@@ -1,6 +1,6 @@
 {{meta {docid: values}}}
 
-# Values, Types, and Operators
+# مقدارها, انواع داده, و عملگرها
 
 {{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
 
@@ -17,74 +17,45 @@ quote}}
 
 {{index "binary data", data, bit, memory}}
 
-Inside the computer's world, there is only data. You can read data,
-modify data, create new data—but that which isn't data cannot be
-mentioned. All this data is stored as long sequences of bits and is
-thus fundamentally alike.
+درون دنیای کامپیوتر، فقط داده‌ (data) وجود دارد. شما می توانید داده‌ها را بخوانید، تغییر دهید، داده‌های جدیدی ایجاد کنید – اما چیزی به جز داده وجود خارجی ندارد. همه‌ی این داده‌ها به شکل دنباله‌ای بلند از بیت ها ذخیره می‌شوند که اساسا به یکدیگر شبیه هستند.
 
 {{index CD, signal}}
 
-_Bits_ are any kind of two-valued things, usually described as zeros and
-ones. Inside the computer, they take forms such as a high or low
-electrical charge, a strong or weak signal, or a shiny or dull spot on
-the surface of a CD. Any piece of discrete information can be reduced
-to a sequence of zeros and ones and thus represented in bits.
+
+_بیت‌ها_ معمولا با صفر و یک توصیف می شوند اما در واقع هر نوعی از چیزهای دو مقداری را می توان بیت در نظر گرفت. درون کامپیوتر، بیت ها به شکل بار الکتریکی بالا و پایین، سیگنال ضعیف و قوی یا نقاط تاریک و روشن روی سطح یک CD در می آیند. هر مقدار گسسته‌ای از اطلاعات را می توان به دنباله‌ای از صفرها و یک‌ها و درنتیجه به صورت بیت‌ها نشان داد.
 
 {{index "binary number", radix, "decimal number"}}
 
-For example, we can express the number 13 in bits. It works the same
-way as a decimal number, but instead of 10 different ((digit))s, you
-have only 2, and the weight of each increases by a factor of 2 from
-right to left. Here are the bits that make up the number 13, with the
-weights of the digits shown below them:
+به عنوان مثال، می توانیم عدد 13 را به شکل بیت‌ها نشان دهیم. مکانیزم نمایش، شبیه نمایش اعداد دهدهی است؛ اما با این تفاوت که به جای 10 رقم مختلف، شما فقط دو رقم در اختیار دارید که وزن هر کدام با ضریب 2 از راست به چپ افزایش میابد. در اینجا بیت‌هایی که عدد 13 را نشان می دهند به همراه وزن هر رقم در زیر آن آورده شده است.
+
 
 ```{lang: null}
    0   0   0   0   1   1   0   1
  128  64  32  16   8   4   2   1
 ```
 
-So that's the binary number 00001101. Its non-zero digits stand for
-8, 4, and 1, and add up to 13.
+بنابراین عدد دودویی مورد نظر 00001101 می‌باشد که معادل رقم‌های غیر صفر آن 8, 4, و 1 می‌باشد که برابر است با 13.
 
-## Values
+## مقدارها
 
 {{index [memory, organization], "volatile data storage", "hard drive"}}
 
-Imagine a sea of bits—an ocean of them. A typical modern computer has
-more than 30 billion bits in its volatile data storage (working
-memory). Nonvolatile storage (the hard disk or equivalent) tends to
-have yet a few orders of magnitude more.
+دریایی از بیت‌ها را تصور کنید. اقیانوسی از آن‌ها را. یک کامپیوتر مدرن معمولی دارای بیش از ۳۰ میلیارد بیت در حافظه‌ی فرارش (حافظه‌ی اصلی) است. حافظه‌های غیر فرار(مثل دیسک سخت یا هارد دیسک و شبیه آن) چندین برابر بیشتر و بزرگ تر هستند.
 
-To be able to work with such quantities of bits without getting lost,
-we must separate them into chunks that represent pieces of
-information. In a JavaScript environment, those chunks are called
-_((value))s_. Though all values are made of bits, they play different
-roles. Every value has a ((type)) that determines its role. Some
-values are numbers, some values are pieces of text, some values are
-functions, and so on.
+
+برای اینکه بتوان با این تعداد از بیت‌ها کار کرد و در بین آن‌ها گم نشد، بایستی آن‌ها را به تکه‌هایی که هر کدام بخشی از اطلاعات را نمایش می دهند تقسیم کنیم. در یک محیط جاوااسکریپتی، این تکه‌ها را به نام _((مقدار‌ها))_ می خوانند. اگرچه همه مقدارها از بیت‌ها تشکیل شده اند، اما نقش‌های مختلفی را ایفا می کنند. هر مقدار دارای یک نوع داده است که نقش آن را مشخص می کند. بعضی مقدارها عدد هستند، بعضی حروف متن هستند، بعضی مقدارها تابع (function) هستند و مانند آن.
 
 {{index "garbage collection"}}
 
-To create a value, you must merely invoke its name. This is
-convenient. You don't have to gather building material for your values
-or pay for them. You just call for one, and _whoosh_, you have it. They
-are not really created from thin air, of course. Every value has to be
-stored somewhere, and if you want to use a gigantic amount of them at
-the same time, you might run out of memory. Fortunately, this is a
-problem only if you need them all simultaneously. As soon as you no
-longer use a value, it will dissipate, leaving behind its bits to be
-recycled as building material for the next generation of values.
+برای ایجاد یک مقدار، فقط کافیست نام آن را فراخوانی کنید. بسیار سرراست. نیازی نیست مواد اولیه برای مقادیر مورد نظرتان جمع‌آوری کنید یا هزینه‌ای پرداخت کنید. فقط فراخوانی کنید و تمام. شما آن را ایجاد کردید. البته آن ها از عدم به وجود نمی آیند. مقدار‌ها باید جایی ذخیره بشوند و اگر قصد استفاده از مقادیر بسیار زیادی از آن‌ها را در یک زمان دارید، ممکن است که با کمبود حافظه روبرو شوید. خوشبختانه، این مشکل فقط زمانی رخ می دهد که در یک آن واحد (همزمان) نیاز به همه‌ی آن ها داشته باشید. به محض اینکه از مقداری استفاده نکنید، از چرخه خارج خواهد شد و بیت‌های متناظرش برای ایجاد مقدارهای جدید مورد استفاده قرار خواهد گرفت.
 
-This chapter introduces the atomic elements of JavaScript programs,
-that is, the simple value types and the operators that can act on such
-values.
+این فصل به معرفی عناصر اساسی برنامه‌های جاوااسکریپت می پردازد که شامل نوع مقدارهای ساده و عملگرهایی که روی این مقادیر می توان اعمال کرد می شود.
 
-## Numbers
+## اعداد
 
 {{index [syntax, number], number, [number, notation]}}
 
-Values of the _number_ type are, unsurprisingly, numeric values. In a
-JavaScript program, they are written as follows:
+مقدارهای مربوط به نوع عدد (number) طبیعتا مقادیر عددی هستند. در یک برنامه جاوااسکریپت، این مقادیر به شکل زیر نوشته می شوند:
 
 ```
 13
@@ -92,40 +63,21 @@ JavaScript program, they are written as follows:
 
 {{index "binary number"}}
 
-Use that in a program, and it will cause the bit pattern for the
-number 13 to come into existence inside the computer's memory.
+استفاده از این مقدار در برنامه باعث می شود تا الگوی بیتی متناظر عدد 13، در داخل حافظه‌ی کامپیوتر به وجود آید.
 
 {{index [number, representation], bit}}
 
-JavaScript uses a fixed number of bits, 64 of them, to store a
-single number value. There are only so many patterns you can make with
-64 bits, which means that the number of different numbers that can be
-represented is limited. With _N_ decimal ((digit))s, you can represent
-10^N^ numbers. Similarly, given 64 binary
-digits, you can represent 2^64^ different numbers, which is about 18
-quintillion (an 18 with 18 zeros after it). That's a lot.
+جاوااسکریپت از تعداد بیت ثابتی (64 بیت) برای ذخیره یک عدد استفاده می کند. با این 64 بیت می توان ترکیب‌های بسیار زیادی ساخت و البته که تعداد اعداد متفاوتی که می توان نمایش داد دارای محدودیت است. برای _N_ ((رقم)) دهدهی، می توان 10^N^ ( ده به توان N) عدد را نمایش داد. به طور مشابه، برای 64 رقم دودویی، می توان 2^64^ عدد متفاوت را نشان داد که چیزی حدود 18 کوینتیلیون ( عدد 18 و 18 تا صفر جلوی آن) می شود که رقم بسیار بزرگی است.
 
-Computer memory used to be much smaller, and people tended to use
-groups of 8 or 16 bits to represent their numbers. It was easy to
-accidentally _((overflow))_ such small numbers—to end up with a number
-that did not fit into the given number of bits. Today, even computers
-that fit in your pocket have plenty of memory, so you are free to use
-64-bit chunks, and you need to worry about overflow only when dealing
-with truly astronomical numbers.
+حافظه‌ی کامپیوتر سابقا بسیار کوچک‌تر بود و برای نمایش اعدا مجبور بودیم از 8 یا 16 بیت استفاده کنیم. در این شرایط به راحتی امکان رخ دادن اتفاقی سرریز (_((overflow))_)  فراهم بود – عددی تولید شود که با تعداد بیتی که وجود داشت امکان نمایشش نبود. امروزه، حتی کامپیوتر‌هایی که در جیب شما هم جا می شوند دارای حافظه‌های بزرگ هستند بنابراین به راحتی می توانید از قطعه‌های 64 بیتی استفاده کنید و نیازی نیست نگران رخ دادن سرریز باشیم مگر در شرایطی که با اعدادی نجومی و بسیار بزرگ سر و کار داریم.
 
 {{index sign, "floating-point number", "sign bit"}}
 
-Not all whole numbers less than 18 quintillion fit in a JavaScript number,
-though. Those bits also store negative numbers, so one bit indicates
-the sign of the number. A bigger issue is that nonwhole numbers must
-also be represented. To do this, some of the bits are used to store
-the position of the decimal point. The actual maximum whole number
-that can be stored is more in the range of 9 quadrillion (15
-zeros)—which is still pleasantly huge.
+البته تمامی اعداد صحیح کمتر از 18 کوینتیلیون را نمی توان در جاوااسکریپت نمایش داد. آن تعداد بیت‌هایی که گفته شد، باید اعداد منفی را هم جا بدهند بنابراین یک بیت برای نگه‌داری علامت عدد استفاده می شود. دردسر بزرگ‌تر این است که اعداد غیرصحیح (اعشاری) را نیز باید نشان داد. برای این کار بعضی از بیت‌ها را برای ذخیره‌ی محل قرارگیری نقطه‌ی اعشاری یا علامت ممیز در نظر می گیرند. در واقع بزرگترین عددی صحیحی را که می‌توان ذخیره کرد بیشتر در بازه‌ی 9 کوادریلیون (عدد 9 و 15 صفر) قرار می گیرد که البته هنوز رقم بسیار بزرگی است.
 
 {{index [number, notation], "fractional number"}}
 
-Fractional numbers are written by using a dot.
+اعداد کسری یا اعشاری را با استفاده از نقطه می نویسند.
 
 ```
 9.81
@@ -133,35 +85,25 @@ Fractional numbers are written by using a dot.
 
 {{index exponent, "scientific notation", [number, notation]}}
 
-For very big or very small numbers, you may also use scientific
-notation by adding an _e_ (for _exponent_), followed by the exponent
-of the number.
+برای اعداد خیلی بزرگ یا خیلی کوچک، همچنین می توایند از روش نمادگذاری علمی استفاده کنید. به این صورت که کاراکتر _e_ (ابتدای واژه‌ی _exponent_ به معنای توان) را به همراه توان عدد در انتهای عدد مورد نظر می نویسیم.
 
 ```
 2.998e8
 ```
 
-That is 2.998 × 10^8^ = 299,800,000.
+عدد بالا معادل 2.998 × 10^8^ = 299,800,000 می باشد.
 
 {{index pi, [number, "precision of"], "floating-point number"}}
 
-Calculations with whole numbers (also called _((integer))s_) smaller
-than the aforementioned 9 quadrillion are guaranteed to always be
-precise. Unfortunately, calculations with fractional numbers are
-generally not. Just as π (pi) cannot be precisely expressed by a
-finite number of decimal digits, many numbers lose some precision when
-only 64 bits are available to store them. This is a shame, but it
-causes practical problems only in specific situations. The important
-thing is to be aware of it and treat fractional digital numbers as
-approximations, not as precise values.
+محاسبات روی اعداد صحیح (integer) کمتر از بیشینه‌ی ذکر شده (9 کوادریلیون)، همیشه دقیق محاسبه می شوند. متاسفانه، محاسبات روی اعداد اعشاری معمولا این چنین دقیق نیستند. درست مثل عدد پی (Pi) که نمی توان آن را با دنباله‌ای متناهی از ارقام نشان داد، وقتی فقط 64 بیت برای ذخیره‌ی اعداد در اختیار داریم، خیلی از اعداد، بخشی از دقت را در محاسبات از دست می دهند. این قابل قبول به نظر نمی رسد، اما در عمل، مشکل جدی فقط در شرایط خاص رخ می دهد. نکته‌ی مهمی که باید در نظر داشت این است که حواسمان باید به این نبود دقت باشد و با ارقام اعشاری به صورت تقریبی کار کنیم نه به عنوان مقادیر صد در صد دقیق.
 
-### Arithmetic
+
+### حساب
 
 {{index [syntax, operator], operator, "binary operator", arithmetic, addition, multiplication}}
 
-The main thing to do with numbers is arithmetic. Arithmetic operations
-such as addition or multiplication take two number values and produce
-a new number from them. Here is what they look like in JavaScript:
+کار اصلی ما با اعداد انجام محاسبات است. عملیات جبری یا حسابی مثل جمع یا ضرب، دو مقدار عددی را می‌گیرند و عددی جدیدی را از آن ‌ها تولید می کنند. در جاوااسکریپت این گونه محاسبات به شکل زیر خواهند بود:
+
 
 ```
 100 + 4 * 11
@@ -169,17 +111,12 @@ a new number from them. Here is what they look like in JavaScript:
 
 {{index [operator, application], asterisk, "plus character", "* operator", "+ operator"}}
 
-The `+` and `*` symbols are called _operators_. The first stands for
-addition, and the second stands for multiplication. Putting an
-operator between two values will apply it to those values and produce
-a new value.
+نماد‌های `+` و `*` را _عملگر_ می نامند. اولین نماد نماد جمع و دومی برای ضرب استفاده می شود. اگر عملگری بین دو مقدار قرار بگیرد، روی آن‌ها عمل کرده و مقدار جدیدی را تولید می کند.
+
 
 {{index grouping, parentheses, precedence}}
 
-But does the example mean "add 4 and 100, and multiply the result by 11,"
-or is the multiplication done before the adding? As you might have
-guessed, the multiplication happens first. But as in mathematics, you
-can change this by wrapping the addition in parentheses.
+عبارات بالا آیا به این معناست که عدد 4 را با 100 جمع کن و حاصل را در 11 ضرب نما؟ یا عمل ضرب قبل از جمع انجام می شود؟ همانطور که ممکن است حدس زده باشید، عمل ضرب زودتر انجام می شود. اما درست مثل ریاضیات، می توانید  عمل جمع را داخل پرانتز قرار دهید تا ترتیب عوض شود.
 
 ```
 (100 + 4) * 11
@@ -187,107 +124,71 @@ can change this by wrapping the addition in parentheses.
 
 {{index "hyphen character", "slash character", division, subtraction, minus, "- operator", "/ operator"}}
 
-For subtraction, there is the `-` operator, and division can be done
-with the `/` operator.
+برای عمل تفریق، عملگر `-` و برای تقسیم، عملگر `/` وجود دارد.
 
-When operators appear together without parentheses, the order in which
-they are applied is determined by the _((precedence))_ of the
-operators. The example shows that multiplication comes before
-addition. The `/` operator has the same precedence as `*`. Likewise
-for `+` and `-`. When multiple operators with the same precedence
-appear next to each other, as in `1 - 2 + 1`, they are applied left to
-right: `(1 - 2) + 1`.
+زمانی که بدون استفاده از پرانتز از عملگرها استفاده می شود، ترتیبی که برای محاسبه و تقدم آن‌ها استفاده می شود براساس _((تقدم))_ عملگرهاست. در مثال قبل، مشاهده کردید که عمل ضرب قبل از عمل جمع انجام می شود. عملگر `/` هم تقدم مشابهی با `*` دارد. `+` و `-` هم تقدم یکسانی دارند. زمانی که چندین عملگر با تقدم مشابه در یک عبارت قرار می گیرند، مثل `1 - 2 + 1`، نحوه بکارگیری از چپ به راست خواهد بود: `(1 - 2) + 1`٫
 
-These rules of precedence are not something you should worry about.
-When in doubt, just add parentheses.
+نگران این قوانین تقدم نباشید. هر زمان که شک داشتید کدام اولویت دارد، از پرانتز استفاده کنید.
 
 {{index "modulo operator", division, "remainder operator", "% operator"}}
 
-There is one more arithmetic operator, which you might not immediately
-recognize. The `%` symbol is used to represent the _remainder_
-operation. `X % Y` is the remainder of dividing `X` by `Y`. For
-example, `314 % 100` produces `14`, and `144 % 12` gives `0`.
-The remainder operator's precedence is the same as that of multiplication and
-division. You'll also often see this operator referred to as _modulo_.
+یک عملگر حسابی دیگر هنوز مانده، عملگری که احتمالا نتوانید به سرعت کارکرد آن را حدس بزنید. نماد `%` برای عمل محاسبه باقی مانده استفاده می شود.`X % Y` به معنای محاسبه‌ی باقی مانده‌ی تقسیم `X` بر `Y` است. مثلا `314 % 100`حاصلش می شود `14` و `144 % 12`، `0` را تولید می کند. تقدم عملگر باقی‌مانده نیز مانند جمع و تقسیم است. شما اغلب برای این عملگر، اصطلاح پیمانه را مشاهده می کنید، اگرچه از نظر فنی همان باقی مانده دقیق تر است.
 
-### Special numbers
+### اعداد خاص
 
 {{index [number, "special values"]}}
 
-There are three special values in JavaScript that are considered
-numbers but don't behave like normal numbers.
+در جاوااسکریپت سه مقدار خاص وجود دارند که به عنوان عدد محسوب می شوند اما خاصیت و رفتار اعداد معمولی را ندارند.
 
 {{index infinity}}
 
-The first two are `Infinity` and `-Infinity`, which represent the
-positive and negative infinities. `Infinity - 1` is still `Infinity`,
-and so on. Don't put too much trust in infinity-based computation,
-though. It isn't mathematically sound, and it will quickly lead to the
-next special number: `NaN`.
+دو تای اول `Infinity` و `-Infinity` هستند که نماد مثبت و منفی بی‌نهایت می باشند. `Infinity - 1` ، همچنان `Infinity` خواهد بود. زیاد به محاسباتی که بر اساس مقدار Infinity هستند اعتماد نکنید. از نقطه‌نظر ریاضیات، زیاد استوار نیستند و ممکن است باعث تولید نتیجه‌ای بشوند که همان عدد خاص سوم ماست: `NaN`.
+
 
 {{index NaN, "not a number", "division by zero"}}
 
-`NaN` stands for "not a number", even though it _is_ a value of the
-number type. You'll get this result when you, for example, try to
-calculate `0 / 0` (zero divided by zero), `Infinity - Infinity`, or
-any number of other numeric operations that don't yield a meaningful
-result.
+`NaN` مخفف Not a Number به معنای “غیر عدد” است. اگرچه مقداری برای نوع داده‌ی عدد محسوب می شود. اگر به عنوان مثال، سعی کنید که `0 / 0` (صفر را بر صفر تقسیم کنید) را محاسبه کنید با NaN روبرو خواهید شد یا `Infinity - Infinity` یا هر عمل حسابی دیگر روی اعداد که نتیجه‌ی آن مشخص و با معنا نباشد.
 
-## Strings
+
+## رشته‌ها
 
 {{indexsee "grave accent", backtick}}
 
 {{index [syntax, string], text, character, [string, notation], "single-quote character", "double-quote character", "quotation mark", backtick}}
 
-The next basic data type is the _((string))_. Strings are used to
-represent text. They are written by enclosing their content in quotes.
+نوع داده‌ی بنیادی بعدی _((رشته))_ است. رشته‌ها برای نمایش متن استفاده می شوند و به این صورت نوشته می شوند که محتوای آن ها داخل علامت نقل قول تک یا جفت قرار می گیرد.
 
 ```
 `Down on the sea`
 "Lie on the ocean"
 'Float on the ocean'
 ```
-
-You can use single quotes, double quotes, or backticks to mark
-strings, as long as the quotes at the start and the end of the string
-match.
+می توانید از کاراکتر نقل قول تک، نقل قول جفت یا (`` - backtick) برای مشخص کردن رشته‌ها استفاده کنید البته تا زمانی که برای شروع و پایان رشته از یک علامت یکسان استفاده می کنید.
 
 {{index "line break", "newline character"}}
 
-Almost anything can be put between quotes, and JavaScript will make a
-string value out of it. But a few characters are more difficult. You
-can imagine how putting quotes between quotes might be hard.
-_Newlines_ (the characters you get when you press [enter]{keyname}) can be
-included without escaping only when the string is quoted with backticks
-(`` ` ``).
+جاوااسکریپت تقریبا هر مقداری که در داخل علامت‌های نقل قول محصور بشود را رشته در نظر می گیرد یا سعی می کند به رشته تبدیل کند. البته چند کاراکتر ویژه، شرایط متفاوتی دارند. می توانید تصور کنید چقدر سخت خواهد بود که بخواهیم خود علامت نقل قول را بین علامت‌های نقل قول در یک رشته قرار دهیم. کارکترهای خط جدید (کاراکترهایی که پس از فشردن کلید [enter]{keyname} به وجود می‌آیند) را نیز بدون “گریز دادن” فقط می توان زمانی در رشته قرار داد که رشته توسط کاراکتر backticks(`) محصور شده باشد.
+
 
 {{index [escaping, "in strings"], ["backslash character", "in strings"]}}
 
-To make it possible to include such characters in a string, the
-following notation is used: whenever a backslash (`\`) is found inside
-quoted text, it indicates that the character after it has a special
-meaning. This is called _escaping_ the character. A quote that is
-preceded by a backslash will not end the string but be part of it.
-When an `n` character occurs after a backslash, it is interpreted as a
-newline. Similarly, a `t` after a backslash means a ((tab character)).
-Take the following string:
+برای اینکه اینگونه کاراکترها را در یک رشته قرار دهیم، از این روش استفاده می شود: هرگاه درون یک رشته‌‌ی متنی که بین نقل قول محصور شده است، کاراکتر (`\`) بک اسلش پیدا شود، به این معناست که کاراکتر بعد از آن معنای خاصی دارد و باید طور دیگری تفسیر شود. به این کار گریزدادن (_escaping_) گفته می شود. کاراکتر نقل قولی که قبل از آن، کاراکتر `\` قرار گرفته، دیگر به معنای کاراکتر پایان رشته تفسیر نمی شود بلکه خود بخشی از رشته خواهد بود. اگر بعد از `\` کاراکتر `n` قرار گیرد، به عنوان یک خط جدید تفسیر می شود. به طور مشابه، کاراکتر `t` بعد از `\` ، به معنای ((tab character)) خواهد بود. به رشته‌ی زیر توجه کنید.:
 
 ```
 "This is the first line\nAnd this is the second"
 ```
 
-The actual text contained is this:
+خروجی واقعی متن بالا به شکل زیر خواهد بود:
 
 ```{lang: null}
 This is the first line
 And this is the second
 ```
 
-There are, of course, situations where you want a backslash in a
-string to be just a backslash, not a special code. If two backslashes
-follow each other, they will collapse together, and only one will be
-left in the resulting string value. This is how the string "_A newline
-character is written like `"`\n`"`._" can be expressed:
+مواقعی هم پیش خواهد آمد که بخواهید خود بک اسلش را درون یک رشته نمایش دهید نه به صورت یک کد خاص. در این صورت از دو بک اسلش پشت سر هم استفاده می شود. این کار باعث می شود که یکی از آن‌ها در رشته‌ی نهایی نشان داده شود. مثلا برای اینکه رشته‌ای متناظر با رشته‌ی زیر را نمایش دهید:
+"_A newline
+character is written like `"`\n`"`._"
+در جاوااسکریپت باید به شکل زیر نوشته شود:
 
 ```
 "A newline character is written like \"\\n\"."
@@ -297,62 +198,42 @@ character is written like `"`\n`"`._" can be expressed:
 
 {{index [string, representation], Unicode, character}}
 
-Strings, too, have to be modeled as a series of bits to be able to
-exist inside the computer. The way JavaScript does this is based on
-the _((Unicode))_ standard. This standard assigns a number to
-virtually every character you would ever need, including characters
-from Greek, Arabic, Japanese, Armenian, and so on. If we have a number
-for every character, a string can be described by a sequence of
-numbers.
+رشته‌ها نیز بایستی به شکل دنباله‌ای از بیت ها تبدیل شوند تا درون کامپیوتر ذخیره شوند. روشی که جاوااسکریپت برای این کار استفاده می کند بر اساس استاندارد _((Unicode))_ است. این استاندارد به همه‌ی کاراکترهایی که ممکن است نیاز داشته باشید (شامل کاراکترهای از زبان های یونانی، عربی، ژاپنی، ارمنی و غیره)، عددی را اختصاص می دهد. اگر برای هر کاراکتری عددی داشته باشیم، رشته ها را می توان به وسیله دنباله‌ای از این اعداد توصیف کرد.
+
 
 {{index "UTF-16", emoji}}
 
-And that's what JavaScript does. But there's a complication:
-JavaScript's representation uses 16 bits per string element, which can
-describe up to 2^16^ different characters. But Unicode defines more
-characters than that—about twice as many, at this point. So some
-characters, such as many emoji, take up two "character positions" in
-JavaScript strings. We'll come back to this in [Chapter
-?](higher_order#code_units).
+و این کاریست که جاوااسکریپت انجام می دهد. اما اینجا یک مشکل وجود دارد: سیستم نمایش جاوااسکریپت از 16 بیت برای هر عنصر رشته استفاده می کند که باعث می شود بتوان تا 2^16^ کاراکتر متفاوت را پوشش داد. اما یونیکد کاراکترهای بیشتری را تعریف می کند که در حال حاضر تقریبا دوبرابر این تعداد است. بنابراین بعضی کاراکترها مثل خیلی از کاراکترهای ایموجی در یک رشته، دو “فضای کاراکتر” را اشغال می کنند. به این نکته در [فصل
+?](higher_order#code_units) باز خواهیم گشت.
 
 {{index "+ operator", concatenation}}
 
-Strings cannot be divided, multiplied, or subtracted, but the `+`
-operator _can_ be used on them. It does not add, but it
-_concatenates_—it glues two strings together. The following line will
-produce the string `"concatenate"`:
+نمی توان عملیات حسابی تقسیم، ضرب یا تفریق را روی رشته‌ها انجام داد، اما عملگر `+` را می توان استفاده کرد. این عملگر روی رشته‌ها جمع حسابی را انجام نمی دهد، بلکه عمل چسباندن دو رشته را انجام می دهد. کد زیر رشته‌ی  `"concatenate"` را تولید می کند.
 
 ```
 "con" + "cat" + "e" + "nate"
 ```
 
-String values have a number of associated functions (_methods_) that
-can be used to perform other operations on them. I'll say more about
-these in [Chapter ?](data#methods).
+می توان روی مقادیر رشته ای عملیاتی را به وسیله توابع مرتبط (_متدها_) انجام داد که در [فصل ?](data#methods) به آن ها می پردازیم.
+
 
 {{index interpolation, backtick}}
 
-Strings written with single or double quotes behave very much the
-same—the only difference is in which type of quote you need to escape
-inside of them. Backtick-quoted strings, usually called _((template
-literals))_, can do a few more tricks. Apart from being able to span
-lines, they can also embed other values.
+رشته‌هایی که به وسیله نقل قول تک یا جفتی نوشته می شوند خیلی شبیه هم عمل می کنند – تنها تفاوت بر می گردد به علامت نقل قولی که بایستی در صورت استفاده با توجه به آن گریز داده شود. رشته‌هایی که با علامت backtick محصور می شوند، که معمولا _((template
+literals))_ نامیده می شوند، قابلیت بیشتری دارند. جدا از اینکه می می توان در آن‌ها خطوط رشته را شکست یا خطوط متعدد داشت، می توانند مقادیر دیگر را نیز در خود جاسازی کنند.
 
 ```
 `half of 100 is ${100 / 2}`
 ```
 
-When you write something inside `${}` in a template literal, its
-result will be computed, converted to a string, and included at that
-position. The example produces "_half of 100 is 50_".
+زمانی که چیزی را داخل`${}` می نویسید و آن را با backtick محصور می کنید، نتیجه عبارت مورد نظر محاسبه شده، به رشته تبدیل می شود و در جای مورد نظر قرار می گیرد. مثال بالا رشته‌ی "_half of 100 is 50_" را تولید می کند.
 
-## Unary operators
+
+## عملگرهای یگانی
 
 {{index operator, "typeof operator", type}}
 
-Not all operators are symbols. Some are written as words. One example
-is the `typeof` operator, which produces a string value naming the
-type of the value you give it.
+همه‌ی عملگرها را با نمادها نشان نمی دهند. بعضی از آن‌ها با حروف معمولی لاتین نوشته‌ می شوند. به عنوان مثال می توان عملگر `typeof` را ذکر نمود که نوع داده‌ی ورودی خود را به شکل یک رشته برمی گرداند.
 
 ```
 console.log(typeof 4.5)
@@ -365,37 +246,28 @@ console.log(typeof "x")
 
 {{id "console.log"}}
 
-We will use `console.log` in example code to indicate that we want to
-see the result of evaluating something. More about that in the [next
-chapter](program_structure).
+در مثال‌های کتاب برای اینکه نشان دهیم قصد داریم نتیجه ارزیابی چیزی را ببینیم،‌از دستور `console.log` استفاده می کنیم. برای اطلاعات بیشتر در باره آن به [فصل بعد](program_structure) مراجعه کنید.
 
 {{index negation, "- operator", "binary operator", "unary operator"}}
 
-The other operators shown all operated on two values, but `typeof`
-takes only one. Operators that use two values are called _binary_
-operators, while those that take one are called _unary_ operators. The
-minus operator can be used both as a binary operator and as a unary
-operator.
+دیگر عملگر‌هایی که تا به حال دیده‌ایم بر روی دو مقدار عمل می کردند اما `typeof` فقط به یک مقدار نیاز دارد. عملگرهایی که به دو مقدار نیاز دارند، عملگرهای دودویی (_binary_) نامیده می شوند،‌ در حالیکه آن هایی که روی یک مقدار عمل می کنند را عملگرهای _یکانی_ می نامند. عملگر تفریق (-) را می‌توان هم به عنوان یکانی و هم دودویی استفاده کرد.
 
 ```
 console.log(- (10 - 2))
 // → -8
 ```
 
-## Boolean values
+### مقدارهای بولی
 
 {{index Boolean, operator, true, false, bit}}
 
-It is often useful to have a value that distinguishes between only two
-possibilities, like "yes" and "no" or "on" and "off". For this
-purpose, JavaScript has a _Boolean_ type, which has just two values,
-true and false, which are written as those words.
+گاهی اوقات لازم است تا به وسیله‌ی یک مقدار فقط دو حالت را شناسایی و تمییز دهیم، مثل “yes” و “no” یا “on” و “off”. برای این منظور جاوااسکریپت نوع داده بولی (_Boolean_) را در نظر گرفته است که فقط دارای دو مقدار است: true و false (که به همین شکل نوشته می شوند).
 
-### Comparison
+### مقایسه‌ها
 
 {{index comparison}}
 
-Here is one way to produce Boolean values:
+یکی از راه‌های تولید مقدار‌های بولی را در مثال زیر می بینیم:
 
 ```
 console.log(3 > 2)
@@ -406,12 +278,9 @@ console.log(3 < 2)
 
 {{index [comparison, "of numbers"], "> operator", "< operator", "greater than", "less than"}}
 
-The `>` and `<` signs are the traditional symbols for "is greater
-than" and "is less than", respectively. They are binary operators.
-Applying them results in a Boolean value that indicates whether they
-hold true in this case.
+علامت‌های `>` و `<` به ترتیب همان نمادهای سنتی برای “بزرگتر است از” و “کوچکتر است از” هستند. آن‌ها عملگرهایی دودویی هستند. در صورت استفاده از آن‌ها منجر به تولید یک مقدار بولی می شود که نشان می دهد آیا true است یا خیر.
 
-Strings can be compared in the same way.
+رشته‌ها را هم می توان به روشی مشابه مقایسه کرد.
 
 ```
 console.log("Aardvark" < "Zoroaster")
@@ -420,17 +289,11 @@ console.log("Aardvark" < "Zoroaster")
 
 {{index [comparison, "of strings"]}}
 
-The way strings are ordered is roughly alphabetic but not really what
-you'd expect to see in a dictionary: uppercase letters are always
-"less" than lowercase ones, so `"Z" < "a"`, and nonalphabetic
-characters (!, -, and so on) are also included in the ordering. When
-comparing strings, JavaScript goes over the characters from left to
-right, comparing the ((Unicode)) codes one by one.
+رشته‌ها تقریبا براساس حروف الفبا مرتب می شوند اما نه کاملا به شکلی که در واژه‌نامه می بینید: حروف بزرگ در عمل ،مقایسه از حروف کوچک “کوچک‌تر” محسوب می گردند،‌ بنابراین عبارت `"Z" < "a"` مقدار true را برمی‌گرداند، وکاراکترهای غیرالفبایی (!,-, و مانند آن‌ها) نیز ترتیب دارند و مقایسه می شوند. در زمان مقایسه‌ی رشته ها، جاوااسکریپت کاراکترهای هر رشته را یک به یک از چپ به راست براساس کدهای یونیکدشان، باهم مقایسه می‌کند.
 
 {{index equality, ">= operator", "<= operator", "== operator", "!= operator"}}
 
-Other similar operators are `>=` (greater than or equal to), `<=`
-(less than or equal to), `==` (equal to), and `!=` (not equal to).
+دیگر عملگرهای مقایسه‌ای به صورت هستند: عملگر=< (بزرگتر مساوی)،=> (کوچکتر مساوی)، == (برابری) و=! (نابرابری).
 
 ```
 console.log("Itchy" != "Scratchy")
@@ -441,30 +304,26 @@ console.log("Apple" == "Orange")
 
 {{index [comparison, "of NaN"], NaN}}
 
-There is only one value in JavaScript that is not equal to itself, and
-that is `NaN` ("not a number").
+تنهای یک مقدار در جاوااسکریپت وجود دارد که با خودش برابر نیست، و آن `NaN` است که به معنای “مقدار عددی نیست” می باشد.
 
 ```
 console.log(NaN == NaN)
 // → false
 ```
 
-`NaN` is supposed to denote the result of a nonsensical computation,
-and as such, it isn't equal to the result of any _other_ nonsensical
-computations.
+`NaN` به این منظور ایجاد شده که نشان دهد نتیجه‌ی محاسبه بی معنا بوده است، و به همین دلیل، با نتیجه‌ی هیچ محاسبه‌ی بی‌معنای دیگری برابر نخواهد بود.
 
-### Logical operators
+
+### عملگرهای منطقی
 
 {{index reasoning, "logical operators"}}
 
-There are also some operations that can be applied to Boolean values
-themselves. JavaScript supports three logical operators: _and_, _or_,
-and _not_. These can be used to "reason" about Booleans.
+ عملیاتی نیز وجود دارند که می توانند روی مقدارهای بولی اجرا شوند. جاوااسکریپت از سه عملگر منطقی پشتیبانی می کند: _and_ ، _or_ و _not_. این عملگرها را می توان برای انجام عملیات منطقی روی عبارات بولی استفاده کرد.
+
 
 {{index "&& operator", "logical and"}}
 
-The `&&` operator represents logical _and_. It is a binary operator,
-and its result is true only if both the values given to it are true.
+عملگر `&&` نماد _and_ منطقی است. این عملگر دودویی و نتیجه‌ی آن زمانی صحیح (true) است که هر دو عملوند یا مقداری که به آن داده می شود، صحیح (true) باشند.
 
 ```
 console.log(true && false)
@@ -475,8 +334,7 @@ console.log(true && true)
 
 {{index "|| operator", "logical or"}}
 
-The `||` operator denotes logical _or_. It produces true if either of
-the values given to it is true.
+عملگر `||` نماد _or_ منطقی است. نتیجه‌ی این عملگر زمانی صحیح (true) که یکی از دو مقدار داده شده، صحیح باشد.
 
 ```
 console.log(false || true)
@@ -487,19 +345,11 @@ console.log(false || false)
 
 {{index negation, "! operator"}}
 
-_Not_ is written as an exclamation mark (`!`). It is a unary operator
-that flips the value given to it—`!true` produces `false`, and `!false`
-gives `true`.
+_Not_ یا نقیض با علامت تعجب (`!`) نمایش داده می شود که عملگری یکانی است که مقداری را که به آن داده می شود را نقیض می کند ( برعکس می کند) – `!true` مقدار `false` را بر می گرداند و `!false` مقدار `true`.
 
 {{index precedence}}
 
-When mixing these Boolean operators with arithmetic and other
-operators, it is not always obvious when parentheses are needed. In
-practice, you can usually get by with knowing that of the operators we
-have seen so far, `||` has the lowest precedence, then comes `&&`,
-then the comparison operators (`>`, `==`, and so on), and then the
-rest. This order has been chosen such that, in typical expressions
-like the following one, as few parentheses as possible are necessary:
+زمانی که این عملگرها را با عملگرهای حسابی و دیگر عملگرها ترکیب می کنیم، همیشه واضح نیست که کی لازم است از پرانتزها استفاده کرد. در عمل معمولا می توان با دانستن اینکه در بین عملگرهایی که بررسی کردیم، `||` دارای کمترین حق تقدم، بعد `&&` و پس از آن عملگرهای مقایسه (`>`, `==`, …) و بعد بقیه عملگرها قرار می گیرند، پیش رفت. با توجه به ترتیب تقدم‌ها به این شکل در عبارتی مثل عبارت پایین به حداقل پرانتز می توان اکتفا کرد.:
 
 ```
 1 + 1 == 2 && 10 * 10 > 50
@@ -507,9 +357,8 @@ like the following one, as few parentheses as possible are necessary:
 
 {{index "conditional execution", "ternary operator", "?: operator", "conditional operator", "colon character", "question mark"}}
 
-The last logical operator I will discuss is not unary, not binary, but
-_ternary_, operating on three values. It is written with a question
-mark and a colon, like this:
+آخرین عملگر منطقی که قصد دارم در باره آن صحبت کنم، نه یکانی است و دودویی، بلکه سه‌تایی (_ternary_) می باشد و روی سه مقدار عمل می کند. برای نوشتن آن از علامت سوال و دونقطه به شکل زیر استفاده می شود:
+
 
 ```
 console.log(true ? 1 : 2);
@@ -517,37 +366,23 @@ console.log(true ? 1 : 2);
 console.log(false ? 1 : 2);
 // → 2
 ```
+این عملگر را عملگر شرطی می نامند (گاهی اوقات هم همان عملگر سه‌تایی به این دلیل که تنها عملگری است که این ویژگی را در جاوااسکریپت دارد). مقداری که در سمت چپ علامت سوال قرار می گیرد، مشخص می کند که کدام یک از دو مقدار بعدی به عنوان نتیجه برگردانده می شود. زمانی که صحیح (true) ارزیابی شود، مقدار وسطی انتخاب می شود، و هنگامی که false است، آخرین مقدار که در سمت راست قرار دارد، برگردانده می شود.
 
-This one is called the _conditional_ operator (or sometimes just
-the _ternary_ operator since it is the only such operator in the
-language). The value on the left of the question mark "picks" which of
-the other two values will come out. When it is true, it chooses the
-middle value, and when it is false, it chooses the value on the right.
-
-## Empty values
+## مقدارهای پوچ
 
 {{index undefined, null}}
 
-There are two special values, written `null` and `undefined`, that are
-used to denote the absence of a _meaningful_ value. They are
-themselves values, but they carry no information.
+دو مقدار خاص وجود دارد که به شکل `null` و `undefined` نوشته می شوند که برای مشخص کردن مقدار‌هایی که درجاوااسکریپت معنایی ندارند استفاده می شوند.  آن‌ها خودشان مقدار هستند اما اطلاعات خاصی را حمل نمی کنند.
 
-Many operations in the language that don't produce a meaningful value
-(you'll see some later) yield `undefined` simply because they have to
-yield _some_ value.
+عملیات زیادی در جاوااسکریپت وجود دارند که مقدار معناداری را تولید نمی کنند ( در ادامه مواردی را خواهید دید) و به این خاطر که بالاخره باید مقداری را برگردانند، `undefined` را تولید می کنند.
 
-The difference in meaning between `undefined` and `null` is an accident
-of JavaScript's design, and it doesn't matter most of the time. In cases
-where you actually have to concern yourself with these values, I
-recommend treating them as mostly interchangeable.
+تفاوت معنای دو مقدار `undefined` و `null` به خاطر نحوه‌ی طراحی خود جاوااسکریپت است و در بیشتر اوقات باهم تفاوت معنایی خاصی ندارند. اگر شرایطی وجود دارد که باید نگران تفاوت این دو باشید، پیشنهاد می کنم که هر دو را معادل هم در نظر بگیرید و هرکدام را خواستید به جای دیگری استفاده کنید ( در آینده بیشتر به آن می پردازیم).
 
-## Automatic type conversion
+## تبدیل خودکار نوع داده
 
 {{index NaN, "type coercion"}}
 
-In the Introduction, I mentioned that JavaScript goes out of its way
-to accept almost any program you give it, even programs that do odd
-things. This is nicely demonstrated by the following expressions:
+در مقدمه کتاب، توضیح دادم که جاوااسکریپت برای اینکه هر برنامه‌ای که شما به آن می دهید را تفسیر کند، تلاش بسیاری می کند، حتی برنامه‌هایی که به نظر صحیح نمی آیند. در عبارات زیر این مساله به خوبی نشان داده شده است:
 
 ```
 console.log(8 * null)
@@ -564,33 +399,15 @@ console.log(false == 0)
 
 {{index "+ operator", arithmetic, "* operator", "- operator"}}
 
-When an operator is applied to the "wrong" type of value, JavaScript
-will quietly convert that value to the type it needs, using a set of
-rules that often aren't what you want or expect. This is called
-_((type coercion))_. The `null` in the first expression becomes `0`,
-and the `"5"` in the second expression becomes `5` (from string to
-number). Yet in the third expression, `+` tries string concatenation
-before numeric addition, so the `1` is converted to `"1"` (from number
-to string).
+زمانی که یک عملگر، به نوع مقدار غلطی اعمال می شود، جاوااسکریپت با استفاده از  مجموعه‌ای از قواعد که اغلب قابل پیش بینی و انتظار نیستند، بی سر و صدا مقدار مورد نظر را به نوعی که می خواهد تبدیل می کند. به این کار، تبدیل خودکار نوع یا _((type coercion))_ می گویند. بنابراین `null` در عبارت اول به `0` تبدیل می شود، و `"5"` در عبارت دوم به `5` ( از رشته به عدد) تبدیل می شود. همچنین در عبارت سوم، `+` ابتدا سعی می کند که رشته‌ها را بهم الحاق کند قبل از اینکه عمل جمع حسابی را انجام بدهد بنابراین عدد `1` را به `"1"` ( عدد به رشته) تبدیل می کند.
 
 {{index "type coercion", [number, "conversion to"]}}
 
-When something that doesn't map to a number in an obvious way (such as
-`"five"` or `undefined`) is converted to a number, you get the value
-`NaN`. Further arithmetic operations on `NaN` keep producing `NaN`, so
-if you find yourself getting one of those in an unexpected place, look
-for accidental type conversions.
+اگر مقداری را نتوان به شکل واضحی به یک عدد تبدیل کرد‌ (مثلا `"five"` یا `undefined`)، مقدار `NaN` تولید خواهد شد. همچنین عملیات حسابی روی مقدار `NaN` باعث تولید دوباره‌ی `NaN` می شود، بنابراین اگر در حین برنامه نویسی متوجه شدید که این مقدار را در جایی که انتظارش را نداشتید،‌ مشاهده کردید، به دنبال تبدیل تصادفی نوع داده بگردید.
 
 {{index null, undefined, [comparison, "of undefined values"], "== operator"}}
 
-When comparing values of the same type using `==`, the outcome is easy
-to predict: you should get true when both values are the same, except
-in the case of `NaN`. But when the types differ, JavaScript uses a
-complicated and confusing set of rules to determine what to do. In
-most cases, it just tries to convert one of the values to the other
-value's type. However, when `null` or `undefined` occurs on either
-side of the operator, it produces true only if both sides are one of
-`null` or `undefined`.
+زمانی که مقدارهایی از یک نوع داده را با  `==` مقایسه می کنیم، خروجی به راحتی قابل پیش بینی است: اگر دو مقدار مشابه‌ هم باشند، نتیجه صحیح (true) خواهد بود به استثنای مقدار `NaN`. اما هنگامی‌که نوع داده‌ها متفاوت اند، جاوااسکریپت از یک سری دستورات پییچیده و گیج‌کننده برای انجام مقایسه استفاده می کند. در اکثر موارد، راه‌حل انتخابی تبدیل یکی از مقادیر به نوع مقدار دیگر است. هرچند زمانی که `null` یا `undefined` در یک سمت از عملگر قرار می گیرد، زمانی مقدار true تولید می شود که هر دو طرف یا `null` یا `undefined` باشند.
 
 ```
 console.log(null == undefined);
@@ -599,41 +416,24 @@ console.log(null == 0);
 // → false
 ```
 
-That behavior is often useful. When you want to test whether a value
-has a real value instead of `null` or `undefined`, you can compare it
-to `null` with the `==` (or `!=`) operator.
+این رفتار جاوااسکریپت درباره‌ی `null` و `undefined` اغلب کاربردی است.
+می توانید به سادگی با مقایسه‌ی یک مقدار با `null` با استفاده از عملگر `==`  یا `!=`، به واقعی و معنادار بودن یک مقدار پی ببرید.
 
 {{index "type coercion", [Boolean, "conversion to"], "=== operator", "!== operator", comparison}}
 
-But what if you want to test whether something refers to the precise
-value `false`? Expressions like `0 == false` and `"" == false` are
-also true because of automatic type conversion. When you do _not_ want
-any type conversions to happen, there are two additional operators:
-`===` and `!==`. The first tests whether a value is _precisely_ equal
-to the other, and the second tests whether it is not precisely equal.
-So `"" === false` is false as expected.
+اما برای آزمایش اینکه مقداری دقیقا برابر با `false` است یا نه، چه باید کرد؟ طبق قوانین مربوط به تبدیل رشته‌ها و اعداد به مقادیر بولی، `0`, `NaN` و رشته‌ی خالی (“”)، به صورت false تفسیر می شوند، درحالی‌که دیگر مقادیر به عنوان true در نظر گرفته می شوند. به همین علت عبارتی مثل  `0 == false`  و `"" == false` به عنوان true ارزیابی می شوند. برای این گونه موارد، زمانی که این تبدیل خودکار نوع داده را نمی خواهید، می توان از دو عملگر دیگر استفاده کرد: `===` و `!==`. عملگر اول بررسی می کند که مقدار دقیقا متناظر با مقدار دیگر باشد، و دومی بررسی می کند که دقیقا متناظر نباشند. بنابراین `"" === false` ، مقدار ناصحیح(false) را برمی گرداند، همانطور مورد انتظار بود.
 
-I recommend using the three-character comparison operators defensively to
-prevent unexpected type conversions from tripping you up. But when you're
-certain the types on both sides will be the same, there is no problem with
-using the shorter operators.
+من پیشنهاد می‌کنم که از عملگر مقایسه‌ای سه‌کاراکتری به صورت پیشگیرانه استفاده شود تا از تبدیل داده‌های ناخواسته که باعث دردسر می شوند جلوگیری شود. اما زمانی که از شباهت نوع داده دو طرف مطمئن هستید، استفاده از عملگر‌های کوتاه‌تر نادرست نخواهد بود.
 
-### Short-circuiting of logical operators
+### اتصال کوتاه در عملگرهای منطقی
 
 {{index "type coercion", [Boolean, "conversion to"], operator}}
 
-The logical operators `&&` and `||` handle values of different types
-in a peculiar way. They will convert the value on their left side to
-Boolean type in order to decide what to do, but depending on the
-operator and the result of that conversion, they will return either the
-_original_ left-hand value or the right-hand value.
+عملگرهای منطقی `&&` و `||`  از روش به خصوصی برای ارزیابی مقدارهای انواع داده‌ی مختلف استفاده می کنند. ابتدا مقدار سمت چپ عملگر را به نوع بولی تبدیل می کنند تا تصمیم بگیرند که چه کنند و بسته به نوع عملگر و نتیجه تبدیل نوع داده، یا مقدار اولیه سمت چپ را برمی‌گردانند یا مقدار سمت راست را.
 
 {{index "|| operator"}}
 
-The `||` operator, for example, will return the value to its left when
-that can be converted to true and will return the value on its right
-otherwise. This has the expected effect when the values are Boolean
-and does something analogous for values of other types.
+عملگر `||` ، به عنوان مثال، زمانی مقدار سمت چپ عبارت را برمیگرداند که بتوان آن را به true تبدیل کرد و در غیر این صورت مقدار سمت راست را برمیگرداند. این تبدیل همانطور که انتظارش را داشتید برای مقادیر بولی عمل می کند و برای مقادر دیگر انواع داده نیز به شکل مشابهی عمل می کند.
 
 ```
 console.log(null || "user")
@@ -644,47 +444,25 @@ console.log("Agnes" || "user")
 
 {{index "default value"}}
 
-We can use this functionality as a way to fall back on a default
-value. If you have a value that might be empty, you can put `||` after
-it with a replacement value. If the initial value can be converted to
-false, you'll get the replacement instead. The rules for converting
-strings and numbers to Boolean values state that `0`, `NaN`, and the
-empty string (`""`) count as `false`, while all the other values count
-as `true`. So `0 || -1` produces `-1`, and `"" || "!?"` yields `"!?"`.
+با این ویژگی می توان از عملگر `||` به عنوان روشی برای در نظر گرفتن مقدار پیش‌فرض در عبارت‌ها استفاده کرد. اگر مقداری را داشته باشید که ممکن است تهی باشد، می توانید بعد از آن `||` به همراه مقداری جایگزین قرار دهید. اگر مقدار اولیه را بتوان به false تبدیل کرد، نتیجه‌ای که دریافت خواهید کرد برابر با مقدار جایگزین خواهد بود. طبق قوانین تبدیل رشته‌ها و اعداد به مقادیر بولی، `0`, `NaN` و رشته‌ی تهی (`""`) به عنوان `false` در نظر گرفته می شود، درحالیکه دیگر مقادیر به عنوان `true`  شمرده می شود. بنابراین `0 || -1` مقدار `-1` و عبارت `"" || "!?"` مقدار `"!?"` را تولید می کند.
 
 {{index "&& operator"}}
 
-The `&&` operator works similarly but the other way around. When the
-value to its left is something that converts to false, it returns that
-value, and otherwise it returns the value on its right.
+عملگر `&&` به شکل مشابهی عمل می کند، اما در جهت عکس.  زمانی‌که مقداری که در سمت چپ عبارت قرار دارد، عبارتی است که به false تبدیل می شود، همان مقدار سمت چپ برگردانده خواهد شد، در غیر اینصورت، مقدار سمت راست ارزیابی و برگردانده می شود.
 
-Another important property of these two operators is that the part to
-their right is evaluated only when necessary. In the case of `true ||
-X`, no matter what `X` is—even if it's a piece of program that does
-something _terrible_—the result will be true, and `X` is never
-evaluated. The same goes for `false && X`, which is false and will
-ignore `X`. This is called _((short-circuit evaluation))_.
+یکی دیگر از ویژگی‌های مهم این دو عملگر این است که عبارت سمت راست آن‌ها، فقط در صورت نیاز ارزیابی می شود. در مورد مثل `true ||
+X`، مهم نیست که `X` چیست، حتی اگر عبارتی است که در صورت اجرا، کار وحشتناکی انجام می دهد – نتیجه عبارت ، true خواهد بود و `X` اصلا ارزیابی یا اجرا نمی شود. همین قضیه برای `false && X` نیز صادق است که نتیجه‌ی آن false است و `X` ارزیابی نمی شود. این‌ کار ارزیابی مدار کوتاه نامیده می شود.
 
 {{index "ternary operator", "?: operator", "conditional operator"}}
 
-The conditional operator works in a similar way. Of the second and
-third values, only the one that is selected is evaluated.
+عملگر منطقی (سه‌تایی) نیز به شکل مشابهی کار میکند. عبارت اول، همیشه ارزیابی می شود، اما دومین یا سومین مقدار – مقداری که انتخاب نمی شود – ارزیابی هم نخواهد شد.
 
-## Summary
+## خلاصه
 
-We looked at four types of JavaScript values in this chapter: numbers,
-strings, Booleans, and undefined values.
+در این فصل به چهار نوع از مقدارهای جاوااسکریپت نگاهی انداختیم:‌اعداد، رشته‌ها، مقادیر بولی، و مقادیر تعریف نشده.
 
-Such values are created by typing in their name (`true`, `null`) or
-value (`13`, `"abc"`). You can combine and transform values with
-operators. We saw binary operators for arithmetic (`+`, `-`, `*`, `/`,
-and `%`), string concatenation (`+`), comparison (`==`, `!=`, `===`,
-`!==`, `<`, `>`, `<=`, `>=`), and logic (`&&`, `||`), as well as
-several unary operators (`-` to negate a number, `!` to negate
-logically, and `typeof` to find a value's type) and a ternary operator
-(`?:`) to pick one of two values based on a third value.
+این مقدار‌ها را می توان با تایپ نامشان (`true`, `null`) یا مقدارشان (`13`, `"abc"`) به وجود آورد. شما می توانید با استفاده از عملگرها، این مقدارها را ترکیب کنید و تغییر دهید. ما عملگرهای دودویی را برای عملیات حسابی (`+`, `-`, `*`, `/`,
+و `%`)، عملگر الحاق رشته (`+`)، عملگرهای مقایسه (`==`, `!=`, `===`,
+`!==`, `<`, `>`, `<=`, `>=`)، منطقی (`&&`, `||`)، همچنین چندین عملگر یکانی (`-` برای منفی کردن یک عدد، `!` برای نقیض منطقی، و `typeof` برای فهمیدن نوع داده‌ی یک مقدار) و عملگر سه‌تایی (`?:`) برای انتخاب یکی از دو مقدار بر اساس مقدار سوم را در این فصل مشاهده نمودیم.
 
-This gives you enough information to use JavaScript as a pocket
-calculator but not much more. The [next
-chapter](program_structure) will start tying
-these expressions together into basic programs.
+این مقدار اطلاعات برای استفاده از جاوااسکریپت به عنوان یک ماشین‌ حساب جیبی و نه بیشتر کافی است. در [فصل بعد](program_structure) شروع به ترکیب این عبارت‌ها خواهیم کرد تا برنام‌هایی ابتدایی بسازیم.
