@@ -12,6 +12,33 @@
   src: local('PT Mono'), local('PTMono-Regular'), url(../font/pt_mono.woff) format('woff');
 }
 
+@font-face {
+  font-family: Shabnam;
+  src: url('../font/Shabnam.eot');
+  src: url('../font/Shabnam.eot?#iefix') format('embedded-opentype'),
+       url('../font/Shabnam.woff') format('woff'),
+       url('../font/Shabnam.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Shabnam;
+  src: url('../font/Shabnam-Bold.eot');
+  src: url('../font/Shabnam-Bold.eot?#iefix') format('embedded-opentype'),
+       url('../font/Shabnam-Bold.woff') format('woff'),
+       url('../font/Shabnam-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Shabnam;
+  src: url('../font/Shabnam-Light.eot');
+  src: url('../font/Shabnam-Light.eot?#iefix') format('embedded-opentype'),
+       url('../font/Shabnam-Light.woff') format('woff'),
+       url('../font/Shabnam-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+
 html, body {
   padding: 0;
   margin: 0;
@@ -19,11 +46,12 @@ html, body {
 }
 
 body {
-  font-family: Georgia, 'Nimbus Roman No9 L', 'Century Schoolbook L', serif;
-  font-size: 20px;
-  line-height: 1.45;
+  font-family: Shabnam, 'Nimbus Roman No9 L', 'Century Schoolbook L', serif;
+  font-size: 19px;
+  line-height: 1.65;
   color: black;
   background: white;
+  font-weight: 300;
 }
 
 article {
@@ -95,7 +123,7 @@ code {
 }
 
 h1, h2, h3 {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: Shabnam, Georgia, serif;
   font-weight: 700;
   margin: 1rem 0;
   letter-spacing: 2px;

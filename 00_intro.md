@@ -13,6 +13,8 @@ quote}}
 
 {{figure {url: "img/chapter_picture_00.jpg", alt: "Picture of a screwdriver and a circuit board", chapter: "framed"}}}
 
+این کتاب درباره‌ی فرمان‌ دادن به کامپیوتر‌هاست. امروزه کامپیوترها تقریبا مثل پیچ‌گوشتی‌ها رایج و پراستفاده هستند اما از آن ها پیچیده تر هستند و بکارگیری آن‌ها برای انجام کاری که می خواهید نیز همیشه کار آسانی نیست.
+
 This is a book about instructing ((computer))s. Computers are about as
 common as screwdrivers today, but they are quite a bit more complex,
 and making them do what you want them to do isn't always easy.
