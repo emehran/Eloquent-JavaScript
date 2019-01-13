@@ -107,6 +107,7 @@ let renderer = {
   td_close() { return "</td>" },
 
   html_block(token) { return token.content },
+  html_inline(token) { return token.content},
 
   code_inline(token) { return `<code>${maybeSplitInlineCode(escape(token.content))}</code>` },
 

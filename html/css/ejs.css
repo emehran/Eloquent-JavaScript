@@ -121,7 +121,9 @@ code, pre, .CodeMirror {
 code {
   padding: 0 2px;
 }
-
+bdo{
+  direction: ltr;
+}
 h1, h2, h3 {
   font-family: Shabnam, Georgia, serif;
   font-weight: 700;
