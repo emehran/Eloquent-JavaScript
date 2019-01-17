@@ -13,144 +13,68 @@ quote}}
 
 {{figure {url: "img/chapter_picture_00.jpg", alt: "Picture of a screwdriver and a circuit board", chapter: "framed"}}}
 
-این کتاب درباره‌ی فرمان‌ دادن به کامپیوتر‌هاست. امروزه کامپیوترها تقریبا مثل پیچ‌گوشتی‌ها رایج و پراستفاده هستند اما از آن ها پیچیده تر هستند و بکارگیری آن‌ها برای انجام کاری که می خواهید نیز همیشه کار آسانی نیست.
+این کتاب درباره‌ی فرمان‌ دادن به کامپیوتر‌هاست. امروزه کامپیوترها تقریبا مثل پیچ‌گوشتی‌ها رایج و پراستفاده هستند اما از آن ها پیچیده‌ترند و بکارگیری آن‌ها برای انجام کاری که می خواهید نیز همیشه کار آسانی نیست.
 
-This is a book about instructing ((computer))s. Computers are about as
-common as screwdrivers today, but they are quite a bit more complex,
-and making them do what you want them to do isn't always easy.
+اگر کاری که از کامپیوترتان می خواهید تا انجام دهد، کاری سرراست و قابل فهم باشد مثل نمایش ایمیل‌تان یا کار به عنوان ماشین حساب، می توانید نرم‌افزار مناسب آن را باز کرده و استفاده کنید. اما برای کارهای خاص یا وظایفی که انتهای مشخصی ندارند، احتمالا برنامه‌ای وجود ندارد.
 
-If the task you have for your computer is a common, well-understood
-one, such as showing you your email or acting like a calculator, you
-can open the appropriate ((application)) and get to work. But for
-unique or open-ended tasks, there probably is no application.
-
-That is where ((programming)) may come in. _Programming_ is the act of
-constructing a _program_—a set of precise instructions telling a
-computer what to do. Because computers are dumb, pedantic beasts,
-programming is fundamentally tedious and frustrating.
+اینجاست که ((برنامه‌نویسی)) به میدان می‌آید. _برنامه‌نویسی_ همان ساختن یک _برنامه_ — مجموعه‌ای از دستورات دقیق که به یک کامپیوتر می گوید که چه کار بکند — می باشد. از آنجا که کامپیوترها موجوداتی احمق و درعین حال دقیق هستند، برنامه‌نویسی اساسا کاری خسته‌کننده و پرمشقت است.
 
 {{index [programming, "joy of"], speed}}
 
-Fortunately, if you can get over that fact, and maybe even enjoy the rigor
-of thinking in terms that dumb machines can deal with, programming can
-be rewarding. It allows you to do things in seconds that would take
-_forever_ by hand. It is a way to make your computer tool
-do things that it couldn't do before. And it provides a wonderful
-exercise in abstract thinking.
+خوشبختانه اگر بتوانید با این سختی کنار بیایید و شاید حتی از فکر کردن به گونه‌ای که ماشین‌های احمق درک کنند، لذت ببرید، برنامه نویسی می تواند رضایت بخش باشد. برنامه نویسی باعث می شود بتوانید کارهایی که به صورت دستی _بی نهایت_ زمان می برد را در چند ثانیه انجام دهید. این راهی است که با آن می توانید با کامپیوترتان کارهایی بکنید که پیش‌تر نمی توانست انجام دهد. همچنین برنامه‌نویسی تمرینی شگفت‌انگیز برای پرورش تفکر انتزاعی محسوب می شود.
 
-Most programming is done with ((programming language))s. A _programming
-language_ is an artificially constructed language used to instruct
-computers. It is interesting that the most effective way we've found
-to communicate with a computer borrows so heavily from the way we
-communicate with each other. Like human languages, computer languages
-allow words and phrases to be combined in new ways, making it possible to
-express ever new concepts.
+بیشتر کار برنامه‌نویسی به وسیله‌ی زبان‌های برنامه‌نویسی صورت می گیرد. یک _زبان برنامه‌نویسی_ زبانی است برای فرمان‌دادن به کامپیوترها ساخته می شود. جالب توجه است که موثرترین روشی که برای ارتباط با یک کامپیوتر پیدا کرده ایم به اندازه‌ی زیادی وام‌دار روشی‌ است که در ارتباط با یکدیگر استفاده می کنیم. مانند زبان‌های بشری، زبان‌های کامپیوتری به واژه‌ها و عبارات امکان ترکیب به شیوه‌های جدید را می دهد و امکان بیان مفاهیم جدید را فراهم می سازد.
 
 {{index [JavaScript, "availability of"], "casual computing"}}
 
-At one point language-based interfaces, such as the BASIC and DOS
-prompts of the 1980s and 1990s, were the main method of interacting with
-computers. They have largely been replaced with visual interfaces,
-which are easier to learn but offer less freedom. Computer languages
-are still there, if you know where to look. One such language,
-JavaScript, is built into every modern web ((browser)) and is thus
-available on almost every device.
+روزگاری رابط‌های کاربری مبتنی بر زبان، مانند BASIC و DOS که در دهه‌های هشتاد و نود میلادی استفاده می شدند، روش اصلی تعامل با کامپیوترها بودند. اکنون رابط‌های بصری به طور گسترده‌ای جایگزین آن‌ها شده اند که یادگیری آسان‌تری دارند و در عین حال آزادی کمتری فراهم می سازند. اگر بدانید کجا را جستجو کنید، زبان‌های کامپیوتری هنوز موجود هستند. یکی از اینگونه‌ زبان‌ها، جاوااسکریپت است، که در هر مرورگر وب مدرن وجود دارد و در نتیجه تقریبا در همه‌ی دیوایس‌ها در دسترس است.
 
 {{indexsee "web browser", browser}}
 
-This book will try to make you familiar enough with this language to
-do useful and amusing things with it.
+این کتاب سعی خواهد کرد تا شما را با این زبان به اندازه‌ای آشنا کند تا بتوانید کارهای مفید و مفرحی با آن انجام دهید.
 
-## On programming
+## درباره‌ی برنامه‌نویسی
 
 {{index [programming, "difficulty of"]}}
 
-Besides explaining JavaScript, I will introduce the basic
-principles of programming. Programming, it turns out, is hard. The
-fundamental rules are simple and clear, but programs built on top of
-these rules tend to become complex enough to introduce their own rules
-and complexity. You're building your own maze, in a way, and you might
-just get lost in it.
+علاوه بر آموزش جاوااسکریپت، قواعد پایه‌ای برنامه‌نویسی را نیز معرفی خواهم کرد. به نظر می رسد برنامه‌نویسی سخت است. قواعد اساسی آن ساده و روشن هستند اما برنامه‌هایی که بر اساس این قوانین ساخته می شوند پتانسیل این را دارند تا به حدی پیچیده بشوند که قواعد و پیچیدگی‌های خودشان را داشته باشند. در برنامه‌نویسی شما در حال ساخت مارپیچ خودتان هستید و ممکن است به شکلی در آن گم بشوید.‍
 
 {{index learning}}
+در زمان خواندن این کتاب مواقعی پیش خواهد آمد که مطالب کتاب حس بدی در شما ایجاد کنند. اگر در برنامه‌نویسی تازه‌وارد هستید، مطالب جدید زیادی برای یادگیری وجود خواهد داشت. بیشتر این مطالب بعد به صورتی ترکیب خواهند شد تا لازم باشد ارتباط بیشتری با آن‌ها برقرار سازید.
 
-There will be times when reading this book feels terribly frustrating.
-If you are new to programming, there will be a lot of new material to
-digest. Much of this material will then be _combined_ in ways that
-require you to make additional connections.
-
-It is up to you to make the necessary effort. When you are struggling
-to follow the book, do not jump to any conclusions about your own
-capabilities. You are fine—you just need to keep at it. Take a break,
-reread some material, and make sure you read and understand the
-example programs and ((exercises)). Learning is hard work, but
-everything you learn is yours and will make subsequent learning
-easier.
+تلاش متناسب برای یادگیری بستگی به خود شما دارد. در زمان مطالعه کتاب و تقلا برای یادگیری مطالب، نباید هیچ نتیجه‌ی منفی‌ای نسبت به توانایی‌های خودتان بگیرید. توانایی شما خوب است فقط لازم است تا ادامه دهید. استراحتی بکنید، بعضی از مطالب را دوباره مطالعه کنید و مطمئن شوید که برنامه‌های نمونه و تمرین‌ها را خوب خوانده و فهمیده اید. یادگیری کاری دشوار است اما هرچیزی که یادبگیرید، مال شماست و ادامه یادگیری را آسان‌تر می کند.
 
 {{quote {author: "Ursula K. Le Guin", title: "The Left Hand of Darkness"}
 
 {{index "Le Guin, Ursula K."}}
-
-When action grows unprofitable, gather information; when information
-grows unprofitable, sleep.
-
+وقتی اقدام اثری ندارد، اطلاعات جمع‌آوری کن; زمانی وقتی اطلاعات سودی نمی رساند، استراحت کن.
 quote}}
 
 {{index [program, "nature of"], data}}
 
-A program is many things. It is a piece of text typed by a programmer,
-it is the directing force that makes the computer do what it does, it
-is data in the computer's memory, yet it controls the actions
-performed on this same memory. Analogies that try to compare programs
-to objects we are familiar with tend to fall short. A superficially
-fitting one is that of a machine—lots of separate parts tend to be
-involved, and to make the whole thing tick, we have to consider the
-ways in which these parts interconnect and contribute to the operation
-of the whole.
+یک برنامه‌ در واقع خیلی چیز ها است. متنی است که توسط یک برنامه‌نویس تایپ شده است، نیرویی پیش‌ران است که باعث می شود کامپیوتر کاری را بایست انجام دهد، داده‌هایی است که در حافظه‌ی کامپیوتر قرار دارند، در عین حال کارهایی که در همان حافظه‌ رخ می دهند را کنترل می کند. تمثیل‌هایی که تلاش دارند برنامه‌ها را با اشیائی که برای ما آشنا هستند مقایسه کنند به زیاد موفق نیستند. یکی از این قیاس‌های تقریبا مناسب، قیاس برنامه با ماشین است. تعداد زیادی قطعات جدا از که با هم درگیر هستند و برای اینکه کل ماشین کار کند، باید راه‌هایی را در نظر بگیریم که این قطعات با هم اتصال دارند و برای کاکرد کل ماشین تعامل می کنند.
 
-A ((computer)) is a physical machine that acts as a host for these immaterial
-machines. Computers themselves can do only stupidly straightforward
-things. The reason they are so useful is that they do these things at
-an incredibly high ((speed)). A program can ingeniously combine an
-enormous number of these simple actions to do very
-complicated things.
+یک ((کامپیوتر)) یک ماشین فیزیکی است که مانند یک میزبان برای این قسمت‌های غیرفیزیکی عمل می کند. خود کامپیوترها فقط قادرند کارهایی بی‌نهایت پیش‌ پا افتاده و سرراست را انجام دهند. دلیل اینکه این قدر کاربرد دارند این است که همین کارها را فوق العاده ((سریع)) انجام می دهند. یک برنامه می تواند به صورت هوشمندانه تعداد بسیار زیادی از این
+کارهای ساده را باهم ترکیب کند تا وظایف خیلی پیچیده‌ای را به انجام برساند.
 
 {{index [programming, "joy of"]}}
+یک برنامه، ساختمانی از جنس فکر است. ساخت آن هزینه ندارد. سبک است و به آسانی توسط تایپ‌کردن پیشرفت می کند.
 
-A program is a building of thought. It is costless to build, it is
-weightless, and it grows easily under our typing hands.
-
-But without care, a program's size and ((complexity)) will grow out of
-control, confusing even the person who created it. Keeping programs
-under control is the main problem of programming. When a program
-works, it is beautiful. The art of programming is the skill of
-controlling complexity. The great program is subdued—made simple in
-its complexity.
+اما در صورت بی دقتی، اندازه و پیچیدگی یک برنامه به حدی رشد می کند که از کنترل خارج می شود و حتی برای فردی که آن را ایجاد کرده گیج کننده می شود. مشکل اصلی در برنامه‌نویسی، تحت کنترل نگه‌داشتن برنامه است. درست کار کردن یک برنامه زیباست. هنر برنامه‌نویسی، مهارت کنترل‌کردن پیچیدگی برنامه است. برنامه‌ی بزرگ با ساده‌سازی پیچیدگی‌اش مهار می شود.
 
 {{index "programming style", "best practices"}}
 
-Some programmers believe that this complexity is best managed by using
-only a small set of well-understood techniques in their programs. They
-have composed strict rules ("best practices") prescribing the form
-programs should have and carefully stay within their safe little
-zone.
+بعضی برنامه‌نویسان بر این باورند که بهترین روش مدیریت این پیچیدگی، استفاده از مجموعه‌ای محدود از تکنیک‌های روشن در برنامه‌ها است. این افراد قوانین سخت‌گیرانه‌ای ("بهترین روش‌ها - best practices") را وضع و تجویز کرده‌اند تا برنامه‌ها باید از آن‌ها تبعیت کرده و در محدوده‌ی امن و کوچک آن‌ها باقی بمانند.
 
 {{index experiment}}
 
-This is not only boring, it is ineffective. New problems often
-require new solutions. The field of programming is young and still
-developing rapidly, and it is varied enough to have room for wildly
-different approaches. There are many terrible mistakes to make in
-program design, and you should go ahead and make them so that you
-understand them. A sense of what a good program looks like is
-developed in practice, not learned from a list of rules.
+این کار نه تنها کسل کننده است، بلکه موثر هم نیست. مشکلات جدید اغلب نیازمند راه‌حل‌های جدید می‌باشند. رشته‌ی برنامه‌نویسی جوان است و هنوز به سرعت در حال توسعه می باشند و به اندازه‌ی کافی متنوع است که فضا برای روش‌های مختلف وجود داشته باشد. اشتباهات مهلکی در طراحی برنامه ممکن است صورت گیرد و بهتر است مرتکب آن ها بشوید و ادامه دهید تا آن ها را درک کنید. نوشتن یک برنامه‌ی خوب با تمرین و توسعه بدست می آید نه با یادگیری لیستی از قوانین.
 
-## Why language matters
+## چرا زبان برنامه‌نویسی اهمیت دارد
 
 {{index "programming language", "machine code", "binary data"}}
 
-In the beginning, at the birth of computing, there were no programming
-languages. Programs looked something like this:
+در ابتدا، زمانی که محاسبه‌ی کامپیوتری متولد شد، زبان برنامه‌نویسی وجود نداشت. برنامه ها چیزی شبیه به زیر بودند:
 
 ```{lang: null}
 00110001 00000000 00000000
@@ -166,43 +90,29 @@ languages. Programs looked something like this:
 
 {{index [programming, "history of"], "punch card", complexity}}
 
-That is a program to add the numbers from 1 to 10 together and print
-out the result: `1 + 2 + ... + 10 = 55`. It could run on a simple,
-hypothetical machine. To program early computers, it was necessary to
-set large arrays of switches in the right position or punch holes in
-strips of cardboard and feed them to the computer. You can probably
-imagine how tedious and error-prone this procedure was. Even writing
-simple programs required much cleverness and discipline. Complex ones
-were nearly inconceivable.
+برنامه‌ی بالا اعداد 1 تا 10 را باهم جمع کرده و نتیجه را چاپ می نماید: <bdo>`1 + 2 + ... + 10 = 55`</bdo>. این برنامه می تواند روی یک ماشین ساده فرضی اجرا شود. برای برنامه‌نویسی کامپیوتر‌های اولیه، لازم بود تا ردیف بزرگی از سویچ‌ها را در موقعیت مناسب قرار داد یا در نوارهای مقوایی مخصوص را سوراخ ایجاد کرد و در کامپیوتر قرار داد. احتمالا می توانید تصور کنید که این کار چقدر خسته‌کننده و در معرض اشتباه بود. حتی نوشتن برنامه‌های ساده نیازمند هوش و نظم زیادی بود. نوشتن برنامه‌های پیچیده تقریبا قابل تصور نبود.
 
 {{index bit, "wizard (mighty)"}}
 
-Of course, manually entering these arcane patterns of bits (the ones
-and zeros) did give the programmer a profound sense of being a mighty
-wizard. And that has to be worth something in terms of job
-satisfaction.
+البته، وارد کردن این الگوهای بیتی رمزگونه (صفر و یک‌ها) باعث می شد که برنامه نویس احساس کند که جادوگیری چیره‌دست است و حس رضایت شغلی در آن‌ها ایجاد می کرد.
 
 {{index memory, instruction}}
 
-Each line of the previous program contains a single instruction. It
-could be written in English like this:
+هر خط ار برنامه‌ی قبلی حاوی یک دستور است. می توان‌ آن را در زبان فارسی به صورت زیر نوشت:
 
- 1. Store the number 0 in memory location 0.
- 2. Store the number 1 in memory location 1.
- 3. Store the value of memory location 1 in memory location 2.
- 4. Subtract the number 11 from the value in memory location 2.
- 5. If the value in memory location 2 is the number 0,
-    continue with instruction 9.
- 6. Add the value of memory location 1 to memory location 0.
- 7. Add the number 1 to the value of memory location 1.
- 8. Continue with instruction 3.
- 9. Output the value of memory location 0.
+ 1. عدد 0 را در موقعیت 0 حافظه ذخیره کن.
+ 2. عدد 1 را در موقعیت 1 در حافظه ذخیره کن.
+ 3. مقدار موجود در موقعیت 1 حافظه را در موقعیت 2 حافظه ذخیره کن.
+ 4. عدد 11 را از مقداری که در موقعیت 2 در حافظه قرار دارد، تفریق کن.
+ 5. اگر مقدار موجود در موقعیت 2 در حافظه برابر با 0 است، به سراغ دستور شماره 9 برو.
+ 6. مقدار موجود در موقعیت 1 حافظه را به مقدار موجود در موقعیت 0 حافظه اضافه نما.
+ 7. عدد 1 را به مقدار موجود در موقعیت 1 حافظه اضافه نما.
+ 8. دستور شماره 3 را اجرا کن.
+ 9. مقدار موجود در موقعیت 0 حافظه را در خروجی قرار بده.
 
 {{index readability, naming, binding}}
 
-Although that is already more readable than the soup of bits, it is
-still rather obscure. Using names instead of numbers for the
-instructions and memory locations helps.
+اگرچه نوشته بالا از سوپ بیت‌ها خواناتر است، ولی همچنان نامفهوم و مبهم است. استفاده از نام‌ها به جای اعداد برای دستورات و موقعیت‌های حافظه کمک‌کننده است.
 
 ```{lang: "text/plain"}
  Set “total” to 0.
@@ -220,21 +130,10 @@ instructions and memory locations helps.
 
 {{index loop, jump, "summing example"}}
 
-Can you see how the program works at this point? The first two lines
-give two memory locations their starting values: `total` will be used
-to build up the result of the computation, and `count` will keep track
-of the number that we are currently looking at. The lines using
-`compare` are probably the weirdest ones. The program wants to see
-whether `count` is equal to 11 to decide whether it can stop
-running. Because our hypothetical machine is rather primitive, it can
-only test whether a number is zero and make a decision based
-on that. So it uses the memory location labeled `compare` to compute
-the value of `count - 11` and makes a decision based on that value.
-The next two lines add the value of `count` to the result and
-increment `count` by 1 every time the program has decided that `count`
-is not 11 yet.
+می توانید بگویید برنامه چگونه کار می کند؟ در دو خط اول به دو مکان در حافظه مقدارهای اولیه اختصاص داده می شود: `total` برای ساختن نتیجه محاسبه استفاده می شود و `count` عددی را که در حال حاضر در دست داریم را ردگیری می کند. خطوطی که از `compare` استفاده می کنند احتمالا مبهم ترین خطوط به نظر می آیند. برنامه می خواهد بررسی کند آیا `count` برابر با 11 است تا در مورد توقف اجرای برنامه تصمیم بگیرد. با توجه به اینکه ماشین فرضی ما نسبتا ابتدایی می باشد، فقط می تواند صفر بودن یک عدد را آزمایش کند و بر اساس آن تصمیم بگیرد.  بنابراین از موقعیتی در حافظه که برچسب `compare` دارد برای محاسبه مقدار `count - 11` استفاده می کند و بر اساس آن مقدار تصمیم می گیرد. دو خط بعدی مقدار `count` را به نتیجه محاسبه جمع کرده و مقدار `count` را بعد از هربار که برنامه متوجه شد که مقدار `count` هنوز ‍‍11 نیست، یک واحد افزایش می دهد.
 
-Here is the same program in JavaScript:
+همین برنامه در جاوااسکریپت به صورت زیر خواهد بود:
+
 
 ```
 let total = 0, count = 1;
@@ -248,27 +147,15 @@ console.log(total);
 
 {{index "while loop", loop, [braces, block]}}
 
-This version gives us a few more improvements. Most important, there
-is no need to specify the way we want the program to jump back and
-forth anymore. The `while` construct takes care of that. It continues
-executing the block (wrapped in braces) below it as long as the
-condition it was given holds. That condition is `count <= 10`, which
-means “_count_ is less than or equal to 10”. We no longer have to
-create a temporary value and compare that to zero, which was just an
-uninteresting detail. Part of the power of programming languages is
-that they can take care of uninteresting details for us.
+این نسخه کمی بهتر شده است. مهم تر از همه، نیازی نیست نحوه‌ی انتقال برنامه بین دستورات را مشخص کنیم.  ساختار `while` این وظیفه را به عهده می گیرد. این ساختار، بلوک کد (بین کروشه‌ها) زیرینش را تا زمانی که شرطش برقرار باشد اجرا می کند. این شرط همان <bdo>`count <= 10`</bdo> می باشد به معنای "_count_ مساوی یا کوچکتر از 10 باشد" است. دیگر نیازی نیست که مقداری موقت ایجاد کنیم و آن را با صفر مقایسه کنیم، که کار جالبی نبود. بخشی از قدرت زبان‌های برنامه‌نویسی این است که این گونه جزئیات اضافی را پوشش می دهند.
 
 {{index "console.log"}}
 
-At the end of the program, after the `while` construct has finished,
-the `console.log` operation is used to write out the result.
+در پایان برنامه، بعد از اینکه ساختار `while` به اتمام رسید، دستور `console.log` برای قراردادن نتیجه در خروجی استفاده می شود.
 
 {{index "sum function", "range function", abstraction, function}}
 
-Finally, here is what the program could look like if we happened to
-have the convenient operations `range` and `sum` available, which
-respectively create a ((collection)) of numbers within a range and
-compute the sum of a collection of numbers:
+در نهایت، اگر شانس استفاده از دستورات  `range` و `sum` را داشتیم، که به ترتیب برای ایجاد مجموعه‌ای از اعداد در یک بازه‌ و محاسبه‌ی جمع یک مجموعه اعداد استفاده می شوند، برنامه به شکل زیر نوشته می شد:
 
 ```{startCode: true}
 console.log(sum(range(1, 10)));
@@ -277,23 +164,13 @@ console.log(sum(range(1, 10)));
 
 {{index readability}}
 
-The moral of this story is that the same program can be expressed in
-both long and short, unreadable and readable ways. The first version of the
-program was extremely obscure, whereas this last one is almost
-English: `log` the `sum` of the `range` of numbers from 1 to 10. (We
-will see in [later chapters](data) how to define operations like `sum`
-and `range`.)
+درسی که از این داستان می شود گرفت این است که یک برنامه‌ی یکسان را می توان به دو صورت طولانی و کوتاه ، ناخوانا و خوانا نوشت. اولین نسخه‌ی این برنامه بسیار گنگ بود در حالیکه که آخرین نسخه‌ی آن تقریبا به زبان انگلیسی نوشته شده است: <bdo>`log` the `sum` of the `range` of numbers from 1 to 10.</bdo> (مجموع اعداد بازه‌ی 1  تا 10 را بنویس.). در [فصل‌های بعد](data) خواهیم دید که چگونه دستوراتی مثل `sum` و `range` را خودمان تعریف کنیم.
 
 {{index ["programming language", "power of"], composability}}
 
-A good programming language helps the programmer by allowing them to
-talk about the actions that the computer has to perform on a higher
-level. It helps omit details, provides convenient building blocks
-(such as `while` and `console.log`), allows you to define your own
-building blocks (such as `sum` and `range`), and makes those blocks
-easy to compose.
+یک زبان برنامه‌نویسی خوب با فراهم نمودن امکان اجرای دستوراتی در سطح بالا، به برنامه‌نویس کمک می کند. باعث می شود که جزئیات به کم‌اهمیت کنار گذاشته شوند، بلوک‌های سازنده‌ی مناسب فراهم می کند (مانند `while` و `console.log`)،به شما اجازه می دهد تا بلوک‌های سازنده‌ی خودتان را تعریف کنید (مانند `sum` و `range`) و نوشتن این بلاک‌ها را آسان می نماید.
 
-## What is JavaScript?
+## جاوااسکریپت چیست؟
 
 {{index history, Netscape, browser, "web application", JavaScript, [JavaScript, "history of"], "World Wide Web"}}
 
@@ -301,77 +178,29 @@ easy to compose.
 
 {{indexsee Web, "World Wide Web"}}
 
-JavaScript was introduced in 1995 as a way to add programs to web
-pages in the Netscape Navigator browser. The language has since been
-adopted by all other major graphical web browsers. It has made modern
-web applications possible—applications with which you can interact
-directly without doing a page reload for every action. JavaScript is also
-used in more traditional websites to provide various forms of
-interactivity and cleverness.
+جاوااسکریپت در سال 1995 به عنوان روشی برای افزودن برنامه‌ها به صفحات وب در مرورگر Netscape Navigator معرفی شد. این زبان بعد از آن توسط همه‌ی مرورگرهای وب گرافیکی به خدمت گرفته شده است. جاوااسکریپت باعث شده تا ساخت برنامه‌های وب مدرن ممکن شود، برنامه‌هایی که می توانید بدون نیاز به بارگیری مجدد صفحه وب برای هر کار، با آن‌ها تعامل برقرار کنید. جاوااسکریپت همچنین به صورت سنتی در وبسایت‌های بیشتری برای انجام اشکال متنوعی از تعامل و هوشمندی بکار گرفته می شود.
 
 {{index Java, naming}}
 
-It is important to note that JavaScript has almost nothing to do with
-the programming language named Java. The similar name was inspired by
-marketing considerations rather than good judgment. When JavaScript
-was being introduced, the Java language was being heavily marketed and
-was gaining popularity. Someone thought it was a good idea to try to
-ride along on this success. Now we are stuck with the name.
+لازم است گفته شود که جاوااسکریپت تقریبا هیچ ربطی به زبان برنامه‌نویسی جاوا ندارد. از نام جاوا برای ملاحظات بازاریابی استفاده شد نه ارتباط آن ها. در زمان معرفی جاوااسکریپت، زبان جاوا به شدت تبلیغ می شد و محبوبیت زیادی هم کسب می کرد. با قرض گرفتن این نام ظاهرا قصد سوار شدن بر این موفقیت مورد نظر بوده است. اکنون همین نام جا افتاده است.
 
 {{index ECMAScript, compatibility}}
 
-After its adoption outside of Netscape, a ((standard)) document was
-written to describe the way the JavaScript language should work so
-that the various pieces of software that claimed to support JavaScript
-were actually talking about the same language. This is called the
-ECMAScript standard, after the Ecma International organization that
-did the standardization. In practice, the terms ECMAScript and
-JavaScript can be used interchangeably—they are two names for the same
-language.
+بعد از بکارگیری جاوااسکریپت خارج از Netscape، یک سند استاندارد نوشته شد تا نحوه‌ای که زبان جاوااسکریپت بایستی کار کند توصیف شود و در نتیجه نرم‌افزارهای متنوعی که قصد پشتیبانی از این زبان را دارند، همه به زبان یکسانی اشاره کنند. به این استاندارد، استاندارد ECMAScript گفته می شود. این نام گذاری بعد از اینکه سازمان بین‌المللی Ecma که کار استانداردسازی انجام داد، صورت گرفت. در عمل، اصطلاح ECMAScript و JavaScript را می توان به جای هم به کار برد - هر دو نام به یک زبان اشاره می کند.
 
 {{index [JavaScript, "weaknesses of"], debugging}}
 
-There are those who will say _terrible_ things about JavaScript. Many
-of these things are true. When I was required to write something in
-JavaScript for the first time, I quickly came to despise it. It would
-accept almost anything I typed but interpret it in a way that was
-completely different from what I meant. This had a lot to do with the
-fact that I did not have a clue what I was doing, of course, but there
-is a real issue here: JavaScript is ridiculously liberal in what it
-allows. The idea behind this design was that it would make programming
-in JavaScript easier for beginners. In actuality, it mostly makes
-finding problems in your programs harder because the system will not
-point them out to you.
+افرادی هستند که چیزهای ناخوش‌آیندی نسبت به جاوااسکریپت می گویند. خیلی از این چیزها درست هستند. زمانی که لازم داشتم تا چیزی را به زبان جاوااسکریپت برای اولین بار بنویسم، خیلی سریع به سراغ سرزنش آن رفتم. تقریبا هر چیزی که تایپ می کردم قبول می‌کرد اما به صورتی تفسیر می نمود که کاملا با چیزی انتظارش را می کشیدم متفاوت بود. درسته که این رفتار به این واقعیت که من اطلاعی از نحوه‌ی عملکرد زبان نداشتم ربط زیادی داشت، اما یک مسئله در جاوااسکریپت واقعیت دارد: جاوااسکریپت به طرز خنده‌داری در کارهایی که مجاز می شمرد روشن‌فکر است. ایده‌ی پشت این نوع طراحی این بوده است که برنامه‌نویسی در جاوااسکریپت را برای تازه‌کارها آسان‌تر کنند. در واقعیت، اتفاقی که افتاده این است که پیدا کردن مشکلات برنامه با این کار سخت‌ تر می شود زیرا سیستم مشکلات را به شما نشان نمی دهد.
 
 {{index [JavaScript, "flexibility of"], flexibility}}
 
-This flexibility also has its advantages, though. It leaves space for
-a lot of techniques that are impossible in more rigid languages, and
-as you will see (for example in [Chapter ?](modules)), it can be used
-to overcome some of JavaScript's shortcomings. After ((learning)) the
-language properly and working with it for a while, I have learned to
-actually _like_ JavaScript.
+البته این انعطاف، مزیت‌هایی نیز به همراه دارد. راه را برای بروز تکنیک‌های زیادی باز می کند که در زبان‌های سخت‌گیر تر ممکن نیست و همانطور که خواهید دید ( مثلا در [فصل ?](modules))، می توان‌ از آن برای پوشش بعضی از اشکالات خود جاوااسکریپت بهره برد.  بعد از یادگیری درست این زبان و سپری کردن مدتی با آن، من آموختم که واقعا جاوااسکریپت رو دوست داشته باشم.
 
 {{index future, [JavaScript, "versions of"], ECMAScript, "ECMAScript 6"}}
 
-There have been several versions of JavaScript. ECMAScript version 3
-was the widely supported version in the time of JavaScript's ascent to
-dominance, roughly between 2000 and 2010. During this time, work was
-underway on an ambitious version 4, which planned a number of radical
-improvements and extensions to the language. Changing a living, widely
-used language in such a radical way turned out to be politically
-difficult, and work on the version 4 was abandoned in 2008, leading to
-a much less ambitious version 5, which made only some uncontroversial
-improvements, coming out in 2009. Then in 2015 version 6 came out, a
-major update that included some of the ideas planned for version 4.
-Since then we've had new, small updates every year.
+نسخه‌های متفاوتی از جاوااسکریپت وجود دارد. نسخه‌ی سوم ECMAScript در زمانی که جاوااسکریپت گوی سبقت را ربود، حدودا بین سال‌های 2000 تا 2010، به صورت گسترده‌ای پشتیبانی می شد. در طول این مدت، کار روی نسخه‌ی جاه‌طلبانه 4 ، در جریان بود. نسخه‌ای که برنامه‌ریزی شده بود تا بهبود‌ها و امکاناتی اساسی به زبان اضافه کند. تغییر اساسی زبانی زنده و پراستفاده، از نقطه‌نظر سیاست کاری مشکل بود و کار روی نسخه‌ی 4 در سال 2008 متوقف شد و منجر به کار روی نسخه‌ی بسیار محافظه‌کارانه‌تر 5 شد، که فقط تغییرات و بهبود‌هایی که محل اختلاف نبودند را در بر داشت، که در سال 2009 منتشر شد. سپس در سال 2015 نسخه‌ی 6 بیرون آمد، یک به‌روز رسانی اساسی که بعضی از آن ایده‌هایی که در نسخه‌ی 4 برنامه‌ریزی شده بودند را در بر داشت. از آن موقع به بعد، هر سال تغییراتی جدید و کوچک را شاهد هستیم.
 
-The fact that the language is evolving means that browsers have to
-constantly keep up, and if you're using an older browser, it may not
-support every feature. The language designers are careful to not make
-any changes that could break existing programs, so new browsers can
-still run old programs. In this book, I'm using the 2017 version of
-JavaScript.
+این واقعیت که جاوااسکریپت در حال تکامل است به این معناست که مرورگرها نیز باید همواره به روز شوند، پس اگر از یک مرورگر قدیمی‌تر استفاده کنید، ممکن است همه‌ی ویژگی‌ها را پشتیبانی نکند. طراحان زبان جاوااسکریپت حواسشان هست که تغییراتی ایجاد نکنند که باعث خراب شدن برنامه‌های موجود بشود، بنابراین مرورگرهای جدید، برنامه‌های قدیمی را نیز به درستی اجرا می نمایند. در این کتاب، من از نسخه‌ی 2017 جاوااسکریپت استفاده می کنم.
 
 {{index [JavaScript, "uses of"]}}
 
