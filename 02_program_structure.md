@@ -13,82 +13,47 @@ quote}}
 
 {{figure {url: "img/chapter_picture_2.jpg", alt: "Picture of tentacles holding objects", chapter: framed}}}
 
-In this chapter, we will start to do things that can actually be called
-_programming_. We will expand our command of the JavaScript language
-beyond the nouns and sentence fragments we've seen so far, to the
-point where we can express meaningful prose.
+در این فصل، قصد داریم شروع به انجام کارهایی بکنیم که بشود نام آن را واقعا _برنامه‌نویسی_ گذاشت. دانشمان را نسبت به دستورات جاوااسکریپت به فراتر از اجزاء عبارات توسعه خواهیم داد تا بتوانیم چیزهایی معناداری بنویسیم.
 
-## Expressions and statements
+## عبارت‌ها و دستورات
 
 {{index grammar, [syntax, expression], [code, "structure of"], grammar, [JavaScript, syntax]}}
 
-In [Chapter ?](values), we made values and applied operators to them
-to get new values. Creating values like this is the main substance of
-any JavaScript program. But that substance has to be framed in a
-larger structure to be useful. So that's what we'll cover next.
+در [فصل ?](values)، مقدارهایی را ایجاد و عملگرهایی را به آن ها اعمال کردیم تا مقدارهای جدید ایجاد کنیم. تولید مقدارها به این صورت، جوهر اساسی هر برنامه جاوا اسکریپت است، اما این ماده اصلی بایستی در یک ساختار بزرگتر شکل داده شود تا کاربرد پیدا کند. این کاری است که در این فصل به آن خواهیم پرداخت.
 
 {{index "literal expression", [parentheses, expression]}}
 
-A fragment of code that produces a value is called an
-_((expression))_. Every value that is written literally (such as `22`
-or `"psychoanalysis"`) is an expression. An expression between
-parentheses is also an expression, as is a ((binary operator))
-applied to two expressions or a ((unary operator)) applied to one.
+قطعه کدی که باعث تولید یک مقدار می شود را اصطلاحا _((عبارت))_ (عبارت) می گویند. هر مقداری که در برنامه به طور مستقیم نوشته میشود ) مانند `22` یا `"psychoanalysis"` ( در واقع یک عبارت است. عبارتی که بین پراتنز قرار می گیرد نیز عبارت است، به همین صورت که یک عملگر دودویی که به دو عبارت اعمال شده است یا عملگر یگانی که به یک عملوند اعمال شده.
 
 {{index [nesting, "of expressions"], "human language"}}
 
-This shows part of the beauty of a language-based interface.
-Expressions can contain other expressions in a way similar to how subsentences in human languages are nested—a subsentence can
-contain its own subsentences, and so on. This allows us to build
-expressions that describe arbitrarily complex computations.
+این شیوه کارکرد عبارتها بخشی از زیبایی شباهت زبان برنامه نویسی به زبان طبیعی را نشان می دهد. عبارتها می توانند تو در تو باشند درست شبیه زیرجملهها در زبان های بشری. یک زیرجمله می تواند زیرجملهی دیگری را در بر داشته باشد و به همین صورت. این امکان به ما این اجازه را می دهد تا عبارت ها را ترکیب کنیم تا محاسبات پیچیدهای را انجام دهیم.
 
 {{index statement, semicolon, program}}
 
-If an expression corresponds to a sentence fragment, a JavaScript
-_statement_ corresponds to a full sentence. A program is a list of
-statements.
+اگر یک عبارت مثلا مرتبط با بخشی از یک جمله بدانیم، یک _دستور_ جاوااسکریپت را می توان یک جمله‌ی کامل در زبان بشری دانست. یک برنامه، لیستی از دستورات است.
 
 {{index [syntax, statement]}}
 
-The simplest kind of statement is an expression with a semicolon after
-it. This is a program:
+ساده ترین شکل یک دستور شامل یک عبارت و یک سمی کالن در انتهای آن است. این یک برنامه است:
 
 ```
 1;
 !false;
 ```
 
-It is a useless program, though. An ((expression)) can be content to
-just produce a value, which can then be used by the enclosing code. A
-((statement)) stands on its own, so it amounts to something only if it
-affects the world. It could display something on the screen—that
-counts as changing the world—or it could change the internal state of
-the machine in a way that will affect the statements that come after
-it. These changes are called _((side effect))s_. The statements in the
-previous example just produce the values `1` and `true` and then
-immediately throw them away. This leaves no impression on the world at
-all. When you run this program, nothing observable happens.
+البته برنامه بالا، کاربردی ندارد. یک ((عبارت)) می تواند منجر به تولید یک مقدار شود، مقداری که بعدا توسط کدهای اطرافش استفاده می شود. یک دستور مستقلا عمل می کند و زمانی به چیزی اطلاق می شود که بر جهان اثر بگذارد. می تواند چیزی را روی صفحه نشان دهد – که به عنواند تغییر جهان محسوب می شود – یا حالت درونی برنامه را به گونه‌ای تغییر دهد که بر عبارت هایی که بعد می آیند اثر بگذارد. این تغییرات را اثرات جانبی_((side effect))s_ می نامند. در مثال قبل، دستوراتی که آورده شدند فقط مقدارهای `1` و `true` را تولید می کردند و بلافاصله آن ها را بی استفاده رها می کردند. این کار به هیچ وجه اثری بر جهان نمی گذارد. زمانی که این برنامه اجرا می شود، اتفاقی قابل مشاهده و عملی رخ نمی دهد.
 
 {{index "programming style", "automatic semicolon insertion", semicolon}}
 
-In some cases, JavaScript allows you to omit the semicolon at the end
-of a statement. In other cases, it has to be there, or the next
-((line)) will be treated as part of the same statement. The rules for
-when it can be safely omitted are somewhat complex and error-prone. So
-in this book, every statement that needs a semicolon will always get
-one. I recommend you do the same, at least until you've learned more
-about the subtleties of missing semicolons.
+در بعضی از موارد جاوااسکریپت به شما اجازه می دهد که از گذاشتن سمی کالن در انتهای دستور صرف نظر کنید. در دیگر موارد، باید حتما استفاده شود، در غیر این صورت ((خط بعدی)) به عنوان ادامه‌ی دستور قبل محاسبه خواهد شد. قوانین مربوط به حذف یا جاگذاری سمی کلان در دستورات می توانند پیچیده و خطاساز باشند. در این کتاب، تمامی دستوراتی که نیاز به سمی کالن دارند، حتما با سمی کالن پایان می یابند. من به شما پیشنهاد می کنم که همین کار را در برنامه های خود انجام دهید، حداقل تا زمانی که اطلاعات بیشتری در مورد ریزه کاری‌های مربوط به حذف سمی کالن بدست بیاورد.
 
-## Bindings
+## متغیرها (بست‌ها)
 
 {{indexsee variable, binding}}
 {{index [syntax, statement], [binding, definition], "side effect", [memory, organization], [state, in binding]}}
 
-How does a program keep an internal state? How does it remember
-things? We have seen how to produce new values from old values, but
-this does not change the old values, and the new value has to be
-immediately used or it will dissipate again. To catch and hold values,
-JavaScript provides a thing called a _binding_, or _variable_:
+چگونه یک برنامه یک وضعیت داخلی را نگه‌داری می کند؟ چگونه‌ برنامه مواردی را به خاطر می سپارد؟ پیش از این دیدیم که چطور می تواند مقادیر جدیدی را از مقدارهای قبلی به وجود آورد، این کار تغییری در مقادیر قبلی به وجود نمی آورد و مقادیر جدید هم باید بلافاصله استفاده شوند وگرنه از دسترس خارج می شوند. برای حفظ این مقادیر، جاوااسکریپت راهی را پیشنهاد می دهد که _متغیر_ یا _بست_ نامیده می شود:
 
 ```
 let caught = 5 * 5;
@@ -96,17 +61,11 @@ let caught = 5 * 5;
 
 {{index "let keyword"}}
 
-That's a second kind of ((statement)). The special word
-(_((keyword))_) `let` indicates that this sentence is going to define
-a binding. It is followed by the name of the binding and, if we want
-to immediately give it a value, by an `=` operator and an expression.
+استفاده از متغیر نوع دومی از دستور را به ما معرفی می کند. واژه‌ی مخصوص (_((کلمه‌ی کلیدی - keyword))_) `let` مشخص می کند که این جمله قرار است که متغیری را تعریف کند. بعد از این کلمه کلیدی، نام متغیر و اگر بخواهیم بلافاصله مقداری را به آن اختصاص دهیم، به وسیله عملگر `=` و یک عبارت می توانیم این کار را انجام دهیم.
 
-The previous statement creates a binding called `caught` and uses it
-to grab hold of the number that is produced by multiplying 5 by 5.
+دستور بالا متغیری به نام `caught` را ایجاد کرده و از آن برای نگه‌داری یک عدد که از حاصل ضرب 5 در 5 به وجود آمده است، استفاده می کند.
 
-After a binding has been defined, its name can be used as an
-((expression)). The value of such an expression is the value the
-binding currently holds. Here's an example:
+بعد از اینکه یک متغیر تعریف شد، می توان نام آن را به عنوان یک ((عبارت)) مورد استفاده قرار داد. مقدار این نوع عبارت همان مقداریست که متغیر در حال حاضر نگه‌داری می کند. به مثال توجه نمایید:
 
 ```
 let ten = 10;
@@ -116,10 +75,8 @@ console.log(ten * ten);
 
 {{index "= operator", assignment, [binding, assignment]}}
 
-When a binding points at a value, that does not mean it is tied to
-that value forever. The `=` operator can be used at any time on
-existing bindings to disconnect them from their current value and have
-them point to a new one.
+زمانی که یک متغیر به مقداری اشاره می کند، به این معنی نیست که برای همیشه به آن گره خورده است. عملگر  `=` را می توان در هر زمان استفاده کرد و متغیرهای فعلی را از مقادیری که به آن‌ها اشاره می کنند جدا کرده و به مقادیر جدیدی اختصاص داد.
+
 
 ```
 let mood = "light";
@@ -132,15 +89,9 @@ console.log(mood);
 
 {{index [binding, "model of"], "tentacle (analogy)"}}
 
-You should imagine bindings as tentacles, rather than boxes. They do
-not _contain_ values; they _grasp_ them—two bindings can refer to the
-same value. A program can access only the values that it still has a
-reference to. When you need to remember something, you grow a tentacle
-to hold on to it or you reattach one of your existing tentacles to it.
+می توانید متغیرها را به جای جعبه به بازوچه‌هایی تشبیه کنیم. آن ها مقدارها را در خود _نگه_ نمی دارند، بلکه به آن‌ها _دسترسی_ دارند – دو متغیر می توانند به یک مقدار مشابه اشاره کنند. یک برنامه فقط می تواند به مقدارهایی که همچنان امکان رجوع به آن ها را دارد دسترسی دارد. زمانی که نیاز دارید تا چیزی را در برنامه به حفظ کنید ( به خاطر بسپارید )، بازوچه ای را به سمت آن می فرستید تا آن را نگه دارد یا یکی از بازوچه‌های (دست) فعلی را مامور آن چیز می کنید.
 
-Let's look at another example. To remember the number of dollars that
-Luigi still owes you, you create a binding. And then when he pays back
-$35, you give this binding a new value.
+اجازه بدهید تا مثالی دیگر را بررسی کنیم. برای به یاد آوری دلارهایی که لوئیجی هنوز به شما بدهکار است، می توانید از یک متغیر استفاده کنید. زمانی که او ۳۵ دلار به شما پس می دهد، مقدار متغیر مورد نظر را تغییر می دهید.
 
 ```
 let luigisDebt = 140;
@@ -151,23 +102,18 @@ console.log(luigisDebt);
 
 {{index undefined}}
 
-When you define a binding without giving it a value, the tentacle has
-nothing to grasp, so it ends in thin air. If you ask for the value of
-an empty binding, you'll get the value `undefined`.
+زمانی که متغیری را تعریف می کنید اما به آن مقدار اولیه اختصاص نمی دهید، بازوچه‌ای که مثال زدیم هنوز چیزی ندارد تا به آن اشاره کند، بنابراین به جای خاصی اشاره نخواهد کرد. اگر شما در جایی از برنامه درخواستی برای یک متغیر خالی ارسال کنید، مقداری که به شما باز خواهد گشت `undefined` خواهد بود.
 
 {{index "let keyword"}}
 
-A single `let` statement may define multiple bindings. The
-definitions must be separated by commas.
+میتوان از یک `let` برای تعریف چندین متغیر استفاده نمود. این تعریف ها بایستی به وسیله ویرگول جدا شوند.
 
 ```
 let one = 1, two = 2;
 console.log(one + two);
 // → 3
 ```
-
-The words `var` and `const` can also be used to create bindings, in a
-way similar to `let`.
+کلمه‌های `var` و  `const` را نیز می توان به طور مشابهی برای ایجاد متغیرها ( binding) استفاده کرد. درست شبیه استفاده از `let`.
 
 ```
 var name = "Ayda";
@@ -178,35 +124,22 @@ console.log(greeting + name);
 
 {{index "var keyword"}}
 
-The first, `var` (short for "variable"), is the way bindings were
-declared in pre-2015 JavaScript. I'll get back to the precise way it
-differs from `let` in the [next chapter](functions). For now,
-remember that it mostly does the same thing, but we'll rarely use it
-in this book because it has some confusing properties.
+اولین کلمه کلیدی، `var` (کوتاه شده‌ی "variable")، روشی بود که binding ها در نسخه قبل از 2015 جاوااسکریپت با آن تعریف می شدند. در [فصل بعدی](functions) به تفاوت آن با `let` خواهیم پرداخت. فعلا، به خاطر داشته باشید که هر دو کار  اکثر اوقات مشابهی انجام می دهند، اما در این کتاب ما به ندرت از آن استفاده خواهیم کرد به خاطر اینکه خصوصیات گیج کننده‌ای دارد.
 
 {{index "const keyword", naming}}
 
-The word `const` stands for _((constant))_. It defines a constant
-binding, which points at the same value for as long as it lives. This
-is useful for bindings that give a name to a value so that you can
-easily refer to it later.
+کلمه کلیدی `const` به معنای  _((ثابت))_ است. این کلمه کلیدی یک ثابت تعریف می نماید که به مقدار مشابهی تا زمانی که وجود داشته باشد اشاره می کند. برای انتساب‌هایی (binding) که برای نامگذاری یک مقدار برای ارجاع راحت تر در آینده استفاده می شوند مفید است.
 
-## Binding names
+## نامگذاری متغیرها یا bindings
 
 {{index "underscore character", "dollar sign", [binding, naming]}}
 
-Binding names can be any word. Digits can be part of binding
-names—`catch22` is a valid name, for example—but the name must not
-start with a digit. A binding name may include dollar signs (`$`) or
-underscores (`_`) but no other punctuation or special characters.
+می توان از هر کلمه‌ای در نام متغیرها استفاده کرد. ارقام را می توان به عنوان بخشی از نام متغیر استفاده کرد – مثلا `catch22` یک نام معتبر است- اما نمی توان نام متغیر را با اعداد شروع کرد. نام یک متغیر می تواند شامل علامت دلار (`$`) یا زیرخط (`_`) باشد اما دیگر علامت‌های نقطه گذاری یا کاراکترهای ویژه را نمی توان استفاده کرد.
+
 
 {{index [syntax, identifier], "implements (reserved word)", "interface (reserved word)", "package (reserved word)", "private (reserved word)", "protected (reserved word)", "public (reserved word)", "static (reserved word)", "void operator", "yield (reserved word)", "enum (reserved word)", "reserved word", [binding, naming]}}
 
-Words with a special meaning, such as `let`, are _((keyword))s_, and
-they may not be used as binding names. There are also a number of
-words that are "reserved for use" in ((future)) versions of
-JavaScript, which also can't be used as binding names. The full list
-of keywords and reserved words is rather long.
+کلماتی که معنای خاصی در جاوااسکریپت دارند مانند `let` را _((کلمات کلیدی))_ می نامند و نمی توان از آن ها برای نام گذاری متغیرها استفاده کرد. همچنین یک تعداد مشخصی از کلمات وجود دارند که برای نسخه‌های آینده جاوااسکریپت رزرو شده اند که نمی توان از آن ها برای نامگذاری متغیرها استفاده کرد،  لیست کامل کلمات کلیدی و رزرو شده تقریبا بلند است.
 
 ```{lang: "text/plain"}
 break case catch class const continue debugger default
@@ -218,35 +151,22 @@ switch this throw true try typeof var void while with yield
 
 {{index [syntax, error]}}
 
-Don't worry about memorizing this list. When creating a binding produces
-an unexpected syntax error, see whether you're trying to define a
-reserved word.
+نگران حفظ کردن کلمات بالا نباشید. اگر در هنگام تعریف یک متغیر با خطایی خلاف انتظار روبرو شدید، بررسی کنید که از موارد بالا استفاده نکرده باشید.
 
-## The environment
+## محیط اجرایی
 
 {{index "standard environment", [browser, environment]}}
 
-The collection of bindings and their values that exist at a given time
-is called the _((environment))_. When a program starts up, this
-environment is not empty. It always contains bindings that are part of
-the language ((standard)), and most of the time, it also has bindings
-that provide ways to interact with the surrounding system. For
-example, in a browser, there are functions to interact with the
-currently loaded website and to read ((mouse)) and ((keyboard)) input.
+به مجموعه متغیرها (bindings) و مقادیر آن ها که در یک زمان مشخص فعال هستند محیط اجرایی _((environment))_ گفته می شود. زمانی که برنامه‌ای اجرا می شود، این محیط خالی نیست و همیشه حاوی متغیرهایی است که بخشی از استاندارد زبان هستند و اکثر اوقات متغیرهایی را هم در بر دارد که این امکان را می دهد تا بتوان با سیستم پیرامون هم کنش داشت. به عنوان مثال، در یک مرورگر وب، توابعی در دسترس است که می توان با آن ها با وب سایتی که بارگذاری شده است ارتباط متقابل داشت و همچنین  ورودی‌های ((موس)) و ((صفحه‌کلید)) را خواند.
 
-## Functions
+## توابع
 
 {{indexsee "application (of functions)", [function, application]}}
 {{indexsee "invoking (of functions)", [function, application]}}
 {{indexsee "calling (of functions)", [function, application]}}
 {{index output, function, [function, application], [browser, environment]}}
 
-A lot of the values provided in the default environment have the type
-_((function))_. A function is a piece of program wrapped in a value.
-Such values can be _applied_ in order to run the wrapped program. For
-example, in a browser environment, the binding `prompt` holds a
-function that shows a little ((dialog box)) asking for user input. It
-is used like this:
+خیلی از مقدارهایی که در محیط اجرایی پیش‌فرض وجود دارند از نوع _((function))_ هستند. یک تابع در واقع یک قطعه یا بخشی از برنامه‌ است که در قالب یک مقدار قرار گرفته است. این نوع مقدار‌ها را می توان بکار گرفت تا برنامه‌ی موجود در آن را اجرا نمود. به عنوان مثال، در محیط مرورگر، متغیر `prompt` تابعی را نگه‌داری می کند که در صورت اجرا، پنجره‌ی گفتگویی را نشان می دهد که می تواند اطلاعاتی را از کاربر دریافت نماید. به شکل زیر استفاده می شود:
 
 ```
 prompt("Enter passcode");
@@ -256,38 +176,19 @@ prompt("Enter passcode");
 
 {{index parameter, [function, application], [parentheses, arguments]}}
 
-Executing a function is called _invoking_, _calling_, or _applying_
-it. You can call a function by putting parentheses after an
-expression that produces a function value. Usually you'll directly use
-the name of the binding that holds the function. The values between
-the parentheses are given to the program inside the function. In the
-example, the `prompt` function uses the string that we give it as the
-text to show in the dialog box. Values given to functions are called
-_((argument))s_. Different functions might need a different number or
-different types of arguments.
+به اجرای یک تابع، _فراخوانی_، _صدازدن_، یا _بکارگیری_ آن گفته می شود. برای صدازدن یک تابع می توان یک جفت پرانتز را در جلوی عبارتی که یک مقدار از نوع تابع را تولید می کند قرار دارد. معمولا به طور مستقیم با متغیری که حاوی تابع است کار می کنید. اگر بین پرانتز مقادیری قرار گیرد، این مقادیر به برنامه‌ای که در داخل تابع قرار دارد فرستاده می شود. در مثال تابع `prompt` از رشته ای که به آن می دهیم استفاده کرده و به عنوان متن پنجره‌ی گفتگو استفاده می کند. مقدارهایی که به توابع فرستاده می شوند را _((آرگومان))_ می گوییم. توابع مختلف ممکن است به تعداد و انواع مختلف آرگومان نیاز داشته باشند.
 
-The `prompt` function isn't used much in modern web programming,
-mostly because you have no control over the way the resulting dialog
-looks, but can be helpful in toy programs and experiments.
+تابع `prompt` به آن صورت در برنامه‌نویسی وب مدرن استفاده‌ای ندارد، بیشتر به این دلیل که کنترلی روی ظاهر پنجره‌ی گفتگوی تولید شده ندارید، اما می تواند در بعضی موارد مثل برنامه‌های تفننی یا برای آزمایش کردن مفید واقع شود.
 
-## The console.log function
+## تابع console.log
 
 {{index "JavaScript console", "developer tools", "Node.js", "console.log", output, [browser, environment]}}
 
-In the examples, I used `console.log` to output values. Most JavaScript
-systems (including all modern web browsers and Node.js) provide a
-`console.log` function that writes out its arguments to _some_ text
-output device. In browsers, the output lands in the ((JavaScript
-console)). This part of the browser interface is hidden by default,
-but most browsers open it when you press F12 or, on a Mac, [command]{keyname}-[option]{keyname}-I.
-If that does not work, search through the menus for an item named Developer
-Tools or similar.
+در مثال های قبلی، من از `console.log` برای نمایش مقدارها استفاده کردم. اکثر سیستم‌های جاوااسکریپت ( شامل همه مرورگرهای مدرن و node.js) تابعی به نام `console.log` را فراهم می کنند که آرگومان‌های ورودیش را در جایی به صورت متنی چاپ می کند. در مرورگرها، این خروجی در کنسول جاوااسکریپت  قرار می گیرد. کنسول بخشی از مرورگر است که به صورت پیش فرض مخفی است،‌ اما در بیشتر مرورگرها با فشار دادن کلید F12 یا در مک با [command]{keyname}-[option]{keyname}-I در دسترس خواهد بود. اگر این کلیدهای میانبر کار نکرد، از طریق منوی مرورگر به دنبال  “developer tools” و شبیه آن بگردید.
 
 {{if interactive
 
-When running the examples (or your own code) on the pages of this
-book, `console.log` output will be shown after the example, instead of
-in the browser's JavaScript console.
+زمانی که مثال‌های اینجا(یا کدهای خودتان) را در صفحات این کتاب اجرا می کنید، خروجی تابع `console.log`، به جای نمایش در کنسول جاوااسکریپت مرورگر، بعد از خود مثال نشان داده خواهد شد.
 
 ```
 let x = 30;
@@ -299,23 +200,14 @@ if}}
 
 {{index [object, property], [property, access]}}
 
-Though binding names cannot contain ((period character))s,
-`console.log` does have one. This is because `console.log` isn't a
-simple binding. It is actually an expression that retrieves the `log`
-property from the value held by the `console` binding. We'll
-find out exactly what this means in [Chapter ?](data#properties).
+اگرچه در نام متغیرها نمی توان از کاراکتر نقطه استفاده کرد، `console.log` حاوی نقطه است. علت آن این است که  `console.log` یک متغیر(بایندینگ) ساده نیست. در واقع عبارتی است که خصیصه‌ی `log` را از مقداری که در متغیر `console` نگه داری شده است را بر می گرداند. در [فصل ?](data#properties)، با مفهوم آن به طور دقیق آشنا خواهیم شد.
 
 {{id return_values}}
-## Return values
+## مقادیر بازگشتی
 
 {{index [comparison, "of numbers"], "return value", "Math.max function", maximum}}
 
-Showing a dialog box or writing text to the screen is a _((side
-effect))_. A lot of functions are useful because of the side effects
-they produce. Functions may also produce values, in which case they
-don't need to have a side effect to be useful. For example, the
-function `Math.max` takes any amount of number arguments and gives
-back the greatest.
+نمایش یک پنجره تعاملی یا نوشتن متن در اسکرین یک _((اثر جانبی))_ می باشد. خیلی از توابع به خاطر اثر جانبی ای که تولید می کنند کاربرد دارند. توابع همچنین می توانند مقادیر را تولید کنند و در این صورت نیازی به اثر جانبی ندارند تا در برنامه کاربرد داشته باشند. به عنوان مثال، تابع `Math.max` به تعداد دلخواه آرگومان از جنس عدد می گیرد و بزرگترین آن ها را برمی گرداند.
 
 ```
 console.log(Math.max(2, 4));
@@ -324,29 +216,19 @@ console.log(Math.max(2, 4));
 
 {{index [function, application], minimum, "Math.min function"}}
 
-When a function produces a value, it is said to _return_ that value.
-Anything that produces a value is an ((expression)) in JavaScript,
-which means function calls can be used within larger expressions. Here
-a call to `Math.min`, which is the opposite of `Math.max`, is used as
-part of a plus expression:
+زمانی که یک تابع مقداری را تولید می کند، گفته می شود که آن مقدار را _برگردانده_ است. در جاوااسکریپت هرچیزی که مقداری را تولید می کند یک عبارت است که باعث می شود فراخوانی توابع را بتوان در درون عبارت های بزرگتر استفاده کرد. در اینجا فراخوانی `Math.min` که متضاد تابع`Math.max` محسوب می شود، به عنوان بخشی از یک عبارت جمع حسابی استفاده شده است:
 
 ```
 console.log(Math.min(2, 4) + 100);
 // → 102
 ```
+[در فصل بعد](functions) توضیح می دهیم که چگونه توابع خود را بنویسید.
 
-The [next chapter](functions) explains how to write your own
-functions.
-
-## Control flow
+## جریان کنترل
 
 {{index "execution order", program, "control flow"}}
 
-When your program contains more than one ((statement)), the statements
-are executed as if they are a story, from top to bottom. This example
-program has two statements. The first one asks the user for a number,
-and the second, which is executed after the first, shows the
-((square)) of that number.
+زمانی که برنامه شما بیش از یک ((دستور)) دارد، دستورها شبیه به خواندن یک داستان از بالا به پایین اجرا می شوند. به عنوان مثال، این برنامه دو دستور دارد. اولین دستور از کاربر درخواست می کند که عددی را وارد نماید و دومی که پس از آن اجرا می شود، ((مربع)) عدد وارد شده را نشان می دهد.
 
 ```
 let theNumber = Number(prompt("Pick a number"));
@@ -356,33 +238,23 @@ console.log("Your number is the square root of " +
 
 {{index [number, "conversion to"], "type coercion", "Number function", "String function", "Boolean function", [Boolean, "conversion to"]}}
 
-The function `Number` converts a value to a number. We need that
-conversion because the result of `prompt` is a string value, and we
-want a number. There are similar functions called `String` and
-`Boolean` that convert values to those types.
+تابع `Number` مقدار ورودی اش را به عدد تبدیل می کند. ما به این تبدیل نیاز داریم چرا که نتیجه تابع `prompt` از جنس رشته است و ما به دنبال عدد هستیم. توابع مشابهی به نام `String` و `Boolean` وجود دارد که مقادیر را به نوع خودشان تبدیل می کنند.
 
-Here is the rather trivial schematic representation of straight-line
-control flow:
+در اینجا شمایی ابتدایی از چگونگی جریان کنترل  خطی مستقیم نمایش داده شده است.
 
 {{figure {url: "img/controlflow-straight.svg", alt: "Trivial control flow", width: "4cm"}}}
 
-## Conditional execution
+## اجرای شرطی
 
 {{index Boolean, ["control flow", conditional]}}
 
-Not all programs are straight roads. We may, for example, want to
-create a branching road, where the program takes the proper branch
-based on the situation at hand. This is called _((conditional
-execution))_.
+همه‌ی برنامه‌ها از جنس خطی و مستقیم نیستند. مثلا ممکن است بخواهیم یک راه دیگر هم در برنامه در نظر بگیریم که برنامه با توجه به شرایطی که در دست دارد راه مناسب را انتخاب کند. به این کار _((اجرای شرطی))_ می گویند.
 
 {{figure {url: "img/controlflow-if.svg", alt: "Conditional control flow",width: "4cm"}}}
 
 {{index [syntax, statement], "Number function", "if keyword"}}
 
-Conditional execution is created with the `if` keyword in JavaScript.
-In the simple case, we want some code to be executed if, and only if,
-a certain condition holds. We might, for example, want to show the
-square of the input only if the input is actually a number.
+در جاوااسکریپت اجرای شرطی را با کلمه کلیدی `if` پیاده سازی می کنند. در یک مورد ساده، ما قصد داریم که قطعه کدی فقط در صورتی اجرا شود که شرط خاصی برقرار باشد. به عنوان نمونه، در برنامه‌ی قبل، ممکن است بخواهیم که مربع ورودی را تنها زمانی نشان دهیم که ورودی از جنس عدد باشد.
 
 ```{test: wrap}
 let theNumber = Number(prompt("Pick a number"));
@@ -391,33 +263,20 @@ if (!Number.isNaN(theNumber)) {
               theNumber * theNumber);
 }
 ```
-
-With this modification, if you enter "parrot", no output is shown.
+با این تغییر، اگر رشته‌ی “parrot” را وارد کنید، هیچ چیز به عنوان خروجی نشان داده نخواهد شد.
 
 {{index [parentheses, statement]}}
 
-The `if` keyword executes or skips a statement depending on the value
-of a Boolean expression. The deciding expression is written after the
-keyword, between parentheses, followed by the statement to
-execute.
+کلمه کلیدی `if` براساس مقدار یک عبارت بولی، دستوری را اجرا یا از آن صرف نظر می کند. آین عبارت بولی که مبنای تصمیم گیری است درست بعد از کلمه کلیدی بین پرانتز نوشته می شود و در ادامه عبارتی که باید اجرا شود می آید.
 
 {{index "Number.isNaN function"}}
 
-The `Number.isNaN` function is a standard JavaScript function that
-returns `true` only if the argument it is given is `NaN`. The `Number`
-function happens to return `NaN` when you give it a string that
-doesn't represent a valid number. Thus, the condition translates to
-"unless `theNumber` is not-a-number, do this".
+تابع `Number.isNaN` یک تابع استاندارد جاوااسکریپت است که زمانی مقدار `true` را برمی گرداند که آرگومان ورودی آن از نوع `NaN` باشد. تابع `Number` منجر به تولید `NaN` خواهد شد اگر رشته‌ای به آن بدهید که نمی تواند بیانگر یک عدد معتبر باشد. بنابراین، معنای عبارت شرطی این‌گونه می شود: “تا زمانی که `theNumber` از جنس عدد نیست، فلان کار رو انجام بده”.
 
 {{index grouping, "{} (block)", [braces, "block"]}}
 
-The statement after the `if` is wrapped in braces (`{` and
-`}`) in this example. The braces can be used to group any number of
-statements into a single statement, called a _((block))_. You could
-also have omitted them in this case, since they hold only a single
-statement, but to avoid having to think about whether they are needed, most JavaScript programmers use them in every wrapped
-statement like this. We'll mostly follow that convention in this book,
-except for the occasional one-liner.
+در این مثال دستوری که در خط بعد از `if`  قرار دارد توسط با کروشه‌های مجعد محصور شده است (`{` و
+`}`). از کروشه ها می تواند برای گروه بندی دستورات متعدد به عنوان یک دستور استفاده کرد که به آن _((بلاک))_ گفته می شود. در مثال فوق می توانستید که کروشه‌ها را حذف کنید به این علت که فقط یک دستور داشتید اما برای اجتناب از سردرگمی فکر کردن به زمان گذاشتن یا نگذاشتن کروشه‌ها، بیشتر برنامه نویسان جاوااسکریپت از کروشه‌ها در مواردی شبیه این هم استفاده می کنند. ما هم در این کتاب از همین عرف استفاده می کنیم مگر بعضی اوقات که قصد داریم  کلا دستور در یک خط باشد.
 
 ```
 if (1 + 1 == 2) console.log("It's true");
@@ -426,10 +285,8 @@ if (1 + 1 == 2) console.log("It's true");
 
 {{index "else keyword"}}
 
-You often won't just have code that executes when a condition holds
-true, but also code that handles the other case. This alternate path
-is represented by the second arrow in the diagram. You can use the `else` keyword, together with `if`, to create two separate, alternative
-execution paths.
+همیشه اینطور نیست که برنامه در صورت true بودن شرط بایستی اجرا شود، بلکه گاهی عکس این مطلب اتفاق می افتد. این مسیر جانبی در دیاگرام با پیکان دوم نمایش داده شده است. استفاده از کلمه کلیدی `else` به همراه `if` این امکان را به ما می دهد دو مسیر اجرایی متفاوت تعریف کنیم.
+
 
 ```{test: wrap}
 let theNumber = Number(prompt("Pick a number"));
@@ -443,8 +300,7 @@ if (!Number.isNaN(theNumber)) {
 
 {{index ["if keyword", chaining]}}
 
-If you have more than two paths to choose from, you can "chain" multiple `if`/`else`
-pairs together. Here's an example:
+اگر بیش از دو مسیر برای انتخاب داشتیم، می توان از چندین جفت `if`/`else` که با هم زنجیر شده اند استفاده کرد. به مثال توجه کنید:
 
 ```
 let num = Number(prompt("Pick a number"));
@@ -458,22 +314,16 @@ if (num < 10) {
 }
 ```
 
-The program will first check whether `num` is less than 10. If it is,
-it chooses that branch, shows `"Small"`, and is done. If it isn't, it
-takes the `else` branch, which itself contains a second `if`. If the
-second condition (`< 100`) holds, that means the number is between 10
-and 100, and `"Medium"` is shown. If it doesn't, the second and last
-`else` branch is chosen.
+برنامه در ابتدا بررسی می کند که آیا `num` از 10 مقدارش کم تر است یا خیر. اگر کمتر بود، به سراغ آن شاخه از کد می رود و `"Small"` را نشان می دهد و کار تمام است. اگر شرط دوم (`< 100`) برقرار بود، به این معناست که عدد بین 10 و 100 است که در این صورت `"Medium"` نمایش داده می شود. اگر هیچ کدام نبود،  دومین و آخرین `else` انتخاب می شود.
 
-The schema for this program looks something like this:
+فلوچارت برنامه بالا چیزی شبیه عکس زیر خواهد بود.
 
 {{figure {url: "img/controlflow-nested-if.svg", alt: "Nested if control flow", width: "4cm"}}}
 
 {{id loops}}
-## while and do loops
+## while و do loops
 
-Consider a program that outputs all ((even number))s from 0 to 12. One
-way to write this is as follows:
+برنامه ای را در نظر بگیرید که همه‌ی ((اعداد زوج)) بین 0 و 12 را چاپ می کند. یکی از راه های نوشتن این برنامه به شکل زیر است:
 
 ```
 console.log(0);
@@ -487,20 +337,13 @@ console.log(12);
 
 {{index ["control flow", loop]}}
 
-That works, but the idea of writing a program is to make something
-_less_ work, not more. If we needed all even numbers less than 1,000,
-this approach would be unworkable. What we need is a way to run a
-piece of code multiple times. This form of control flow is called a
-_((loop))_.
+این برنامه کار خواهد کرد اما ایده‌ی اینکه اصلا برنامه‌ای نوشته می شود این است که چیزی _کمتر_ کار ببرد نه بیشتر. اگر ما بخواهیم تمام اعداد زوج کوچکتر از ۱,۰۰۰ را جاپ کنیم، روش قبلی دیگر کاربردی نیست. آنچه ما می خواهیم روشی است که بتوان با آن کدهایی را تکرار کرد. این شکل جریان کنترل را _loop_ یا _حلقه_ می نامند.
 
 {{figure {url: "img/controlflow-loop.svg", alt: "Loop control flow",width: "4cm"}}}
 
 {{index [syntax, statement], "counter variable"}}
 
-Looping control flow allows us to go back to some point in the program
-where we were before and repeat it with our current program state. If
-we combine this with a binding that counts, we can do something like
-this:
+جریان کنترل حلقه‌ای به ما این امکان را می دهد که به نقطه‌ای در برنامه برگشته، جایی که قبلا بوده ایم و آن را در حالت فعلی برنامه تکرار کنیم. اگر این امکان را با یک متغیر شمارشگر ترکیب کنیم، می توانیم کاری شبیه زیر را انجام دهیم:
 
 ```
 let number = 0;
@@ -515,28 +358,16 @@ while (number <= 12) {
 
 {{index "while loop", Boolean, [parentheses, statement]}}
 
-A ((statement)) starting with the keyword `while` creates a loop. The
-word `while` is followed by an ((expression)) in parentheses and
-then a statement, much like `if`. The loop keeps entering that
-statement as long as the expression produces a value that gives `true`
-when converted to Boolean.
+((دستوری)) که با کلمه کلیدی `while` شروع شود، یک حلقه ایجاد می کند. ساختار `while` بسیار شبیه به `if` است. کلمه `while` در ابتدا،‌ بعد از آن یک جفت پرانتز که در داخلش یک ((عبارت)) قرار می گیرد و بعد دستور نوشته می شود.
+حلقه while، دستور مورد نظر را اجرا به صورت مداوم اجرا می کند البته تا زمانی که عبارت داخل پرانتز true ارزیابی شود. مقدار داخل پرانتز به نوع داده بولی تبدیل می شود و بعد ارزیابی می شود.
 
 {{index [state, in binding], [binding, as state]}}
 
-The `number` binding demonstrates the way a ((binding)) can track the
-progress of a program. Every time the loop repeats, `number` gets a
-value that is 2 more than its previous value. At the beginning of
-every repetition, it is compared with the number 12 to decide whether
-the program's work is finished.
+متغیر `number` در اینجا نشان می دهد که چگونه می توان از یک متغیر برای نگه‌داری پیش رفت یک برنامه استفاده کرد. هر بار که حلقه تکرار می شود، مقدار `number`  به اندازه‌ی 2 واحد از قبل بیشتر می شود. در ابتدای هر تکرار این عدد با عدد 12 مقایسه شده تا مشخص شود که آیا به پایان اجرای برنامه رسیده ایم یا خیر.
 
 {{index exponentiation}}
 
-As an example that actually does something useful, we can now write a
-program that calculates and shows the value of 2^10^ (2 to the 10th
-power). We use two bindings: one to keep track of our result and one
-to count how often we have multiplied this result by 2. The loop tests
-whether the second binding has reached 10 yet and, if not, updates
-both bindings.
+به عنوان یک مثال کاربردی، اکنون می توانیم برنامه ای بنویسیم که مقدار 2^10^ را محاسبه و نمایش دهد. ما از دو متغیر استفاده خواهیم کرد: یکی برای نگه داشتن نتیجه محاسبه و دیگری برای شمردن تعداد دفعاتی که ما نتیجه را در 2 ضرب کرده ایم. حلقه بررسی می کند که آیا متغیر دوم به 10 رسیده است که در غیر این صورت هر دوی متغیرها را به روز رسانی می کند.
 
 ```
 let result = 1;
@@ -549,18 +380,13 @@ console.log(result);
 // → 1024
 ```
 
-The counter could also have started at `1` and checked for `<= 10`,
-but for reasons that will become apparent in [Chapter
-?](data#array_indexing), it is a good idea to get used to
-counting from 0.
+متغیر شمارنده counter همچنین می توانست از عدد `1` شروع شود و با شرط <bdo>`<= 10`</bdo> بررسی شود، به دلایلی که در [فصل
+?](data#array_indexing) روشن خواهد شد، بهتر است که عادت کنیم تا از 0 بشماریم.
+
 
 {{index "loop body", "do loop", ["control flow", loop]}}
 
-A `do` loop is a control structure similar to a `while` loop. It
-differs only on one point: a `do` loop always executes its body at
-least once, and it starts testing whether it should stop only after
-that first execution. To reflect this, the test appears after the body
-of the loop.
+حلقه `do` یک ساختار کنترلی است شبیه به حلقه‌ی `while` است. تفاوت فقط در یک چیز است: یک حلقه‌ی `do` حداقل بدنه‌اش را یک بار اجرا می کند و بررسی شرط توقف را بعد از اولین اجرا انجام می دهد. برای نشان دادن این ویژگی، قسمت بررسی شرط، بعد از بدنه‌ی حلقه نوشته می شود:
 
 ```
 let yourName;
@@ -572,30 +398,15 @@ console.log(yourName);
 
 {{index [Boolean, "conversion to"], "! operator"}}
 
-This program will force you to enter a name. It will ask again and
-again until it gets something that is not an empty string. Applying
-the `!` operator will convert a value to Boolean type before negating
-it, and all strings except `""` convert to `true`. This means the loop
-continues going round until you provide a non-empty name.
+این برنامه شما را وادار خواهد کرد که حتما نامی را وارد نمایید. این درخواست آن قدر پرسیده خواهد شد تا بالاخره چیزی غیر از رشته‌ی خالی را دریافت کند. افزودن عملگر `!` باعث می شود که یک مقدار قبل از منفی شدن به نوع بولی تبدیل شود و می دانیم که تمام رشته‌ها به جز `""` به `true` تبدیل می شوند. این بدین معناست که حلقه تا زمانی که نامی غیر تهی وارد نکنید اجرا  می شود.
 
-## Indenting Code
+## ایجاد تورفتگی در کدها
 
 {{index [code, "structure of"], [whitespace, indentation], "programming style"}}
 
-In the examples, I've been adding spaces in front of statements that
-are part of some larger statement. These spaces are not required—the computer
-will accept the program just fine without them. In fact, even the
-((line)) breaks in programs are optional. You could write a program as
-a single long line if you felt like it.
+همان طور که در مثال‌ها مشاهده کرده اید، در ابتدای دستوراتی که به عنوان بخشی از دستورات بزرگتر محسوب می شوند فضاهای خالی قرار داده ام. در جاوااسکریپت، این فضاها ضروری نیستند – کامپیوتر برنامه را بدون آن ها به خوبی قبول می کند. در واقع، حتی شکستن خطوط در برنامه ها اختیاری است. شما می توانید اگر دوست داشتید برنامه ای را در یک خط بلند بنویسید.
 
-The role of this ((indentation)) inside ((block))s is to make the
-structure of the code stand out. In code where new blocks are opened
-inside other blocks, it can become hard to see where one block ends
-and another begins. With proper indentation, the visual shape of a
-program corresponds to the shape of the blocks inside it. I like to
-use two spaces for every open block, but tastes differ—some people use
-four spaces, and some people use ((tab character))s. The important
-thing is that each new block adds the same amount of space.
+نقش ((تورفتگی‌ها)) در درون ((بلاک‌ها)) برای نمایان سازی ساختار کد است. در کدنویسی گاهی بلاک‌های جدید درون بلاک‌های دیگر قرار می گیرند و پیدا کردن پایان و شروع بلاک ها میتواند سخت شود. با ایجاد تورفتگی مناسب، شکل ظاهری برنامه خود بیانگر ساختار بلاک‌های درون آن خواهد بود.  من ترجیح می دهد که از دو فاصله برای هر بلاک باز استفاده کنم اما سلیقه‌ها متفاوت است بعضی مردم دوست دارند که از چهار فاصله استفاده کنند و بعضی ((کاراکتر تب)) را می پسندند. اما مساله مهم این است که برای هر بلاک جدید از میزان تورفتگی یکسانی استفاده کنیم.
 
 ```
 if (false != true) {
@@ -606,25 +417,18 @@ if (false != true) {
 }
 ```
 
-Most code ((editor)) programs[ (including the one in this book)]{if
-interactive} will help by automatically indenting new lines the proper
-amount.
+اکثر برنامه های ((ویرایشگر)) کد [ (مثل ویرایشگر کد این کتاب)]{if
+interactive}، تو رفتگی ها را به صورت خودکار و با اندازه مناسب ایجاد می کنند.
 
-## for loops
+## حلقه‌های for
 
 {{index [syntax, statement], "while loop", "counter variable"}}
 
-Many loops follow the pattern shown in the `while` examples. First a
-"counter" binding is created to track the progress of the loop. Then
-comes a `while` loop, usually with a test expression that checks whether the
-counter has reached its end value. At the end of the loop body, the
-counter is updated to track progress.
+خیلی از حلقه‌ها از الگویی که در مثال‌های `while` دیدیم پیروی می کنند. در ابتدا یک متغیر “شمارنده” ایجاد می شود تا پیشرفت حلقه را نگه‌داری کند. سپس حلقه‌ی `while` خواهد آمد که عبارت تست آن معمولا مقدار شمارنده را بررسی می کند که به مرز خاصی رسیده است باشد. در پایان بدنه‌ی حلقه، شمارنده به روز رسانی می شود تا پیشرفت برنامه پیگیری شود.
 
 {{index "for loop", loop}}
 
-Because this pattern is so common, JavaScript and similar languages
-provide a slightly shorter and more comprehensive form, the `for`
-loop.
+چون این الگو بسیار رایج است، جاوااسکریپت و زبان های مشابه‌‌ آن روش کمی کوتاهتر و جامع تری را ارائه می دهند، حلقه `for`.
 
 ```
 for (let number = 0; number <= 12; number = number + 2) {
@@ -637,23 +441,15 @@ for (let number = 0; number <= 12; number = number + 2) {
 
 {{index ["control flow", loop], state}}
 
-This program is exactly equivalent to the
-[earlier](program_structure#loops) even-number-printing example. The
-only change is that all the ((statement))s that are related to the
-"state" of the loop are grouped together after `for`.
+برنامه‌ی بالا دقیقا معادل برنامه‌ی چاپ اعداد زوج [پیشین](program_structure#loops) است. تنها تفاوت این است که تمامی دستوراتی که به “وضعیت” برنامه ربط دارند، اکنون در یک گروه بعد از `for` قرار گرفته اند.
 
 {{index [binding, as state], [parentheses, statement]}}
 
-The parentheses after a `for` keyword must contain two
-((semicolon))s. The part before the first semicolon _initializes_ the
-loop, usually by defining a binding. The second part is the
-((expression)) that _checks_ whether the loop must continue. The final
-part _updates_ the state of the loop after every iteration. In most
-cases, this is shorter and clearer than a `while` construct.
+پرانتزهای بعد از کلمه کلیدی `for` باید حتما دارای دو سمی کالن (نقطه ویرگول) باشند. قسمت قبل از نقطه‌ویرگول اول حلقه را _مقداردهی اولیه_ می کند، که این کار معمولا با تعریف یک متغیر انجام می شود. قسمت دوم عبارتی است که _بررسی_ می کند که تا کی حلقه بایستی ادامه پیدا کند. بخش نهایی  وضعیت حلقه را بعد از هربار تکرار _به روز رسانی_ می کند. در بیشتر موارد، این روش از ساختار `while` کوتاهتر و سرراست تر است.
 
 {{index exponentiation}}
 
-This is the code that computes 2^10^ using `for` instead of `while`:
+در اینجا کدی را مشاهده می کنید که 2^10^ را محاسبه می کند البته با `for` به جای `while`:
 
 ```{test: wrap}
 let result = 1;
@@ -664,16 +460,13 @@ console.log(result);
 // → 1024
 ```
 
-## Breaking Out of a Loop
+## شکستن حلقه و خروج از آن
 
 {{index [loop, "termination of"], "break keyword"}}
 
-Having the looping condition produce `false` is not the only way a
-loop can finish. There is a special statement called `break` that has
-the effect of immediately jumping out of the enclosing loop.
+تنها راه به پایان رسیدن یک حلقه فقط تولید مقدار `false` توسط بخش شرط حلقه نیست. دستور خاصی به نام `break` وجود دارد که در صورت استفاده باعث می شود که بلافاصله برنامه از حلقه‌ی محصورش بیرون بیاید.
 
-This program illustrates the `break` statement. It finds the first number
-that is both greater than or equal to 20 and divisible by 7.
+برنامه‌ی زیر چگونگی استفاده از `break` را نمایش می دهد. این برنامه اولین عددی که بزرگتر و مساوی 20 است و همچنین قابل تقسیم بر 7 است را می یابد.
 
 ```
 for (let current = 20; ; current = current + 1) {
@@ -687,58 +480,42 @@ for (let current = 20; ; current = current + 1) {
 
 {{index "remainder operator", "% operator"}}
 
-Using the remainder (`%`) operator is an easy way to test whether a
-number is divisible by another number. If it is, the remainder of
-their division is zero.
+با استفاده از عملگر باقی مانده (`%`) می توان به راحتی بخش پذیری یک عدد بر عددی دیگر را امتحان کرد. اگر بخش پذیر باشد، باقی مانده تقسیمشان برابر صفر خواهد بود.
 
 {{index "for loop"}}
 
-The `for` construct in the example does not have a part that checks
-for the end of the loop. This means that the loop will never stop
-unless the `break` statement inside is executed.
+ساختار `for` در این مثال، بخشی که پایان حلقه را بررسی می کند را ندارد. این بدین معناست که حلقه هرگز متوقف نخواهد شد مگر اینکه دستور `break` در درون آن اجرا شود.
 
-If you were to remove that `break` statement or you accidentally write
-an end condition that always produces `true`, your program would get
-stuck in an _((infinite loop))_. A program stuck in an infinite loop
-will never finish running, which is usually a bad thing.
+اگر آن دستور `break` را حذف کنید یا به طور اتفاقی  شرطی را بنویسید که همیشه مقدار `true` را تولید نماید، برنامه شما در یک _((حلقه‌ی بی‌نهایت))_ گیر خواهد افتاد. برنامه‌ای که در حلقه بی نهایت بیفتد، اجرای آن پایان نمی یابد، که معمولا چیز بدی است.
 
 {{if interactive
 
-If you create an infinite loop in one of the examples on these pages,
-you'll usually be asked whether you want to stop the script after a
-few seconds. If that fails, you will have to close the tab that you're
-working in, or on some browsers close your whole browser, to recover.
+اگر در مثال‌های موجود در صفحات آنلاین کتاب یک حلقه‌ی بی‌نهایت ایجاد کنید، پس از چند ثانیه، معمولا از شما پرسیده می شود که قصد ادامه اجرای اسکریپت را دارید یا خیر. اگر متوقف نشود، مجبور خواهید شد تا برگه‌ای که در آن کار می کنید را ببندید، یا در بعضی مرورگرها، کل مرورگر را ببندید.
 
 if}}
 
 {{index "continue keyword"}}
 
-The `continue` keyword is similar to `break`, in that it influences
-the progress of a loop. When `continue` is encountered in a loop body,
-control jumps out of the body and continues with the loop's next
-iteration.
+کلمه‌ی کلیدی `continue` همانند `break` روی پیشروی حلقه تاثیر می گذارد. زمانی که `continue` در داخل بدنه حلقه اجرا شود، کنترل برنامه از بدنه خارج شده و به تکرار بعدی منتقل شده و ادامه می یابد.
 
-## Updating bindings succinctly
+## روش کوتاه به روزرسانی متغیرها
 
 {{index assignment, "+= operator", "-= operator", "/= operator", "*= operator", [state, in binding], "side effect"}}
 
-Especially when looping, a program often needs to "update" a binding
-to hold a value based on that binding's previous value.
+به طور خاص در حلقه‌ها، معمولا برنامه نیازمند به روز رسانی یک متغیر بر اساس مقدار قبلی آن است.
 
 ```{test: no}
 counter = counter + 1;
 ```
 
-JavaScript provides a shortcut for this.
+جاوااسکریپت راه میانبری برای این کار دارد:
 
 ```{test: no}
 counter += 1;
 ```
+میانبرهای مشاهبی برای دیگر عملگرها وجود دارد مثل <bdo>`result *= 2`</bdo> که مقدار متغیر `result` را دوبرابر می کند یا <bdo>`counter -= 1`</bdo> که مقدار count را کاهش می دهد.
 
-Similar shortcuts work for many other operators, such as `result *= 2`
-to double `result` or `counter -= 1` to count downward.
-
-This allows us to shorten our counting example a little more.
+این شیوه به ما این امکان را می دهد که مثال شمارش اعداد را کمی کوتاه تر بنویسیسم.
 
 ```
 for (let number = 0; number <= 12; number += 2) {
@@ -748,14 +525,13 @@ for (let number = 0; number <= 12; number += 2) {
 
 {{index "++ operator", "-- operator"}}
 
-For `counter += 1` and `counter -= 1`, there are even shorter
-equivalents: `counter++` and `counter--`.
+برای <bdo>`counter += 1`</bdo> و <bdo>`counter -= 1`</bdo> معادل‌های کوتاهتری هم وجود دارد: <bdo>`counter++`</bdo> و<bdo>`counter--`</bdo>.
 
-## Dispatching on a value with switch
+## تصمیم گیری بر اساس یک مقدار به کمک switch
 
 {{index [syntax, statement], "conditional execution", dispatch, ["if keyword", chaining]}}
 
-It is not uncommon for code to look like this:
+کدهایی شبیه کد زیر بسیار رایج هستند:
 
 ```{test: no}
 if (x == "value1") action1();
@@ -766,11 +542,7 @@ else defaultAction();
 
 {{index "colon character", "switch keyword"}}
 
-There is a construct called `switch` that is intended to express such
-a "dispatch" in a more direct way. Unfortunately, the syntax
-JavaScript uses for this (which it inherited from the C/Java line of
-programming languages) is somewhat awkward—a chain of `if` statements
-may look better. Here is an example:
+ساختاری به نام `switch` وجود دارد که در مواردی شبیه بالا بسیار خوانا و سرراست تر است. متاسفانه، شیوه‌ی نوشتاری ای که جاوااسکریپت برای این ساختار استفاده می کند ( که از زبان‌های شبیه C/Java گرفته شده است) کمی بدقواره است – زنجیره‌ای از دستورات `if` ممکن است زیباتر به نظر بیاید. به مثال توجه فرمایید:
 
 ```
 switch (prompt("What is the weather like?")) {
@@ -790,25 +562,13 @@ switch (prompt("What is the weather like?")) {
 
 {{index fallthrough, "break keyword", "case keyword", "default keyword"}}
 
-You may put any number of `case` labels inside the block opened by
-`switch`. The program will start executing at the label that
-corresponds to the value that `switch` was given, or at `default` if
-no matching value is found. It will continue executing, even across
-other labels, until it reaches a `break` statement. In some cases,
-such as the `"sunny"` case in the example, this can be used to share
-some code between cases (it recommends going outside for both sunny
-and cloudy weather). But be careful—it is easy to forget such a
-`break`, which will cause the program to execute code you do not want
-executed.
+می توانید هر تعداد دلخواه برچسب `case` درون یک بلاک `switch` قرار دهید. برنامه با توجه به مقداری که به `switch` داده می شود برچسب متناظر را انتخاب کرده و به آن قسمت منتقل می شود یا اگر موردی پیدا نشود قسمت `default` اجرا می شود. پس از انتخاب برچسب، دستورات آن اجرا می شوند حتی دستوراتی که زیر برچسب دیگری قرار دارند تا زمانیکه برنامه به دستور `break` برسد. در بعضی موارد، مانند مورد (case) `"sunny"` در مثال بالا، این امکان را می توان برای به اشتراک گذاری کدهایی بین case ها استفاده کرد ( برنامه رفتن به بیرون شهر را برای هر دو هوای ابری و آفتابی پیشنهاد می دهد). اما حواستان باشد: خیلی ساده می توان `break` را فراموش کرد که باعث اجرای کدهایی خواهد شد که شما نمی خواهید.
 
-## Capitalization
+## استفاده از حروف بزرگ
 
 {{index capitalization, [binding, naming], [whitespace, syntax]}}
 
-Binding names may not contain spaces, yet it is often helpful to use
-multiple words to clearly describe what the binding represents. These
-are pretty much your choices for writing a binding name with several
-words in it:
+در نام متغیرها  نمی توان از فاصله (فضای خالی) استفاده کرد اما اغلب استفاده از چند واژه برای شرح محتوای متغیر مفید است. اینکه از چه شیوه‌ای برای نوشتن نام متغیرهای چند کلمه ای استفاده کنید بستگی به سلیقه شما دارد:
 
 ```{lang: null}
 fuzzylittleturtle
@@ -819,38 +579,22 @@ fuzzyLittleTurtle
 
 {{index "camel case", "programming style", "underscore character"}}
 
-The first style can be hard to read. I rather like the look of the
-underscores, though that style is a little painful to type. The
-((standard)) JavaScript functions, and most JavaScript programmers,
-follow the bottom style—they capitalize every word except the first.
-It is not hard to get used to little things like that, and code with
-mixed naming styles can be jarring to read, so we follow this
-((convention)).
+خواند سبک اول می تواند سخت باشد. شخصا، از روش استفاده از زیرخط (underscore) را می پسندم اگرچه تایپ آن کمی مشکل تر است. توابع ((استاندارد)) جاوااسکریپت و بیشتر برنامه نویسان جاوااسکریپت از روش اخر استفاده می کنند – به جز کلمه‌ی اول دیگر کلمات را با حروف بزرگ شروع می کنند. می توان به راحتی به یکی از این روش ها عادت کرد. کدنویسی با سبک‌های نامگذاری متفاوت می تواند مشکلاتی در خوانایی کد ایجاد کند، بنابراین ما فقط از یک سبک و آن هم سبک آخر استفاده خواهیم کرد.
 
 {{index "Number function", constructor}}
 
-In a few cases, such as the `Number` function, the first letter of a
-binding is also capitalized. This was done to mark this function as a
-constructor. What a constructor is will become clear in [Chapter
-?](object#constructors). For now, the important thing is not
-to be bothered by this apparent lack of ((consistency)).
+در موارد کمی، مثل تابع `Number` حرف اول متغیر به صورت بزرگ نوشته شده است. این برای نشانه‌گذاری این تابع به عنوان یک تابع سازنده است. اینکه یک تابع سازنده چیست در [فصل
+?](object#constructors) روشن خواهد شد. فعلا نکته مهم این است که با دیدن این نبود ((یکپارچگی)) در این گونه موارد خودتان را ناراحت نکنید.
 
-## Comments
+## توضیحات
 
 {{index readability}}
 
-Often, raw code does not convey all the information you want a program
-to convey to human readers, or it conveys it in such a cryptic way
-that people might not understand it. At other times, you might just
-want to include some related thoughts as part of your program. This is
-what _((comment))s_ are for.
+اغلب اوقات، کدهای اصلی برنامه همه‌ی آنچه قصد دارید تا برنامه به کسانی که قصد نگاه کردن و فهمیدن کدها را دارند منتقل نمی کنند و یا به شکل پیچیده‌ای این کار را می کند که دیگران نمی توانند آن را درک کنند. یا ممکن است بخواهید تا توضیحات مرتبطی را به عنوان بخشی از برنامه بنویسید. می توانید از _((توضیحات))_ برای این کار استفاده کنید.
 
 {{index "slash character", "line comment"}}
 
-A comment is a piece of text that is part of a program but is
-completely ignored by the computer. JavaScript has two ways of writing
-comments. To write a single-line comment, you can use two slash
-characters (`//`) and then the comment text after it.
+یک توضیح، متنی است که بخشی از برنامه محسوب می شود اما کامپیوتر آن را نادیده می گیرد. جاوااسکریپت دو راه برای نوشتن توضیحات دارد. برای نوشتن توضیحات تک-خطی ، می توانید از دو کاراکتر اسلش (`//`) در ابتدای توضیح استفاده کنید.
 
 ```{test: no}
 let accountBalance = calculateBalance(account);
@@ -865,10 +609,7 @@ addToReport(accountBalance, report);
 
 {{index "block comment"}}
 
-A `//` comment goes only to the end of the line. A section of text
-between `/*` and `*/` will be ignored in its entirety, regardless of
-whether it contains line breaks. This is useful for adding blocks of
-information about a file or a chunk of program.
+توضیحی که با `//` مشخص شده باشد فقط تا پایان همان خط در نظر گرفته می شود. متنی که بین `/*` و `*/` محصور شده باشد به طور کامل و بدون توجه به اینکه حاوی چند خط باشد، به عنوان توضیح در نظر گرفته می شود. این ویژگی برای افزودن بلاک‌های اطلاعات در باره‌ی یک فایل یا بخشی از برنامه استفاده می شود.
 
 ```
 /*
@@ -880,51 +621,29 @@ information about a file or a chunk of program.
 const myNumber = 11213;
 ```
 
-## Summary
+## خلاصه
 
-You now know that a program is built out of statements, which
-themselves sometimes contain more statements. Statements tend to
-contain expressions, which themselves can be built out of smaller
-expressions.
+اکنون شما می دانیک که یک برنامه از مجموعه ای از دستورات ساخته می شود، که خود آن‌ها نیز گاهی حاوی دستورات بیشتری هستند. دستورات حاوی عبارت‌ها هستند که خود این عبارت‌ها نیز می توانند از عبارت‌های کوتاهتری تشکیل شده باشند.
 
-Putting statements after one another gives you a program that is
-executed from top to bottom. You can introduce disturbances in the
-flow of control by using conditional (`if`, `else`, and `switch`) and
-looping (`while`, `do`, and `for`) statements.
+قرار دادن دستورات یکی پس از دیگری، برنامه ای را می سازد که از بالا به پایین به ترتیب اجرا می شود. می شود این ترتیب در جریان کنترل را با استفاده از دستورات شرطی ( `if`, `else` و `switch`) و حلقه‌ها (`while`, `do`, و `for`)  به هم زد.
 
-Bindings can be used to file pieces of data under a name, and they are
-useful for tracking state in your program. The environment is the set
-of bindings that are defined. JavaScript systems always put a number
-of useful standard bindings into your environment.
+متغیرها می توانند برای دسته بندی بخش‌هایی از داده ها تحت یک نام استفاده شوند. همچنین آن‌ها برای حفظ و پیگیری حالت فعلی در برنامه شما مفید هستند. محیط اجرایی مجموعه‌ای از متغیرهاست که قبلا تعریف شده اند. سیستم‌های جاوااسکریپت همیشه تعدادی متغیر استاندارد مفید را در محیط شما تعبیه می کنند.
 
-Functions are special values that encapsulate a piece of program. You
-can invoke them by writing `functionName(argument1, argument2)`. Such
-a function call is an expression and may produce a value.
+توابع مقدارهایی ویژه هستند که بخشی از برنامه را در درون خود نگه داری می کنند. می توانید آن‌ها را با نوشتن `functionName(argument1, argument2)` فراخوانی کنید. این گونه فراخوانی کردن یک تابع یک نوع عبارت است که می تواند مقداری را هم تولید کند.
 
-## Exercises
+## تمرین‌ها
 
 {{index exercises}}
 
-If you are unsure how to test your solutions to the exercises, refer to the
-[Introduction](intro).
+آگر مطمئن نیستید که چگونه راه حل‌هایی که برای تمرین ها ارائه می دهید را آزمایش کنید، به [مقدمه](intro) رجوع کنید.
 
-Each exercise starts with a problem description. Read this description and try to
-solve the exercise. If you run into problems, consider reading the
-hints [after the exercise]{if interactive}[at the [end of the
-book](hints)]{if book}. Full solutions to the exercises are
-not included in this book, but you can find them online at
-[_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2).
-If you want to learn something from the exercises, I recommend looking
-at the solutions only after you've solved the exercise, or at least
-after you've attacked it long and hard enough to have a slight
-headache.
+هر تمرین با یک شرح مساله شروع می شود. آن را بخوانید و سعی کنید آن را حل کنید. اگر در حل مساله به مشکل برخورد کردید، به قسمت “راهنمایی کوچک” که در انتهای کتاب قرار گرفته است رجوع کنید. راه حل کامل برای تمرین‌ها در داخل این کتاب گنجانده نشده است،‌ اما می توانید آن ها را در  [_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2) بیابید. اگر واقعا می خواهید که از تمرین‌ها چیزی بیاموزید، فقط زمانی به سراغ راه حل ها بروید که مساله را حل نموده اید یا حداقل به اندازه کافی تلاش و زمان صرف حل آن کرده باشید که کمی احساس سردرد داشته باشید.
 
-### Looping a triangle
+### حلقه و مثلث
 
 {{index "triangle (exercise)"}}
 
-Write a ((loop)) that makes seven calls to `console.log` to output the
-following triangle:
+حلقه‌ای را پیاده سازی کنید که هفت بار تابع `console.log` را فراخوانی کرده و مثلث زیر را تولید کند:
 
 ```{lang: null}
 #
@@ -938,8 +657,7 @@ following triangle:
 
 {{index [string, length]}}
 
-It may be useful to know that you can find the length of a string by
-writing `.length` after it.
+دانستن این نکته که طول یک رشته را می توان با گذاشتن `.length` در انتهای آن بدست آورد شاید به دردتان بخورد.
 
 ```
 let abc = "abc";
@@ -949,8 +667,7 @@ console.log(abc.length);
 
 {{if interactive
 
-Most exercises contain a piece of code that you can modify to solve
-the exercise. Remember that you can click code blocks to edit them.
+بیشتر تمرین‌ها به همراه‌ کدی می آیند که می توانید برای حل تمرین آن را ویرایش کنید. به یاد داشته باشید که برای ویرایش باید روی بلاک کد کلیک کنید.
 
 ```
 // Your code here.
@@ -961,15 +678,9 @@ if}}
 
 {{index "triangle (exercise)"}}
 
-You can start with a program that prints out the numbers 1 to 7, which
-you can derive by making a few modifications to the [even number
-printing example](program_structure#loops) given earlier in the
-chapter, where the `for` loop was introduced.
+می توانید با برنامه‌ای شروع کنید که اعداد 1 تا 7 را چاپ می کند، که با کمی دستکاری [کد مثال چاپ اعداد زوج](program_structure#loops) که در این فصل آمد به دست می آید. جایی که حلقه‌ی `for` را معرفی کردیم.
 
-Now consider the equivalence between numbers and strings of hash
-characters. You can go from 1 to 2 by adding 1 (`+= 1`). You can go
-from `"#"` to `"##"` by adding a character (`+= "#"`). Thus, your
-solution can closely follow the number-printing program.
+اکنون به شباهت بین اعداد و رشته‌هایی که از کاراکتر ‍‍`#` تشکیل شده اند توجه کنید. می توانید با افزودن 1، از 1 به 2 برسید (`+= 1`). برای به دست آوردن `"##"` از `"#"`، می توانید یک کاراکتر به آن اضافه کنید (`+= "#"`). در این صورت، راه حل شما می تواند بسیار نزدیک به برنامه چاپ اعداد باشد.
 
 hint}}
 
@@ -977,18 +688,11 @@ hint}}
 
 {{index "FizzBuzz (exercise)", loop, "conditional execution"}}
 
-Write a program that uses `console.log` to print all the numbers from
-1 to 100, with two exceptions. For numbers divisible by 3, print
-`"Fizz"` instead of the number, and for numbers divisible by 5 (and
-not 3), print `"Buzz"` instead.
+برنامه ای بنویسید که با استفاده از `console.log` تمامی اعداد بین 1 و 100 را چاپ نماید با دو استثنا. برای اعدادی که بر 3 بخش پذیرند به جای عدد عبارت`"Fizz"`، و برای اعدادی که بر 5 بخش پذیرند (نه بر 3)، مقدار `"Buzz"` را چاپ نماید.
 
-When you have that working, modify your program to print `"FizzBuzz"`
-for numbers that are divisible by both 3 and 5 (and still print
-`"Fizz"` or `"Buzz"` for numbers divisible by only one of those).
+وقتی برنامه شما موارد بالا را به درستی انجام داد، آن را تغییر داده تا مقدار `"FizzBuzz"` را برای اعدادی که بر 3 و 5 به طور همزمان بخش پذیرند چاپ کند ( برنامه همچنان باید `"Fizz"` و `"Buzz"` را برای اعدادی که به هر یک بخش پذیرند را چاپ کند).
 
-(This is actually an ((interview question)) that has been claimed to
-weed out a significant percentage of programmer candidates. So if you
-solved it, your labor market value just went up.)
+(این مساله در واقع یکی از سوالات مصاحبه شغلی است که ادعا شده که می تواند برای رد افرادی که مناسب برنامه نویسی نیستند استفاده شود. بنابراین اگر شما آن را حل کردید، همین الان قیمت شما در بازار کار بالاتر رفت.  )
 
 {{if interactive
 ```
@@ -1000,50 +704,35 @@ if}}
 
 {{index "FizzBuzz (exercise)", "remainder operator", "% operator"}}
 
-Going over the numbers is clearly a looping job, and selecting what to
-print is a matter of conditional execution. Remember the trick of
-using the remainder (`%`) operator for checking whether a number is
-divisible by another number (has a remainder of zero).
+حرکت بین اعدا به وضوح به حلقه‌ها مربوط می شود و انتخاب گزینه برای خروجی، به اجرای شرطی ارتباط پیدا می کند.  ترفند استفاده از عملگر باقی‌مانده (`%`) برای چک کردن تقسیم پذیر بودن یک عدد بر دیگری را به خاطر بیاورید ( که باقی مانده آن صفر می شد.)
 
-In the first version, there are three possible outcomes for every
-number, so you'll have to create an `if`/`else if`/`else` chain.
+در نسخه‌ی اول، سه خروجی برای هر عدد ممکن است، بنابراین باید یک زنجیره‌ی <bdo>`if`/`else if`/`else`</bdo> ایجاد کنید.
 
 {{index "|| operator", ["if keyword", chaining]}}
 
-The second version of the program has a straightforward solution and a
-clever one. The simple solution is to add another conditional "branch" to
-precisely test the given condition. For the clever solution, build up a
-string containing the word or words to output and print either this
-word or the number if there is no word, potentially by making good use
-of the `||` operator.
+نسخه‌ی دوم این برنامه یک راه حل سرراست و یک راه حل هوشمندانه دارد. راه حل ساده این است که یک شاخه‌ی شرط دیگر اضافه شود تا شرط داده شده به دقت بررسی شود. برای راه هوشمندانه، رشته‌ای حاوی کلمه یا کلماتی بسازید که در صورت بودن عدد، رشته و در غیر این صورت عدد مورد نظر چاپ شود. می توان از عملگر `||` در اینجا به شکل خوبی استفاده کرد.
 
 hint}}
 
-### Chessboard
+### صفحه‌ی شطرنج
 
 {{index "chessboard (exercise)", loop, [nesting, "of loops"], "newline character"}}
 
-Write a program that creates a string that represents an 8×8 grid,
-using newline characters to separate lines. At each position of the
-grid there is either a space or a "#" character. The characters should
-form a chessboard.
+برنامه ای بنویسید که رشته‌ای را ایجاد می کند که نمایانگر یک صفحه‌ی 8×8 است. از کاراکتر خط جدید برای جداسازی خطوط استفاده کنید. در هر مکان از صفحه می توان یا از فضای خالی (فاصله) یا کاراکتر "#" استفاده کرد. مجموع کاراکترها باید شبیه صفحه شطرنج باشند.
 
-Passing this string to `console.log` should show something like this:
+رشته‌ی تولیدی را اگر به تابع `console.log` بدهید بایستی چیزی شبیه شکل زیر را تولید کند:
 
 ```{lang: null}
  # # # #
-# # # # 
+# # # #
  # # # #
-# # # # 
+# # # #
  # # # #
-# # # # 
+# # # #
  # # # #
-# # # # 
+# # # #
 ```
-
-When you have a program that generates this pattern, define a
-binding `size = 8` and change the program so that it works for
-any `size`, outputting a grid of the given width and height.
+بعد از ساختن قسمت اول و تولید الگوی بالا، اکنون متغیر <bdo>`size = 8`</bdo> را تعریف کنید و برنامه را طوری تغییر دهید که برای هر مقدار `size` به درستی کار کند و صفحه‌ای با آن طول و عرض تولید کند.
 
 {{if interactive
 ```
@@ -1055,26 +744,16 @@ if}}
 
 {{index "chess board (exercise)"}}
 
-You can build the string by starting with an empty one (`""`) and
-repeatedly adding characters. A newline character is written `"\n"`.
+با یک رشته‌ی خالی (`""`) می توانید ساخت رشته‌ی مورد نظر را شروع کنید و بعد به صورت مداوم کاراکتر‌ها را ضافه نمایید. یک کاراکتر خط جدید به صورت `"\n"` نوشته می شود.
 
 {{index [nesting, "of loops"], [braces, "block"]}}
 
-To work with two ((dimensions)), you will need a ((loop)) inside of a
-loop. Put braces around the bodies of both loops to make it
-easy to see where they start and end. Try to properly indent these
-bodies. The order of the loops must follow the order in which we build
-up the string (line by line, left to right, top to bottom). So the
-outer loop handles the lines, and the inner loop handles the characters
-on a line.
+برای کار با دو ((بعد))، لازم از تا از یک ((حلقه)) درون حلقه‌ای دیگر استفاده کنید. پیرامون بدنه‌های هر دو حلقه، کروشه بگذارید تا شروع و پایان هر یک را گم نکنید. سعی کنید تا برای بدنه‌ها به خوبی تورفتگی ایجاد کنید. ترتیب قرارگیری حلقه‌ها باید براساس رشته‌ای که می‌سازیم باشد (خط به خط، چپ به راست، بالا به پایین). بنابراین حلقه‌ی بیرونی خطوط را پوشش می دهد و حلقه‌ی درونی کاراکترهای هر خط را تولید می کند.
 
 {{index "counter variable", "remainder operator", "% operator"}}
 
-You'll need two bindings to track your progress. To know whether to
-put a space or a hash sign at a given position, you could test whether
-the sum of the two counters is even (`% 2`).
+به دو متغیر برای ردگیری پیشرفت برنامه نیاز خواهید داشت. برای دانستن اینکه در یک موقعیت آیا باید فضای خالی قرار دهید یا کاراکتر `#`، می توانید بررسی کنید که جمع دو شمارنده‌ مقداری زوج باشد (`% 2`).
 
-Terminating a line by adding a newline character must happen after the
-line has been built up, so do this after the inner loop but inside the outer loop.
+پایان دادن یک خط با یک کاراکتر خط جدید (`"\n"`) باید بعد از اینکه هر خط ساخته شد اتفاق بیفتند، بنابراین این کار را بعد از حلقه‌ی درونی اما درون حلقه‌ی بیرونی انجام دهید.
 
 hint}}
