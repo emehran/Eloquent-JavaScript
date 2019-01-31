@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/journal.js", "code/chapter/04_data.js"], zip: "node/html"}}}
 
-# Data Structures: Objects and Arrays
+# ساختارهای داده: اشیاء و آرایه‌ها
 
 {{quote {author: "Charles Babbage", title: "Passages from the Life of a Philosopher (1864)", chapter: true}
 
@@ -17,86 +17,47 @@ quote}}
 
 {{index object, "data structure"}}
 
-Numbers, Booleans, and strings are the atoms that ((data)) structures
-are built from. Many types of information require more than one
-atom, though. _Objects_ allow us to group values—including other
-objects—to build more complex structures.
+اعداد، مقادیر بولی، و رشته‌ها عناصری هستند که ساختار داده‌‌ها از آن ها ساخته می شوند. اگرچه انواع زیادی از اطلاعات هستند که نیاز به چیزی بیش از یک عنصر دارند. _اشیاء_ این امکان را به ما می دهند که مقادیر مختلف – از جمله دیگر اشیاء – را با هم ترکیب کنیم و ساختارهای پیچیده‌تری را بسازیم.
 
-The programs we have built so far have been limited by the fact that
-they were operating only on simple data types. This chapter will
-introduce basic data structures. By the end of it, you'll know enough
-to start writing useful programs.
+برنامه هایی که تا کنون ساخته‌ایم محدود به کار با انواع داده‌ی ساده بوده اند. این فصل ساختارهای داده‌ی پایه معرفی می شوند. در انتهای این فصل ، به اندازه کافی اطلاعات دارید که شروع به نوشتن برنامه‌های کاربردی بکنید.
 
-The chapter will work through a more or less realistic programming
-example, introducing concepts as they apply to the problem at hand.
-The example code will often build on functions and bindings that were
-introduced earlier in the text.
+این فصل با مثال‌های برنامه‌نویسی کم و بیش واقعی جلو می رود تا مفاهیم جدید را همانطور که در مسئله پیش می آیند، معرفی کند. کدهای مثال‌ها اغلب با توابع و متغیرهایی که پیش‌تر معرفی شده اند ساخته می شوند.
 
 {{if book
 
-The online coding ((sandbox)) for the book
-([_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code))
-provides a way to run code in the context of a specific chapter. If
-you decide to work through the examples in another environment, be
-sure to first download the full code for this chapter from the sandbox
-page.
+محیط تست که به صورت آنلاین برای کدها این کتاب در نظر گرفته شده است ([_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code)) این امکان را فراهم کرده است که کدهای هر فصل را اجرا کنید. اگر تصمیم دارید تا مثال‌ها را در محیط دیگری اجرا کنید، مطمئن شوید که ابتدا کل کدها را از سایت دانلود کنید.
 
 if}}
 
-## The weresquirrel
+## انسان‌سنجاب
 
 {{index "weresquirrel example", lycanthropy}}
+هر از چند گاهی معمولا بین ساعت هشت تا ده شب ((ژاک)) متوجه می شود که تغییر شکل داده و به یک جونده کوچک با دمی پرپشت تبدیل می شود.
 
-Every now and then, usually between 8 p.m. and 10 p.m.,
-((Jacques)) finds himself transforming into a small furry rodent with
-a bushy tail.
+از یک سو ژاک نسبتا خوشحال است که شبیه داستان‌های کلاسیک تبدیل به گرگ نمی شود. سنجاب شدن احتمالا مشکلاتی کمتری نسبت به گرگ شدن ایجاد می کند. به جای اینکه نگران باشد که اتفاقی همسایه‌اش را نخورد ( که خیلی ناجور است )، نگران خورده شدن توسط گربه‌ی همسایه است. بعد از دو مرتبه‌ای که روی شاخه‌ی باریک و لرزانی بالای یک درخت بلوط، لخت و گیج، بیدار شد، درها و پنجره‌های  اتاقش را شب‌ها قفل می کرد و چندتایی گردو هم کف اتاق قرار می داد که سرگرم بماند.
 
-On one hand, Jacques is quite glad that he doesn't have classic
-lycanthropy. Turning into a squirrel does cause fewer problems than
-turning into a wolf. Instead of having to worry about accidentally
-eating the neighbor (_that_ would be awkward), he worries about being
-eaten by the neighbor's cat. After two occasions where he woke up on a
-precariously thin branch in the crown of an oak, naked and
-disoriented, he has taken to locking the doors and windows of his room
-at night and putting a few walnuts on the floor to keep himself busy.
-
-That takes care of the cat and tree problems. But Jacques would prefer
-to get rid of his condition entirely. The irregular occurrences of the
-transformation make him suspect that they might be triggered by
-something. For a while, he believed that it happened only on days when
-he had been near oak trees. But avoiding oak trees did not stop the
-problem.
+این، مشکل گربه‌ی همسایه و درخت را حل می کرد. اما ژاک به دنبال این بود که از این مشکل به طور کلی رهایی یابد. تبدیل شدن‌های بی نظم و قاعده باعث شده بود که شک کند شاید چیز خاصی علت این مشکل باشد. برای مدتی،  فکر می کرد که این اتفاق در روزهایی رخ می دهد که نزدیک درخت بلوط بوده است. اما دوری از درخت بلوط هم کمکی نکرد و مشکل برطرف نشد.
 
 {{index journal}}
 
-Switching to a more scientific approach, Jacques has started keeping a
-daily log of everything he does on a given day and whether he changed
-form. With this data he hopes to narrow down the conditions that
-trigger the transformations.
+ژاک با انتخاب روشی علمی تر، اقدام به نگه‌داری گزارشی روزانه از همه‌ی فعالیت‌هایی یک روز و وضعیت تبدیل شدن به سنجاب نموده است. با در دست داشتن این اطلاعات، امیدوار است بتواند شرایطی که باعث بروز تبدیل می شود را محدودتر کند.
 
-The first thing he needs is a data structure to store this
-information.
+اکنون اولین کاری که باید انجام دهد طراحی یک ساختار داده برای ذخیره این اطلاعات است.
 
-## Data sets
+## مجموعه‌های داده
 
 {{index ["data structure", collection], [memory, organization]}}
 
-To work with a chunk of digital data, we'll first have to find a way
-to represent it in our machine's memory. Say, for example, that we
-want to represent a ((collection)) of the numbers 2, 3, 5, 7, and 11.
+برای کار با داده‌های دیجیتال، ابتدا باید راهی، برای
+ارائه‌ی آن‌ها در حافظه‌ی کامپیوتر (ماشین) بیابیم. به عنوان یک مثال ساده، فرض کنید که می خواهیم ((مجموعه)) ای از اعداد، 2، 3، 5، 7، و 11 را در حافظه قرار دهیم.
 
 {{index string}}
 
-We could get creative with strings—after all, strings can have any
-length, so we can put a lot of data into them—and use `"2 3 5 7 11"`
-as our representation. But this is awkward. You'd have to somehow
-extract the digits and convert them back to numbers to access them.
+برای این کار می توانیم از رشته‌ها، خلاقانه بهره ببریم – به هر حال رشته ها می توانند هر طولی داشته باشند؛ پس می توان داده‌های زیادی درون آن‌ها قرار داد – و از نمایش رشته‌ای <bdo>`"2 3 5 7 11"`</bdo> استفاده کنیم. اما این کار ایرادهایی دارد. برای استفاده از اعداد، مجبور خواهید شد که به شکلی آن ها را از دل رشته ها استخراج و به نوع عدد تبدیل کنید.
 
 {{index [array, creation], "[] (array)"}}
 
-Fortunately, JavaScript provides a data type specifically for storing
-sequences of values. It is called an _array_ and is written as a list
-of values between ((square brackets)), separated by commas.
+خوشبختانه، جاوااسکریپت نوع داده‌ای فراهم می کند که به طور خاص برای ذخیره دنباله‌ای از مقدارها استفاده می شود. این نوع داده خاص _آرایه_ نام دارد و به این صورت نوشته می شود که مقدارها بین براکت قرار می گیرند و با ویرگول جدا می شوند.
 
 ```
 let listOfNumbers = [2, 3, 5, 7, 11];
@@ -110,40 +71,24 @@ console.log(listOfNumbers[2 - 1]);
 
 {{index "[] (subscript)", [array, indexing]}}
 
-The notation for getting at the elements inside an array also uses
-((square brackets)). A pair of square brackets immediately after an
-expression, with another expression inside of them, will look up the
-element in the left-hand expression that corresponds to the
-_((index))_ given by the expression in the brackets.
+برای دستیابی به عناصر درون یک آرایه نیز، از براکت‌ها استفاده می شود. یک جفت براکت که بلافاصله بعد از یک عبارت می آیند و بعد از آن عبارتی دیگر درون آن قرار می گیرد. با این کار عنصر مورد نظرمان را با استفاده از _شاخصی_ که به وسیله عبارت داخل براکت‌ها مشخص می کنیم، در داخل عبارت سمت چپ جستجو می کنیم.
 
 {{id array_indexing}}
 {{index "zero-based counting"}}
 
-The first index of an array is zero, not one. So the first element is
-retrieved with `listOfNumbers[0]`. Zero-based counting has a long
-tradition in technology and in certain ways makes a lot of sense, but
-it takes some getting used to. Think of the index as the amount of
-items to skip, counting from the start of the array.
+اولین خانه‌ی یک آرایه، صفر است، نه یک. بنابراین اولین عنصر را می توان با <bdo>`listOfNumbers[0]`</bdo> به دست آورد.  شمارش از صفر، در تکنولوژی سابقه‌ای دیرینه دارد و در بعضی مواقع کاری بسیار معقول می باشد؛ اما ممکن است کمی زمان ببرد تا به آن عادت کنید. می توانید اندیس آرایه را به صورت تعداد آیتم هایی که باید از ابتدای آرایه گذشت تا به عنصر مورد نظر رسید، تصور کرد.
 
 {{id properties}}
 
-## Properties
+## خاصیت‌ها
 
 {{index "Math object", "Math.max function", ["length property", "for string"], [object, property], "period character", [property, access]}}
 
-We've seen a few suspicious-looking expressions like `myString.length`
-(to get the length of a string) and `Math.max` (the maximum function)
-in past chapters. These are expressions that access a _property_
-of some value. In the first case, we access the `length` property of
-the value in `myString`. In the second, we access the property named
-`max` in the `Math` object (which is a collection of
-mathematics-related constants and functions).
+در فصل‌های قبل، با عبارت‌هایی روبرو شده ایم که ظاهری نامانوس داشتند مانند <bdo>`myString.length`</bdo> (برای بدست آوردن طول رشته) یا `Math.max` (برای یافتن بیشینه اعداد). این ها عبارت‌هایی هستند که به _خاصیتی_ از یک مقدار دسترسی دارند. در مثال اول، به خاصیت `length` از مقدار `myString` اشاره می کنیم. در مورد دوم، به خاصیتی با نام `max` از شیء `Math` دسترسی پیدا کرده ایم ( که این شیء شامل مجموعه ای از ثابت ها و توابع ریاضی می باشد).
 
 {{index [property, access], null, undefined}}
 
-Almost all JavaScript values have properties. The exceptions are
-`null` and `undefined`. If you try to access a property on one of
-these nonvalues, you get an error.
+تقریبا همه‌ی مقدارهای جاوااسکریپت دارای خاصیت‌ها می باشند. مورد استثنا `null` و `undefined`  است. اگر سعی کنید تا به خاصیتی از این دو اشاره کنید، با خطا مواجه خواهید شد.
 
 ```{test: no}
 null.length;
@@ -153,44 +98,23 @@ null.length;
 {{indexsee "dot character", "period character"}}
 {{index "[] (subscript)", "period character", "square brackets", "computed property", [property, access]}}
 
-The two main ways to access properties in JavaScript are with a dot
-and with square brackets. Both `value.x` and `value[x]` access a
-property on `value`—but not necessarily the same property. The
-difference is in how `x` is interpreted. When using a dot, the word
-after the dot is the literal name of the property. When using square
-brackets, the expression between the brackets is _evaluated_ to get
-the property name. Whereas `value.x` fetches the property of `value`
-named "x", `value[x]` tries to evaluate the expression `x` and uses
-the result, converted to a string, as the property name.
+دو روش رایج برای دسترسی به خاصیت‌ها در جاوااسکریپت استفاده از نقطه و براکت است. هر دوی <bdo>`value.x`</bdo> و <bdo>`value[x]`</bdo> به خاصیتی از `value` دسترسی دارند – اما نه لزوما به خاصیتی یکسان. تفاوت به نحوه‌ی تفسیر `x` بر می گردد. زمانی که از نقطه استفاده می کنیم، قسمت بعد از نقطه، بایستی نام متغیری معتبر باشد که مستقیما نام خاصیت را مشخص می کند. زمانی که از براکت استفاده می شود، عبارتی که بین براکت‌ها قرار می گیرد _ارزیابی_ شده تا نام خاصیت مشخص شود. در حالیکه  <bdo>`value.x`</bdo> خاصیتی از `value` که نام آن "x" است را برمی‌گرداند، <bdo>`value[x]`</bdo> سعی می کند تا عبارت `x` را ارزیابی کرده و نتیجه‌ی آن را به عنوان نام خاصیت استفاده کند.
 
-So if you know that the property you are interested in is called
-_color_, you say `value.color`. If you want to extract the property
-named by the value held in the binding `i`, you say `value[i]`.
-Property names are strings. They can be any string, but the dot notation works only with
-names that look like valid binding names. So if you want to access a
-property named _2_ or _John Doe_, you must use square brackets:
-`value[2]` or `value["John Doe"]`.
+بنابراین اگر می دانید که نام خاصیتی که مورد نظرتان است _color_ است شود به سراغ <bdo>`value.color`</bdo> بروید. اگر قصد دارید به خاصیتی اشاره کنید که نامش در متغیر `i` ذخیره شده است ، می توانید از <bdo>`value[i]`</bdo> استفاده کنید. نام یک خاصیت می تواند هر رشته‌ای باشد، اما روش استفاده از نقطه، فقط روی نام‌هایی کار می کند که برای یک متغیر معتبر می باشند. بنابراین اگر قصد دارید تا به خاصیتی به نام _2_ یا <bdo>_John Doe_</bdo> دسترسی داشته باشید، باید حتما از براکتها استفاده کنید:‌<bdo>`value[2]`</bdo>  یا <bdo>`value["John Doe"]`</bdo>.
 
-The elements in an ((array)) are stored as the array's properties, using
-numbers as property names. Because you can't use the dot notation with
-numbers and usually want to use a binding that holds the index
-anyway, you have to use the bracket notation to get at them.
+عناصر درون یک ((آرایه)) به عنوان خاصیت‌های آن ذخیره می شوند که برای نام این خاصیت ها از اعداد استفاده می شود. چون نمی توان از نقطه برای دسترسی به نام‌های عدد استفاده کرد، و اغلب لازم است تا به خانه‌های آرایه با استفاده از متغیرها اشاره کنیم، باید از روش براکت‌ برای دستیابی به آن‌ها استفاده کنیم.
 
 {{index ["length property", "for array"], [array, "length of"]}}
 
-The `length` property of an array tells us how many elements it has.
-This property name is a valid binding name, and we know its name in
-advance, so to find the length of an array, you typically write
-`array.length` because that's easier to write than `array["length"]`.
+خاصیت `length` در آرایه‌ها هم تعداد عناصری که در آرایه وجود دارد را نشان می دهد. نام این خاصیت (length)، نامی معتبر برای یک متغیر می باشد و ما از آن آگاه بودیم پس به سراغ روش <bdo>`array.length`</bdo> می رویم چراکه از <bdo>`array["length"]`</bdo> آسان تر نوشته می شود.
 
 {{id methods}}
 
-## Methods
+## متدها
 
 {{index [function, "as property"], method, string}}
 
-Both string and array objects contain, in addition to the `length`
-property, a number of properties that hold function values.
+هر دوی اشیاء رشته‌ای و آرایه‌ای، علاوه بر خاصیت `length` تعدادی خاصیت دیگر دارند که که حاوی مقدارهایی از جنس تابع هستند.
 
 ```
 let doh = "Doh";
@@ -202,25 +126,17 @@ console.log(doh.toUpperCase());
 
 {{index "case conversion", "toUpperCase method", "toLowerCase method"}}
 
-Every string has a `toUpperCase` property. When called, it will return
-a copy of the string in which all letters have been converted to
-uppercase. There is also `toLowerCase`, going the other way.
+همه‌ی رشته‌ها خاصیت `toUpperCase` را دارند که در صورت فراخوانی، یک کپی از رشته‌ را با حروف بزرگ برمی‌گرداند. همچنین `toLowerCase` نیز وجود دارد که عکس آن عمل می کند.
 
 {{index "this binding"}}
 
-Interestingly, even though the call to `toUpperCase` does not pass any
-arguments, the function somehow has access to the string `"Doh"`, the
-value whose property we called. How this works is described in
-[Chapter ?](object#obj_methods).
+جالب آن‌که، وقتی که `toUpperCase` فراخوانی می شود علی رغم اینکه مقداری به عنوان آرگومان دریافت نمی کند، این تابع به نحوی به رشته‌ی `"Doh"` دسترسی دارد (مقداری که خاصیت را روی آن فراخوانی کرده ایم). چگونگی کارکرد این موضوع در [فصل ?](object#obj_methods) توضیح داده می شود.
 
-Properties that contain functions are generally called _methods_ of
-the value they belong to, as in "`toUpperCase` is a method of a
-string".
+خاصیت‌هایی که حاوی تابع هستند را عموما _متدهای_ مقداری که به آن تعلق دارند، می نامند. همانطور که `toUpperCase` متدی از یک رشته محسوب می شود.
 
 {{id array_methods}}
 
-This example demonstrates two methods you can use to manipulate
-arrays:
+مثال پیش رو، دو متد را که می توانید از آن ها برای دستکاری آرایه‌ها استفاده کنید، شرح می دهد:
 
 ```
 let sequence = [1, 2, 3];
@@ -236,36 +152,22 @@ console.log(sequence);
 
 {{index collection, array, "push method", "pop method"}}
 
-The `push` method adds values to the end of an array, and the
-`pop` method does the opposite, removing the last value in the array
-and returning it.
+متد `push` را میتوان برای افزودن مقادیر به انتهای یک آرایه استفاده کرد. متد `pop` عکس آن عمل می کند: آخرین مقداری که در انتهای یک آرایه وجود دارد را حذف کرده و برمی گرداند.
 
 {{index ["data structure", stack]}}
 
-These somewhat silly names are the traditional terms for operations on
-a _((stack))_. A stack, in programming, is a data structure that
-allows you to push values into it and pop them out again in the
-opposite order so that the thing that was added last is removed first.
-These are common in programming—you might remember the function ((call
-stack)) from [the previous chapter](functions#stack), which is an
-instance of the same idea.
+نام این دو متد در کارهای مرتبط با پشته‌ها از قدیم استفاده می شده است. یک _((پشته‌))_، در برنامه نویسی، ساختار داده‌ای است که این امکان را به شما می دهد تا مقادیر را به آن وارد کرده و به ترتیب عکس از آن خارج نمایید. بنابراین مقداری که آخر از همه وارد شده است، اول از همه خارج می شود. این کارها در برنامه نویسی رایج هستند – ممکن است پشته‌ی فراخوانی توابع که در [فصل قبل](functions#stack) بحث شد را به خاطر بیاورید که نمونه ای از همین مفهوم است.
 
-## Objects
+## آبجکت‌ها یا اشیاء
 
 {{index journal, "weresquirrel example", array, record}}
 
-Back to the weresquirrel. A set of daily log entries can be
-represented as an array. But the entries do not consist of just a
-number or a string—each entry needs to store a list of activities and
-a Boolean value that indicates whether Jacques turned into a squirrel
-or not. Ideally, we would like to group these together into a single
-value and then put those grouped values into an array of log entries.
+برگردیم به مثال انسان‌سنجاب.  می توان مجموعه‌ای از گزارشات روزانه را به صورت یک آرایه نشان داد. اما گزارشات فقط شامل رشته یا عدد نیستند – هر گزارش بایستی لیستی از فعالیت‌ها را ذخیره کند به همراه یک مقدار بولی که نشان می دهد که ژاک به سنجاب تبدیل شده یا نه را ذخیره کند. در وضعیت ایده‌آل، دوست داشتیم که این اطلاعات را با هم گروه کرده و یک مقدار بسازیم و آن مقادیر گروه شده را در یک آرایه‌ای از گزارشات ذخیره کنیم.
+
 
 {{index [syntax, object], [property, definition], [braces, object], "{} (object)"}}
 
-Values of the type _((object))_ are arbitrary collections of
-properties. One way to create an object is by using braces as an
-expression.
+مقادیری که از نوع _((object))_ هستند دارای مجموعه‌ای از خاصیت‌های دلخواه هستند . یک راه برای ایجاد یک شیء استفاده از کروشه ها به عنوان یک عبارت است.
 
 ```
 let day1 = {
@@ -283,11 +185,7 @@ console.log(day1.wolf);
 
 {{index [quoting, "of object properties"], "colon character"}}
 
-Inside the braces, there is a list of properties separated by commas.
-Each property has a name followed by a colon and a value. When an
-object is written over multiple lines, indenting it like in the
-example helps with readability. Properties whose names aren't valid
-binding names or valid numbers have to be quoted.
+درون کروشه ها، می توانیم لیستی از خاصیت‌ها را که با ویرگول جدا می شوند را تعریف کنیم. هر خاصیت به وسیله‌ی یک نام، یک کاراکتر دونقطه در جلوی‌ آن و یک عبارت که مقدار خاصیت را مشخص می کند تعریف می شود. زمانی که تعریف یک شیء به چند خط می کشد،‌ استفاده از تورفتگی در کد‌ها باعث افزایش خوانایی می شود. خاصیت‌هایی که نامشان نام معتبری برای یک متغیر محسوب نمی شوند یا اعداد می بایست درون نقل قول قرار بگیرند.
 
 ```
 let descriptions = {
@@ -298,37 +196,24 @@ let descriptions = {
 
 {{index [braces, object]}}
 
-This means that braces have _two_ meanings in JavaScript. At
-the start of a ((statement)), they start a ((block)) of statements. In
-any other position, they describe an object. Fortunately, it is rarely
-useful to start a statement with an object in braces, so the
-ambiguity between these two is not much of a problem.
+این بدین معناست که کروشه‌ها در جاوااسکریپت _دو_ معنای متفاوت دارند. در شروع یک ((دستور))، نشانگر شروع یک ((بلاک)) از دستورات هستند. در دیگر مکان‌ها، نمایانگر تعریف یک شیء می باشند. خوشبختانه، شروع یک دستور با کروشه‌ی اشیاء کاربردی زیادی ندارد ، بنابراین چندان مساله‌ی مهمی نیست.
 
 {{index undefined}}
 
-Reading a property that doesn't exist will give you the value
-`undefined`.
+خواندن خاصیتی که وجود نداشته باشد باعث تولید مقدار `undefined` می شود.
 
 {{index [property, assignment], mutability, "= operator"}}
 
-It is possible to assign a value to a property expression with the `=`
-operator. This will replace the property's value if it already existed
-or create a new property on the object if it didn't.
+می توان مقداری را به خاصیتی به وسیله عملگر `=` اختصاص داد. این کار باعث می شود مقدار خاصیت مورد نظر – در صورت وجود – جایگزین شده یا در غیر این صورت خاصیت جدید در شیء به وجود بیاید.
+
 
 {{index "tentacle (analogy)", [property, "model of"], [binding, "model of"]}}
 
-To briefly return to our tentacle model of ((binding))s—property
-bindings are similar. They _grasp_ values, but other bindings and
-properties might be holding onto those same values. You may think of
-objects as octopuses with any number of tentacles, each of which has a
-name tattooed on it.
+استعاره‌ی بازوچه که برای متغیرها استفاده شد در اینجا هم کاربرد دارد. خاصیت‌ها به مقدارها _چنگ می زنند_ و این مقدارها ممکن است توسط دیگر متغیرها و خاصیت ها هم نگه داری شوند.  می توانید اشیاء را اختاپوسی در نظر بگیرید که بازوهای متعددی دارد که هر کدام از آن ها نامی دارد که روی آن حک شده است.
 
 {{index "delete operator", [property, deletion]}}
 
-The `delete` operator cuts off a tentacle from such an octopus. It is
-a unary operator that, when applied to an object property,
-will remove the named property from the object. This is not a common
-thing to do, but it is possible.
+عملگر `delete` باعث قطع یک بازوچه از این اختاپوس می شود. این عملگر یکانی است که اگر به خاصیتی اعمال شود آن خاصیت نام‌برده را از شیء حذف می کند. استفاده از این عملگر زیاد رایج نیست، اما به هر حال قابل استفاده است.
 
 ```
 let anObject = {left: 1, right: 2};
@@ -345,26 +230,18 @@ console.log("right" in anObject);
 
 {{index "in operator", [property, "testing for"], object}}
 
-The binary `in` operator, when applied to a string and an object,
-tells you whether that object has a property with that name. The difference
-between setting a property to `undefined` and actually deleting it is
-that, in the first case, the object still _has_ the property (it just
-doesn't have a very interesting value), whereas in the second case the
-property is no longer present and `in` will return `false`.
+عملگر دودویی `in` اگر به رشته‌ای یا شیءای اعمال شود، مقداری از جنس بولی بر می گرداند که مشخص می کند که آن شیء دارای آن خاصیت است یا خیر. تفاوت بین اختصاص `undefined` به یک خاصیت و حذف آن این است که در مورد اول، شیء مورد بحث همچنان آن خاصیت را دارد (اگرچه مقدار آن جالب به نظر نمی رسد) در حالیکه در مورد دوم خاصیت دیگر وجود ندارد و عملگر `in` مقدار `false` را بر می گرداند.
+
 
 {{index "Object.keys function"}}
 
-To find out what properties an object has, you can use the
-`Object.keys` function. You give it an object, and it returns an array
-of strings—the object's property names.
+برای بدست آوردن خاصیت‌های یک شیء، می توانید از تابع <bdo>`Object.keys`</bdo> استفاده کنید. اگر شیءای را به آن بدهید، آرایه‌ای از نام خاصیت‌های شیء بر می گرداند.
 
 ```
 console.log(Object.keys({x: 0, y: 0, z: 2}));
 // → ["x", "y", "z"]
 ```
-
-There's an `Object.assign` function that copies all properties from
-one object into another.
+تابع دیگری به نام <bdo>`Object.assign`</bdo> نیز وجوددارد که تمام خاصیت‌های یک شیء را در شیء دیگری کپی می کند.
 
 ```
 let objectA = {a: 1, b: 2};
@@ -375,14 +252,11 @@ console.log(objectA);
 
 {{index array, collection}}
 
-Arrays, then, are just a kind of object specialized for storing
-sequences of things. If you evaluate `typeof []`, it produces
-`"object"`. You can see them as long, flat octopuses with all their
-tentacles in a neat row, labeled with numbers.
+آرایه‌ها نیز، در واقع شکل خاصی از اشیاء هستند که برای ذخیره‌ی دنباله‌ای از چیزها اختصاصی شده اند. اگر <bdo>`typeof []`</bdo>  را ارزیابی کنید، مقدار `"object"` تولید می شود. می توانید آن ها را به عنوان اختاپوس‌های درازی در نظر بگیرید که همه‌ی بازوهای آن‌ها به شکل ردیفی مرتب با اعداد برچسب گذاری شده اند.
 
 {{index journal, "weresquirrel example"}}
 
-We will represent the journal that Jacques keeps as an array of objects.
+بنابراین می توانیم دفترچه‌ی ژاک را به صورت آرایه ای از اشیاء نمایش دهیم.
 
 ```{test: wrap}
 let journal = [
@@ -399,32 +273,20 @@ let journal = [
 ];
 ```
 
-## Mutability
+## تغییر پذیری
 
-We will get to actual programming _real_ soon now. First there's one
-more piece of theory to understand.
+به زودی به برنامه‌نویسی _واقعی_ می رسیم. قبل از آن یک قسمت تئوری دیگر وجود دارد که بایستی درک شود.
 
 {{index mutability, "side effect", number, string, Boolean, [object, mutability]}}
 
-We saw that object values can be modified. The types of values
-discussed in earlier chapters, such as numbers, strings, and Booleans,
-are all _((immutable))_—it is impossible to change values of those
-types. You can combine them and derive new values from them, but when
-you take a specific string value, that value will always remain the
-same. The text inside it cannot be changed. If you have a string that
-contains `"cat"`, it is not possible for other code to change a
-character in your string to make it spell `"rat"`.
+تا حالا متوجه‌ شده‌ایم که مقدار اشیاء را می توان تغییر داد. انواع مقدارهایی که در فصلهای پیشین بحث کردیم، مانند اعداد، رشته‌ها و مقادیر بولی،‌ همه _((غیرقابل تغییر))_ بودند. تغییر مقداری از این انواع داده غیر ممکن است. می توانید آن‌ها را ترکیب کنید تا مقادیر جدیدی ایجاد کنید اما اگر مقدار رشته‌ای خاصی را بگیرید، مقدارش همیشه همان خواهد ماند. متن داخلش را نمی توان عوض کرد. اگر رشته‌ای داشته باشید که مقدار `"cat"` را دربردارد، برای کدهای برنامه امکان ندارد که بتوانند کاراکتر از آن را تغییر دهند و مثلا به `"rat"` تبدیلش کنند.
 
-Objects work differently. You _can_ change their properties,
-causing a single object value to have different content at different times.
+محتوای یک مقدار از نوع شیء را _می توان_ به وسیله‌ی خاصیت‌هایش تغییر داد.
+این کار باعث می شود که یک شیء در زمان‌های مختلف محتوای متفاوتی داشته باشد.
 
 {{index [object, identity], identity, [memory, organization], mutability}}
 
-When we have two numbers, 120 and 120, we can consider them precisely
-the same number, whether or not they refer to the same physical bits.
-With objects, there is a difference between having two references to
-the same object and having two different objects that contain the same
-properties. Consider the following code:
+زمانی که دو عدد مثلا 120 و 120 را داریم می توانیم هر دو را دقیقا یک عدد مشابه در نظر بگیریم، فارغ از اینکه به بیت‌های فیزیکی یکسانی مربوط باشند یا خیر. اما در اشیاء، بین داشتن دو ارجاع به یک شیء یکسان و داشتن دو شیء متفاوت که خاصیت‌های مشابهی دارند،‌تفاوت وجود دارد. به کدهای زیر رو توجه کنید:
 
 ```
 let object1 = {value: 10};
@@ -445,20 +307,12 @@ console.log(object3.value);
 
 {{index "tentacle (analogy)", [binding, "model of"]}}
 
-The `object1` and `object2` bindings grasp the _same_ object, which is
-why changing `object1` also changes the value of `object2`. They are
-said to have the same _identity_. The binding `object3` points to a
-different object, which initially contains the same properties as
-`object1` but lives a separate life.
+متغیرهای `object1` و `object2` به شیء مشابهی اشاره می کنند که به همین دلیل تغییر `object1` منجر به تغییر مقدار `object2` هم می شود. گفته می شود این دو هویت یکسانی دارند. متغیر `object3` به شی دیگری اشاره می کند که دارای خاصیت هایی مشابه `object1` است اما در فضای متفاوتی قرار گرفته است.
 
 {{index "const keyword", "let keyword", [binding, "as state"]}}
 
-Bindings can also be changeable or constant, but this is separate from
-the way their values behave. Even though number values don't change,
-you can use a `let` binding to keep track of a changing number by
-changing the value the binding points at. Similarly, though a `const`
-binding to an object can itself not be changed and will continue to
-point at the same object, the _contents_ of that object might change.
+متغیرها نیز می توانند از نوع ثابت و غیر ثابت باشند، اما این قضیه ارتباطی به رفتار مقدارهای آن ها ندارد. اگرچه مقداری از جنس عدد تغییر ناپذیر است، می توانید از متغیر که با `let` تعریف شده است استفاده کنید تا عددی که متغیر به آن اشاره می کند را عوض کنید. به طور مشابه، اگرچه یک binding که با `const` برای یک شیء تعریف شده است را نمی توان تغییر داد و همیشه به شیء مشابهی اشاره خواهد کرد، اما _محتوای_ آن شیء قابل تغییر است.
+
 
 ```{test: no}
 const score = {visitors: 0, home: 0};
@@ -470,20 +324,13 @@ score = {visitors: 1, home: 1};
 
 {{index "== operator", [comparison, "of objects"], "deep comparison"}}
 
-When you compare objects with JavaScript's `==` operator, it compares
-by identity: it will produce `true` only if both objects are precisely
-the same value. Comparing different objects will return `false`, even
-if they have identical properties. There is no "deep" comparison
-operation built into JavaScript, which compares objects by contents,
-but it is possible to write it yourself (which is one of the
-[exercises](data#exercise_deep_compare) at the end of this chapter).
+عملگر `==` جاوااسکریپت، زمانی که برای مقایسه‌ی اشیاء استفاده می شود، تنها زمانی مقدار `true` را برمیگرداند که هر دو شیء کاملا مقدار مشابهی باشند. مقایسه اشیاء متفاوت حتی زمانی که محتوای آن ها یکسان باشد باعث برگرداندن `false` می شود. در جاوااسکریپت عملگری برای مقایسه‌ی عمیق تعبیه نشده است که محتوای اشیاء را بررسی و مقایسه کند. اما خودتان می توانید آن را بنویسید ( یکی از [تمرین‌های](data#exercise_deep_compare) پایان این فصل همین مساله خواهد بود).
 
-## The lycanthrope's log
+## برنامه‌ی گزارش مسخ
 
 {{index "weresquirrel example", lycanthropy, "addEntry function"}}
 
-So, Jacques starts up his JavaScript interpreter and sets up the
-environment he needs to keep his ((journal)).
+خوب ژاک برنامه مفسر جاوااسکریپت را اجرا می کند و محیطی که برای نوشتن گزارش روزانه نیاز دارد را فراهم می کند
 
 ```{includeCode: true}
 let journal = [];
@@ -495,15 +342,9 @@ function addEntry(events, squirrel) {
 
 {{index [braces, object], "{} (object)", [property, definition]}}
 
-Note that the object added to the journal looks a little odd. Instead
-of declaring properties like `events: events`, it just gives a
-property name. This is shorthand that means the same thing—if a
-property name in brace notation isn't followed by a value, its
-value is taken from the binding with the same name.
+توجه کنید که شیءی که به ژورنال اضافه می شود کمی غیر عادی به نظر می رسد. به جای اینکه خاصیت را به شکل `events: events` بنویسیم، فقط نام خاصیت نوشته شده است. این دستور کوتاه معادل همان روش معمولی است – اگر در روش تعریف شیء به وسیله کروشه‌ها، نام خاصیتی بدون تعریف مقدارش نوشته شود، مقدار آن از متغیری با همان نام گرفته می شود.
 
-So then, every evening at 10 p.m.—or sometimes the next morning, after
-climbing down from the top shelf of his bookcase—Jacques records the
-day.
+بنابراین هر شب ساعت ده – یا گاهی اوقات صبح روز بعد، بعد از پایین آمدن از قفسه بالایی کتابخانه اش-  ژاک گزارش روز را ثبت می کند.
 
 ```
 addEntry(["work", "touched tree", "pizza", "running",
@@ -514,37 +355,21 @@ addEntry(["weekend", "cycling", "break", "peanuts",
           "beer"], true);
 ```
 
-Once he has enough data points, he intends to use statistics to find
-out which of these events may be related to the squirrelifications.
+زمانی که مقدار کافی اطلاعات در دست داشت، قصد دارد تا به محاسبه‌ی ارتباط بین تبدیل شدنش به سنجاب و اتفاقاتی که در آن روز افتاده است بپردازد و امیدوار است چیزهای مفیدی از این همبستگی‌ها دستش بیاید.
 
 {{index correlation}}
 
-_Correlation_ is a measure of ((dependence)) between statistical
-variables. A statistical variable is not quite the same as a
-programming variable. In statistics you typically have a set of
-_measurements_, and each variable is measured for every measurement.
-Correlation between variables is usually expressed as a value that
-ranges from -1 to 1. Zero correlation means the variables are not
-related. A correlation of one indicates that the two are perfectly
-related—if you know one, you also know the other. Negative one also
-means that the variables are perfectly related but that they are
-opposites—when one is true, the other is false.
+_همبستگی_ مقیاسی برای تعیین میزان _وابستگی_ بین متغیرهای آماری است. یک متغیر آماری شبیه به متغیرها در زبان‌های برنامه نویسی نیست. در آمار شما معمولا مجموعه‌ای از اندازه‌ها دارید و هر متغیر برای همه‌ی اندازه‌ها محاسبه می شود. همبستگی بین متغیرها معمولا به شکل ضریبی بین <bdo>-1</bdo> تا <bdo>1</bdo> تولید می شود. ضریب همبستگی صفر به معنای این است که دو متغیر هیچ ارتباطی با هم ندارند و ضریب همبستگی یک به معنای ارتباط کامل دو متغیر است – اگر یکی از آن ها را بدانید، دیگری را نیز می توانید بدست بیاورید. منهای یک نیز به معنای ارتباط کامل دو متغیر اما به شکل معکوس و مخالف است- زمانی که یکی درست است دیگری نادرست خواهد بود.
 
 {{index "phi coefficient"}}
 
-To compute the measure of correlation between two Boolean variables,
-we can use the _phi coefficient_ (_ϕ_). This is a formula whose input
-is a ((frequency table)) containing the number of times the different
-combinations of the variables were observed. The output of the formula
-is a number between -1 and 1 that describes the correlation.
+برای محاسبه اندازه ضریب همبستگی بین دو متغیر بولی، می توانیم از _ضریب فی_ (_ϕ_) استفاده کنیم. این ضریب فرمولی است که ورودی آن یک جدول فراوانی از تعداد دفعاتی است که ترکیب های مختلف دو متغیر مشاهده شده اند. خروجی فرمول  عددی بین <bdo>-1</bdo> و 1 است که میزان همبستگی را مشخص می کند.
 
-We could take the event of eating ((pizza)) and put that in a
-frequency table like this, where each number indicates the amount of
-times that combination occurred in our measurements:
+می توانیم رخداد خوردن ((پیتزا)) را در نظر بگیریم و آن را در جدول فراوانی به شکل زیر قرار دهیم، جایی که هر عدد نمایانگر تعداد دفعاتی است که ترکیب مورد نظر ما اتفاق افتاده است:
 
 {{figure {url: "img/pizza-squirrel.svg", alt: "Eating pizza versus turning into a squirrel", width: "7cm"}}}
 
-If we call that table _n_, we can compute _ϕ_ using the following formula:
+اگر جدول را _n_ بنامیم، می توان _ϕ_ را با فرمول زیر محاسبه کرد:
 
 {{if html
 
@@ -569,55 +394,31 @@ if}}
 
 if}}
 
-(If at this point you're putting the book down to focus on a terrible
-flashback to 10th grade math class—hold on! I do not intend to torture
-you with endless pages of cryptic notation—it's just this one formula for
-now. And even with this one, all we do is turn it into JavaScript.)
+( اگر دارید کتاب را می بندید تا به سراغ خاطرات وحشتناک کتاب ریاضی دبیرستان بروید، صبر کنید! قرار نیست که در این کتاب شما را با فرمول‌های عجیب غریب اذیت کنم – فعلا همین یک فرمول بس است. برای همین یک مورد هم تمام کاری که قرار است بکنیم تبدیل آن به جاوااسکریپت است.)
 
-The notation [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} indicates
-the number of measurements where the first variable (squirrelness) is
-false (0) and the second variable (pizza) is true (1). In the pizza
-table, [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} is 9.
+نماد <bdo>[_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex}</bdo> نشان دهنده تعداد اندازه‌گیری‌هایی است که اولین اندازه(سنجاب شد)  false (0) و دومین اندازه‌گیری (پیتزا خوردن) true (1) شده است. در این مثال <bdo>[_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex}</bdo> برابر 9 است.
 
-The value [_n_~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} refers
-to the sum of all measurements where the first variable is true, which
-is 5 in the example table. Likewise, [_n_~•0~]{if
-html}[[$n_{\bullet0}$]{latex}]{if tex} refers to the sum of the
-measurements where the second variable is false.
+مقدار <bdo>[_n_~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex}</bdo> برابر با جمع همه اندازه‌گیری‌های است که متغیر اول آن ها true ارزیابی شده است که در این مثال ۵ است. به همین صورت <bdo>[_n_~•0~]{if
+html}[[$n_{\bullet0}$]{latex}]{if tex}</bdo> به مجموع اندازه‌گیری‌هایی که متغیر دوم‌آن‌ها false است اشاره می کند.
 
 {{index correlation, "phi coefficient"}}
 
-So for the pizza table, the part above the division line (the
-dividend) would be 1×76−4×9 = 40, and the part below it (the
-divisor) would be the square root of 5×85×10×80, or [√340000]{if
-html}[[$\sqrt{340000}$]{latex}]{if tex}. This comes out to _ϕ_ ≈
-0.069, which is tiny. Eating ((pizza)) does not appear to have
-influence on the transformations.
+بنابراین برای جدول پیتزا، بالای کسر یا صورت کسر می شود <bdo> 1×76−4×9 = 40</bdo>  و مخرج کسر برابر است با ریشه‌ی دوم <bdo>5×85×10×80</bdo> یا <bdo>[√340000]{if
+html}[[$\sqrt{340000}$]{latex}]{if tex}</bdo>٫   که حاصل می شود <bdo>_ϕ_ ≈
+0.069</bdo>  که عدد خیلی کوچکی است. خوردن پیتزا به نظر می رسد تاثیر در تبدیل ژاک به سنجاب ندارد.
 
-## Computing correlation
+## محاسبه‌ی ضریب همبستگی
 
 {{index [array, "as table"], [nesting, "of arrays"]}}
 
-We can represent a two-by-two ((table)) in JavaScript with a
-four-element array (`[76, 9, 4, 1]`). We could also use other
-representations, such as an array containing two two-element arrays
-(`[[76, 9], [4, 1]]`) or an object with property names like `"11"` and
-`"01"`, but the flat array is simple and makes the expressions that
-access the table pleasantly short. We'll interpret the indices to the
-array as two-((bit)) ((binary number))s, where the leftmost (most
-significant) digit refers to the squirrel variable and the rightmost
-(least significant) digit refers to the event variable. For example,
-the binary number `10` refers to the case where Jacques did turn into
-a squirrel, but the event (say, "pizza") didn't occur. This happened
-four times. And since binary `10` is 2 in decimal notation, we will
-store this number at index 2 of the array.
+در جاوااسکریپت می توانیم یک جدول دو در دو را با یک آرایه‌ی چهار-عنصری نشان <bdo>(`[76, 9, 4, 1]`)</bdo>.  همچنین می توان به شکل‌ها دیگر نیز این کار را کرد مثل استفاده از آرایه‌ای که از دو آرایه‌ی دو خانه‌ای تشکیل شده است <bdo>(`[[76, 9], [4, 1]]`)</bdo>  یا شیءای با خاصیت هایی به شکل `"11"` و `"01"`، اما استفاده از یک آرایه‌ی تخت ساده تر است و باعث می شود که عبارت‌هایی که برای دسترسی به خانه‌های آرایه می نویسیم کوتاه تر شوند. خانه‌های آرایه را به عنوان دوبیت دودویی محسوب می کنیم که رقم چپ (با ارزش‌ترین عدد) نمایانگر متغیر سنجاب‌شدن و رقم راست (کم ارزش ترین) معرف متغیر رخداد است. به عنوان مثال عدد دودویی `10` به موردی اشاره می کند که ژاک به سنجاب تبدیل شده است اما رخداد مورد نظر (مثلا خوردن پیتزا) رخ نداده است . این کار چهار مرتبه اتفاق افتاده است و به علت اینکه عدد دودویی  `10` معادل در دهدهی می شود  2 ، ما این عدد را در خانه‌ی 2 آرایه ذخیره خواهیم کرد.
 
 {{index "phi coefficient", "phi function"}}
 
 {{id phi_function}}
 
-This is the function that computes the _ϕ_ coefficient from such an
-array:
+تابع زیر محاسبه‌ی مقدار _ϕ_ را از آرایه‌ی مذکور انجام می دهد:
+
 
 ```{includeCode: strip_log, test: clip}
 function phi(table) {
@@ -634,28 +435,18 @@ console.log(phi([76, 9, 4, 1]));
 
 {{index "square root", "Math.sqrt function"}}
 
-This is a direct translation of the _ϕ_ formula into JavaScript.
-`Math.sqrt` is the square root function, as provided by the `Math`
-object in a standard JavaScript environment. We have to add two fields
-from the table to get fields like [n~1•~]{if
-html}[[$n_{1\bullet}$]{latex}]{if tex} because the sums of rows or
-columns are not stored directly in our data structure.
+کد بالا در واقع ترجمه‌ی مستقیم فرمول محاسبه _ϕ_ به زبان جاوااسکریپت است. تابع <bdo>`Math.sqrt`</bdo> ریشه‌ی دوم عدد را حساب می کند که توسط شیء `Math` در محیط استاندارد جاوااسکریپت فراهم شده است. برای دستیابی به فیلد‌هایی شبیه به [n~1•~]{if
+html}[[$n_{1\bullet}$]{latex}]{if tex} بایستی دو فیلد از جدول را با هم جمع کنیم چرا که مجموع ردیف ها یا ستون‌ها به شکل مستقیم در ساختار داده‌ی ما ذخیره نمی شوند.
 
 {{index "JOURNAL data set"}}
 
-Jacques kept his journal for three months. The resulting ((data set))
-is available in the [coding
-sandbox](https://eloquentjavascript.net/code#4) for this chapter[
+ژاک به ثبت روزانه خود برای سه ماه ادامه داد. مجموعه داده‌های بدست آماده را می توانید در قسمت [کدهای](https://eloquentjavascript.net/code#4) این فصل [
 ([_https://eloquentjavascript.net/code#4_](https://eloquentjavascript.net/code#4))]{if
-book}, where it is stored in the `JOURNAL` binding and in a
-downloadable
-[file](https://eloquentjavascript.net/code/journal.js).
+book} بدست بیاورید. این داده‌ها در متغیر `JOURNAL` ذخیره شده اند که [فایل](https://eloquentjavascript.net/code/journal.js) آن قابل دانلود است.
 
 {{index "tableFor function"}}
 
-To extract a two-by-two ((table)) for a specific event from the
-journal, we must loop over all the entries and tally how many times
-the event occurs in relation to squirrel transformations.
+برای استخراج یک ((جدول)) دو-در-دو برای یک رخداد خاص از دفتر روزانه، بایستی تمامی رکوردها را پیمایش کنیم و تعداد دفعاتی که آن رخداد در ارتباط با سنجاب شدن اتفاق افتاده است را بشماریم.
 
 ```{includeCode: strip_log}
 function tableFor(event, journal) {
@@ -675,30 +466,21 @@ console.log(tableFor("pizza", JOURNAL));
 
 {{index [array, searching], "includes method"}}
 
-Arrays have an `includes` method that checks whether a given value
-exists in the array. The function uses that to determine whether the
-event name it is interested in is part of the event list for a given
-day.
+آرایه‌ها متدی به نام `includes` دارند که برای یک مقدار داده شده بررسی می کند که آیا در آرایه موجود است یا خیر. تابع بالا از متد استفاده می کند تا مشخص کند که رخداد مورد نظر در بین رخدادهای آن روز مشخص شده هست یا خیر.
 
 {{index [array, indexing]}}
 
-The body of the loop in `tableFor` figures out which box in the table
-each journal entry falls into by checking whether the entry contains
-the specific event it's interested in and whether the event happens
-alongside a squirrel incident. The loop then adds one to the correct
-box in the table.
+بدنه‌ی حلقه‌ی تابع `tableFor` مشخص می کند هر کدام از مدخل‌های دفتر روزانه در کدام قسمت از جدول قرار می گیرند. این کار با چک کردن اینکه آیا مدخل،‌رخداد مورد نظر را دارد  و آیا این رخداد همزمان با تبدیل شدن اتفاق افتاده است یا خیر. بعد حلقه یک واحد به قسمت صحیح در جدول اضافه می کند.
 
-We now have the tools we need to compute individual ((correlation))s.
-The only step remaining is to find a correlation for every type of
-event that was recorded and see whether anything stands out.
+هم اکنون ما ابزاری که برای محاسبه همبستگی ها نیاز داشتیم را در اختیار داریم. تنها گامی که مانده است پیدا کردن ضریب همبستگی برای همه‌ی رخدادهای ضبط شده اس و اینکه ببینیم کدام رخداد موثر است.
 
 {{id for_of_loop}}
 
-## Array loops
+## حلقه‌ها در آرایه
 
 {{index "for loop", loop, [array, iteration]}}
 
-In the `tableFor` function, there's a loop like this:
+در تابع `tableFor` حلقه‌ای وجود داشت که شبیه کد زیر بود:
 
 ```
 for (let i = 0; i < JOURNAL.length; i++) {
@@ -707,12 +489,9 @@ for (let i = 0; i < JOURNAL.length; i++) {
 }
 ```
 
-This kind of loop is common in classical JavaScript—going over arrays
-one element at a time is something that comes up a lot, and to do that
-you'd run a counter over the length of the array and pick out each
-element in turn.
+این شکل از حلقه در جاوااسکریپ کلاسیک رایج است – که در آن هر بار سراغ یک خانه‌ از آرایه می رویم که برای انجام آن شمارنده‌ای متناسب با طول آرایه استفاده می کنیم تا بتوانیم به هر عنصر دسترسی داشته باشیم.
 
-There is a simpler way to write such loops in modern JavaScript.
+راه ساده‌تری در جاوااسکریپت مدرن برای این گونه حلقه ها وجود دارد.
 
 ```
 for (let entry of JOURNAL) {
@@ -722,21 +501,16 @@ for (let entry of JOURNAL) {
 
 {{index "for/of loop"}}
 
-When a `for` loop looks like this, with the word `of` after a variable
-definition, it will loop over the elements of the value given after
-`of`. This works not only for arrays but also for strings and some
-other data structures. We'll discuss _how_ it works in [Chapter
-?](object).
+زمانی که یک حلقه‌ی `for` به این شکل نوشته می شود که بعد از تعریف یک متغیر کلمه‌ی کلیدی `of` می آید، مقداری که بعد از `of` می آید را پیمایش می کند. این حلقه نه تنها برای آرایه‌ها کاربرد دارد بلکه برای رشته‌ها و بعضی از دیگر ساختارهای داده نیز استفاده می شود. با نحوه‌ی عملکر آن در [فصل
+?](object) آشنا می شویم.
 
 {{id analysis}}
 
-## The final analysis
+## تحلیل نهایی
 
 {{index journal, "weresquirrel example", "journalEvents function"}}
 
-We need to compute a correlation for every type of event that occurs
-in the data set. To do that, we first need to _find_ every type of
-event.
+لازم است تا محاسبه‌ی ضریب همبستگی را برای همه‌ی رخدادهایی که در مجموعه‌‌ی داده ها وجود دارد را انجام دهیم. برای این کار، ابتدا باید همه‌ی انواع رخداد ها را _پیدا_ کنیم.
 
 {{index "includes method", "push method"}}
 
@@ -756,12 +530,9 @@ function journalEvents(journal) {
 console.log(journalEvents(JOURNAL));
 // → ["carrot", "exercise", "weekend", "bread", …]
 ```
+با پیمایش تک تک رخدادها و افزودن آن‌هایی که قبلا در آرایه‌ی `events` موجود نبودند، این تابع تمامی رخدادها را جمع‌آوری می کند.
 
-By going over all the events and adding those that aren't already in
-there to the `events` array, the function collects every type of
-event.
-
-Using that, we can see all the ((correlation))s.
+با استفاده از آن می توانیم همه‌ی ((همبستگی)) ها را ببینیم.
 
 ```{test: no}
 for (let event of journalEvents(JOURNAL)) {
@@ -775,10 +546,7 @@ for (let event of journalEvents(JOURNAL)) {
 // and so on...
 ```
 
-Most correlations seem to lie close to zero. Eating carrots, bread, or
-pudding apparently does not trigger squirrel-lycanthropy. It _does_
-seem to occur somewhat more often on weekends. Let's filter the
-results to show only correlations greater than 0.1 or less than -0.1.
+بیشتر ضرایب همبستگی به نظر می رسد که به صفر نزدیک هستند. خوردن هویج، نان، یا دسر، ظاهرا ارتباطی با سنجاب شدن ژاک ندارند. به نظر می رسد این تبدیل بیشتر در آخر هفته‌ها رخ می دهد. اجازه بدهید تا نتایج را کمی فیلتر کنیم (پالایش؟) تا فقط نتایجی نشان داده شوند که ضریب همبستگی آن ها بیش از <bdo>0.1</bdo> یا کمتر از <bdo>-0.1</bdo>  باشد.
 
 ```{test: no, startCode: true}
 for (let event of journalEvents(JOURNAL)) {
@@ -796,12 +564,9 @@ for (let event of journalEvents(JOURNAL)) {
 // → peanuts:        0.5902679812
 ```
 
-Aha! There are two factors with a ((correlation)) that's clearly stronger
-than the others. Eating ((peanuts)) has a strong positive effect on
-the chance of turning into a squirrel, whereas brushing his teeth has
-a significant negative effect.
+آها! دو فاکتور در بین نتایج وجود دارد که ضریب آن ها مشخصا قوی تر از دیگر موارد است. خوردن بادم زمینی اثر مثبت زیادی در شانس تبدیل شدن به سنجاب دارد، در حالیکه مسواک زدن اثری قابل توجه اما در جهت معکوس ایجاد می کند.
 
-Interesting. Let's try something.
+جالب است. اجازه بدهید تا چیزی را آزمایش کنیم.
 
 ```
 for (let entry of JOURNAL) {
@@ -814,40 +579,25 @@ console.log(phi(tableFor("peanut teeth", JOURNAL)));
 // → 1
 ```
 
-That's a strong result. The phenomenon occurs precisely when Jacques
-eats ((peanuts)) and fails to brush his teeth. If only he weren't such
-a slob about dental hygiene, he'd have never even noticed his
-affliction.
+نتیجه‌ی قابل توجه‌ای است. تبدیل دقیقا زمانی رخ می دهد که ژاک بادم زمینی می خورد و فراموش می کند تا مسواک کند. اگر او آن قدر بی توجه به بهداشت دهان و دندان نبود ، هرگز به این رنج دچار نمی شد.
 
-Knowing this, Jacques stops eating peanuts altogether and finds that
-his transformations don't come back.
+با دانستن این، ژاک دیگر بادام زمینی نمی خورد و متوجه می شود که تبدیل دیگر اتفاق نمی افتد.
 
 {{index "weresquirrel example"}}
 
-For a few years, things go great for Jacques. But at some point he
-loses his job. Because he lives in a nasty country where having no job
-means having no medical services, he is forced to take employment with
-a ((circus)) where he performs as _The Incredible Squirrelman_,
-stuffing his mouth with peanut butter before every show.
+تا چند سال اوضاع خیلی خوب برای ژاک پیش رفت. تا این که در برهه‌ای کارش را از دست داد. چون ژاک در کشوری زندگی می کرد که نداشتن کار به معنای نداشتن خدمات بهداشت و سلامت بود،‌ مجبور شد تا در یک سیرک مشغول به کار شود جایی که نقشش _مرد سنجابی افسانه‌ای_ بود. او قبل از هر نمایش دهانش را پر از کره‌ بادم زمینی می کرد.
 
-One day, fed up with this pitiful existence, Jacques fails to change
-back into his human form, hops through a crack in the circus tent, and
-vanishes into the forest. He is never seen again.
+یک روز، ژاک خسته از این زندگی رقت انگیز، وقتی نتوانست به شکل انسانی خودش تبدیل شود، لابلای یکی از شکاف‌های چادر سیرک پرید و در جنگل ناپدید شد. دیگر کسی ژاک را بعد از آن ندید.
 
-## Further arrayology
+## کمی آرایه‌شناسی بیشتر
 
 {{index [array, methods], [method, array]}}
 
-Before finishing the chapter, I want to introduce you to a few more
-object-related concepts. I'll start by introducing some generally
-useful array methods.
+قبل از تمام کردن این فصل، قصد دارم تا شما را با چند مفهوم دیگر مرتبط با اشیاء آشنا کنم. ابتدا با چند متد عمومی و مفید از آرایه ها آشنا می شویم.
 
 {{index "push method", "pop method", "shift method", "unshift method"}}
 
-We saw `push` and `pop`, which add and remove elements at the
-end of an array, [earlier](data#array_methods) in this
-chapter. The corresponding methods for adding and removing things at
-the start of an array are called `unshift` and `shift`.
+`pop` و `push` را [پیش‌تر](data#array_methods) در همین فصل دیدیم، که برای حذف و اضافه عناصر در انتهای آرایه استفاده می شدند. متدهای مرتبط دیگری که همین کار را در ابتدای آرایه انجام می دهند `shift` و `unshift` می باشند.
 
 ```
 let todoList = [];
@@ -864,19 +614,11 @@ function rememberUrgently(task) {
 
 {{index "task management example"}}
 
-That program manages a queue of tasks. You add tasks to the end of the
-queue by calling `remember("groceries")`, and when you're ready to do
-something, you call `getTask()` to get (and remove) the front item
-from the queue. The `rememberUrgently` function also adds a task but
-adds it to the front instead of the back of the queue.
+کار برنامه‌ی بالا مدیریت صف وظایف است. برای افزودن یک وظیفه به انتهای صف، تابع <bdo>`remember("groceries")`</bdo> را فراخوانی می کند و زمانی که برای انجام یک وظیفه آماده هستید ، تابع <bdo>`getTask()`</bdo> را برای گرفتن (و حذف) یک وظیفه از جلوی صف فراخوانی می کنید. تابع `rememberUrgently` نیز برای افزودن یک وظیفه استفاده می شود اما آن را به جلوی صف اضافه می کند نه انتهای صف.
 
 {{index [array, searching], "indexOf method", "lastIndexOf method"}}
 
-To search for a specific value, arrays provide an `indexOf` method. The method
-searches through the array from the start to the end and returns the
-index at which the requested value was found—or -1 if it wasn't found.
-To search from the end instead of the start, there's a similar method
-called `lastIndexOf`.
+برای جستجوی یک مقدار خاص، آرایه‌ها متدی به نام `indexOf` را فراهم می کنند. این متد در طول آرایه از شروع تا پایان حرکت کرده و اندیسی که در آن مقدار مورد درخواست پیدا شد – یا <bdo>-1</bdo> در صورت پیدا نکردن – بر می گرداند. برای جستجو از آخر به اول، متدی مشابهی وجود دارد که  `lastIndexOf` نامیده می شود.
 
 ```
 console.log([1, 2, 3, 2, 1].indexOf(2));
@@ -884,15 +626,11 @@ console.log([1, 2, 3, 2, 1].indexOf(2));
 console.log([1, 2, 3, 2, 1].lastIndexOf(2));
 // → 3
 ```
-
-Both `indexOf` and `lastIndexOf` take an optional second argument that
-indicates where to start searching.
+هر دوی `indexOf` و `lastIndexOf` آرگومان اختیاری دیگری قبول می کنند که برای مشخص کردن نقطه‌ی شروع جستجو استفاده می شود.
 
 {{index "slice method", [array, indexing]}}
 
-Another fundamental array method is `slice`, which takes start and end
-indices and returns an array that has only the elements between them.
-The start index is inclusive, the end index exclusive.
+یکی دیگر از متدهای اساسی آرایه‌ها، متد `slice` است که شماره اندیس های شروع و پایان را گرفته و آرایه‌ای که شامل عناصر بین آن‌ها می شود را تولید می کند. این آرایه تولیدی شامل عنصر آغازین و فاقد عنصر پایانی خواهد بود.
 
 ```
 console.log([0, 1, 2, 3, 4].slice(2, 4));
@@ -903,18 +641,13 @@ console.log([0, 1, 2, 3, 4].slice(2));
 
 {{index [string, indexing]}}
 
-When the end index is not given, `slice` will take all of the elements
-after the start index. You can also omit the start index to copy the
-entire array.
+زمانی که اندیس پایانی به متد داده نشود، `slice` تمامی عناصری که بعد از اندیس آغازین قرار می گیرند را بر می گرداند. می توانید همچنین اندیس اول را هم مشخص نکنید که باعث می شود کل آرایه کپی شود.
 
 {{index concatenation, "concat method"}}
 
-The `concat` method can be used to glue arrays together to create a
-new array, similar to what the `+` operator does for strings.
+متد `concat` برای چسباندن آرایه‌ها بهم و ساخت یک آرایه جدید استفاده می شود، شبیه کاری که عملگر `+` برای رشته‌ها انجام می دهده.
 
-The following example shows both `concat` and `slice` in action. It takes
-an array and an index, and it returns a new array that is a copy of
-the original array with the element at the given index removed.
+مثال پیش رو نحوه‌ی عملکرد هر دوی متدهای  `slice`  و `concat` را نشان می  دهد.  تابع مثال، یک آرایه و یک اندیس را به عنوان ورودی دریافت می کند و آرایه‌ی جدیدی را برمی گرداند که نسخه‌ای از آرایه‌ی دریافتی بدون عنصری که اندیسش داده شده است می باشد.
 
 ```
 function remove(array, index) {
@@ -924,16 +657,13 @@ function remove(array, index) {
 console.log(remove(["a", "b", "c", "d", "e"], 2));
 // → ["a", "b", "d", "e"]
 ```
+اگر به متد `concat` آرگومانی غیرآرایه‌ای بفرستید، این مقدار به صورت آرایه‌ای یک عنصر محسوب می شود و به انتهای آرایه‌ی جدید اضافه خواهد شد.
 
-If you pass `concat` an argument that is not an array, that value will
-be added to the new array as if it were a one-element array.
-
-## Strings and their properties
+## رشته‌های و خاصیت‌های آن ها
 
 {{index [string, properties]}}
 
-We can read properties like `length` and `toUpperCase` from string
-values. But if you try to add a new property, it doesn't stick.
+می توانیم دو خاصیت `length` و `toUpperCase` را از یک  مقدار رشته‌ای بخوانیم. اما اگر سعی کنید خاصیت جدید به آن بیافزایید، کار نخواهد کرد.
 
 ```
 let kim = "Kim";
@@ -941,17 +671,11 @@ kim.age = 88;
 console.log(kim.age);
 // → undefined
 ```
-
-Values of type string, number, and Boolean are not objects, and though
-the language doesn't complain if you try to set new properties on
-them, it doesn't actually store those properties. As mentioned earlier,
-such values are immutable and cannot be changed.
+مقادیر نوع رشته، عدد و بولی، شیء محسوب نمی شوند و اگرچه سعی کنید تا خاصیت جدیدی روی آن تعریف کنید، مفسر جاوااسکریپت خطایی تولید نمی کند، اما این خاصیت ها را هم ایجاد و ذخیره نمی کند. همانطور که قبلا ذکر شد، این گونه مقادیر قابل تغییر نیستند.
 
 {{index [string, methods], "slice method", "indexOf method", [string, searching]}}
 
-But these types do have built-in properties. Every string value has a
-number of methods. Some very useful ones are `slice` and `indexOf`,
-which resemble the array methods of the same name.
+اما این انواع داده خاصیت‌های از پیش تعریف شده دارند.  هر مقدار رشته‌ای دارای چندین متد است. `slice` و `indexOf` از متدهای خیلی مفید محسوب می شوند که به متدهای مشابهی در آرایه‌ها شباهت دارند.
 
 ```
 console.log("coconuts".slice(4, 7));
@@ -960,9 +684,7 @@ console.log("coconut".indexOf("u"));
 // → 5
 ```
 
-One difference is that a string's `indexOf` can search for a string
-containing more than one character, whereas the corresponding array
-method looks only for a single element.
+یک تفاوت `indexOf` رشته نسبت به آرایه، توانایی جستجو رشته‌ای که شامل بیش از یک کاراکتر است در حالی که در متد مربوط به آرایه فقط جستجو را روی عناصر تکی انجام می دهد.
 
 ```
 console.log("one two three".indexOf("ee"));
@@ -971,17 +693,14 @@ console.log("one two three".indexOf("ee"));
 
 {{index [whitespace, trimming], "trim method"}}
 
-The `trim` method removes whitespace (spaces, newlines, tabs, and
-similar characters) from the start and end of a string.
+متد `trim` فضای خالی را ( شامل فضای خالی، کاراکتر خط جدید، کاراکتر تب، و کاراکترهای مشابه) از آغاز و پایان رشته حذف می کند.
 
 ```
 console.log("  okay \n ".trim());
 // → okay
 ```
 
-The `zeroPad` function from the [previous chapter](functions) also
-exists as a method. It is called `padStart` and takes the desired
-length and padding character as arguments.
+تابع `zeroPad` که در [فصل قبل](functions) نوشتیم نیز به عنوان یک متد وجود دارد. اسم این متد `padStart` است و طول دلخواه و کاراکتر ترازبندی را به عنوان آرگومان می گیرد.
 
 ```
 console.log(String(6).padStart(3, "0"));
@@ -990,8 +709,7 @@ console.log(String(6).padStart(3, "0"));
 
 {{id split}}
 
-You can split a string on every occurrence of another string with
-`split` and join it again with `join`.
+می توانید با استفاده از متد `split` یک رشته را بر اساس تکرار رشته‌ای دیگر تقسیم و جدا کنید و با استفاده از متد `join` دوباره بهم بچسبانید.
 
 ```
 let sentence = "Secretarybirds specialize in stomping";
@@ -1004,9 +722,7 @@ console.log(words.join(". "));
 
 {{index "repeat method"}}
 
-A string can be repeated with the `repeat` method, which creates a new
-string containing multiple copies of the original string, glued
-together.
+یک رشته را می توان با استفاده از متد `repeat` تکرار کرد که در این صورت رشته‌ای جدید تولید می شود که حاوی کپی های متعدد از رشته‌ای اصلی است که به هم چسبیده اند.
 
 ```
 console.log("LA".repeat(3));
@@ -1015,10 +731,8 @@ console.log("LA".repeat(3));
 
 {{index ["length property", "for string"], [string, indexing]}}
 
-We have already seen the string type's `length` property. Accessing
-the individual characters in a string looks like accessing array
-elements (with a caveat that we'll discuss in [Chapter
-?](higher_order#code_units)).
+قبل از این با خاصیت `length` برای نوع رشته آشنا شدیم. دستیابی به کاراکترهای یک رشته شبیه دستیابی به عناصر یک آرایه است ( با در نظر گرفتن یک نکته که در [فصل
+?](higher_order#code_units) به آن می پردازیم).
 
 ```
 let string = "abc";
@@ -1030,18 +744,16 @@ console.log(string[1]);
 
 {{id rest_parameters}}
 
-## Rest parameters
+## سایر پارامتر‌ها
 
 {{index "Math.max function"}}
 
-It can be useful for a function to accept any number of ((argument))s.
-For example, `Math.max` computes the maximum of _all_ the arguments it
-is given.
+بسیار می تواند مفید واقع شود که یک تابع هر تعداد دلخواهی آرگومان را قبول کند. به عنوان مثال، `Math.max` بیشینه‌ی _همه_ آرگومان‌هایی که به آن داده می شود را بر می گرداند.
 
 {{index "period character", "max example", spread}}
 
-To write such a function, you put three dots before the function's
-last ((parameter)), like this:
+برای نوشتن این گونه توابع، بایستی سه علامت نقطه قبل از آخرین ((پارامتر)) تابع قرار دهید، شبیه مثال زیر:
+
 
 ```{includeCode: strip_log}
 function max(...numbers) {
@@ -1055,30 +767,22 @@ console.log(max(4, 1, 9, -2));
 // → 9
 ```
 
-When such a function is called, the _((rest parameter))_ is bound to
-an array containing all further arguments. If there are other
-parameters before it, their values aren't part of that array. When, as
-in `max`, it is the only parameter, it will hold all arguments.
+زمانی که تابعی با این تعریف فراخوانی شود، _((پارامتر rest))_ به آرایه‌ای که حاوی تمامی دیگر آرگومان‌هاست اشاره می کند. اگر پارامترهای دیگری قبل از آن وجود داشته باشد، مقدار‌ آن ها در آن آرایه قرار نمی گیرد. زمانی که، مانند متد `max`، به عنوان اولین پارامتر تعریف شود، تمامی آرگومان ها را در بر خواهد گرفت.
 
 {{index [function, application]}}
 
-You can use a similar three-dot notation to _call_ a function with an
-array of arguments.
+با استفاده از این نماید سه نقطه‌ای می توانید یک تابع را با آرایه‌ای از آرگومان‌ها _فراخوانی_ کنید.
 
 ```
 let numbers = [5, 1, 7];
 console.log(max(...numbers));
 // → 7
 ```
-
-This "((spread))s" out the array into the function call, passing its
-elements as separate arguments. It is possible to include an array
-like that along with other arguments, as in `max(9, ...numbers, 2)`.
+این کار باعث می شود که آرایه‌ی مورد نظر در فراخوانی تابع ((پخش)) بشود، به طوری که عناصرش به عنوان آرگومان‌های جدا محسوب شود.  همچنین می توان که آرایه‌ای شبیه‌ آن را لابه‌لای دیگر آرگومان ها ارسال کرد مثل :‌ <bdo>`max(9, ...numbers, 2)`</bdo>.
 
 {{index [array, "of rest arguments"], "square brackets"}}
 
-Square bracket array notation similarly allows the triple-dot operator
-to spread another array into the new array.
+براکت‌های آرایه به طور مشابه این امکان را به شما می دهند که از عملگر سه‌نقطه برای پخش آرایه‌ای دیگر در یک آرایه‌ی جدید استفاده کنید:
 
 ```
 let words = ["never", "fully"];
@@ -1086,49 +790,29 @@ console.log(["will", ...words, "understand"]);
 // → ["will", "never", "fully", "understand"]
 ```
 
-## The Math object
+## شیء Math
 
 {{index "Math object", "Math.min function", "Math.max function", "Math.sqrt function", minimum, maximum, "square root"}}
 
-As we've seen, `Math` is a grab bag of number-related utility
-functions, such as `Math.max` (maximum), `Math.min` (minimum), and
-`Math.sqrt` (square root).
+همانطور که دیده‌ایم، `Math` حاوی تعدادی توابع کاربردی مرتبط با اعداد است، مثل <bdo>`Math.max`</bdo>  (بیشینه)، <bdo> `Math.min`</bdo> (کمینه)، و <bdo>`Math.sqrt`</bdo> (ریشه دوم عدد).
 
 {{index namespace, [object, property]}}
 
 {{id namespace_pollution}}
 
-The `Math` object is used as a container to group a bunch of related
-functionality. There is only one `Math` object, and it is almost never
-useful as a value. Rather, it provides a _namespace_ so that all these
-functions and values do not have to be global bindings.
+شیء `Math` به عنوان ظرفی استفاده می شود تا قابلیت های مرتبطی را گروه بندی کند. تنها یک شیء `Math` وجود دارد، و تقریبا هرگز کاربردی به عنوان یک مقدار ندارد. در عوض، فضای نامی (_namespace_) را فراهم می کند که باعث می شود نیازی نباشد این متدها و مقدارها در فضای سراسری تعریف شوند.
 
 {{index [binding, naming]}}
 
-Having too many global bindings "pollutes" the namespace. The more
-names have been taken, the more likely you are to accidentally
-overwrite the value of some existing binding. For example, it's not
-unlikely to want to name something `max` in one of your programs.
-Since JavaScript's built-in `max` function is tucked safely inside the
-`Math` object, we don't have to worry about overwriting it.
+تعریف تعداد زیادی متغیر سراسری، باعث می شود که به نوعی فضای نام آلوده شود. هرچه نام‌های بیشتری اشغال شوند ، احتمال بیشتری وجود دارد که به طور تصادفی مقدار بعضی از متغیرها را جایگزین شوند. به عنوان مثال، بعید نیست که بخواهید چیزی را به نام  `max` در یکی از برنامه‌هایتان تعریف کنید. به علت اینکه تابع از پیش تعریف شده  `max` در جاوااسکریپت  به شکل امنی درون شیء `Math` نگه داری می شود، نیازی نیست نگران باشیم که تصادفا آن را تغییر دهیم.
 
 {{index "let keyword", "const keyword"}}
 
-Many languages will stop you, or at least warn you, when you are
-defining a binding with a name that is already taken. JavaScript does
-this for bindings you declared with `let` or `const`
-but—perversely—not for standard bindings nor for bindings declared
-with `var` or `function`.
+خیلی از زبان های برنامه نویسی زمانی که شما در حال تعریف متغیری هستید که قبلا با همان نام تعریف شده است، مانع شما می شوند یا حداقل شما را باخبر می کنند. جاوااسکریپت این کار را برای متغیرهایی که با `let` یا `const` تعریف شده اند انجام می دهد اما برای متغیرهایی که با `var`  یا توابعی که با `function` تعریف شده اند  و متغیرهای استاندارد (جاوااسکریپت؟) این کار را انجام نمی دهد.
 
 {{index "Math.cos function", "Math.sin function", "Math.tan function", "Math.acos function", "Math.asin function", "Math.atan function", "Math.PI constant", cosine, sine, tangent, "PI constant", pi}}
 
-Back to the `Math` object. If you need to do ((trigonometry)), `Math`
-can help. It contains `cos` (cosine), `sin` (sine), and `tan`
-(tangent), as well as their inverse functions, `acos`, `asin`, and
-`atan`, respectively. The number π (pi)—or at least the closest
-approximation that fits in a JavaScript number—is available as
-`Math.PI`. There is an old programming tradition of writing the names
-of ((constant)) values in all caps.
+برگردیم به شیء `Math`. اگر نیاز به محاسبات ((مثلثاتی)) دارید ، `Math` می تواند به شما کمک کند. مانند متدهای  `cos` (کسینوس)، `sin` (سینوس)، و `tan` (تانژانت) به همراه توابع معکوس آن‌ها، `acos` `asin` و `atan`. عدد π (پی) – در واقع نزدیک ترین تقریبی که برای آن در جاوااسکریپت وجود دارد – نیز در دسترس است به عنوان <bdo>`Math.PI`</bdo>. یک سبک قدیمی در برنامه نویسی وجود دارد که نام ((ثابت)) ها را با حروف بزرگ می نویسند.
 
 ```{test: no}
 function randomPointOnCircle(radius) {
@@ -1140,15 +824,11 @@ console.log(randomPointOnCircle(2));
 // → {x: 0.3667, y: 1.966}
 ```
 
-If sines and cosines are not something you are familiar with, don't
-worry. When they are used in this book, in [Chapter ?](dom#sin_cos),
-I'll explain them.
+اگر با سینوس و کسینوس آشنا نیستنید، نگران نباشید. زمانی که به سراغ استفاده از آن ها خواهیم رفت،‌در [در فصل ?](dom#sin_cos)، آن ها را توضیح خواهم داد.
 
 {{index "Math.random function", "random number"}}
 
-The previous example used `Math.random`. This is a function that
-returns a new pseudorandom number between zero (inclusive) and one
-(exclusive) every time you call it.
+در مثال قبل از`Math.random` استفاده شد. این تابع است که عددی رندم بین صفر (به غیر از خود صفر) و یک (شامل خود یک) با هر بار فراخوانی آن تولید می کند.
 
 ```{test: no}
 console.log(Math.random());
@@ -1161,43 +841,27 @@ console.log(Math.random());
 
 {{index "pseudorandom number", "random number"}}
 
-Though computers are deterministic machines—they always react the same
-way if given the same input—it is possible to have them produce
-numbers that appear random. To do that, the machine keeps some hidden
-value, and whenever you ask for a new random number, it performs
-complicated computations on this hidden value to create a new value.
-It stores a new value and returns some number derived from it. That
-way, it can produce ever new, hard-to-predict numbers in a way that
-_seems_ random.
+اگرچه کامپیوتر ها ماشین‌هایی قطعی محسوب می شوند- همیشه به ورودی یکسان، واکنش یکسانی بروز می دهند –  می توان از آن ها خواست تا اعدادی که ظاهرا تصادفی هستند را تولید کنند. برای این کار، کامپیوتر بعضی مقادیر مخفی را در نظر می گیرد، و هر وقت که شما درخواست عدد تصادفی می کنید، محاسبات پیچیده‌ای را روی آن مقدارهای مخفی انجام می دهد تا مقدار جدیدی بسازد.  مقدار جدید را ذخیره کرده و عددی که از آن گرفته شده را به عنوان پاسخ برمی گرداند. با این روش، قادر است که اعداد جدیدی تولید کند که به سختی قابل پیش بینی اند طوری که _به نظر_ تصادفی می آیند.
 
 {{index rounding, "Math.floor function"}}
 
-If we want a whole random number instead of a fractional one, we can
-use `Math.floor` (which rounds down to the nearest whole number) on
-the result of `Math.random`.
+اگر به جای اعداد اعشاری، به عدد رندم کامل(صحیح) نیاز داریم،‌می توانیم از متد <bdo>`Math.floor`</bdo> (که عدد ورودی‌اش را به نزدیک ترین عدد کوچکتر کامل رند می کند ) در نتیجه <bdo>`Math.random`</bdo> استفاده کنیم.
 
 ```{test: no}
 console.log(Math.floor(Math.random() * 10));
 // → 2
 ```
-
-Multiplying the random number by 10 gives us a number greater than or
-equal to 0 and below 10. Since `Math.floor` rounds down, this
-expression will produce, with equal chance, any number from 0 through
-9.
+ضرب عدد تصادفی در عدد 10 باعث می شود که عددی بزرگتر مساوی 0 و کوچکتر از 10 را تولید کنیم. به علت اینکه <bdo>`Math.floor`</bdo> به سمت پایین عمل رند را انجام می دهد،این عبارت عددی تصادفی از 0 تا 9 را تولید می کند.
 
 {{index "Math.ceil function", "Math.round function", "Math.abs function", "absolute value"}}
 
-There are also the functions `Math.ceil` (for "ceiling", which rounds
-up to a whole number), `Math.round` (to the nearest whole number), and
-`Math.abs`, which takes the absolute value of a number, meaning it
-negates negative values but leaves positive ones as they are.
+همچنین توابع دیگری مثل <bdo>`Math.ceil`</bdo>  (رند کردن به سمت بالا (سقف))، <bdo>`Math.round`</bdo> (نزدیک ترین عدد صحیح)، و <bdo>`Math.abs`</bdo>، برای بدست آوردن قدرمطلق (اندازه مطلق عدد فارغ از علامت آن، اعداد منفی را منفی کرده و به اعداد مثبت کاری ندارد) وجود دارد.
 
-## Destructuring
+## تجزیه کردن (destructring)
 
 {{index "phi function"}}
 
-Let's go back to the `phi` function for a moment.
+اجازه بدهید به تابع محاسبه `phi` (فی) برگردیم:
 
 ```{test: wrap}
 function phi(table) {
@@ -1211,10 +875,7 @@ function phi(table) {
 
 {{index "destructuring binding", parameter}}
 
-One of the reasons this function is awkward to read is that we have a
-binding pointing at our array, but we'd much prefer to have bindings
-for the _elements_ of the array, that is, `let n00 = table[0]` and so on.
-Fortunately, there is a succinct way to do this in JavaScript.
+یکی از دلایلی که این تابع خوانایی سختی دارد این است که متغیری داریم که به آرایه‌ی ما اشاره می کند، در حالیکه بهتر این بود که متغیرهایی برای اشاره به _عناصر_ آرایه داشتیم، مثل، <bdo>`let n00 = table[0]`</bdo> و از این قبیل. خوشبختانه راه مختصری برای این کار در جاوااسکریپت تعبیه شده است.
 
 ```
 function phi([n00, n01, n10, n11]) {
@@ -1226,15 +887,11 @@ function phi([n00, n01, n10, n11]) {
 
 {{index "let keyword", "var keyword", "const keyword", [binding, destructuring]}}
 
-This also works for bindings created with `let`, `var`, or
-`const`. If you know the value you are binding is an array, you can
-use ((square brackets)) to "look inside" of the value, binding its
-contents.
+این روش برای متغیرهایی که با `let`، `var` یا `const` تعریف شده اند نیز کار می کند. اگر مقداری که قصد دارید به آن اشاره کنید به عنوان یک متغیر یک آرایه است، می توانید از ((براکت‌ها)) استفاده کنید تا به درون مقدار دست یابید و محتوای آن را مورد اشاره قرار دهید.
 
 {{index [object, property], [braces, object]}}
 
-A similar trick works for objects, using braces instead of square
-brackets.
+روش مشابهی برای اشیاء نیز وجود دارد، استفاده از کروشه به جای براکت‌.
 
 ```
 let {name} = {name: "Faraji", age: 23};
@@ -1244,48 +901,27 @@ console.log(name);
 
 {{index null, undefined}}
 
-Note that if you try to destructure `null` or `undefined`, you get an
-error, much as you would if you directly try to access a property
-of those values.
+توجه داشته باشید که اگر سعی کنید که `null` یا `undefined` را تجزیه کنید، با خطا مواجه می شوید، درست همانطور که اگر سعی کنید مستقیما به خاصیتی از این دو مقدار اشاره کنید.
 
 ## JSON
 
 {{index [array, representation], [object, representation], "data format", [memory, organization]}}
 
-Because properties only grasp their value, rather than contain it,
-objects and arrays are stored in the computer's memory as
-sequences of bits holding the _((address))es_—the place in memory—of
-their contents. So an array with another array inside of it consists
-of (at least) one memory region for the inner array, and another for
-the outer array, containing (among other things) a binary number that
-represents the position of the inner array.
+به علت این که خاصیت ها فقط به مقدارهایشان دسترسی دارند نه اینکه واقعا آن ها را نگه‌داری کنند، اشیاء و آرایه‌ها به صورت دنباله‌ای از بیت‌ها حافظه‌ی کامپیوتر ذخیره می شوند که حاوی _آدرس‌های_ – مکان‌هایی در حافظه – محتوای مرتبطشان می باشند. بنابراین یک آرایه که آرایه‌ای دیگر درون آن قرار گرفته حداقل از یک ناحیه‌ی حافظه برای آرایه‌ی درونی، و ناحیه‌ای دیگر برای آرایه‌ی بیرونی تشکیل شده است، که حاوی (علاوه بر چیزهای دیگر) یک عدد دودویی است که نمایانگر موقعیت آرایه درونی می باشد.
 
-If you want to save data in a file for later or send it to another
-computer over the network, you have to somehow convert these tangles
-of memory addresses to a description that can be stored or sent. You
-_could_ send over your entire computer memory along with the address
-of the value you're interested in, I suppose, but that doesn't seem
-like the best approach.
+اگر بخواهید که داده‌ها را در یک فایل ذخیره کنید برای استفاده در آینده، یا به کامپیوتر دیگری در شبکه ارسالش کنید، می بایست به نحوی این آدرس‌های حافظه را تبدیل به توصیفاتی کنید که بتوان آن را ذخیره یا ارسال کرد.  می توانستید تمام حافظه‌ی کامپیوتر را همراه با آدرس مقدار مورد نظر ارسال کنید، ظاهرا شدنی است، اما ظاهرا راه خیلی خوبی محسوب نمی شود.
 
 {{indexsee "JavaScript Object Notation", JSON}}
 
 {{index serialization, "World Wide Web"}}
 
-What we can do is _serialize_ the data. That means it is converted
-into a flat description. A popular serialization format is called
-_((JSON))_ (pronounced "Jason"), which stands for JavaScript Object
-Notation. It is widely used as a data storage and communication format
-on the Web, even in languages other than JavaScript.
+کاری که می توانی در این موقعیت بکنیم این است که داده ها را پشت سرهم ردیف کنیم( سریالایز). به این معنا که آن را تبدیل به توصیفی تخت در بیاوریم. یکی از فرمت‌های محبوب سریال کردن داده ها _((JSON))_ نامیده می شود ( که جی سون تلفظ می شود)، که مخفف نشانه‌گذاری شیء جاوااسکریپت است (javascript object notation). این روش به طور گسترده به عنوان روشی برای ذخیره داده‌ها و ارسال/دریافت داده ها در وب استفاده می شود، حتی در دیگر زبان‌های برنامه نویسی غیر ازجاوااسکریپت.
 
 {{index [array, notation], [object, creation], [quoting, "in JSON"], comment}}
 
-JSON looks similar to JavaScript's way of writing arrays and objects,
-with a few restrictions. All property names have to be surrounded by
-double quotes, and only simple data expressions are allowed—no
-function calls, bindings, or anything that involves actual
-computation. Comments are not allowed in JSON.
+JSON خیلی شبیه به روش جاوااسکریپت در نوشتن آرایه‌ها و اشیاء به نظر می رسد، با کمی محدودیت. نام خاصیت ها بایستی حتما با نقل قول جفتی احاطه شوند، و فقط عبارت‌های داده‌ای ساده قابل قبول هستند – متغیرها، فراخوانی توابع، یا هرچیزی که شامل محاسبه‌ی عملی باشد مجاز نیستند. توضیحات هم در JSON مجاز نیستند.
 
-A journal entry might look like this when represented as JSON data:
+یک مدخل گزارش روزانه ممکن است شبیه زیر باشد اگر به فرمت JSON  نوشته شود:
 
 ```{lang: "application/json"}
 {
@@ -1296,10 +932,7 @@ A journal entry might look like this when represented as JSON data:
 
 {{index "JSON.stringify function", "JSON.parse function", serialization, deserialization, parsing}}
 
-JavaScript gives us the functions `JSON.stringify` and `JSON.parse` to
-convert data to and from this format. The first takes a JavaScript
-value and returns a JSON-encoded string. The second takes such a
-string and converts it to the value it encodes.
+جاوااسکریپت دو متد <bdo>`JSON.stringify`</bdo>  و <bdo>`JSON.parse`</bdo> را در اختیار ما قرار داده است تا بتوانیم داده‌ها را به JSON تبدیل یا‌ از آن استخراج کنیم. تابع اول یک مقدار جاوااسکریپتی را گرفته و به رشته‌ای با فرمت JSON تبدیل می کند. تابع دوم رشته‌ای را گرفته و به مقداری که در ان وجود دارد بر می گرداند.
 
 ```
 let string = JSON.stringify({squirrel: false,
@@ -1310,36 +943,23 @@ console.log(JSON.parse(string).events);
 // → ["weekend"]
 ```
 
-## Summary
+## خلاصه
 
-Objects and arrays (which are a specific kind of object) provide ways
-to group several values into a single value. Conceptually, this allows
-us to put a bunch of related things in a bag and run around with the
-bag, instead of wrapping our arms around all of the individual things
-and trying to hold on to them separately.
+آشیاء و آرایه ها ( آرایه‌ها هم شکلی خاصی از آشیاء هستند) راه‌هایی را فراهم می کنند که مقادیر متعددی را گروه‌بندی کرده و به عنوان یک مقدار در اختیار داشته باشیم. به طور مفهومی، این به ما اجازه می دهد که چیزهای مرتبط را در سبدی قرار دهیم و با خودمان جابجا کنیم، به جای اینکه مجبور باشیم با دستهایمان سعی کنیم که چیزهای متعددی را جداگانه نگه داری کنیم.
 
-Most values in JavaScript have properties, the exceptions being `null`
-and `undefined`. Properties are accessed using `value.prop` or
-`value["prop"]`. Objects tend to use names for their properties
-and store more or less a fixed set of them. Arrays, on the other hand,
-usually contain varying amounts of conceptually identical values and
-use numbers (starting from 0) as the names of their properties.
+اکثر مقادیر در جاواسکریپت داری خاصیت‌هایی نیز هستند، مورد استثنا `null` و `undefined` است. می توان به خاصیت ها به صورت <bdo>`value.prop`</bdo> یا <bdo>`value["prop"]`</bdo> دسترسی داشت. در اشیاء خاصیت ها نام گذاری می شوند و معمولا مجموعه‌ی ثابتی از آن ها را نگه داری می کنند. آرایه‌ها، از سوی دیگر، در بردارنده تعداد متنوعی از مقدارهایی است که معمولا از یک جنس هستند و از اعداد ( با شروع از صفر) به عنوان نام خاصیت‌هایشان استفاده می کنند.
 
-There _are_ some named properties in arrays, such as `length` and a
-number of methods. Methods are functions that live in properties and
-(usually) act on the value they are a property of.
+البته بعضی خاصیت‌ها در آرایه‌ها وجود دارند مانند `length` که نام گذاری شده اند. متدها توابعی هستند که در فضای خاصیت‌ها جریان دارند و (معمولا) روی مقداری که خاصیتی از آن محسوب می شوند عمل می کنند.
 
-You can iterate over arrays using a special kind of `for` loop—`for
-(let element of array)`.
+می توانی عناصر یک آرایه را به وسیله نوع خاصی از حلقه‌ی  `for` پیمایش یا شمارش کنید – for (let element of array)
 
-## Exercises
+## تمرین‌ها
 
-### The sum of a range
+### مجموع یک بازه
 
 {{index "summing (exercise)"}}
 
-The [introduction](intro) of this book alluded to the following as a
-nice way to compute the sum of a range of numbers:
+در [مقدمه‌ی](intro) این کتاب به مثال زیر به عنوان یک راه خوب برای محاسبه مجموعه بازه‌ای از اعداد اشاره شد:
 
 ```{test: no}
 console.log(sum(range(1, 10)));
@@ -1347,23 +967,14 @@ console.log(sum(range(1, 10)));
 
 {{index "range function", "sum function"}}
 
-Write a `range` function that takes two arguments, `start` and `end`,
-and returns an array containing all the numbers from `start` up to
-(and including) `end`.
+تابعی به نام `range` بنویسید که دو آرگومان را دریاف می کند، `start` و `end` و آرایه‌ای حاوی تمامی اعدادی که از `start` شروع می شوند ( و شامل) عدد `end` نیز می باشد.
 
-Next, write a `sum` function that takes an array of numbers and
-returns the sum of these numbers. Run the example program and see
-whether it does indeed return 55.
+بعد، تابعی به نام `sum` بنویسید که آرایه‌ای از اعداد را گرفته و مجموع این اعداد را برمیگرداند. برنامه‌ ای که در مثال آمده را اجرا کرده و بررسی کنید که آیا 55 را به عنوان پاسخ بر می گرداند.
+
 
 {{index "optional argument"}}
 
-As a bonus assignment, modify your `range` function to take an
-optional third argument that indicates the "step" value used when
-building the array. If no step is given, the elements go up by
-increments of one, corresponding to the old behavior. The function
-call `range(1, 10, 2)` should return `[1, 3, 5, 7, 9]`. Make sure it
-also works with negative step values so that `range(5, 2, -1)`
-produces `[5, 4, 3, 2]`.
+به عنوان یک ماموریت تشویقی، تابع `range` خود را تغییر داده تا یک آرگومان اختیاری سومی را هم قبول کند که مشخص کننده‌ی گام (step) برای ساختن آرایه می باشد. اگر گامی مشخص نشده بود، عناصر یک واحد یک واحد بالا می روند شبیه رفتار معمولی که داشت. فراخوانی تابع به شکل <bdo>`range(1, 10, 2)`</bdo> بایستی خروجی <bdo>`[1, 3, 5, 7, 9]`</bdo> را تولید کند. مطمئن شوید که تابع با گام منفی هم کار خواهد کرد پس  <bdo>`range(5, 2, -1)`</bdo> بایستی <bdo>`[5, 4, 3, 2]`</bdo> را تولید کند.
 
 {{if interactive
 
@@ -1414,24 +1025,15 @@ parameters in the default value of a parameter.
 
 hint}}
 
-### Reversing an array
+### معکوس کردن یک آرایه
 
 {{index "reversing (exercise)", "reverse method", [array, methods]}}
 
-Arrays have a `reverse` method that changes the array by inverting
-the order in which its elements appear. For this exercise, write two
-functions, `reverseArray` and `reverseArrayInPlace`. The first,
-`reverseArray`, takes an array as argument and produces a _new_ array
-that has the same elements in the inverse order. The second,
-`reverseArrayInPlace`, does what the `reverse` method does: it
-_modifies_ the array given as argument by reversing its elements.
-Neither may use the standard `reverse` method.
+آرایه‌ها متدی به نام `reverse` دارند که ترتیب عناصر آرایه را معکوس می نماید. برای این تمرین، دو تابع بنویسید:`reverseArray` و `reverseArrayInPlace`. تابع اول ، `reverseArray` آرایه ای را به عنوان ورودی می گیرد و آرایه‌ی _جدیدی_ را تولید می کند که همان عناصر را دارد اما به ترتیب وارونه. تابع دوم، `reverseArrayInPlace` مشابه‌ متد `reverse` عمل می کند: آرایه‌ای که به عنوان آرگومان دریافت می کند را _تغییر می دهد_ و ترتیب عناصرش را عکس می کند. در این تمرین نمی توانید از متد استاندارد `reverse` استفاده کنید.
 
 {{index efficiency, "pure function", "side effect"}}
 
-Thinking back to the notes about side effects and pure functions in
-the [previous chapter](functions#pure), which variant do you expect to
-be useful in more situations? Which one runs faster?
+به بحث اثرات جانبی و توابع ناب فکر کنید که در [فصل قبل](functions#pure) صحبت شد، کدام تابع از موارد بالا به نظر شما در موقعیت های بیشتری کاربرد خواهد داشد؟ کدام سریع‌تر عمل می کند؟
 
 {{if interactive
 
@@ -1480,15 +1082,13 @@ hint}}
 
 {{id list}}
 
-### A list
+### لیست
 
 {{index ["data structure", list], "list (exercise)", "linked list", array, collection}}
 
-Objects, as generic blobs of values, can be used to build all sorts of
-data structures. A common data structure is the _list_ (not to be
-confused with array). A list is a nested set of objects, with the
-first object holding a reference to the second, the second to the
-third, and so on.
+اشیاء به عنوان مقادیری بدون چهارچوب خاص، می توانند برای ساختن هر نوع ساختار داده استفاده شوند. یکی از انواع رایج ساختار داده، _لیست_ است ( نباید لیست را با آرایه اشتباه گرفت). یک لیست مجموعه‌ای تودرتو از اشیاء است که اولین شیء ارجاعی به دومین، دومین به سومین و الی آخر نگه داری می کند.
+
+
 
 ```{includeCode: true}
 let list = {
@@ -1503,31 +1103,20 @@ let list = {
 };
 ```
 
-The resulting objects form a chain, like this:
+اشیائی که در یک زنجیره وجود دارند به این شکل خواهند بود:
 
 {{figure {url: "img/linked-list.svg", alt: "A linked list",width: "8cm"}}}
 
 {{index "structure sharing", [memory, structure sharing]}}
 
-A nice thing about lists is that they can share parts of their
-structure. For example, if I create two new values `{value: 0, rest:
-list}` and `{value: -1, rest: list}` (with `list` referring to the
-binding defined earlier), they are both independent lists, but they
-share the structure that makes up their last three elements. The
-original list is also still a valid three-element list.
+یکی از نکات خوب لیست ها این است که آن ها بخشی از ساختارشان را به اشتراک می گذارند. به عنوان مثال، اگر من دو مقدار ایجاد کنم <bdo>`{value: 0, rest:
+list}`</bdo> (که list در اینجا متغیری اشاره می کند که قبل‌تر تعریف شده)، هر دوی آن ها لیست‌های مستقلی هستند، اما ساختاری را به اشتراک می گذارند که سه عنصر آخرشان را شکل می دهد. لیست اصلی همچنین هنوز یک لیست سه عنصره‌ی معتبر است.
 
-Write a function `arrayToList` that builds up a list structure like
-the one shown when given `[1, 2, 3]` as argument. Also write a
-`listToArray` function that produces an array from a list. Then add a
-helper function `prepend`, which takes an element and a list and
-creates a new list that adds the element to the front of the input
-list, and `nth`, which takes a list and a number and returns the
-element at the given position in the list (with zero referring to the
-first element) or `undefined` when there is no such element.
+تابعی به نام `arrayToList` بنویسید که یک ساختار لیست را بسازد شبیه لیستی که نشان داده شد در حالی که مقدار <bdo>`[1, 2, 3]`</bdo> را به عنوان آرگومان دریافت می کند. همچنین تابعی به نام `listToArray` بنویسید که آرایه‌ای از لیست داده شده تولید کند. بعد تابع‌ کمکی `prepend` را تعریف کنید که یک عنصر به همراه یک لیست را گرفته و لیست جدیدی تولید می کند عنصر مورد نظر در ابتدای آن اضافه شده است و تابع `nth` که یک لیست و یک عدد را گرفته و عنصری که در موقعیت خواسته شده قرار دارد را از لیست بر می گرداند ( صفر به عنصر اول اشاره می کند) یا اینکه در صورت نبودن عنصر مقدار `undefined` برگردانده می شود.
 
 {{index recursion}}
 
-If you haven't already, also write a recursive version of `nth`.
+اگر به روش بازگشتی این کار را نکرده اید، همچنین نسخه‌ی بازگشتی تابع `nth` را هم بنویسید.
 
 {{if interactive
 
@@ -1585,31 +1174,21 @@ hint}}
 
 {{id exercise_deep_compare}}
 
-### Deep comparison
+### مقایسه عمیق
 
 {{index "deep comparison (exercise)", [comparison, deep], "deep comparison", "== operator"}}
 
-The `==` operator compares objects by identity. But sometimes you'd
-prefer to compare the values of their actual properties.
+عملگر `==` یکسان بودن اشیاء را بررسی می کند.  گاهی ترجیح می دهید که مقدارهای خاصیت‌های اشیاء را مقایسه کنید.
 
-Write a function `deepEqual` that takes two values and returns true
-only if they are the same value or are objects with the same
-properties, where the values of the properties are equal when compared
-with a recursive call to `deepEqual`.
+تابعی به نام `deepEqual` بنویسید که دو مقدار را دریافت م یکند و زمانی مقدار true‌ را بر می گرداند که هر دوی مقدار ها مشابه باشند یا اگر شیء هستند خاصیت‌های یکسانی داشته باشند، به طوریکه مقدارهای خاصیت‌های آن ها نیز در صورت مقایسه با یک فراخوانی بازگشتی تابع `deepEqual` برابر باشند.
 
 {{index null, "=== operator", "typeof operator"}}
 
-To find out whether values should be compared directly (use the `===`
-operator for that) or have their properties compared, you can use the
-`typeof` operator. If it produces `"object"` for both values, you
-should do a deep comparison. But you have to take one silly exception
-into account: because of a historical accident, `typeof null` also
-produces `"object"`.
+برای اینکه بدانیم آیا باید یکسانی دو چیز را بررسی کنیم ( از عملگر `===` برای آن استفاده می شود) یا اینکه خاصیت‌ها را مقایسه کنیم، می توان از عملگر `typeof` استفاده کرد. اگر این عملگر `“objec”` برای هر دو مقدار تولید کرد، بایستی عمل مقایسه‌ی عمیق را انجام دهید. راستی بایستی یک استثناء احمقانه را هم به حساب بیاورد: به علیت اتفاقی در قدیم، <bdo>`typeof null`</bdo> نیز `“object”` را تولید می کند.
 
 {{index "Object.keys function"}}
 
-The `Object.keys` function will be useful when you need to go over the
-properties of objects to compare them.
+تایع <bdo>`Object.keys`</bdo> نیز زمانی که نیاز دارید به سراغ خاصیت‌های یک شیء برای مقایسه بروید مفید خواهد بود.
 
 {{if interactive
 
