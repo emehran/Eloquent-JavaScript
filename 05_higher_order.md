@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/scripts.js", "code/chapter/05_higher_order.js", "code/intro.js"], zip: "node/html"}}}
 
-# Higher-Order Functions
+# توابع رده‌بالا (Higher-Order)
 
 {{if interactive
 
@@ -31,17 +31,11 @@ quote}}
 
 {{index "program size"}}
 
-A large program is a costly program, and not just because of the time
-it takes to build. Size almost always involves ((complexity)), and
-complexity confuses programmers. Confused programmers, in turn,
-introduce mistakes (_((bug))s_) into programs. A large program then
-provides a lot of space for these bugs to hide, making them hard to
-find.
+یک برنامه بزرگ پرهزینه است و فقط به این خاطر نیست که زمان زیادی برای ساختن آن لازم است. اندازه‌ی برنامه همیشه شامل میزان پیچیدگی برنامه هم می شود، چیزی که برنامه نویسان را سردرگم می کند و موجب می شود اشتباه کنند و برنامه خطا (_((باگ))_) داشته باشد. بنابراین یک برنامه‌ی بزرگ فضای زیادی برای پنهان شدن باگ‌ها فراهم می سازد و پیدا کردن باگ‌ها را سخت می کند.
 
 {{index "summing example"}}
 
-Let's briefly go back to the final two example programs in the
-introduction. The first is self-contained and six lines long.
+اجازه بدهید به طور مختصر به نسخه‌ی نهایی دو برنامه‌ی نمونه برگردیم که در مقدمه کتاب آورده شده اند. برنامه‌ی اول فاقد تابع و کلا دارای شش خط کد است:
 
 ```
 let total = 0, count = 1;
@@ -52,105 +46,77 @@ while (count <= 10) {
 console.log(total);
 ```
 
-The second relies on two external functions and is one line long.
+دومین برنامه از دو تابع استفاده می و فقط یک خط دارد:
+
 
 ```
 console.log(sum(range(1, 10)));
 ```
 
-Which one is more likely to contain a bug?
+کدام یک بیشتر احتمال دارد باگ داشته باشد؟
 
 {{index "program size"}}
 
-If we count the size of the definitions of `sum` and `range`, the
-second program is also big—even bigger than the first. But still, I'd
-argue that it is more likely to be correct.
+اگر اندازه‌ی تعریف توابع `sum` و `range` را هم به حساب بیاوریم، برنامه دوم نیز برنامه‌ای بزرگ محسوب می شود – حتی بزرگ تر از برنامه اول. اما هنوز، من ادعا می کنم که این برنامه با احتمال بیشتری درست کار خواهد کرد.
+
 
 {{index [abstraction, "with higher-order functions"], "domain-specific language"}}
 
-It is more likely to be correct because the solution is expressed in a
-((vocabulary)) that corresponds to the problem being solved. Summing a
-range of numbers isn't about loops and counters. It is about ranges
-and sums.
+با احتمال بیشتری درست کار خواهد کرد زیرا راه‌حل آن با ((واژگانی)) بیان شده است که با حل مسئله ارتباط معنایی دارند. جمع  بستن (sum) یک بازه‌ (range) از اعداد ربطی به حلقه‌ها و شمارنده‌ها ؛ندارد بلکه مربوط به بازه‌ها و عمل جمع می شود.
 
-The definitions of this vocabulary (the functions `sum` and `range`)
-will still involve loops, counters, and other incidental details. But
-because they are expressing simpler concepts than the program as a
-whole, they are easier to get right.
+در تعریف این واژگان ( توابع `sum` و `range`) همچنان از حلقه‌ها، شمارنده‌ها و دیگر جزئیات فرعی استفاده خواهد شد. اما به دلیل اینکه آن‌ها به جای بیان برنامه به عنوان یک کل، مفاهیم ساده‌تری را نشان می دهند، آسان‌تر سامان می یابند.
 
-## Abstraction
 
-In the context of programming, these kinds of vocabularies are usually
-called _((abstraction))s_. Abstractions hide details and give us the
-ability to talk about problems at a higher (or more abstract) level.
+## انتزاع
+
+در فضای برنامه‌نویسی، این گونه واژگان را عموما انتزاع‌ها یا _((abstraction))s_ می گویند. انتزاع‌ها جزئیات را مخفی می کنند و به ما این امکان را می دهند که در باره مسئله‌ها در سطح بالاتری ( انتزاع بیشتر ) گفتگو کنیم.
 
 {{index "recipe analogy", "pea soup"}}
 
-As an analogy, compare these two recipes for pea soup. The first one
-goes like this:
+به عنوان تشبیه، می توان این دو طرز تهیه‌ی سوپ نخود را با هم مقایسه کرد. اولین مورد به صورت زیر خواهد بود:
 
 {{quote
 
-Put 1 cup of dried peas per person into a container. Add water until
-the peas are well covered. Leave the peas in water for at least 12
-hours. Take the peas out of the water and put them in a cooking pan.
-Add 4 cups of water per person. Cover the pan and keep the peas
-simmering for two hours. Take half an onion per person. Cut it into
-pieces with a knife. Add it to the peas. Take a stalk of celery per
-person. Cut it into pieces with a knife. Add it to the peas. Take a
-carrot per person. Cut it into pieces. With a knife! Add it to the
-peas. Cook for 10 more minutes.
+یک فنجان نخود خشک برای هر نفر درون یک ظرف بریزید. به آن آب اضافه کنید تا همه‌ی نخود‌ها را در بر بگیرد. اجازه بدهید نخودها حداقل 12 ساعت در آب بمانند. بعد نخودها را از آب درآورده درون یک قابلمه قرار دهید.  برای هر نفر 4 لیوان آب اضافه کنید. روی قابلمه را پوشانده  و بگذارید برای 2 ساعت روی گاز باشد. برای هر نفر نیمی از پیاز را برداشته آن را تکه تکه کنید و به نخود‌ها اضافه نمایید. برای هر نفر یک ساقه‌ی کرفس بردارید. با چاقو قطعه قطعه کنید و به نخود ها اضافه کنید. برای هر نفر یک هویج در نظر گرفته، تکه تکه کرده با چاقو! و به نخودها اضافه کنید. بگذارید 10 دقیقه دیگر بپزد.
 
 quote}}
 
-And this is the second recipe:
+طرز تهیه‌ی دوم:
 
 {{quote
 
-Per person: 1 cup dried split peas, half a chopped onion, a stalk of
-celery, and a carrot.
+برای هر نفر: یک لیوان نخود خشک، نیمی از یک پیاز تکه تکه شده، یک ساقه کرفس، و یک هویج.
 
-Soak peas for 12 hours. Simmer for 2 hours in 4 cups of water
-(per person). Chop and add vegetables. Cook for 10 more minutes.
+نخود ها را 12 ساعت بخیسانید. 2 ساعت در 4 لیوان آب ( برای یک نفر) روی گاز آهسته بجوشانید. سبزیجات را تکه تکه کرده و اضافه کنید. برای 10 دقیقه دیگر پخته شود.
 
 quote}}
 
 {{index vocabulary}}
 
-The second is shorter and easier to interpret. But you do need to
-understand a few more cooking-related words such as _soak_, _simmer_, _chop_,
-and, I guess, _vegetable_.
+دستور دوم کوتاه تر و توضیح ساده تری داشت. اما برای فهم آن بایستی چند واژه‌ی مرتبط با آشپزی را یاد داشته باشید – _خیساندن_،  _جوشاندن،_ _ریز ریز کردن_ و فکر کنم _سبزیجات_.
 
-When programming, we can't rely on all the words we need to be waiting
-for us in the dictionary. Thus, we might fall into the pattern of the
-first recipe—work out the precise steps the computer has to perform,
-one by one, blind to the higher-level concepts that they express.
+هنگام برنامه‌نویسی، نمی توانیم فرض کنیم همه‌ی واژگانی که نیاز داریم وجود داشته و در واژه‌نامه منتظر ما باشند. بنابراین، ممکن است به دام الگوی موجود در طرز تهیه‌ی اول بیفتیم - کارکردن روی قدم‌های دقیقی که کامپیوتر بایستی اجرا کند، یکی پس از دیگری، بدون توجه به مفاهیم سطح بالاتری که این دستورات بیان می کنند.
 
 {{index abstraction}}
 
-It is a useful skill, in programming, to notice when you are working
-at too low a level of abstraction.
+یکی از مهارت های کاربردی در برنامه نویسی، این است که زمانی که در سطح بسیار پایینی از انتزاع کار می کنید، نسبت به آن آگاه باشید.
 
-## Abstracting repetition
+## تکرار انتزاعی
 
 {{index [array, iteration]}}
 
-Plain functions, as we've seen them so far, are a good way to build
-abstractions. But sometimes they fall short.
+توابع ساده، مانند مواردی که تا کنون دیده ایم، برای ایجاد انتزاع مفید هستند. اما گاهی اوقات کافی نیستند.
 
 {{index "for loop"}}
 
-It is common for a program to do something a given number of times.
-You can write a `for` ((loop)) for that, like this:
+در برنامه‌ها رایج است که کاری را به تعداد مشخصی تکرار کنیم. می توان از یک حلقه‌ی `for` برای این کار استفاده کرد:
 
 ```
 for (let i = 0; i < 10; i++) {
   console.log(i);
 }
 ```
-
-Can we abstract "doing something _N_ times" as a function? Well, it's
-easy to write a function that calls `console.log` _N_ times.
+آیا می توان “انجام یک کار به تعداد _N_ بار” را با استفاده از یک تابع تجرید کرد؟ خوب خیلی راحت می توان تابعی نوشت که <bdo>`console.log`</bdo> را _N_  بار فراخوانی کند.
 
 ```
 function repeatLog(n) {
@@ -164,9 +130,8 @@ function repeatLog(n) {
 
 {{indexsee "higher-order function", "function, higher-order"}}
 
-But what if we want to do something other than logging the numbers?
-Since "doing something" can be represented as a function and functions
-are just values, we can pass our action as a function value.
+اما اگر بخواهیم کاری به غیر از چاپ اعداد در خروجی انجام دهیم چه؟ با توجه به این که “انجام یک کار” را می توان به عنوان یک تابع در نظر گرفت و توابع هم در واقع مقدار هستند، می توانیم "کار"مان را به عنوان یک مقدار تابع ارسال کنیم.
+
 
 ```{includeCode: "top_lines: 5"}
 function repeat(n, action) {
@@ -181,8 +146,7 @@ repeat(3, console.log);
 // → 2
 ```
 
-We don't have to pass a predefined function to `repeat`. Often, it
-is easier to create a function value on the spot instead.
+نیازی نیست که حتما یک تابع از پیش تعریف شده را به تابع `repeat`  ارسال کنید. اغلب آسان تر است که یک مقدار تابع همان موقع ایجاد کنیم.
 
 ```
 let labels = [];
@@ -195,30 +159,17 @@ console.log(labels);
 
 {{index "loop body", [braces, body], [parentheses, arguments]}}
 
-This is structured a little like a `for` loop—it first describes the
-kind of loop and then provides a body. However, the body is now written
-as a function value, which is wrapped in the parentheses of the
-call to `repeat`. This is why it has to be closed with the closing
-brace _and_ closing parenthesis. In cases like this example, where the
-body is a single small expression, you could also omit the
-braces and write the loop on a single line.
+این ساختار کمی شبیه حلقه‌ی `for` به نظر می رسد – ابتدا نوع حلقه را مشخص می کند سپس بدنه را فراهم می کند.  با این حال، بدنه اکنون به صورت یک مقدار تابع نوشته می شود، که خود درون پرانتز‌های مربوط به فراخوانی تابع `repeat` قرار گرفته است. به همین دلیل است که باید حتما به وسیله کروشه‌ی پایانی  _و_ پرانتز پایانی بسته شود.  در مواردی شبیه این مثال، جایی که بدنه، یک عبارت واحد کوچک است، می توانید کروشه‌ها را حذف کنید و حلقه را در یک خط بنویسید.
 
-## Higher-order functions
+## توابع رده‌بالا
 
 {{index [function, "higher-order"], [function, "as value"]}}
 
-Functions that operate on other functions, either by taking them as
-arguments or by returning them, are called _higher-order functions_.
-Since we have already seen that functions are regular values, there is
-nothing particularly remarkable about the fact that such functions
-exist. The term comes from ((mathematics)), where the distinction
-between functions and other values is taken more seriously.
+توابعی که روی توابع دیگر عمل می کنند، چه با گرفتن آن ها به عنوان آرگومان و چه با برگرداندن آن ها ، _توابع رده‌بالا_ نامیده می شوند. با توجه به این که پیش تر دیده‌ایم که توابع در واقع یک نوع مقدار هستند، مسئله‌ی قابل توجه و به خصوصی در مورد فلسفه‌ی وجود اینگونه توابع وجود ندارد. اصطلاح رده‌بالا (higher-order) از ((ریاضیات)) گرفته شده است جایی که به تمایز بین توابع و دیگر مقادیر اهمیت بیشتری داده شده است.
 
 {{index abstraction}}
 
-Higher-order functions allow us to abstract over _actions_, not just
-values. They come in several forms. For example, we can have
-functions that create new functions.
+توابع رده‌بالا، به ما این امکان را می دهند که براساس _اقدام‌ها_، انتزاع ایجاد کنیم، نه فقط بر اساس مقدارها.  این گونه توابع به اشکال مختلفی می آیند. به عنوان نمونه‌، می توانید توابعی داشته باشید که خود توابعی را ایجاد می کنند.
 
 ```
 function greaterThan(n) {
@@ -229,7 +180,8 @@ console.log(greaterThan10(11));
 // → true
 ```
 
-And we can have functions that change other functions.
+یا توابعی داشته باشید که دیگر توابع را تغییر می دهند.
+
 
 ```
 function noisy(f) {
@@ -244,9 +196,7 @@ noisy(Math.min)(3, 2, 1);
 // → calling with [3, 2, 1]
 // → called with [3, 2, 1] , returned 1
 ```
-
-We can even write functions that provide new types of ((control
-flow)).
+حتی می توانید توابعی بنویسید که نوعی جدیدی از ((جریان کنترل)) را فراهم نمایند.
 
 ```
 function unless(test, then) {
@@ -264,8 +214,7 @@ repeat(3, n => {
 
 {{index [array, methods], [array, iteration], "forEach method"}}
 
-There is a built-in array method, `forEach`, that provides something
-like a `for`/`of` loop as a higher-order function.
+متد از پیش تعریف شده ای به نام `forEach` برای آرایه‌ها وجود دارد که کاری شبیه حلقه‌ی <bdo>`for`/`of`</bdo> را به عنوان یک تابع رده‌بالا انجام می دهد.
 
 ```
 ["A", "B"].forEach(l => console.log(l));
@@ -273,34 +222,22 @@ like a `for`/`of` loop as a higher-order function.
 // → B
 ```
 
-## Script data set
+## مجموعه داده‌ی الفبا
 
-One area where higher-order functions shine is data processing. To process data, we'll need some actual data. This chapter will
-use a ((data set)) about scripts—((writing system))s such as Latin,
-Cyrillic, or Arabic.
+یکی از ناحیه‌هایی که توابع رده‌بالا درخشان عمل می کنند، پردازش داده ها می باشد. برای پردازش داده ها، نیاز به داده‌ی واقعی داریم. در این فصل از ((مجموعه‌ی داده‌ای)) در باره‌ی حروف الفبا – ((سیستم های نوشتاری)) مانند لاتین، سیریلیک، یا عربی – استفاده می کنیم.
 
-Remember ((Unicode)) from [Chapter ?](values#unicode), the system that
-assigns a number to each character in written language? Most of these
-characters are associated with a specific script. The standard
-contains 140 different scripts—81 are still in use today, and 59
-are historic.
+((یونیکد)) را از [فصل ?](values#unicode) به خاطر بیاورید، سیستمی که برای هر کاراکتر از زبان های نوشتاری، عددی را اختصاص می داد. اکثر این کاراکترها به الفبای مشخصی تعلق دارند.  این استاندارد دارای 140 الفبای متفاوت است – از این تعداد، 81 تای آن ها امروزه استفاده می شوند و 59 مورد دیگر به تاریخ پیوسته اند.
 
-Though I can fluently read only Latin characters, I appreciate the
-fact that people are writing texts in at least 80 other writing
-systems, many of which I wouldn't even recognize. For example, here's
-a sample of ((Tamil)) handwriting:
+اگرچه من فقط می توانم کاراکترهای لاتین را به صورت روان بخوانم، اما این واقعیت که مردم جهان حداقل به 80 سیستم نوشتاری دیگر می نویسند که خیلی از آن ها را حتی نمی توانم تشخیص دهم را تحسین می کنم . به عنوان مثال، نمونه‌ی زیر دست نوشته ای از زبان ((تمیل)) است:
+
 
 {{figure {url: "img/tamil.png", alt: "Tamil handwriting"}}}
 
 {{index "SCRIPTS data set"}}
 
-The example ((data set)) contains some pieces of information about the
-140 scripts defined in Unicode. It is available in the [coding
-sandbox](https://eloquentjavascript.net/code#5) for this chapter[
+((مجموعه‌ی داده)) نمونه‌ی ما حاوی اطلاعاتی از حدود 140 الفبای موجود در یونیکد است. این داده‌ها در قسمت [کدهای](https://eloquentjavascript.net/code#5) این فصل [
 ([_https://eloquentjavascript.net/code#5_](https://eloquentjavascript.net/code#5))]{if
-book} as the `SCRIPTS` binding. The binding contains an array of
-objects, each of which describes a script.
-
+book} به عنوان متغیر `SCRIPTS` قابل دانلود می باشند. این متغیر شامل آرایه‌ای از اشیاء است که هر کدام معرف یک الفبا می باشند.
 
 ```{lang: "application/json"}
 {
@@ -313,28 +250,17 @@ objects, each of which describes a script.
 }
 ```
 
-Such an object tells us the name of the script, the Unicode ranges
-assigned to it, the direction in which it is written, the
-(approximate) origin time, whether it is still in use, and a link to
-more information. The direction may be `"ltr"` for left to right, `"rtl"`
-for right to left (the way Arabic and Hebrew text are written), or
-`"ttb"` for top to bottom (as with Mongolian writing).
+این اشیاء شامل نام الفبا، بازه‌ی یونیکدی که به آن اختصاص دارد،جهتی که به آن سمت نوشته می شود، منشاء زمانی (تقریبی)، اینکه اکنون نیز استفاده می شوند یا خیر، و لینکی به اطلاعات بیشتر می باشند. جهت نوشتن می تواند `"ltr"` برای چپ به راست، `"rtl"` راست به چپ (مانند عربی و عبری) یا `"ttb"` برای بالا به پایین (مانند زبان مغولی) باشد.
 
 {{index "slice method"}}
 
-The `ranges` property contains an array of Unicode character
-((range))s, each of which is a two-element array containing a lower bound
-and an upper bound. Any character codes within these ranges are assigned
-to the script. The lower ((bound)) is inclusive (code 994 is a Coptic
-character), and the upper bound is non-inclusive (code 1008 isn't).
+خاصیت `ranges` شامل آرایه‌ای از بازه‌های کاراکتر یونیکد می باشد که هر کدام یک آرایه‌ی دو عنصری است که یک مرز پایین و بالا دارد. هر کد کاراکتری که در این بازه قرار بگیرد متعلق به الفبای مذکور است. مرز پایین خود نیز شامل است ( کد 994 یک کاراکتر قبطی است) و مرز بالایی، خود شامل نمی شود (کد 1008 متعلق به قبطی نیست)
 
-## Filtering arrays
+## فیلتر کردن آرایه ها
 
 {{index [array, methods], [array, filtering], "filter method", [function, "higher-order"], "predicate function"}}
 
-To find the scripts in the data set that are still in use, the
-following function might be helpful. It filters out the elements in an
-array that don't pass a test.
+برای پیدا کردن‌ الفباهایی که همچنان استفاده می شوند، تابع پیش رو می تواند مفید باشد. این تابع یه عنوان یک صافی عمل می کند و عناصری که با شرط تطبیق ندارند را در نتایج نمی آورد.
 
 ```
 function filter(array, test) {
@@ -353,20 +279,13 @@ console.log(filter(SCRIPTS, script => script.living));
 
 {{index [function, "as value"], [function, application]}}
 
-The function uses the argument named `test`, a function value, to fill
-a "gap" in the computation—the process of deciding which elements to
-collect.
+تابع بالا از آرگومانی به نام `test` استفاده می کند، یک مقدار تابع، تا محاسبه مورد نظر را تکمیل کند – عمل انتخاب عناصری که باید به مجموعه اضافه شوند.
 
 {{index "filter method", "pure function", "side effect"}}
 
-Note how the `filter` function, rather than deleting elements from the
-existing array, builds up a new array with only the elements that pass
-the test. This function is _pure_. It does not modify the array it is
-given.
+توجه کنید که چگونه تابع `filter،` به جای اینکه عناصر را از آرایه حذف کند، آرایه‌ی جدیدی می سازد که شامل فقط عناصری است که با شرط تطبیق دارند .این تابع _ناب_ (pure) است. آرایه‌ای که دریافت می کند را تغییر نمی دهد.
 
-Like `forEach`, `filter` is a ((standard)) array method. The example
-defined the function only to show what it does internally.
-From now on, we'll use it like this instead:
+شبیه `forEach،` تابع `filter` نیز یک متد ((استاندارد)) آرایه است. در مثالا بالا، تابع تعریف شد تا شیوه‌ی کارکرد درون آن را نشان دهد. از الان به بعد، به شکل زیر از آن استفاده خواهیم کرد:
 
 ```
 console.log(SCRIPTS.filter(s => s.direction == "ttb"));
@@ -375,20 +294,16 @@ console.log(SCRIPTS.filter(s => s.direction == "ttb"));
 
 {{id map}}
 
-## Transforming with map
+## تغییر شکل به وسیله‌ی map
+
 
 {{index [array, methods], "map method"}}
 
-Say we have an array of objects representing scripts, produced by
-filtering the `SCRIPTS` array somehow. But we want an array of names,
-which is easier to inspect.
+فرض کنید آرایه ای از اشیاء در دست داریم که نمایانگر الفبایی است که پس از اعمال فیلتر به آرایه‌ی `SCRIPTS` به وجود آمده است. اما اگر آرایه‌ای از نام ها در اختیار داشتیم کارمان ساده تر می شد.
 
 {{index [function, "higher-order"]}}
 
-The `map` method transforms an array by applying a function to all of
-its elements and building a new array from the returned values. The
-new array will have the same length as the input array, but its
-content will have been _mapped_ to a new form by the function.
+متد `map` برای تغییر یک آرایه استفاده می شود. به این صورت که تابعی را به همه‌ی عناصر آرایه اعمال کرده و آرایه‌ی جدیدی را از مقادیر برگردانده شده می سازد. تعداد عناصر آرایه‌ی جدید با آرایه‌ی ورودی برابر است. اما محتوای آن به وسیله‌ی تابع داده شده تغییر می کند.
 
 ```
 function map(array, transform) {
@@ -404,31 +319,21 @@ console.log(map(rtlScripts, s => s.name));
 // → ["Adlam", "Arabic", "Imperial Aramaic", …]
 ```
 
-Like `forEach` and `filter`, `map` is a standard array method.
+شبیه `forEach` و `filter` متد `map` نیز از متدهای استاندارد آرایه است.
 
-## Summarizing with reduce
+## خلاصه‌ کردن یک آرایه به وسیله‌ی متد reduce
 
 {{index [array, methods], "summing example", "reduce method"}}
 
-Another common thing to do with arrays is to compute a single value
-from them. Our recurring example, summing a collection of numbers, is
-an instance of this. Another example is finding the script with
-the most characters.
+یکی دیگر از کارهای رایجی که با آرایه‌ها انجام می شود، محاسبه‌ی یک مقدار واحد از آن ها است. مثال تکراری خودمان، جمع کردن مجموعه‌ای از اعداد، نمونه‌ی از آن است. یک مثال دیگر می تواند پیدا کردن الفبایی با بیشترین حروف باشد.
 
 {{indexsee "fold", "reduce method"}}
 
 {{index [function, "higher-order"], "reduce method"}}
 
-The higher-order operation that represents this pattern is called
-_reduce_ (sometimes also called _fold_). It builds a value by
-repeatedly taking a single element from the array and combining it
-with the current value. When summing numbers, you'd start with the
-number zero and, for each element, add that to the sum.
+عمل "رده‌بالا"یی که برای این الگو وجود دارد، _reduce_ (کاهش) خوانده می شود ( گاهی اوقات هم آن‌ را _تاکردن_ می نامند.) این متد به صورت مکرر عنصری از آرایه را گرفته و آن را با مقدار قبلی ترکیب کرده و در نهایت یک مقدار واحد تولید می کند. زمانی که اعداد را جمع می کنید، ابتدا با عدد صفر شروع می کنید و بعد یکایک عناصر را به مجموع اضافه می کنید.
 
-The parameters to `reduce` are, apart from the array, a combining
-function and a start value. This function is a little less
-straightforward than `filter` and `map`, so take a close look at
-it:
+پارامترهای تابع `reduce،` بدون در نظر گرفتن خود آرایه، شامل یک تابع ترکیب و یک مقدار اولیه می باشند. مفهوم این تابع به سرراستی `filter` و `map` نیست، پس بیایید نگاه دقیق تری بکنیم:
 
 ```
 function reduce(array, combine, start) {
@@ -445,11 +350,7 @@ console.log(reduce([1, 2, 3, 4], (a, b) => a + b, 0));
 
 {{index "reduce method", "SCRIPTS data set"}}
 
-The standard array method `reduce`, which of course corresponds to
-this function, has an added convenience. If your array contains at
-least one element, you are allowed to leave off the `start` argument.
-The method will take the first element of the array as its start value
-and start reducing at the second element.
+متد استاندارد آرایه‌ی `reduce` که شبیه به تابع بالا می باشد، یک مزیت بیشتر نیز دارد. اگر آرایه‌ی شما حداقل یک عنصر داشته باشد، می توانید آرگومان `start` را حذف کنید. خود تابع، اولین عنصر آرایه را به عنوان مقدار شروع در نظر گرفته و عمل کاهش را از عنصر دوم شروع می کند.
 
 ```
 console.log([1, 2, 3, 4].reduce((a, b) => a + b));
@@ -458,8 +359,7 @@ console.log([1, 2, 3, 4].reduce((a, b) => a + b));
 
 {{index maximum, "characterCount function"}}
 
-To use `reduce` (twice) to find the script with the most characters,
-we can write something like this:
+برای استفاده از متد `reduce` (دو بار) برای پیدا کردن الفبایی که بیشترین حروف را دارد، می توانیم چیزی مثل کد پایین بنویسیم:
 
 ```
 function characterCount(script) {
@@ -474,28 +374,15 @@ console.log(SCRIPTS.reduce((a, b) => {
 // → {name: "Han", …}
 ```
 
-The `characterCount` function reduces the ranges assigned to a script
-by summing their sizes. Note the use of destructuring in the parameter
-list of the reducer function. The second call to `reduce` then uses
-this to find the largest script by repeatedly comparing two scripts
-and returning the larger one.
+تابع `characterCount` بازه‌ های  مربوط به یک الفبا را به وسیله جمع کردن اندازه‌ی آن ها کاهش می دهد. به استفاده از “تجزیه” (destructing) در لیست پارامتر ها در تابع کاهش دهنده توجه کنید. در فراخوانی دوم تابع `reduce`، از این نتیجه برای پیدا کردن بزرگترین الفبا استفاده می شود؛  دو به دو الفبا ها را مقایسه کرده و الفبای بزرگتر را بر می گرداند.
 
-The Han script has more than 89,000 characters assigned to it in the
-Unicode standard, making it by far the biggest writing system in the
-data set. Han is a script (sometimes) used for Chinese, Japanese, and
-Korean text. Those languages share a lot of characters, though they
-tend to write them differently. The (U.S.-based) Unicode Consortium
-decided to treat them as a single writing system to save
-character codes. This is called _Han unification_ and still makes some
-people very angry.
 
-## Composability
+الفبای Han (هان) دارای بیش از <bdo>89,000</bdo> کاراکتر در استاندارد یونیکد است، که باعث شده به عنوان بزرگ‌ترین سیستم نوشتاری در این مجموعه شناخته شود. هان الفبایی است که (گاهی) برای متون چینی، ژاپنی، و کره‌ای استفاده می شود. این زبان‌ها کاراکترهای مشترک زیادی دارند اگرچه که به شکل متفاوتی آن ها را می نویسند. کنسرسیوم یونیکد ( مستقر در ایالات متحده) تصمیم گرفت که آن ها را به عنوان یک سیستم نوشتاری واحد در نظر بگیرد تا کدهای کارکتر کمتری استفاده شود. این کار _یکی سازی الفبای هان_ خوانده می شود که هنوز بعضی افراد را خیلی عصبانی می کند.
 
+## ترکیب پذیری
 {{index loop, maximum}}
 
-Consider how we would have written the previous example (finding the
-biggest script) without higher-order functions. The code is not that
-much worse.
+ملاحظه کنید چگونه بدون استفاده توابع‌ رده‌بالا، می توانستیم مثال قبل را بنویسیم ( پیدا کردن بزرگ‌ترین الفبا).  آن‌قدرها هم بد از کار در نمی آمد.
 
 ```{test: no}
 let biggest = null;
@@ -509,16 +396,13 @@ console.log(biggest);
 // → {name: "Han", …}
 ```
 
-There are a few more bindings, and the program is four lines
-longer. But it is still very readable.
+با چند متغیر اضافی و چهار خط کدنویسی بیشتر، همچنان برنامه خوانایی خوبی دارد.
 
 {{index "average function", composability, [function, "higher-order"], "filter method", "map method", "reduce method"}}
 
 {{id average_function}}
 
-Higher-order functions start to shine when you need to _compose_
-operations. As an example, let's write code that finds the average
-year of origin for living and dead scripts in the data set.
+توابع رده‌بالا زمانی شروع به درخشش می کنند که نیاز باشد عملیات را _ترکیب_ کنید. به عنوان یک مثال، بیایید کدی بنویسیم که میانگین سال ایجاد را برای الفبا‌های زنده و از رده خارج پیدا می کند.
 
 ```
 function average(array) {
@@ -533,14 +417,9 @@ console.log(Math.round(average(
 // → 188
 ```
 
-So the dead scripts in Unicode are, on average, older than the living
-ones. This is not a terribly meaningful or surprising statistic. But I
-hope you'll agree that the code used to compute it isn't hard to read.
-You can see it as a pipeline: we start with all scripts, filter out
-the living (or dead) ones, take the years from those, average them,
-and round the result.
+بنابراین به طور میانگین الفباهای از رده خارج در یونیکد، قدیمی تر از موارد زنده هستند. این نتیجه خیلی معنای خاصی نمی دهد یا آمار شگفت انگیزی محسوب نمی شود. اما امیدوارم  موافق باشید که کدی که برای محاسبه این نتیجه استفاده شده از خوانایی خوبی برخوردار است. می توانید آن را به عنوان یک خط لوله در نظر بگیرید:  با همه‌ی الفباها شروع می کنیم، موارد زنده (یا از رده خارج) را فیلتر می کنیم، سال‌ها را از آن ها گرفته، میانگین می گیریم و نتیجه را گرد می کنیم.
 
-You could definitely also write this computation as one big ((loop)).
+قطعا می شد این محاسبه را به وسیله یک ((حلقه‌ی)) بزرگ پیاده‌سازی کرد.
 
 ```
 let total = 0, count = 0;
@@ -554,30 +433,19 @@ console.log(Math.round(total / count));
 // → 1188
 ```
 
-But it is harder to see what was being computed and how. And because
-intermediate results aren't represented as coherent values, it'd be a
-lot more work to extract something like `average` into a separate
-function.
+اما کاری که می کند و چگونگی آن به راحتی قابل درک نیست. و به علت اینکه نتایج میانی به عنوان مقادیری مربوط و منسجم نشان داده نمی شوند، برای اینکه بتوان چیزی شبیه به `average` را به عنوان یک تابع مستقل از دل آن استخراج کرد، کار زیادی خواهد برد.
 
 {{index efficiency, [array, creation]}}
 
-In terms of what the computer is actually doing, these two approaches
-are also quite different. The first will build up new arrays when
-running `filter` and `map`, whereas the second computes only some
-numbers, doing less work. You can usually afford the readable
-approach, but if you're processing huge arrays, and doing so many
-times, the less abstract style might be worth the extra speed.
+با توجه به کاری که کامپیوتر در واقعیت انجام می دهد، این دو رهیافت نسبتا با هم متفاوت هستند. در مورد اول، یک آرایه جدید پس از اجرای `filter` و `map` ایجاد می شود، در حالیکه در مورد دوم فقط محاسباتی روی اعداد انجام می شود و کار کمتری صورت می گیرد. معمولا استفاده از روش خواناتر قابل استفاده و منطقی است اما اگر قصد پردازش آرایه‌های خیلی بزرگ را دارید، و این کار را به تعداد دفعات بالایی انجام می دهید، استفاده از روشی با خوانایی و انتزاع کمتر، ارزش سرعتی که دریافت می کنید را دارد.
 
-## Strings and character codes
+## رشته‌ها و کدهای کاراکتر
 
 {{index "SCRIPTS data set"}}
 
-One use of the data set would be figuring out what script a piece of
-text is using. Let's go through a program that does this.
+یکی از کاربرد‌هایی که می توان برای این مجموعه‌ی داده در نظر گرفت، استفاده از آن برای تشخیص الفبای یک متن است. بیایید به سراغ برنامه‌ای برویم که همین کار را انجام می دهد.
 
-Remember that each script has an array of character code ranges
-associated with it. So given a character code, we could use a function
-like this to find the corresponding script (if any):
+به خاطر دارید که هر الفبا حاوی یک آرایه از بازه‌های کد کاراکتری که به آن اختصاص داشت بود. با داشتن یک کد کاراکتر، می توانیم از تابعی مثل زیر برای پیدا کردن الفبای مرتبطش ( در صورت وجود )‌ استفاده کنیم:
 
 {{index "some method", "predicate function", [array, methods]}}
 
@@ -597,41 +465,21 @@ console.log(characterScript(121));
 // → {name: "Latin", …}
 ```
 
-The `some` method is another higher-order function. It takes a test
-function and tells you whether that function returns true for any of the
-elements in the array.
+متد `some` یکی دیگر از توابع رده‌بالا است. این متد تابعی را به عنوان شرط دریافت می کند. این شرط به تک تک عناصر آرایه اعمال شده و اگر حداقل برای یکی از آن ها صدق کند (true باشد)، تابع نیز true را بر می گرداند.
 
 {{id code_units}}
 
-But how do we get the character codes in a string?
+اما چگونه می توانیم کدهای کاراکتر یک رشته را بدست بیاوریم؟
 
-In [Chapter ?](values) I mentioned that JavaScript ((string))s are
-encoded as a sequence of 16-bit numbers. These are called _((code
-unit))s_. A ((Unicode)) ((character)) code was initially supposed to
-fit within such a unit (which gives you a little over 65,000
-characters). When it became clear that wasn't going to be enough, many
-people balked at the need to use more memory per character. To address
-these concerns, ((UTF-16)), the format used by JavaScript strings, was
-invented. It describes most common characters using a single 16-bit
-code unit but uses a pair of two such units for others.
+در [فصل ?](values) اشاره کردم که در جاوااسکریپت ((رشته‌ها)) به عنوان دنباله‌ای از اعداد 16 بیتی کدگذاری می شوند که به آن‌ها ((واحد‌های کد)) گفته می شود. ابتدا قرار بود در ((یونیکد)) هر کد ((کاراکتر)) در یکی از این واحد‌ها قرار گیرد ( که چیزی بیش از <bdo>65,000</bdo> کاراکتر را در اختیار شما می گذارد).  زمانی که روشن شد این مقدار کافی نیست، خیلی ها از موضوع اختصاص حافظه‌ی بیشتر برای هر کاراکتر طفره می رفتند. برای حل این مشکل، ((UTF-16)) اختراع شد ، فرمتی که برای رشته‌های جاوااسکریپت استفاده می شود.  این سیستم اکثر کاراکترهای رایج را با یک واحد کد 16 بیتی توصیف می کند اما برای دیگر کدها، از ((دو واحد)) استفاده می کند.
 
 {{index error}}
 
-UTF-16 is generally considered a bad idea today. It seems almost
-intentionally designed to invite mistakes. It's easy to write programs
-that pretend code units and characters are the same thing. And if your
-language doesn't use two-unit characters, that will appear to work
-just fine. But as soon as someone tries to use such a program with
-some less common ((Chinese characters)), it breaks. Fortunately, with
-the advent of ((emoji)), everybody has started using two-unit
-characters, and the burden of dealing with such problems is more
-fairly distributed.
+این‌ روزها UTF-16  عموما به عنوان ایده‌ی بدی شناخته می شود. به نظر می رسد که عمدا طوری طراحی شده است که اشتباه ساز باشد. به‌سادگی توان برنامه‌هایی نوشت که در ظاهر تفاوتی بین واحدها و کاراکترهای کد قائل نمی شوند و بدون مشکل هم کار می کنند. اما به محض اینکه کسی سعی کند از این گونه برنامه‌ها برای نوشتن بعضی ((کاراکترهای چینی)) نامتداول استفاده کند، برنامه از کار می افتد. خوشبختانه، با ظهور ((ایموجی))، همه به سراغ استفاده از کاراکترهای دو واحده رفته اند، و مسئولیت سروکار داشتن با این گونه مشکلات با عدالت بیشتری توزیع شده است.
 
 {{index [string, length], [string, indexing], "charCodeAt method"}}
 
-Unfortunately, obvious operations on JavaScript strings, such as
-getting their length through the `length` property and accessing their
-content using square brackets, deal only with code units.
+متاسفانه، در جاوااسکریپت کارهای واضح روی رشته‌ها، مثل گرفتن طول آن ها به وسیله خاصیت `length` و دسترسی به محتوای آن‌ها به وسیله براکت ها، تنها از واحدهای کد پشتیبانی می کند.
 
 ```{test: no}
 // Two emoji characters, horse and shoe
@@ -648,21 +496,11 @@ console.log(horseShoe.codePointAt(0));
 
 {{index "codePointAt method"}}
 
-JavaScript's `charCodeAt` method gives you a code unit, not a full
-character code. The `codePointAt` method, added later, does give a
-full Unicode character. So we could use that to get characters from a
-string. But the argument passed to `codePointAt` is still an index
-into the sequence of code units. So to run over all characters in a
-string, we'd still need to deal with the question of whether a
-character takes up one or two code units.
+متد `charCodeAt` در جاوااسکریپت به شما یک واحد کد تحویل می دهد نه کد یک کاراکتر کامل. متد `codePointAt،` که بعدا اضافه شد، کد کامل یونیکد کاراکتر را برمی گرداند. بنابراین می توانیم از این متد برای گرفتن کاراکترهای یک رشته استفاده کنیم. اما آرگومانی که به متد `codePointAt` ارسال می شود هنوز یک اندیس گرفته‌ شده از دنباله‌ی کدهای واحد است. پس با توجه به آن، برای پیمایش همه‌ی کاراکتر‌های یک رشته، همچنان باید بدانیم که هر کاراکتر یک واحد یا دو واحد کد اشغال کرده است.
 
 {{index "for/of loop", character}}
 
-In the [previous chapter](data#for_of_loop), I mentioned that a
-`for`/`of` loop can also be used on strings. Like `codePointAt`, this
-type of loop was introduced at a time where people were acutely aware
-of the problems with UTF-16. When you use it to loop over a string, it
-gives you real characters, not code units.
+در [فصل پیش](data#for_of_loop)، اشاره کردم که حلقه‌ی <bdo>`for`/`of`</bdo>  را همچنین می توان برای رشته‌ها استفاده کرد. شبیه `codePointAt`، این نوع از حلقه نیز زمانی معرفی شد که همه از مشکلات UTF-16 آگاه بودند. با استفاده از آن برای پیمایش یک رشته، به جای کدهای واحد، کاراکترهای واقعی برگردانده می شوند.
 
 ```
 let roseDragon = "🌹🐉";
@@ -673,17 +511,13 @@ for (let char of roseDragon) {
 // → 🐉
 ```
 
-If you have a character (which will be a string of one or two code
-units), you can use `codePointAt(0)` to get its code.
+اگر کاراکتری دارید ( که رشته‌ای از یک یا دو واحد کد است)، می توانید از متد <bdo>`codePointAt(0)`</bdo> برای گرفتن کد متناظرش استفاده کنید.
 
-## Recognizing text
+## تشخیص متن
 
 {{index "SCRIPTS data set", "countBy function", [array, counting]}}
 
-We have a `characterScript` function and a way to correctly loop over
-characters. The next step is to count the characters that belong
-to each script. The following counting abstraction will be useful
-there:
+تا اینجا یک تابع به نام `characterScript` به همراه روشی برای پیمایش کاراکترها در اختیار داریم. گام بعدی شمردن کاراکترهایی است که به هر الفبا مربوط می شود. می توان از تابع زیر برای این کار استفاده کرد:
 
 ```{includeCode: strip_log}
 function countBy(items, groupName) {
@@ -704,23 +538,15 @@ console.log(countBy([1, 2, 3, 4, 5], n => n > 2));
 // → [{name: false, count: 2}, {name: true, count: 3}]
 ```
 
-The `countBy` function expects a collection (anything that we can loop
-over with `for`/`of`) and a function that computes a group name for a
-given element. It returns an array of
-objects, each of which names a group and tells you the number of
-elements that were found in that group.
+تابع `countBy` به عنوان آرگومان، یک مجموعه (هرچیزی که بتوان به وسیله‌ی <bdo>`for`/`of`</bdo> آن را پیمایش کرد) به همراه تابعی برای گروه‌بندی دریافت می کند. خروجی این تابع، آرایه‌ای از اشیاء است که هر یک معرف یک گروه است و به شما می گوید چه تعداد عنصر در آن گروه پیدا شده است.
 
 {{index "findIndex method", "indexOf method"}}
 
-It uses another array method—`findIndex`. This method is somewhat like
-`indexOf`, but instead of looking for a specific value, it finds the
-first value for which the given function returns true. Like `indexOf`,
-it returns -1 when no such element is found.
+این تابع خود از متدی دیگر به نام `findIndex` استفاده می کند. این متد به شکلی شبیه به `indexOf` عمل می کند، اما به جای گشتن برای یک مقدار خاص، به دنبال اولین مقداری می گردد که تابع داده شده با آن مقدار true را برمی گرداند. مانند `indexOf،` اگر عنصری با آن شرایط پیدا نشود، <bdo>-1</bdo> برگردانده می شود.
 
 {{index "textScripts function", "Chinese characters"}}
 
-Using `countBy`, we can write the function that tells us which scripts
-are used in a piece of text.
+با استفاده از countBy می توانیم تابعی بنویسیم که الفبای یک متن را برای ما مشخص کند.
 
 ```{includeCode: strip_log, startCode: true}
 function textScripts(text) {
@@ -743,46 +569,25 @@ console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
 
 {{index "characterScript function", "filter method"}}
 
-The function first counts the characters by name, using
-`characterScript` to assign them a name and falling back to the
-string `"none"` for characters that aren't part of any script. The
-`filter` call drops the entry for `"none"` from the resulting array
-since we aren't interested in those characters.
+تابع بالا ابتدا تعداد کاراکتر‌ها را با نام می شمارد، با استفاده از `characterScript` به آن‌ها نامی را اختصاص می دهد، و برای کاراکترهایی که جزء هیچ الفبایی محسوب نمی شوند، مقدار `“none”` را به رشته باز می گرداند. تابع `filter` تمامی `“none”` ها را از آرایه‌ی نتیجه حذف می کند، چرا که علاقه ای به این کاراکتر‌ها نداریم.
 
 {{index "reduce method", "map method", "join method", [array, methods]}}
 
-To be able to compute ((percentage))s, we first need the total number
-of characters that belong to a script, which we can compute with
-`reduce`. If no such characters are found, the function returns a
-specific string. Otherwise, it transforms the counting entries into
-readable strings with `map` and then combines them with `join`.
+برای اینکه بتوانیم ((درصد‌ها)) را محاسبه کنیم، ابتدا به تعداد همه‌ی کاراکترهایی که به یک الفبا تعلق دارند نیاز داریم، که می توانیم این کار را با `reduce` انجام دهیم. اگر این اراکترها پیدا نشدند، تابع، یک رشته‌ی مشخص برمی گرداند. در غیر این صورت به وسیله تابع `map` موارد محاسبه‌شده را به رشته‌هایی مناسب خواندن تبدیل می کند و در آخر به وسیله `join` آن ها را به هم الحاق می نماید.
 
-## Summary
+## خلاصه
 
-Being able to pass function values to other functions is a deeply
-useful aspect of JavaScript. It allows us to write functions that
-model computations with "gaps" in them. The code that calls these
-functions can fill in the gaps by providing function values.
+یکی از جنبه‌های عمیقا کاربردی جاوااسکریپت، امکان ارسال مقدارهای تابع به دیگر توابع است. با این ویژگی می توان توابعی برای مدل‌سازی محاسباتی نوشت که دارای بخشی "باز" می باشند. کدی که این توابع را فراخوانی می کند، می تواند این فضای باز را به وسیله‌ی مقدار‌های تابع تکمیل کند.
 
-Arrays provide a number of useful higher-order methods. You can use
-`forEach` to loop over the elements in an array. The `filter` method
-returns a new array containing only the elements that pass the
-((predicate function)). Transforming an array by putting each element
-through a function is done with `map`. You can use `reduce` to combine
-all the elements in an array into a single value. The `some` method
-tests whether any element matches a given predicate function. And
-`findIndex` finds the position of the first element that matches a
-predicate.
+آرایه‌ها مجموعه‌ی مفیدی از توابع دست بالا را فراهم می سازند. می توانید از `forEach` برای پیمایش عناصر یک آرایه استفاده کنید. برای برگرداندن یک آرایه‌ی جدید با عناصری که شرایط خاصی دارند، متد `filter` مفید است. برای تغییر شکل عناصر یک آرایه به وسیله‌ی یک تابع، می توانید از `map` استفاده کنید. `reduce` برای ترکیب همه‌ی عناصر یک آرایه و ساخت یک مقدار واحد، کاربرد دارد. متد `some` بررسی می کند که آیا حداقل یک عنصر در آرایه با شرط تابع ورودی تطبیق می کند  و `findIndex` موقعیت اولین عنصری که با شرط ارسالی تطبیق دارد را بر می گرداند.
 
-## Exercises
+## تمرین‌ها
 
-### Flattening
+### یک‌سطح کردن آرایه
 
 {{index "flattening (exercise)", "reduce method", "concat method", [array, flattening]}}
 
-Use the `reduce` method in combination with the `concat` method to
-"flatten" an array of arrays into a single array that has all the
-elements of the original arrays.
+با استفاده از متد `reduce` و ترکیب آن با `concat،` آرایه‌ای از آرایه‌ها را گرفته و آرایه‌ی تختی (مسطح) بسازید که شامل همه‌ی عناصر آرایه‌های اصلی باشد.
 
 {{if interactive
 
@@ -793,20 +598,13 @@ let arrays = [[1, 2, 3], [4, 5], [6]];
 ```
 if}}
 
-### Your own loop
+### شبیه‌سازی حلقه
 
 {{index "your own loop (example)", "for loop"}}
 
-Write a higher-order function `loop` that provides something like a
-`for` loop statement. It takes a value, a test function, an update
-function, and a body function. Each iteration, it first runs the test
-function on the current loop value and stops if that returns false.
-Then it calls the body function, giving it the current value. 
-Finally, it calls the update function to create a new value and
-starts from the beginning.
+تابع رده‌بالایی به نام `loop` بنویسید که کاری مشابه یک حلقه‌ی `for` انجام دهد. این تابع به عنوان آرگومان، یک مقدار، تابع شرط، تابع به‌روز‌رسانی و بدنه‌ی یک تابع را دریافت می کند. در هر تکرار، ابتدا، تابع شرط را بر روی مقدار فعلی حلقه اجرا می کند و در صورتی که false را تولید کرد متوقف می شود. سپس بدنه تابع ارسالی را با دادن مقدار فعلی به آن، اجرا می نماید. در نهایت برای ایجاد یک مقدار جدید، تابع به‌روزرسانی را فراخوانی کرده و از ابتدا شروع می کند.
 
-When defining the function, you can use a regular loop to do the
-actual looping.
+هنگام تعریف تابع، می توانید از یک حلقه‌ی معمولی برای پیاده‌سازی حلقه‌ی اصلی استفاده کنید.
 
 {{if interactive
 
@@ -821,18 +619,13 @@ loop(3, n => n > 0, n => n - 1, console.log);
 
 if}}
 
-### Everything
+### همه‌چیز
 
 {{index "predicate function", "everything (exercise)", "every method", "some method", [array, methods], "&& operator", "|| operator"}}
 
-Analogous to the `some` method, arrays also have an `every` method.
-This one returns true when the given function returns true for _every_
-element in the array. In a way, `some` is a version of the `||`
-operator that acts on arrays, and `every` is like the `&&` operator.
+مشابه متد `some،` آرایه‌ها متدی به نام `every` نیز دارند. این متد زمانی `true` برمی گرداند که تابع داده شد برای _همه‌ی_ عناصر آرایه، مقدار `true` را تولید کند. به نوعی، `some` نسخه‌ای از عملگر `||` است که روی آرایه‌ها عمل می کند و `every` شبیه به عملگر `&&` کار می کند.
 
-Implement `every` as a function that takes an array and a predicate
-function as parameters. Write two versions, one using a loop and one
-using the `some` method.
+متد `every` را به عنوان یک تابع پیاده سازی کنید که یک آرایه و یک تابع دریافت می کند. دو نسخه‌ از این تابع را بنویسید، یک نسخه با استفاده از حلقه و دیگری با استفاده از متد `some`.
 
 {{if interactive
 
@@ -855,36 +648,21 @@ if}}
 
 {{index "everything (exercise)", "short-circuit evaluation", "return keyword"}}
 
-Like the `&&` operator, the `every` method can stop evaluating further
-elements as soon as it has found one that doesn't match. So the
-loop-based version can jump out of the loop—with `break` or
-`return`—as soon as it runs into an element for which the predicate
-function returns false. If the loop runs to its end without finding
-such an element, we know that all elements matched and we should
-return true.
+مانند عملگر `&&`، متد `every` به محض اینکه به موردی برخورد کند که با شرط تطبیق ندارد، ارزیابی دیگر عناصر را متوقف می کند. بنابراین در نسخه‌ی مبتنی بر حلقه، می توان با مشاهده‌ی خروجی false تابع روی یک عنصر، از حلقه به وسیله‌ی `break` یا `return` خارج شد. اگر حلقه بدون برخورد با چنین عنصری به انتهای خود برسد، می دانیم که همه‌ی عناصر مطابق تابع شرط بوده اند و می توانیم true را برگردانیم.
 
-To build `every` on top of `some`, we can apply _((De Morgan's
-laws))_, which state that `a && b` equals `!(!a || !b)`. This can be
-generalized to arrays, where all elements in the array match if there
-is no element in the array that does not match.
+برای ساخت `every‍‍` با استفاده از `some`، می توانیم از قوانین _((دمورگان))_ استفاده کنیم، که براساس آن‌، <bdo>`a && b`</bdo> برابر است با <bdo>`!(!a || !b)`</bdo>. می توان آن را به آرایه‌ها تعمیم داد به این صورت که همه‌ی عناصر در آرایه با شرط تطبیق خواهند داشت اگر عنصری در آرایه نباشد که تطبیق نداشته باشد.
 
 hint}}
 
-### Dominant writing direction
+### جهت نوشتن غالب
 
 {{index "SCRIPTS data set", "direction (writing)", "groupBy function", "dominant direction (exercise)"}}
 
-Write a function that computes the dominant writing direction in a
-string of text. Remember that each script object has a `direction`
-property that can be `"ltr"` (left to right), `"rtl"` (right to left),
-or `"ttb"` (top to bottom).
+تابعی بنویسید که بتواند جهت نوشت غالب یک متن را محاسبه کند. به یاد دارید که هر شیء الفبا خاصیتی به نام `direction` دارد که می تواند `“ltr”` (چپ به راست)، `“rtl”` (راست به چپ)، یا  `“ttb”` (بالا به پایین) باشد.
 
 {{index "characterScript function", "countBy function"}}
 
-The dominant direction is the direction of a majority of the
-characters that have a script associated with them. The
-`characterScript` and `countBy` functions defined earlier in the
-chapter are probably useful here.
+جهت نوشتاری غالب جهتی است که بیشتر کاراکترهایی که الفبای مشخصی دارند، در آن جهت نوشته می شوند. احتمالا دو تابع `characterScript` و `countBy` که پیش تر نوشته شده اند، اینجا کاربرد خواهند داشت.
 
 {{if interactive
 
@@ -904,16 +682,10 @@ if}}
 
 {{index "dominant direction (exercise)", "textScripts function", "filter method", "characterScript function"}}
 
-Your solution might look a lot like the first half of the
-`textScripts` example. You again have to count characters by a
-criterion based on `characterScript` and then filter out the part of
-the result that refers to uninteresting (script-less) characters.
+پاسخ شما ممکن است شباهت زیادی به نیمه‌ی اول مثال `textScripts` داشته باشد. دوباره باید کاراکترها را با شرطی براساس `characterScript` بشمارید و سپس بخشی از نتیجه که الفبای مشخصی ندارند را فیلتر کنید.
 
 {{index "reduce method"}}
 
-Finding the direction with the highest character count can be done
-with `reduce`. If it's not clear how, refer to the example
-earlier in the chapter, where `reduce` was used to find the script
-with the most characters.
+پیدا کردن جهت نوشته بر اساس شمارش بیشترین کاراکتر را می توان با متد `reduce` انجام داد. اگر راه حل به ذهن‌تان نرسید، به مثالی که پیش‌تر در این فصل در مورد استفاده از `reduce` برای پیدا کردن الفبایی با بیشترین حروف مراجعه کنید.
 
 hint}}
