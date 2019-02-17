@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/chapter/06_object.js"], zip: "node/html"}}}
 
-# The Secret Life of Objects
+# زندگی اسرارآمیز اشیاء
 
 {{quote {author: "Barbara Liskov", title: "Programming with Abstract Data Types", chapter: true}
 
@@ -14,70 +14,41 @@ quote}}
 
 {{figure {url: "img/chapter_picture_6.jpg", alt: "Picture of a rabbit with its proto-rabbit", chapter: framed}}}
 
-[Chapter ?](data) introduced JavaScript's objects. In programming
-culture, we have a thing called _((object-oriented programming))_, a
-set of techniques that use objects (and related concepts) as the
-central principle of program organization.
+اشیاء جاوااسکریپت، در [فصل ?](data) معرفی شدند. در فرهنگ برنامه نویسی، مفهومی وجود دارد که به آن _((برنامه نویسی شیء گرا))_ گفته می شود؛ مجموعه‌ای از تکنیک ها که از اشیاء (و مفاهیم مرتبط) به عنوان اصل مرکزی سازماندهی برنامه استفاده می کند.
 
-Though no one really agrees on its precise definition, object-oriented
-programming has shaped the design of many programming languages,
-including JavaScript. This chapter will describe the way these ideas
-can be applied in JavaScript.
+با وجود اینکه هیچ کس روی تعریف دقیق آن توافق ندارد، برنامه نویسی شیء گرا، طراحی خیلی از زبان‌های برنامه نویسی را شکل داده است، مثل خود جاوااسکریپت. این فصل توضیح می دهد چگونه این ایده‌ها را در جاوااسکریپت پیاده سازی کنیم.
 
-## Encapsulation
+## کپسوله‌سازی یا Encapsulation
 
 {{index encapsulation, isolation, modularity}}
 
-The core idea in object-oriented programming is to divide programs
-into smaller pieces and make each piece responsible for managing its
-own state.
+ایده‌ی اصلی در برنامه نویسی شیء گرا، تقسیم برنامه به قسمت‌های کوچکتر است با این شرط که هر قسمت مسئول مدیریت وضعیت خودش باشد.
 
-This way, some knowledge about the way a piece of the program works
-can be kept _local_ to that piece. Someone working on the rest of the
-program does not have to remember or even be aware of that knowledge.
-Whenever these local details change, only the code directly around it
-needs to be updated.
+در این روش، بعضی از اطلاعات مربوط به نحوه‌ی کارکرد یک قسمت از برنامه را می توان به صورت _محلی_ برای همان قسمت نگه داری کرد. کسی که روی قسمت‌های دیگر برنامه کار می کند نیازی نیست تا این اطلاعات را به خاطر داشته باشد یا حتی اصلا از وجودشان آگاه باشد.  در صورت تغییر این جزئیات محلی، فقط لازم است کد‌هایی را به‌روز کنیم که مستقیما پیرامون آن قرار دارند.
 
 {{id interface}}
 {{index [interface, object]}}
 
-Different pieces of such a program interact with each other through
-_interfaces_, limited sets of functions or bindings that provide
-useful functionality at a more abstract level, hiding their precise
-implementation.
+بخش‌های مختلف این گونه برنامه‌ها،  برای ارتباط با یکدیگر از  _رابط‌ها_ (اینترفیس) استفاده می کنند؛ مجموعه‌ای محدود از توابع یا متغیرها که قابلیت‌های مفیدی در سطح بالاتری از انتزاع ایجاد می کنند  و جزئیات دقیق پیاده سازی‌شان را مخفی می کنند.
 
 {{index "public properties", "private properties", "access control", [method, interface]}}
 
-Such program pieces are modeled using ((object))s. Their interface
-consists of a specific set of methods and properties. Properties
-that are part of the interface are called _public_. The others, which
-outside code should not be touching, are called _private_.
+قسمت‌های این‌گونه برنامه را  به وسیله‌ی اشیاء مدل‌سازی می کنند. رابط آن ها شامل مجموعه‌ای مشخص از متدها و خاصیت‌ها می باشد. خاصیت‌هایی را که بخشی از رابط محسوب می شوند، _عمومی_ (public) و آن هایی را که کدهای بیرونی نباید به آن‌ها دسترسی داشته باشند، خاصیت‌ها _خصوصی_ (private) می نامند.
 
 {{index "underscore character"}}
 
-Many languages provide a way to distinguish public and private
-properties and prevent outside code from accessing the private
-ones altogether. JavaScript, once again taking the minimalist
-approach, does not—not yet at least. There is work underway to add
-this to the language.
+بسیاری از زبان‌های برنامه نویسی راهی برای تمایز خاصیت‌های خصوصی و عمومی فراهم می سازند و از دسترسی کدهای بیرونی به خاصیت‌های خصوصی جلوگیری می کنند.  جاوااسکریپت بار دیگر انتخاب روش مینیمال، این گونه عمل نمی کند – حداقل تا الان. البته کارهایی برای افزودن این ویژگی به زبان در حال شکل گیری است.
 
-Even though the language doesn't have this distinction built in,
-JavaScript programmers _are_ successfully using this idea. Typically,
-the available interface is described in documentation or comments. It
-is also common to put an underscore (`_`) character at the start of
-property names to indicate that those properties are private.
+با وجود اینکه خود زبان به صورت درونی از این تمایز پشتیبانی نمی کند، برنامه نویسان جاوااسکریپت این مفهوم را به شکل موفقیت‌آمیزی به کار می برند. معمولا برای مشخص کردن رابط‌های در دسترس از توضیحات یا مستندات برنامه استفاده می کنند. همچنین یک روش رایج برای مشخص کردن خاصیت‌های خصوصی، استفاده از کاراکتر زیرخط (`_`) در شروع این خاصیت‌ها است.
 
-Separating interface from implementation is a great idea. It is
-usually called _((encapsulation))_.
+جدا کردن رابط از پیاده‌‌سازی، ایده‌ی بسیار خوبی است. این کار را معمولا _((کپسوله‌سازی))_ یا مخفی‌سازی می نامند.
 
 {{id obj_methods}}
 
-## Methods
+## متد‌ها
 
 {{index "rabbit example", method, [property, access]}}
-
-Methods are nothing more than properties that hold function values.
-This is a simple method:
+متدها خاصیت‌هایی هستند که مقدار‌های تابع را نگه‌داری می کنند؛ همین. این یک متد ساده است:
 
 ```
 let rabbit = {};
@@ -91,10 +62,7 @@ rabbit.speak("I'm alive.");
 
 {{index "this binding", "method call"}}
 
-Usually a method needs to do something with the object it was called
-on. When a function is called as a method—looked up as a property and
-immediately called, as in `object.method()`—the binding called `this`
-in its body automatically points at the object that it was called on.
+معمولا متد‌ها کاری را روی شیءای که بر روی آن فراخوانی شده‌اند انجام می دهند. . زمانی که یک تابع به عنوان یک متد فراخوانی می شود – به عنوان یک خاصیت جستجو می شود و بلافاصله فراخوانی می شود مانند <bdo>`object.method()`</bdo> – متغیری که `this` نامیده می‌شود به طور خودکار به شیءای که روی آن فراخوانی شده است اشاره می کند.
 
 ```{includeCode: "top_lines:6", test: join}
 function speak(line) {
@@ -115,26 +83,18 @@ hungryRabbit.speak("I could use a carrot right now.");
 
 {{index "call method"}}
 
-You can think of `this` as an extra ((parameter)) that is passed in a
-different way. If you want to pass it explicitly, you can use a
-function's `call` method, which takes the `this` value as its first
-argument and treats further arguments as normal parameters.
+می توانید `this` را یک پارامتر اضافه در نظر بگیرید که به شکلی دیگر ارسال شده است. اگر بخواهید آن آشکارا ارسال نمایید، می توانید از متد `call` توابع استفاده کنید. این متد مقدار `this` را به عنوان آرگومان اول می گیرد و دیگر آرگومان ها را به عنوان پارامترهای معمولی تفسیر می کند.
 
 ```
 speak.call(hungryRabbit, "Burp!");
 // → The hungry rabbit says 'Burp!'
 ```
 
-Since each function has its own `this` binding, whose value depends on
-the way it is called, you cannot refer to the `this` of the wrapping
-scope in a regular function defined with the `function` keyword.
+به دلیل اینکه هر تابع متغیر `this` مربوط به خود را دارد، که مقدارش بستگی به نحوه‌ی فراخوانی آن تابع دارد، نمی توان به `this` محصور در  حوزه‌ی تعریف یک تابع معمولی (که با کلیدواژه‌ی `function` تعریف شده است) دسترسی داشت.
 
 {{index "this binding", "arrow function"}}
 
-Arrow functions are different—they do not bind their own `this` but
-can see the `this` binding of the scope around them. Thus, you can do
-something like the following code, which references `this` from inside
-a local function:
+توابع پیکانی (arrow functions) متفاوت عمل می کنند - این توابع `this` را به جایی مقید نمی کنند اما می توانند متغیر `this` قلمروی پیرامونشان را ببینند. بنابراین، به وسیله‌ی کدی مانند مثال زیر، می توان به `this` از درون یک تابع محلی اشاره کرد:
 
 ```
 function normalize() {
@@ -146,16 +106,15 @@ normalize.call({coords: [0, 2, 3], length: 5});
 
 {{index "map method"}}
 
-If I had written the argument to `map` using the `function` keyword,
-the code wouldn't work.
+اگر آرگومان ارسالی به تابع `map` را به وسیله کلیدواژه‌ی `function` نوشته‌ بودم، کد بالا کار نمی کرد.
 
 {{id prototypes}}
 
-## Prototypes
+## Prototype ها
 
 {{index "toString method"}}
 
-Watch closely.
+با دقت به کد زیر نگاه کنید.
 
 ```
 let empty = {};
@@ -167,23 +126,15 @@ console.log(empty.toString());
 
 {{index magic}}
 
-I pulled a property out of an empty object. Magic!
+خاصیتی را از یک شیء تهی بیرون کشیده‌ام. جادوگری!
 
 {{index [property, inheritance], [object, property]}}
 
-Well, not really. I have simply been withholding information about the
-way JavaScript objects work. In addition to their set of properties,
-most objects also have a _((prototype))_. A prototype is another
-object that is used as a fallback source of properties. When an object
-gets a request for a property that it does not have, its prototype
-will be searched for the property, then the prototype's prototype, and
-so on.
+البته واقعا این‌طور نیست. فقط بخشی از اطلاعات مربوط به شیوه‌ی کارکرد اشیاء را در جاوااسکریپت، هنوز توضیح نداده بودم. بیشتر اشیاء علاوه بر خاصیت‌های خودشان، خاصیتی به نام _((prototype))_ دارند. یک prototype (نمونه‌ی اولیه) خود یک شیء دیگر است که به عنوان یک منبع جایگزین برای خاصیت‌ها استفاده می شود. زمانی که یک شیء، درخواستی برای یک خاصیت دریافت می کند که، آن خاصیت را ندارد، جستجو در prototype اش صورت می گیرد، سپس prototype متعلق prototype شیء مورد نظر، جستجو می شود و این روند ادامه دارد.
 
 {{index "Object prototype"}}
 
-So who is the ((prototype)) of that empty object? It is the great
-ancestral prototype, the entity behind almost all objects,
-`Object.prototype`.
+بنابراین نمونه‌ی اولیه‌ی (prototype) آن شیء تهی کدام است؟ بله آن prototype جد بزرگ شیء می باشد که تقریبا پشت همه‌ی اشیاء قرار دارد، <bdo>`Object.prototype`</bdo>.
 
 ```
 console.log(Object.getPrototypeOf({}) ==
@@ -195,22 +146,15 @@ console.log(Object.getPrototypeOf(Object.prototype));
 
 {{index "getPrototypeOf function"}}
 
-As you guess, `Object.getPrototypeOf` returns the prototype of an
-object.
+همانطور که حدس می زنید، <bdo>`object.getPrototypeOf`</bdo>، برای گرفتن prototype یک شیء استفاده می شود.
 
 {{index "toString method"}}
 
-The prototype relations of JavaScript objects form a ((tree))-shaped
-structure, and at the root of this structure sits `Object.prototype`.
-It provides a few methods that show up in all objects, such as
-`toString`, which converts an object to a string representation.
+روابط بین prototype ها در اشیاء جاوااسکریپت، یک ساختار درختی را شکل می دهند که در ریشه‌ی این ساختار، <bdo>`Object.prototype`</bdo> قرار می گیرد. درون این شیء چند متد وجود دارد که در تمامی اشیاء حضور دارند، مانند `toString`، که عمل تبدیل یک شیء به رشته‌ را انجام می دهد.
 
 {{index inheritance, "Function prototype", "Array prototype", "Object prototype"}}
 
-Many objects don't directly have `Object.prototype` as their
-((prototype)) but instead have another object that provides a different set of
-default properties. Functions derive from `Function.prototype`, and
-arrays derive from `Array.prototype`.
+خیلی از اشیاء به طور مستقیم دارای <bdo>`Object.prototype`</bdo> به عنوان ((prototype)) خودشان نیستند، اما در عوض شیء دیگری دارند که مجموعه‌ی متفاوتی از خاصیت‌های پیش‌فرض را فراهم می سازد. توابع از <bdo>`Function.prototype`</bdo> و آرایه ها از <bdo>`Array.prototype`</bdo> مشتق شده اند.
 
 ```
 console.log(Object.getPrototypeOf(Math.max) ==
@@ -223,14 +167,11 @@ console.log(Object.getPrototypeOf([]) ==
 
 {{index "Object prototype"}}
 
-Such a prototype object will itself have a prototype, often
-`Object.prototype`, so that it still indirectly provides methods like
-`toString`.
+این گونه prototype ها خود نیز دارای یک prototype می باشند که اغلب همان <bdo>`Object.prototype`</bdo> است. پس به طور غیر مستقیم متدهایی شبیه `toString` را فراهم می کنند.
 
 {{index "rabbit example", "Object.create function"}}
 
-You can use `Object.create` to create an object with a specific
-((prototype)).
+می توانید از متد <bdo>`Object.create`</bdo> برای ساختن یک شیء با یک ((prototype)) خاص استفاده کنید.
 
 ```
 let protoRabbit = {
@@ -246,41 +187,25 @@ killerRabbit.speak("SKREEEE!");
 
 {{index "shared property"}}
 
-A property like `speak(line)` in an object expression is a shorthand way
-of defining a method. It creates a property called `speak` and gives
-it a function as its value.
+خاصیتی شبیه به <bdo>`speak(line)`</bdo> در یک تعریف شیء، شکل کوتاه تعریف یک متد است. این کار خاصیتی به نام `speak` را تعریف کرده و یک تابع را به عنوان مقدار به آن می دهد.
 
-The "proto" rabbit acts as a container for the properties that are
-shared by all rabbits. An individual rabbit object, like the killer
-rabbit, contains properties that apply only to itself—in this case its
-type—and derives shared properties from its prototype.
+"protoRabbit" به عنوان یک ظرف برای خاصیت‌های مشترک همه‌ی خرگوش‌ها استفاده می شود. یک شی مجزای rabbit (خرگوش) مثل killerRabbit، دارای خاصیت‌های اختصاصی است که فقط متعلق به خودش – و در این مثال متعلق به نوع خودش – است و نیز خاصیت‌های مشترکی دارد که آن‌ها را از نمونه‌ی اولیه‌اش می گیرد.
 
 {{id classes}}
 
-## Classes
+## کلاس‌ها
 
 {{index "object-oriented programming"}}
 
-JavaScript's ((prototype)) system can be interpreted as a somewhat
-informal take on an object-oriented concept called _((class))es_. A
-class defines the shape of a type of object—what methods and
-properties it has. Such an object is called an _((instance))_ of the
-class.
+سیستم ((prototype)) جاوااسکریپت را می توان به عنوان برداشتی نسبتا غیر رسمی از مفهوم _((کلاس‌ها))_ در برنامه‌نویسی شیء گرا  تفسیر کرد. یک کلاس، سرشت نوعی از شیء را تعریف می کند – متدها و خاصیت‌هایی که دارد. به اشیائی که از کلاس ها ایجاد می شوند، _((نمونه‌های))_ یک کلاس می گویند.
 
 {{index [property, inheritance]}}
 
-Prototypes are useful for defining properties for which all instances
-of a class share the same value, such as ((method))s. Properties that
-differ per instance, such as our rabbits' `type` property, need to
-be stored directly in the objects themselves.
+prototype ها برای تعریف خاصیت‌هایی مفید می باشند که مقدار مشابهی را در طول همه‌ی نمونه‌های یک کلاس به اشتراک می گذارند، مانند متدها. خاصیت‌هایی که برای هر نمونه متفاوت هستند، مانند خاصیت `type` در مثال خرگوش بایستی به طور مستقیم در خود اشیاء ذخیره بشوند.
 
 {{id constructors}}
 
-So to create an instance of a given class, you have to make
-an object that derives from the proper prototype, but you _also_ have
-to make sure it, itself, has the properties that instances of this
-class are supposed to have. This is what a _((constructor))_ function
-does.
+بنابراین برای اینکه بتوان نمونه‌ای از یک کلاس داده شده را ساخت، باید شیءای را ایجاد کنید که از یک prototype درست گرفته شده است، _همچنین_ باید مطمئن شوید که این شیء، خاصیت‌هایی که نمونه‌های کلاس قرار است از پیش داشته باشند را دارد. این کاری است که یک تابع _((سازنده))_ انجام می دهد.
 
 ```
 function makeRabbit(type) {
@@ -292,16 +217,11 @@ function makeRabbit(type) {
 
 {{index "new operator", "this binding", "return keyword", [object, creation]}}
 
-JavaScript provides a way to make defining this type of function
-easier. If you put the keyword `new` in front of a function call, the
-function is treated as a constructor. This means that an object with
-the right prototype is automatically created, bound to `this` in the
-function, and returned at the end of the function.
+جاوااسکریپت راهی را فراهم ساخته که بتوان این گونه توابع را آسان تر تعریف کرد. اگر در ابتدای فراخوانی یک تابع کلیدواژه‌ی `new` را قرار دهید ، آن تابع به عنوان تابع سازنده عمل خواهد کرد. این بدان معناست که یک شیء با prototype صحیح به طور خودکار ساخته شده ، به `this`  درون تابع مقید می شود و در انتهای تابع برگردانده می شود.
 
 {{index "prototype property"}}
 
-The prototype object used when constructing objects is found by taking
-the `prototype` property of the constructor function.
+شیء prototype استفاده شده برای ساختن شیء مورد نظر را می توان با دسترسی به خاصیت `prototype` از تابع سازنده پیدا کرد.
 
 {{index "rabbit example"}}
 
@@ -318,26 +238,15 @@ let weirdRabbit = new Rabbit("weird");
 
 {{index constructor}}
 
-Constructors (all functions, in fact) automatically get a property
-named `prototype`, which by default holds a plain, empty object that
-derives from `Object.prototype`. You can overwrite it with a new
-object if you want. Or you can add properties to the existing object,
-as the example does.
+سازنده‌ها (در حقیقت همه توابع) به طور خودکار خاصیتی به نام `prototype` را می گیرند، که به صورت پیش فرض، یک شیء خالی که از <bdo>`Object.prototype`</bdo> گرفته شده است را نگه داری می کند. اگر بخواهید  می توانید این خاصیت را تغییر دهید و با شیءای دیگر عوض کنید. یا می توانید به شیء خالی فعلی خاصیت‌هایی را اضافه کنید همانطور که در مثال این کار انجام شد.
 
 {{index capitalization}}
 
-By convention, the names of constructors are capitalized so that they
-can easily be distinguished from other functions.
+براساس عرف، نام سازنده‌ها را با حروف بزرگ شروع می کنند تا بتوان به سادگی بین آن ها و توابع معمولی تمییز داد.
 
 {{index "prototype property", "getPrototypeOf function"}}
 
-It is important to understand the distinction between the way a
-prototype is associated with a constructor (through its `prototype`
-property) and the way objects _have_ a prototype (which can be found
-with `Object.getPrototypeOf`). The actual prototype of a constructor
-is `Function.prototype` since constructors are functions. Its
-`prototype` _property_ holds the prototype used for instances created
-through it.
+درک تفاوت بین چگونگی ارتباط یک prototype با یک سازنده ( توسط خاصیت‌ `prototype`اش) و اینکه اشیاء چگونه می تواند prototype داشته باشند ( که می تواند به وسیله <bdo>`Object.getPrototypeOf`</bdo>  بدست آید) اهمیت دارد. prototype واقعی یک سازنده، در واقع <bdo>`Function.prototype`</bdo> است، به این خاطر که سازنده‌ها از نوع تابع به شمار می آیند. _خاصیت_ `prototype` یک سازنده، نمونه‌ی اولیه‌ای را نگه‌داری می کند که ساخت نمونه‌های اشیاء از روی آن صورت می گیرد.
 
 ```
 console.log(Object.getPrototypeOf(Rabbit) ==
@@ -348,12 +257,9 @@ console.log(Object.getPrototypeOf(weirdRabbit) ==
 // → true
 ```
 
-## Class notation
+## استفاده از نماد class
 
-So JavaScript ((class))es are ((constructor)) functions with a
-((prototype)) property. That is how they work, and until 2015, that
-was how you had to write them. These days, we have a less awkward
-notation.
+بنابراین ((کلاس‌های)) جاوااسکریپت، همان توابع ((سازنده)) به همراه یک خاصیت ((prototype)) می باشند. به همین صورت نیز کار می کنند و تا پیش از سال 2015، این روش تنها راهی بود که باید نوشته می شدند. این روز‌ها، روش مناسب‌تری برای پیاده‌سازی کلاس‌ها در اختیار داریم.
 
 ```{includeCode: true}
 class Rabbit {
@@ -371,28 +277,13 @@ let blackRabbit = new Rabbit("black");
 
 {{index "rabbit example", [braces, class]}}
 
-The `class` keyword starts a ((class declaration)), which allows us to
-define a constructor and a set of methods all in a single place. Any
-number of methods may be written inside the declaration's braces.
-The one named `constructor` is treated specially. It
-provides the actual constructor function, which will be bound to the
-name `Rabbit`. The others are packaged into that constructor's
-prototype. Thus, the earlier class declaration is equivalent to the
-constructor definition from the previous section. It just looks nicer.
+کلیدواژه‌ی `class` موجب شروع یک اعلان کلاس می شود که به ما این امکان را می دهد تا سازنده‌ و مجموعه‌ی متدها را یکجا تعریف کنیم. هر تعداد متدی که نیاز باشد را می توان درون کروشه‌های تعریف کلاس قرار داد. متدی که با نام `constructor` نوشته می شود، به صورت خاصی تفسیر می شود. این متد تابع سازنده‌ی واقعی را فراهم می سازد که به نام `Rabbit` قید خواهد خورد. ما بقی متدها درون prototype سازنده بسته‌بندی می شوند. بنابراین، تعریف کلاس به شکل بالا، معادل تعریف سازنده در قسمت قبل است. فقط زیباتر به نظر می رسد.
 
 {{index ["class declaration", properties]}}
 
-Class declarations currently allow only _methods_—properties that hold
-functions—to be added to the ((prototype)). This can be somewhat
-inconvenient when you want to save a non-function value in there.
-The next version of the language will probably improve this. For now, you
-can create such properties by directly manipulating the
-prototype after you've defined the class.
+در تعریف کلاس فقط می توان _متدها_ – خاصیت‌هایی که توابع را نگه‌داری می کنند – را برای اضافه شدن به ((prototype)) تعریف کرد. این محدودیت می تواند در مواقعی که قصد دارید مقداری از نوع غیر تابع را ذخیره کنید مشکل ایجاد کند. می توانید برای این گونه خاصیت‌ها همچنان به صورت مستقیم prototype را بعد از تعریف کلاس تغییر دهید.
 
-Like `function`, `class` can be used both in statements and in
-expressions. When used as an expression, it doesn't define a
-binding but just produces the constructor as a value. You are allowed
-to omit the class name in a class expression.
+`class` درست شبیه `function` می تواند به صورت عبارت و دستور استفاده شود. اگر به عنوان عبارت استفاده شود، متغیری تعریف نکرده و سازنده را به عنوان یک مقدار تولید می کند. می توانید نام کلاس را در این روش از تعریف حذف کنید.
 
 ```
 let object = new class { getWord() { return "hello"; } };
@@ -400,15 +291,11 @@ console.log(object.getWord());
 // → hello
 ```
 
-## Overriding derived properties
+## بازنویسی و تغییر خاصیت‌های مشتق شده
 
 {{index "shared property", overriding, [property, inheritance]}}
 
-When you add a property to an object, whether it is present in the
-prototype or not, the property is added to the object _itself_.
-If there was already a property with
-the same name in the prototype, this property will no longer affect
-the object, as it is now hidden behind the object's own property.
+هنگامی که خاصیتی را به یک شیء اضافه می کنید، فارغ از اینکه در prototype آن وجود داشته باشد یا خیر، خاصیت مورد نظر به _خود_ شیء اضافه خواهد شد. در صورتی وجود خاصیتی با همین نام در prototype، خاصیت موجود در prototype بی اثر خواهد بود و پشت خاصیت خود شیء پنهان می شود.
 
 ```
 Rabbit.prototype.teeth = "small";
@@ -425,25 +312,17 @@ console.log(Rabbit.prototype.teeth);
 
 {{index [prototype, diagram]}}
 
-The following diagram sketches the situation after this code has run.
-The `Rabbit` and `Object` ((prototype))s lie behind `killerRabbit` as
-a kind of backdrop, where properties that are not found in the object
-itself can be looked up.
+نمودار زیر شرایطی را به تصویر می کشد که بعد از اجرای کد بالا رخ می دهد. prototypeهای `Rabbit` و `Object` پشت `killerRabbit` قرار می گیرند، مانند نوعی پس‌زمینه، که در صورت نبودن خاصیت‌ها در خود شیء، به آن‌ها رجوع می شود.
 
 {{figure {url: "img/rabbits.svg", alt: "Rabbit object prototype schema",width: "8cm"}}}
 
 {{index "shared property"}}
 
-Overriding properties that exist in a prototype can be a useful thing
-to do. As the rabbit teeth example shows, overriding can be used to express
-exceptional properties in instances of a more generic class of
-objects, while letting the nonexceptional objects take a
-standard value from their prototype.
+تغییر و بازنویسی خاصیت‌هایی که در پروتوتایپ وجود دارند می تواند کاربرد داشته باشد. همانطور که در مثال rabbit teeth (خاصیت teeth در شیء خرگوش) نشان داده شد، می توان از آن برای مشخص کردن خاصیت های استثناء در نمونه‌ اشیاء یک کلاس عمومی‌تر استفاده کرد و اجازه داد اشیاء معمول مقدار استاندارد را از prototype خود دریافت کنند.
 
 {{index "toString method", "Array prototype", "Function prototype"}}
 
-Overriding is also used to give the standard function and array prototypes a
-different `toString` method than the basic object prototype.
+بازنویسی به این شکل (overridding)، همچنین برای تعریف نسخه‌ی متفاوتی از متد `toString` برای prototypeهای استاندارد تابع(function) و آرایه (array) استفاده می شود. متدی که با `toString` پیش‌فرض شیء پایه متفاوت است.
 
 ```
 console.log(Array.prototype.toString ==
@@ -455,32 +334,22 @@ console.log([1, 2].toString());
 
 {{index "toString method", "join method", "call method"}}
 
-Calling `toString` on an array gives a result similar to calling
-`.join(",")` on it—it puts commas between the values in the array.
-Directly calling `Object.prototype.toString` with an array produces a
-different string. That function doesn't know about arrays, so it
-simply puts the word _object_ and the name of the type between square
-brackets.
+فراخوانی `toString` بر روی یک آرایه نتیجه‌ای شبیه فراخوانی <bdo>`.join(",")`</bdo> روی آن را خواهد داشت – که باعث می شود بین مقادیر آرایه ویرگول قرار گیرد. فراخوانی مستقیم <bdo>`Object.prototype.toString`</bdo> با یک آرایه، رشته‌ی متفاوتی را تولید می کند. این تابع چیزی در مورد آرایه ها نمی داند، پس خیلی ساده واژه‌ی _object_ و نام نوع داده را بین یک جفت براکت چاپ می کند.
 
 ```
 console.log(Object.prototype.toString.call([1, 2]));
 // → [object Array]
 ```
 
-## Maps
+## ساختار داده‌ی Map
 
 {{index "map method"}}
 
-We saw the word _map_ used in the [previous chapter](higher_order#map)
-for an operation that transforms a data structure by applying a
-function to its elements. Confusing as it is, in programming the same
-word is also used for a related but rather different thing.
+با واژه‌ی _map_ در [فصل پیش](higher_order#map) آشنا شدیم. از آن برای تغییر یک ساختار داده به وسیله‌ی اعمال یک تابع به عناصر آن استفاده شد. درست است که شاید کمی گیج‌کننده باشد اما در برنامه‌نویسی، همین واژه برای موضوع مرتبط و نسبتا متفاوتی نیز استفاده می شود.
 
 {{index "map (data structure)", "ages example", ["data structure", map]}}
 
-A _map_ (noun) is a data structure that associates values (the keys)
-with other values. For example, you might want to map names to ages.
-It is possible to use objects for this.
+یک _map_ یک ساختار داده است که مقدارهایی را (کلید‌ها) به مقدارهای دیگر مرتبط می سازد. به عنوان مثال، ممکن است بخواهید اسم‌ها را به سن‌ها نگاشت (map) کنید. می توان از یک شیء برای این کار استفاده کرد.
 
 ```
 let ages = {
@@ -499,18 +368,11 @@ console.log("Is toString's age known?", "toString" in ages);
 
 {{index "Object.prototype", "toString method"}}
 
-Here, the object's property names are the people's names, and the
-property values are their ages. But we certainly didn't list anybody named
-toString in our map. Yet, because plain objects derive from
-`Object.prototype`, it looks like the property is there.
+در این مثال نام خاصیت های شیء، برابر با نام اشخاص است و مقدار‌ این خاصیت‌ها برابر سن شان. اما بی شک، در بین اسامی، کسی به نام toString نداشته‌ایم. بله به دلیل اینکه اشیاء ساده، از <bdo>`Object.prototype`</bdo> مشتق شده اند، به نظر می رسد که این خاصیت آنجا وجود دارد.
 
 {{index "Object.create function", prototype}}
 
-As such, using plain objects as maps is dangerous. There are several
-possible ways to avoid this problem. First, it is possible to create
-objects with _no_ prototype. If you pass `null` to `Object.create`,
-the resulting object will not derive from `Object.prototype` and can
-safely be used as a map.
+بدین لحاظ، استفاده از اشیاء ساده به جای map خطراتی دارد. راه های متفاوتی برای فرار از این مشکل وجود دارد. اول اینکه می توان شیءای را _بدون_ prototype ایجاد کرد. اگر به متد <bdo>`Object.create`</bdo> مقدار `null` را بفرستید، شیء تولیدی دیگر از روی <bdo>`Object.prototype`</bdo> ساخته نمی شود و می توان با خیال راحت به عنوان map از آن استفاده کرد.
 
 ```
 console.log("toString" in Object.create(null));
@@ -519,15 +381,11 @@ console.log("toString" in Object.create(null));
 
 {{index [property, naming]}}
 
-Object property names must be strings. If you need a map whose
-keys can't easily be converted to strings—such as objects—you cannot
-use an object as your map.
+نام خاصیت یک شیء باید از نوع رشته‌ باشد. اگر به یک نگاشت نیاز داشته باشید که کلید‌های آن را نتوان به سادگی به رشته تبدیل کرد (مثل استفاده اشیاء به عنوان کلید)، نمی توانید برای پیاده‌سازی آن نگاشت از یک شیء استفاده کنید.
 
 {{index "Map class"}}
 
-Fortunately, JavaScript comes with a class called `Map` that is
-written for this exact purpose. It stores a mapping and allows any
-type of keys.
+خوشبختانه، جاوااسکریپت کلاسی به نام `Map` را فراهم ساخته است که دقیقا برای همین هدف نوشته شده است. این کلاس برای ذخیره‌ی نگاشت ها با هر نوع کلیدی استفاده می شود.
 
 ```
 let ages = new Map();
@@ -545,19 +403,11 @@ console.log(ages.has("toString"));
 
 {{index [interface, object], "set method", "get method", "has method", encapsulation}}
 
-The methods `set`, `get`, and `has` are part of the interface of the
-`Map` object. Writing a data structure that can quickly update and
-search a large set of values isn't easy, but we don't have to worry
-about that. Someone else did it for us, and we can go through this
-simple interface to use their work.
+متدهای `get` و `set` و `has` بخش‌هایی از رابط شیء `Map` هستند. نوشتن ساختار داده‌ای که بتوان به وسیله‌ی آن مجموعه‌ی بزرگی از مقدارها را به سرعت به روز رسانی و جستجو کرد کار ساده ای نیست، اما نیازی نیست ما نگران آن باشیم. کسانی قبلا این کار را برای ما انجام داده اند و می توانیم به سراغ این رابط ساده برویم و از حاصل کار آن ها استفاده کنیم.
 
 {{index "hasOwnProperty method", "in operator"}}
 
-If you do have a plain object that you need to treat as a map for some
-reason, it is useful to know that `Object.keys` returns only an
-object's _own_ keys, not those in the prototype. As an alternative to
-the `in` operator, you can use the `hasOwnProperty` method, which
-ignores the object's prototype.
+اگر شیء ساده‌ای دارید و بنا به دلایلی لازم است از آن به عنوان یک ساختار map استفاده کنید، لازم است بدانید که `Object.keys` فقط کلید‌های _خود_ یک شیء را برمی گرداند نه آن‌هایی که در prototype آن قرار دارند. به عنوان یک جایگزین برای عملگر `in،` می توانید از متد  `hasOwnProperty` استفاده کنید که پروتوتایپ شیء را در نظر نمی گیرد.
 
 ```
 console.log({x: 1}.hasOwnProperty("x"));
@@ -566,16 +416,11 @@ console.log({x: 1}.hasOwnProperty("toString"));
 // → false
 ```
 
-## Polymorphism
+## چندریختی
 
 {{index "toString method", "String function", polymorphism, overriding, "object-oriented programming"}}
 
-When you call the `String` function (which converts a value to a
-string) on an object, it will call the `toString` method on that
-object to try to create a meaningful string from it. I mentioned that
-some of the standard prototypes define their own version of `toString`
-so they can create a string that contains more useful information than
-`"[object Object]"`. You can also do that yourself.
+زمانی که تابع `String` ( که یک مقدار را به رشته تبدیل می کند) را روی یک شیء فراخوانی می کنید، متد `toString` آن شیء فراخوانی می شود و سعی می کند تا رشته‌ای معنادار از شیء مورد نظر تولید کند. پیش‌تر اشاره کردم که بعضی از prototypeهای استاندارد، نسخه‌ی `toString` اختصاصی خودشان را تعریف می کنند تا با این کار بتوانند اطلاعات مفیدتری نسبت به <bdo>`"[object Object]"`</bdo>  تولید کنند. شما نیز می توانید این کار را انجام دهید.
 
 ```{includeCode: "top_lines: 3"}
 Rabbit.prototype.toString = function() {
@@ -588,44 +433,23 @@ console.log(String(blackRabbit));
 
 {{index "object-oriented programming", [interface, object]}}
 
-This is a simple instance of a powerful idea. When a piece of code is
-written to work with objects that have a certain interface—in this
-case, a `toString` method—any kind of object that happens to support
-this interface can be plugged into the code, and it will just work.
+این نمونه‌ای ساده از یک ایده‌ی قدرتمند است. زمانی که کدی نوشته می شود تا با اشیائی کار کند که دارای یک رابط خاص هستند – در این مثال، یک متد `toString` – می توان با این کد، هر شیء دیگری را که از این رابط پشتیبانی می کند، شامل نمود و به درستی استفاده کرد.
 
-This technique is called _polymorphism_. Polymorphic code can work
-with values of different shapes, as long as they support the interface
-it expects.
+این تکنیک را چندریختی می گویند.  یک کد _چندریخت_  می تواند با مقدارهایی از شکل‌های مختلف کار کنند مادامیکه این شکل‌ها رابطی که کد انتظارش را دارد پشتیبانی کند.
 
 {{index "for/of loop", "iterator interface"}}
 
-I mentioned in [Chapter ?](data#for_of_loop) that a `for`/`of` loop
-can loop over several kinds of data structures. This is another case
-of polymorphism—such loops expect the data structure to expose a
-specific interface, which arrays and strings do. And we can also add
-this interface to your own objects! But before we can do that, we need
-to know what symbols are.
+در [فصل ?](data#for_of_loop) اشاره کردم که با استفاده از حلقه‌ی <bdo>`for`/`of`</bdo> می توان ساختارهای داده‌ی مختلف را پیمایش کرد. این یک مورد دیگر از چندریختی محسوب می شود – این گونه حلقه‌ها از ساختار داده انتظار دارند که رابط‌ خاصی را در دسترس حلقه قرار دهند، رابطی که آرایه‌ها و رشته ها فراهم می سازند. و شما نیز می توانید این رابط را به اشیاء خودتان اضافه کنید! اما قبل از اینکه بتوانیم این کار را بکنیم، لازم است بدانیم که سمبل (symbol) چیست.
 
-## Symbols
+## سمبل‌ها - Symbols
 
-It is possible for multiple interfaces to use the same property name
-for different things. For example, I could define an interface in which
-the `toString` method is supposed to convert the object into a piece
-of yarn. It would not be possible for an object to conform to both
-that interface and the standard use of `toString`.
+می توان در رابط‌های متعدد، از یک نام یکسان برای کارهای مختلف استفاده کرد. مثلا، من می توانم رابطی تعریف کنم که در آن متد `toString` مثلا یک شیء را به یک تکه ریسمان تبدیل کند. اما یک شیء نمی تواند هم از رابطی که تعریف کردیم و هم پیاده‌سازی استاندارد `toString` مطابقت کند.
 
-That would be a bad idea, and this problem isn't that common. Most
-JavaScript programmers simply don't think about it. But the language
-designers, whose _job_ it is to think about this stuff, have provided
-us with a solution anyway.
+این کار نه ایده‌ی خوبی است و نه مشکل رایجی محسوب می شود. بیشتر برنامه‌نویسان جاوااسکریپت به آن فکر هم نمی کنند. اما طراحان زبان، همان افرادی که _شغلشان_ فکر کردن به همین موضوعات است، در هر صورت راه حلی برای ما فراهم ساخته اند.
 
 {{index "Symbol function", [property, naming]}}
 
-When I claimed that property names are strings, that wasn't entirely
-accurate. They usually are, but they can also be _((symbol))s_.
-Symbols are values created with the `Symbol` function. Unlike strings,
-newly created symbols are unique—you cannot create the same symbol
-twice.
+پیش‌تر که ادعا کردم نام خاصیت‌ها از جنس رشته هستند، عبارت کاملا دقیقی استفاده نکرده بودم.  بله معمولا از جنس رشته‌اند اما می توانند از نوع _((symbol))_ نیز باشند. سمبل‌ها مقادیری هستند که با تابع `Symbol` ایجاد می شوند. برخلاف رشته‌ها، سمبل‌هایی که تازه ایجاد می شوند یکتا هستند – نمی توان یک سمبل یکسان را دوبار ایجاد کرد.
 
 ```
 let sym = Symbol("name");
@@ -636,14 +460,9 @@ console.log(blackRabbit[sym]);
 // → 55
 ```
 
-The string you pass to `Symbol` is included when you convert it to a
-string and can make it easier to recognize a symbol when, for
-example, showing it in the console. But it has no meaning beyond
-that—multiple symbols may have the same name.
+رشته‌ای که به تابع `Symbol` ارسال می کنید در هنگام تبدیل آن به رشته استفاده می شود و می تواند شناسایی سمبل را مثلا هنگام نشان دادن در کنسول ساده تر کند. فارغ از آن معنای دیگری ندارد - می توان چندین سمبل را با یک نام تعریف کرد.
 
-Being both unique and usable as property names makes symbols suitable
-for defining interfaces that can peacefully live alongside other
-properties, no matter what their names are.
+منحصر به فرد بودن و امکان استفاده به عنوان نام یک خاصیت، باعث می شود که استفاده از سمبل‌ها، گزینه‌ی مناسبی برای تعریف رابط‌هایی باشد که می توانند بی دردسر در کنار دیگر خاصیت‌ها بدون توجه به نام آن ها تعریف شوند.
 
 ```{includeCode: "top_lines: 1"}
 const toStringSymbol = Symbol("toString");
@@ -659,11 +478,7 @@ console.log([1, 2][toStringSymbol]());
 
 {{index [property, naming]}}
 
-It is possible to include symbol properties in object expressions and
-classes by using ((square bracket))s around the property name.
-That causes the property name to be evaluated, much like the square
-bracket property access notation, which allows us to refer to a
-binding that holds the symbol.
+می توان در تعریف شیء یا کلاس، خاصیت‌هایی که نامشان از جنس symbol است را با قراردادن براکت دور نامشان استفاده نمود. این کار باعث می شود که نام خاصیت ارزیابی شود، بسیار شبیه به استفاده از براکت برای دسترسی به خاصیت‌ها، که باعث می شود بتوانیم به متغیری که یک سمبل را نگه‌داری می کند اشاره کنیم.
 
 ```
 let stringObject = {
@@ -673,29 +488,19 @@ console.log(stringObject[toStringSymbol]());
 // → a jute rope
 ```
 
-## The iterator interface
+## رابط تکرارکننده
 
 {{index "iterable interface", "Symbol.iterator symbol", "for/of loop"}}
 
-The object given to a `for`/`of` loop is expected to be _iterable_.
-This means it has a method named with the `Symbol.iterator`
-symbol (a symbol value defined by the language, stored as a property
-of the `Symbol` function).
+انتظار می رود شیءای که به حلقه‌ی <bdo>`for`/`of`</bdo> داده می شود _قابل تکرار_ باشد. یعنی دارای یک متد است که به وسیله‌ی <bdo>`Symbol.iterator`</bdo> نام گذاری شده است ( مقداری از نوع سمبل که توسط خود زبان تعریف شده است و به عنوان یک خاصیت از تابع `Symbol` ذخیره می شود).
 
 {{index "iterator interface", "next method"}}
 
-When called, that method should return an object that provides a
-second interface, _iterator_. This is the actual thing that iterates.
-It has a `next` method that returns the next result. That result
-should be an object with a `value` property that provides the next value,
-if there is one, and a `done` property, which should be true when there
-are no more results and false otherwise.
+وقتی این متد فراخوانی می شود، خروجی آن شیءای خواهد بود که رابط دومی را فراهم می سازد، رابط _تکرارکننده_. این چیزی است که عمل تکرار را انجام می دهد. این تکرارکننده دارای متدی به نام `next` است که نتیجه‌ی بعدی را برمی گرداند. این نتیجه بایستی یک شیء باشد که خاصیتی به نام  `value` دارد که مقدار بعدی را در صورت وجود نگه‌داری می کند و خاصیتی به نام `done` دارد که در صورت نبود نتیجه‌ای دیگر، برابر با true خواهد و و در غیر این صورت false را خواهد داشت.
 
-Note that the `next`, `value`, and `done` property names are plain
-strings, not symbols. Only `Symbol.iterator`, which is likely to be
-added to a _lot_ of different objects, is an actual symbol.
+توجه داشته باشید که نام خاصیت های `next،` `value` و `done` از نوع رشته‌ی ساده است نه از جنس سمبل. فقط <bdo>`Symbol.iterator`</bdo> است که در واقع از جنس سمبل است و احتمالا به اشیاء متفاوت _زیادی_ اضافه خواهد شد.
 
-We can directly use this interface ourselves.
+می توانیم مستقیما از این رابط استفاده کنیم.
 
 ```
 let okIterator = "OK"[Symbol.iterator]();
@@ -711,8 +516,7 @@ console.log(okIterator.next());
 
 {{id matrix}}
 
-Let's implement an iterable data structure. We'll build a _matrix_
-class, acting as a two-dimensional array.
+بیایید یک ساختار قابل تکرار را پیاده سازیم کنیم. در مثال زیر کلاسی به نام _matrix_ خواهیم ساخت که مانند یک آرایه‌ی دوبعدی عمل می کند
 
 ```{includeCode: true}
 class Matrix {
@@ -737,19 +541,11 @@ class Matrix {
 }
 ```
 
-The class stores its content in a single array of _width_ × _height_
-elements. The elements are stored row by row, so, for example, the third
-element in the fifth row is (using zero-based indexing) stored at
-position 4 × _width_ + 2.
+کلاس بالا محتوای خود را در یک آرایه به تعداد عناصر <bdo>_width_ × _height_</bdo> ذخیره می کند. عناصر به صورت ردیف به ردیف ذخیره می شوند، بنابراین به عنوان مثلا عنصر سوم در ردیف پنجم در موقعیت <bdo>4 × _width_ + 2</bdo> ذخیره می شود ( با در نظر داشتن اندیس گذاری از صفر).
 
-The constructor function takes a width, a height, and an optional
-content function that will be used to fill in the initial values.
-There are `get` and `set` methods to retrieve and update elements in
-the matrix.
+تابع سازنده، یک طول، یک عرض و تابعی اختیاری برای محتوا می گیرد که این تابع برای مقداردهی اولیه استفاده می شود.  متدهای `get` و `set` برای به روز رسانی عناصر و دریافت آن ها در matrix‌ تعریف شده اند.
 
-When looping over a matrix, you are usually interested in the position
-of the elements as well as the elements themselves, so we'll have our
-iterator produce objects with `x`, `y`, and `value` properties.
+در زمان پیمایش یک ماتریس، معمولا دانستن موقعیت عناصر به اندازه‌ی خود عناصر مهم هستند، بنابراین تکرارکننده‌ی ما اشیائی با خاصیت‌های `x` و `y` و `value`  تولید می کند.
 
 {{index "MatrixIterator class"}}
 
@@ -777,18 +573,9 @@ class MatrixIterator {
 }
 ```
 
-The class tracks the progress of iterating over a matrix in its `x`
-and `y` properties. The `next` method starts by checking whether the
-bottom of the matrix has been reached. If it hasn't, it _first_
-creates the object holding the current value and _then_ updates its
-position, moving to the next row if necessary.
+آمار پیشرفت تکرار در طول یک ماتریس توسط خاصیت‌های `x` و `y` ضبط و ثبت می شود. متد `next` با بررسی اینکه آیا به انتهای ماتریس رسیده ایم یا خیر شروع می کند. اگر نرسیده بود، _ابتدا_ شیءای را ایجاد می کند که مقدار فعلی را نگه داری کند و _سپس_ موقعیت آن را به روز رسانی می کند و در صورت نیاز به سراغ ردیف بعدی رفت.
 
-Let's set up the `Matrix` class to be iterable. Throughout this book,
-I'll occasionally use after-the-fact prototype manipulation to add
-methods to classes so that the individual pieces of code remain small
-and self-contained. In a regular program, where there is no need to
-split the code into small pieces, you'd declare these methods directly
-in the class instead.
+اجازه بدهید که کلاس `Matrix` را قابل تکرار کنیم. در این کتاب، گاهی از بعد از تعریف کلاس‌ها، prototype را دستکاری خواهم کرد تا متدهایی را به آن‌ها اضافه کنم، در نتیجه بخش‌های کدهای مجزا کوچک خواهند ماند و به دیگر قسمت‌ها وابسته نخواهند شد. در یک برنامه‌ی معمولی، جایی که نیازی نیست تا کدها را به قسمت‌های کوچکتر تقسیم کرد، می توانید این متدها را مستقیما درون بدنه کلاس تعریف کنید.
 
 ```{includeCode: true}
 Matrix.prototype[Symbol.iterator] = function() {
@@ -798,7 +585,7 @@ Matrix.prototype[Symbol.iterator] = function() {
 
 {{index "for/of loop"}}
 
-We can now loop over a matrix with `for`/`of`.
+اکنون می توانیم یک ماتریس را به وسیله‌ی <bdo>`for`/`of`</bdo> پیمایش کنیم.
 
 ```
 let matrix = new Matrix(2, 2, (x, y) => `value ${x},${y}`);
@@ -811,20 +598,13 @@ for (let {x, y, value} of matrix) {
 // → 1 1 value 1,1
 ```
 
-## Getters, setters, and statics
+## گیرنده‌ها(getters) ، گذارنده‌ها(setters) و متدهای ایستا (static)
 
 {{index [interface, object], [property, definition], "Map class"}}
 
-Interfaces often consist mostly of methods, but it is also okay to
-include properties that hold non-function values. For example, `Map`
-objects have a `size` property that tells you how many keys are stored
-in them.
+رابط‌ها بیشتر از متد‌ها تشکیل شده اند، اما می می توانند خاصیت‌هایی که مقادیر تابعی را نگه داری نمی کنند را نیز داشته باشند. به عنوان مثال، اشیاء `Map` دارای خاصیتی به نام `size` می باشند که تعداد کلید‌هایی که در آن‌ها ذخیره شده است را نگه داری می کند.
 
-It is not even necessary for such an object to compute and store such
-a property directly in the instance. Even properties that are accessed
-directly may hide a method call. Such methods are called
-_((getter))s_, and they are defined by writing `get` in front of the
-method name in an object expression or class declaration.
+در این‌گونه اشیاء لزومی ندارد خاصیتی مثل `size` را مستقیما در خود نمونه شیء محاسبه و ذخیره نمود. حتی خاصیت‌هایی که به صورت مستقیم در دسترس هستند، ممکن است متدی را مخفیانه فراخوانی کنند. این گونه‌ی خاصیت‌ها را _((getter))_ یا گیرنده‌ی مقدار می گویند که به وسیله‌ی نوشتن `get` در ابتدای نام یک متد، در یک عبارت تعریف شیء یا کلاس، تعریف می شوند.
 
 ```{test: no}
 let varyingSize = {
@@ -841,9 +621,7 @@ console.log(varyingSize.size);
 
 {{index "temperature example"}}
 
-Whenever someone reads from this object's `size` property, the
-associated method is called. You can do a similar thing when a
-property is written to, using a _((setter))_.
+زمانی که کسی مقدار خاصیت‌ `size` را درخواست می کند، متدی که به آن پیوند خورده است فراخوانی می شود. می توانید مار مشابهی را برای مقدار دهی به یک خاصیت هم انجام دهید که به آن _((setter))_ یا گذارنده می گویند.
 
 ```{test: no, startCode: true}
 class Temperature {
@@ -870,47 +648,27 @@ console.log(temp.celsius);
 // → 30
 ```
 
-The `Temperature` class allows you to read and write the temperature
-in either degrees ((Celsius)) or degrees ((Fahrenheit)), but
-internally it stores only Celsius and automatically converts to
-and from Celsius in the `fahrenheit` getter and setter.
+کلاس `temperature` در مثال بالا این امکان را فراهم می کند تا میزان دما را به صورت ((سلسیوس)) یا ((فارنهایت)) بنویسید، اما در درون کلاس، این مقدار فقط به سلسیوس ذخیره می شود و به طور خودکار توسط متدهای گیرنده و گذارنده (setter, getter) به ‍`fahrenheit` تبدیل می شود.
 
 {{index "static method"}}
 
-Sometimes you want to attach some properties directly to your
-constructor function, rather than to the prototype. Such methods won't
-have access to a class instance but can, for example, be used to
-provide additional ways to create instances.
+گاهی اوقات می خواهید تا بعضی خاصیت‌ها را به جای prototype، به طور مستقیم در تابع سازنده داشته باشید. این گونه متدها به نمونه‌ی کلاس دسترسی نخواهند داشت اما می توان از آن‌ها به عنوان روش‌های دیگر ایجاد نمونه‌ها استفاده کرد.
 
-Inside a class declaration, methods that have `static` written before
-their name are stored on the constructor. So the `Temperature` class
-allows you to write `Temperature.fromFahrenheit(100)` to create a
-temperature using degrees Fahrenheit.
+درون تعریف یک کلاس، متدهای که کلیدواژه‌ی `static` در ابتدای آن ها نوشته می شود، روی تابع سازنده ذخیره می شوند. بنابراین در کلاس `Temperature` می توانید برای تولید دما به وسیله‌ی درجه‌ی فارنهایت از<bdo>`Temperature.fromFahrenheit(100)`</bdo> استفاده کنید.
 
-## Inheritance
+## ارث‌بری
 
 {{index inheritance, "matrix example", "object-oriented programming", "SymmetricMatrix class"}}
 
-Some matrices are known to be _symmetric_. If you mirror a symmetric
-matrix around its top-left-to-bottom-right diagonal, it stays the
-same. In other words, the value stored at _x_,_y_ is always the same
-as that at _y_,_x_.
+بعضی از ماتریس‌ها را به عنوان ماتریس‌های _متقارن_ می شناسند. اگر یک ماتریس متقارن را حول قطر بالا-چپ-به-پایین-راست بازتاب کنید، تفاوتی در شکل آن ایجاد نمی شود. به بیان دیگر، مقدار موجود در _x_,_y_ همیشه مشابه مقدار _‌y_,_x_ است.
 
-Imagine we need a data structure like `Matrix` but one that enforces
-the fact that the matrix is and remains symmetrical. We could write it
-from scratch, but that would involve repeating some code very similar
-to what we already wrote.
+تصور کنید که به یک ساختار داده مانند `Matrix` نیاز داریم با این شرط که متقارن بودن و ماندن ماتریس را ضمانت کند. می توانیم چنین ساختار داده‌ای را از صفر بنوسیم، اما این کار باعث می شود که کدهایی را تکرار کنیم که قبلا شبیه‌شان را نوشته ایم.
 
 {{index overriding, prototype}}
 
-JavaScript's prototype system makes it possible to create a _new_
-class, much like the old class, but with new definitions for some of
-its properties. The prototype for the new class derives from the old
-prototype but adds a new definition for, say, the `set` method.
+سیستم prototype در جاوااسکریپت این امکان را فراهم کرده است که یک کلاس جدید را بر اساس یک کلاس دیگر اما با بازتعریف بعضی از خاصیت‌های آن ایجاد کنیم. prototype کلاس جدید از prototype کلاس قبلی مشتق می شود اما تعریف جدیدی را برای به عنوان مثال، متد `set` آن در نظر می گیرد.
 
-In object-oriented programming terms, this is called
-_((inheritance))_. The new class inherits properties and behavior from
-the old class.
+در اصطلاح برنامه نویسی شیء گرا به این کار ارث بری می گویند. کلاس جدید خاصیت‌ها و رفتار را از کلاسی دیگر به _((ارث می برد))_.
 
 ```{includeCode: "top_lines: 17"}
 class SymmetricMatrix extends Matrix {
@@ -934,51 +692,23 @@ console.log(matrix.get(2, 3));
 // → 3,2
 ```
 
-The use of the word `extends` indicates that this class shouldn't be
-directly based on the default `Object` prototype but on some other class. This
-is called the _((superclass))_. The derived class is the
-_((subclass))_.
+استفاده از واژه‌ی `extends` به این معنا است که این کلاس نباید بر اساس prototype پیش‌فرض `Object` ساخته شود بلکه بر اساس کلاس دیگری خواهد بود. این کلاس را _((superclass))_ (کلاس والد) می نامند. کلاسی که از آن گرفته می شود را _((subclass))_ (زیرکلاس) می گویند.
 
-To initialize a `SymmetricMatrix` instance, the constructor calls its
-superclass's constructor through the `super` keyword. This is necessary
-because if this new object is to behave (roughly) like a `Matrix`, it
-is going to need the instance properties that matrices have. 
-To ensure the matrix is symmetrical, the constructor wraps the
-`content` method to swap the coordinates for values below the
-diagonal.
+برای مقداردهی اولیه یک نمونه از  `SymmetricMatrix،` سازنده، تابع سازنده‌ی کلاس والدش (superclass) را به وسیله‌ کلیدواژه‌ی  `super` فراخوانی می کند. این کار لازم است به این دلیل که اگر این شیء جدید قرار است شبیه `Matrix` (به‌طورکلی) رفتار کند، به خاصیت‌هایی که ماتریس‌ها دارند نیاز پیدا خواهد کرد. برای اطمینان از متقارن بودن ماتریس، تابع سازنده، متد `content` را در بر می گیرد تا مختصات را برای مقادیر پایین قطر اصلی جابجا کند.
 
-The `set` method again uses `super` but this time not to call the
-constructor but to call a specific method from the superclass's set of
-methods. We are redefining `set` but do want to use the original
-behavior. Because `this.set` refers to the _new_ `set` method, calling
-that wouldn't work. Inside class methods, `super` provides a way to
-call methods as they were defined in the superclass.
+متد `set` دوباره از `super` استفاده می کند، اما این بار هدف، فراخوانی سازنده‌اش نیست. بلکه برای فراخوانی یک متد خاص از متدهای کلاس والد (superclass) می باشد. متد `set` را بازنویسی می کنیم اما می خواهیم از رفتار اصلی آن استفاده کنیم. به دلیل اینکه `this.set` به متد `set` _جدید_ اشاره می کند، نمی توان از آن استفاده کرد. درون متد‌های کلاس، کلیدواژه‌ی `super` راهی فراهم می سازد تا متد‌هایی که در کلاس والد تعریف شده اند را بتوان فراخوانی کرد.
 
-Inheritance allows us to build slightly different data types from
-existing data types with relatively little work. It is a fundamental
-part of the object-oriented tradition, alongside encapsulation and
-polymorphism. But while the latter two are now generally regarded as
-wonderful ideas, inheritance is more controversial.
+با کمک ارث‌بری می توانیم با کار نسبتا کمتری، نوع‌ داده‌های متفاوتی از انواع داده‌ی موجود بسازیم. درکنار کپسوله‌سازی و چندریختی، ارث‌بری یکی از بخش‌های اساسی برنامه‌نویسی شیء گرا می باشد. البته دو ویژگی اول را عموما به عنوان ایده‌هایی فوق‌العاده می شناسند اما در باره‌ی ارث‌بری اختلاف‌ نظرهایی وجود دارد.
 
 {{index complexity, reuse, "class hierarchy"}}
 
-Whereas ((encapsulation)) and polymorphism can be used to _separate_
-pieces of code from each other, reducing the tangledness of the
-overall program, ((inheritance)) fundamentally ties classes together,
-creating _more_ tangle. When inheriting from a class, you usually have
-to know more about how it works than when simply using it. Inheritance
-can be a useful tool, and I use it now and then in my own programs,
-but it shouldn't be the first tool you reach for, and you probably
-shouldn't actively go looking for opportunities to construct class
-hierarchies (family trees of classes).
+در حالیکه کپسوله‌سازی و چندریختی را می توان برای _جداسازی_ کدها و کاهش نابسامانی کل برنامه استفاده کرد، ((ارث‌بری)) اساسا کلاس‌ها را به هم وابسته می کند و به شکلی باعث ایجاد نابسامانی _بیشتر_ می شود. زمانی که از کلاسی ارث‌ می برید، نسبت به حالتی که فقط قصد استفاده از آن را دارید، باید اطلاعات بیشتری از نحوه‌ی کارکرد آن کلاس داشته باشید. ارث‌ بری می تواند ابزار مفیدی باشد و من گاهی از آن در برنامه‌هایم استفاده می کنم، اما نباید اولین گزینه‌ای باشد که به سراغش می روید. و احتمالا خوب نیست به دنبال فرصت‌هایی باشید که در آن‌ها سلسله مراتبی از کلاس‌ها را ایجاد کنید (مثل شجره‌نامه‌ای از کلاس‌ها).
 
-## The instanceof operator
+## عملگر instanceof
 
 {{index type, "instanceof operator", constructor, object}}
 
-It is occasionally useful to know whether an object was derived from a
-specific class. For this, JavaScript provides a binary operator called
-`instanceof`.
+گاهی لازم است بدانیم که یک شیء از کلاس خاصی مشتق شده است یا خیر. برای این منظور، جاوااسکریپت یک عملگر دودویی به نام `instanceof` در نظر گرفته است.
 
 ```
 console.log(
@@ -994,69 +724,40 @@ console.log([1] instanceof Array);
 
 {{index inheritance}}
 
-The operator will see through inherited types, so a `SymmetricMatrix`
-is an instance of `Matrix`. The operator can also be applied to
-standard constructors like `Array`. Almost every object is an instance
-of `Object`.
+این عملگر انواع وارث را مورد کنکاش قرار می دهد، مثلا `SymmetricMatrix` نمونه‌ای از `Matrix` است. این عملگر را همچنین می توان برای سازنده‌های استاندارد مثل `Array` نیز استفاده کرد. تقریبا همه‌ی اشیاء نمونه‌ای از `Object` هستند.
 
-## Summary
+## خلاصه
 
-So objects do more than just hold their own properties. They have
-prototypes, which are other objects. They'll act as if they have
-properties they don't have as long as their prototype has that
-property. Simple objects have `Object.prototype` as their prototype.
+بنابراین اشیاء کاری بیش از نگه‌داری خاصیت‌های خود انجام می دهند. اشیاء prototype دارند که خود نیز اشیاء دیگری می باشند. تا زمانی که prototype یک شیء خاصیتی را داشته باشد، آن شیء نیز دارای آن خاصیت خواهد بود با وجود اینکه در ظاهر فاقد آن است. prototype اشیاء معمولی، <bdo>`Object.prototype`</bdo> می باشد.
 
-Constructors, which are functions whose names usually start with a
-capital letter, can be used with the `new` operator to create new
-objects. The new object's prototype will be the object found in the
-`prototype` property of the constructor. You can make good use of this
-by putting the properties that all values of a given type share into
-their prototype. There's a `class` notation that provides a clear way
-to define a constructor and its prototype.
+می توان از توابع سازنده که معمولا نامشان با حروف بزرگ شروع می شود، با استفاده از کلیدواژه‌ی `new`، برای ایجاد اشیاء جدید استفاده کرد. prototype شیء ایجاد شده، شیءای است که در خاصیت‌ `prototype` سازنده پیدا می شود. می توان از این ویژگی برای قرار دادن همه‌ی خاصیت‌های مشترک یک نوع خاص در prototype آن بهره برد. روش دیگری برای تعریف یک سازنده  و prototype آن وجود دارد که از کلیدواژه‌ی `class` استفاده می کند.
 
-You can define getters and setters to secretly call methods every time
-an object's property is accessed. Static methods are methods stored in
-a class's constructor, rather than its prototype.
+می توانید با تعریف گذارنده‌ها (setters) و گیرنده‌ها (getters)، به طور مخفیانه متدهایی را ایجاد کنید که با هر بار دسترسی به یک خاصیت شیء، فراخوانی می شوند. متدهای ایستا (static) متدهایی هستند که در سازنده‌ی کلاس ذخیره می شوند نه در prototype آن.
 
-The `instanceof` operator can, given an object and a constructor, tell
-you whether that object is an instance of that constructor.
+عملگر `instanceof` را اگر به یک شیء و یک سازنده اعمال کنید، به شما خواهد گفت که آن شیء نمونه‌ای از آن سازنده می باشد یا خیر.
 
-One useful thing to do with objects is to specify an interface for
-them and tell everybody that they are supposed to talk to your object
-only through that interface. The rest of the details that make up your
-object are now _encapsulated_, hidden behind the interface.
+یکی از کارهای مفیدی که می توان با اشیاء انجام داد این است که یک رابط برای آن‌ها مشخص نمود که دیگران فقط بتوانند از طریق آن رابط با شیء ارتباط برقرار کنند. با این کار، دیگر جزئیات مربوط به ساختار شیء شما کپسوله شده و پشت رابط مخفی می مانند.
 
-More than one type may implement the same interface. Code written to
-use an interface automatically knows how to work with any number of
-different objects that provide the interface. This is called
-_polymorphism_.
+اشیائی با انواع مختلف می توانند رابط یکسانی را پیاده‌سازی و استفاده کنند (توسط رابط یکسانی به کار گرفته شوند ). کدی که برای استفاده از یک رابط نوشته شده است به صورت خودکار می داند که چگونه با هر تعداد شیء متفاوت که آن رابط را دارند کار کند. این کار _چندریختی_ نامیده می شود.
 
-When implementing multiple classes that differ in only some details,
-it can be helpful to write the new classes as _subclasses_ of an
-existing class, _inheriting_ part of its behavior.
+زمانی که چندین کلاس را پیاده سازی می کنیم که تنها در بعضی جزئیات با هم تفاوت دارند، می توانیم کلاس‌های جدید را به عنوان _زیرکلاس‌های_ کلاس های موجود بنویسیم که بعضی از رفتارهای آن ها را به _ارث_ ببرند.
 
-## Exercises
+
+## تمرین‌ها
 
 {{id exercise_vector}}
 
-### A vector type
+### نوع بردار
 
 {{index dimensions, "Vec class", coordinates, "vector (exercise)"}}
 
-Write a ((class)) `Vec` that represents a vector in two-dimensional
-space. It takes `x` and `y` parameters (numbers), which it should save
-to properties of the same name.
+کلاسی به نام `Vec` تعریف کنید که نمایانگر یک فضای دوبعدی برداری باشد. این کلاس دو عدد `x` و `y` را به عنوان پارامتر (عددی) دریافت می کند، که با همین نام به عنوان خاصیت ذخیره می شود.
 
 {{index addition, subtraction}}
 
-Give the `Vec` prototype two methods, `plus` and `minus`, that take
-another vector as a parameter and return a new vector that has the sum
-or difference of the two vectors' (`this` and the parameter) _x_ and
-_y_ values.
+به پروتوتایپ `Vec` دو متد `plus` و `minus` را اضافه کنید که بردار دیگری را به عنوان یک پارامتر گرفته و بردار جدیدی را برمیگرداند که  تفاوت یا جمع مقدارهای _x_ و _y_ دو بردار (`this` و پارامترها) را برمی گرداند
 
-Add a ((getter)) property `length` to the prototype that computes the
-length of the vector—that is, the distance of the point (_x_, _y_) from
-the origin (0, 0).
+خاصیت دریافت‌کننده‌ای (getter) به نام `length` به پروتوتایپ اضافه کنید که طول بردار را محاسبه می کند – فاصله‌ی بین نقطه‌ی (_x_,_y_)  از مبدا (0,0).
 
 {{if interactive
 
@@ -1092,37 +793,25 @@ JavaScript.
 
 hint}}
 
-### Groups
+### گروه‌ها
 
 {{index "groups (exercise)", "Set class", "Group class", "set (data structure)"}}
 
 {{id groups}}
 
-The standard JavaScript environment provides another data structure
-called `Set`. Like an instance of `Map`, a set holds a collection of
-values. Unlike `Map`, it does not associate other values with those—it
-just tracks which values are part of the set. A value can be part
-of a set only once—adding it again doesn't have any effect.
+محیط استاندارد جاوااسکریپت ساختار داده‌ی دیگری به نام `Set` را فراهم می کند. شبیه به نمونه‌ای از`Map`، یک مجموعه (set) مجموعه‌ای از مقدارها را نگه داری می کند. برخلاف `Map`، این ساختار داده مقادیر را با هم مرتبط نمی کند – فقط مشخص می کند که کدام مقادیر در مجموعه وجود دارند.  یک مقدار فقط می تواند یکبار به مجموعه اضافه شود – اگر دوباره یک مقدار خاص را اضافه کنیم، اثری نخواهد داشت.
 
 {{index "add method", "delete method", "has method"}}
 
-Write a class called `Group` (since `Set` is already taken). Like
-`Set`, it has `add`, `delete`, and `has` methods. Its constructor
-creates an empty group, `add` adds a value to the group (but only if
-it isn't already a member), `delete` removes its argument from the
-group (if it was a member), and `has` returns a Boolean value
-indicating whether its argument is a member of the group.
+کلاسی به نام `Group` (زیرا `Set` قبلا رزرو شده است) تعریف کنید. شبیه `Set،` این کلاس متدهای  `add،` `delete` و `has` را دارد. سازنده این کلاس یک گروه (group)  خالی ایجاد می کند، متد `add،` یک مقدار را به گروه اضافه می کند (البته اگر قبلا عضو گروه نبود)، متد `delete` آرگومان ورودی‌اش را از گروه حذف می کند (البته اگر وجود داشت)، و متد `has،` مقداری بولی را تولید می کند که نماینگر این است که آرگومانش در عضو گروه بوده است یا خیر.
 
 {{index "=== operator", "indexOf method"}}
 
-Use the `===` operator, or something equivalent such as `indexOf`, to
-determine whether two values are the same.
+از عملگر `===` استفاده کنید یا چیزی مشابه مثل `indexOf،` تا بتوانید محاسبه کنید که آیا دو مقدار مشابه هستند یا خیر.
 
 {{index "static method"}}
 
-Give the class a static `from` method that takes an iterable object
-as argument and creates a group that contains all the values produced
-by iterating over it.
+به کلاس متد استاتیکی به نام `from` اضافه کید که شیءای قابل شمارش را به عنوان آرگومان دریافت می کند و گروهی ایجاد می کند که دارای تمامی مقادیری است که با پیمایش شیء بدست می آید.
 
 {{if interactive
 
@@ -1173,22 +862,17 @@ group.
 
 hint}}
 
-### Iterable groups
+### گروه‌های قابل شمارش
 
 {{index "groups (exercise)", [interface, object], "iterator interface", "Group class"}}
 
 {{id group_iterator}}
 
-Make the `Group` class from the previous exercise iterable. Refer 
-to the section about the iterator interface earlier in the chapter if
-you aren't clear on the exact form of the interface anymore.
+کلاس `Group` که در مثال قبل ایجاد کردید را قابل شمارش کنید. اگر در مورد آن شکل از رابط سوال دارید، مراجعه کنید به بخشی که پیش تر در این فصل در مورد رابط شمارش گر بحث شد.
 
-If you used an array to represent the group's members, don't just
-return the iterator created by calling the `Symbol.iterator` method on
-the array. That would work, but it defeats the purpose of this exercise.
+اگر از یک آرایه برای نمایش اعضای گروه استفاده کرده اید،شمارش‌گری که با فراخوانی <bdo>`Symbol.iterator`</bdo> روی آرایه ایجاد شده است را به عنوان پاسخ استفاده نکنید، این کار درست است اما هدف این تمرین چیز دیگری است.
 
-It is okay if your iterator behaves strangely when the group is
-modified during iteration.
+اگر شمارش‌گر شما رفتاری غیر معمول در هنگام پیمایش و بروزرسانی گروه از خود نشان می دهد، مشکلی نیست.
 
 {{if interactive
 
@@ -1220,17 +904,11 @@ that group.
 
 hint}}
 
-### Borrowing a method
+### قرض گرفتن یک متد
 
-Earlier in the chapter I mentioned that an object's `hasOwnProperty`
-can be used as a more robust alternative to the `in` operator when you
-want to ignore the prototype's properties. But what if your map needs
-to include the word `"hasOwnProperty"`? You won't be able to call that
-method anymore because the object's own property hides the method
-value.
+پیش تر در این فصل گفته شد که متد `hasOwnProperty` یک شیء را می توان به عنوان جایگزینی کاراتر نسبت به عملگر in در شرایط که قصد دارید تا خاصیت‌های پروتوتایپ را درنظر نگیرید کاربرد دارد. اما چه خواهد شد اگر map شما نیز لازم باشد تا واژه‌ی `"hasOwnProperty"`  را داشته باشد؟ در این صورت دیگر نمی توانی این متد را فراخوانی کند، به این علت که خاصیت شیء مقدار این متد را مخفی می کند.
 
-Can you think of a way to call `hasOwnProperty` on an object that has
-its own property by that name?
+آیا می توانی راهی را پیدا کنید که بتوان `hasOwnProperty` را روی یک شی فراخونی کرد، که این شیء خاصیتی با همین نام را هم داشته باشد؟
 
 {{if interactive
 
