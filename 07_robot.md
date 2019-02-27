@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/chapter/07_robot.js", "code/animatevillage.js"], zip: html}}}
 
-# Project: A Robot
+# پروژه: ساخت یک ربات
 
 {{quote {author: "Edsger Dijkstra", title: "The Threats to Computing Science", chapter: true}
 
@@ -15,22 +15,15 @@ quote}}
 
 {{index "project chapter", "reading code", "writing code"}}
 
-In "project" chapters, I'll stop pummeling you with new theory for a
-brief moment, and instead we'll work through a program together. Theory
-is necessary to learn to program, but reading and understanding actual
-programs is just as important.
+در فصل‌های “پروژه”، موقتا مطلب جدیدی معرفی نمی کنم و به جای آن باهم روی ساخت یک برنامه کار خواهیم کرد. مطالب تئوری برای برنامه نویسی لازم هستند، اما خواندن و فهمیدن برنامه‌های واقعی نیز به همان اندازه مهم می باشد.
 
-Our project in this chapter is to build an ((automaton)), a little
-program that performs a task in a ((virtual world)). Our automaton
-will be a mail-delivery ((robot)) picking up and dropping off parcels.
+پروژه‌ی ما در این فصل، ساخت یک ((ماشین خودکار)) است؛ برنامه‌ی کوچکی که وظیفه‌ای را در یک ((جهان مجازی)) انجام می دهد. ماشین خودکار ما، یک ((ربات)) نامه‌رسان است که بسته‌های پستی را تحویل گرفته و به مقصدشان می‌رساند.
 
-## Meadowfield
+## روستای مدوفیلد
 
 {{index "roads array"}}
 
-The village of ((Meadowfield)) isn't very big. It consists of 11
-places with 14 roads between them. It can be described with this
-array of roads:
+روستای ((مدوفیلد)) زیاد بزرگ نیست. دارای 11 مکان است که 14 راه بین آن‌ها وجود دارد. می توان آن را با این آرایه از راه‌ها توصیف نمود:
 
 ```{includeCode: true}
 const roads = [
@@ -46,16 +39,11 @@ const roads = [
 
 {{figure {url: "img/village2x.png", alt: "The village of Meadowfield"}}}
 
-The network of roads in the village forms a _((graph))_. A graph is a
-collection of points (places in the village) with lines between them
-(roads). This graph will be the world that our robot moves through.
+شبکه‌ی راه‌ها در این روستا، یک گراف تشکیل می دهد. یک _((گراف))_ مجموعه‌ای از نقطه‌ها است (مکان‌ها در روستا) به همراه‌ خطوطی که بین آن‌ها قرار می گیرند (راه‌ها). این گراف همان جهانی خواهد بود که ربات ما در آن حرکت خواهد کرد.
 
 {{index "roadGraph object"}}
 
-The array of strings isn't very easy to work with. What we're
-interested in is the destinations that we can reach from a given
-place. Let's convert the list of roads to a data structure that, for
-each place, tells us what can be reached from there.
+کارکردن با آرایه‌ای از رشته‌ها، زیاد راحت نیست. ما می خواهیم بدانیم از هر مکان به چه مقصد‌هایی می توان رفت. بیایید لیست راه ها را به ساختار داده‌ای تبدیل کنیم که برای هر مکان، جاهایی که می توان رفت را مشخص کند.
 
 ```{includeCode: true}
 function buildGraph(edges) {
@@ -77,62 +65,37 @@ function buildGraph(edges) {
 const roadGraph = buildGraph(roads);
 ```
 
-Given an array of edges, `buildGraph` creates a map object that, for
-each node, stores an array of connected nodes.
+این تابع، با گرفتن آرایه‌ای از راه‌ها، `buildGraph` شیءای از نوع نگاشت (map) را ایجاد خواهد کرد که برای هر گره، آرایه‌ای از گره‌های متصل به آن را ذخیره خواهد کرد.
 
 {{index "split method"}}
 
-It uses the `split` method to go from the road strings, which have the
-form `"Start-End"`, to two-element arrays containing the start and end
-as separate strings.
+تابع از متد `split` برای تبدیل رشته‌های راه، که به صورت `"انتها-ابتدا"` می باشند، به آرایه‌های دوعنصری که نقاط شروع و پایان در آن‌ها جدا شده است، استفاده می کند.
 
-## The task
+## ماموریت
 
-Our ((robot)) will be moving around the village. There are parcels
-in various places, each addressed to some other place. The robot picks
-up parcels when it comes to them and delivers them when it arrives at
-their destinations.
+ربات ما در روستا گشت خواهد زد و بسته‌های پستی که در مکان‌های مختلف پراکنده هستند و هر کدام به مکان دیگری باید برده شوند را گرفته و در مقصد‌هایشان تحویل می دهد.
 
-The automaton must decide, at each point, where to go next. It has
-finished its task when all parcels have been delivered.
+این ماشین خودکار باید در هر نقطه تصمیم بگیرد که مکان بعدی کجاست. زمانی که همه‌ی بسته‌ها تحویل داده شدند، ماموریتش تمام می شود.
 
 {{index simulation, "virtual world"}}
 
-To be able to simulate this process, we must define a virtual world
-that can describe it. This model tells us where the robot is and where
-the parcels are. When the robot has decided to move somewhere, we need
-to update the model to reflect the new situation.
+برای شبیه سازی این فرایند، باید یک جهان مجازی تعریف کنیم که آن را توصیف کند. این مدل، مکان ربات و بسته‌ها را مشخص می‌کند. زمانی که ربات تصمیم می گیرد که به سمتی حرکت کند، لازم است تا مدل را به روزرسانی کنیم تا شرایط جدید را منعکس کند.
 
 {{index [state, in objects]}}
 
-If you're thinking in terms of ((object-oriented programming)), your
-first impulse might be to start defining objects for the various
-elements in the world: a ((class)) for the robot, one for a parcel,
-maybe one for places. These could then hold properties that describe
-their current ((state)), such as the pile of parcels at a location,
-which we could change when updating the world.
+اگر به با تفکر ((برنامه نویسی شیء گرا)) به مساله نگاه می کنید، حرکت اول شما شاید تعریف اشیاء مجزا برای عناصر مختلف این جهان باشد: یک ((کلاس)) برای ربات، یک کلاس برای یک بسته، و شاید یکی هم برای مکان‌ها. این کلاس‌ها می توانند خاصیت‌هایی را هم داشته باشند که ((وضعیت)) فعلی آن ها را نگه داری کند. مانند تعداد بسته‌ها در یک مکان، که می توانند با به‌روز‌رسانی جهان، تغییر کنند.
 
-This is wrong.
+این کار اشتباه است.
 
-At least, it usually is. The fact that something sounds like an object
-does not automatically mean that it should be an object in your
-program. Reflexively writing classes for every concept in your
-application tends to leave you with a collection of interconnected
-objects that each have their own internal, changing state. Such
-programs are often hard to understand and thus easy to break.
+حداقل ، معمولا اشتباه است. اینکه چیزی به نظر می‌رسد که یک شیء است، به این معنا نیست که در برنامه‌ی شما هم باید به عنوان یک شیء در نظر گرفته شود. این کار، در نظر گرفتن کلاس‌های مجزا برای تک تک مفاهیم در برنامه، شما را به سمتی می برد که با مجموعه‌ای از اشیاء به هم متصل روبرو شوید که هر کدام وضعیت‌ درونی قابل تغییر خود را دارند. معمولا به سختی می توان این‌گونه برنامه‌ها را درک کرد و در نتیجه، به سادگی با مشکل روبرو می شوند.
 
 {{index [state, in objects]}}
 
-Instead, let's condense the village's state down to the minimal
-set of values that define it. There's the robot's current location and
-the collection of undelivered parcels, each of which has a current
-location and a destination address. That's it.
+به جای آن، بیایید وضعیت روستا را با کوچکترین مجموعه‌مقادیری که می تواند آن را توصیف کند خلاصه کنیم؛ موقعیت فعلی ربات و مجموعه‌‌ی بسته‌هایی که هنوز تحویل داده نشده اند. این بسته‌ها هر کدام دارای یک موقعیت فعلی و یک آدرس مقصد می باشند.
 
 {{index "VillageState class", "persistent data structure"}}
 
-And while we're at it, let's make it so that we don't _change_ this
-state when the robot moves but rather compute a _new_ state for the
-situation after the move.
+اجازه دهید آن را طوری بسازیم که با حرکت ربات، خود وضعیت را تغییر ندهیم بلکه یک وضعیت جدید محاسبه‌ کنیم که حالت بعد از حرکت را نشان می دهد.
 
 ```{includeCode: true}
 class VillageState {
@@ -155,23 +118,13 @@ class VillageState {
 }
 ```
 
-The `move` method is where the action happens. It first checks whether
-there is a road going from the current place to the destination, and
-if not, it returns the old state since this is not a valid move.
+متد `move` جایی است که کار صورت می گیرد. این متد ابتدا وجود مسیری بین مکان فعلی و مقصد را بررسی می‌کند، و در صورت نبود مسیر، وضعیت قبلی را برمی گرداند، دلیل آن هم این است که حرکت خواسته شده معتبر نیست.
 
 {{index "map method", "filter method"}}
 
-Then it creates a new state with the destination as the robot's new
-place. But it also needs to create a new set of parcels—parcels that
-the robot is carrying (that are at the robot's current place) need to
-be moved along to the new place. And parcels that are addressed to the
-new place need to be delivered—that is, they need to be removed from
-the set of undelivered parcels. The call to `map` takes care of the
-moving, and the call to `filter` does the delivering.
+سپس، یک وضعیت جدید ایجاد می‌کند که در آن، مقصد به عنوان مکان جدید ربات در نظر گرفته‌ می شود. همچنین لازم است تا یک مجموعه‌ی جدید از بسته‌ها ایجاد شود – بسته‌هایی که ربات در حال حمل آن‌ها است ( در مکان فعلی ربات قرار دارند) و باید به مکان جدید برده شوند. و بسته‌هایی که مقصدشان مکان جدید است و باید تحویل داده شوند  – که باید از مجموعه‌ی بسته‌های تحویل داده نشده، حذف شوند. فراخوانی `map` عمل حرکت ربات و فراخوانی `filter` کار تحویل بسته‌ها را انجام می دهد.
 
-Parcel objects aren't changed when they are moved but re-created. The
-`move` method gives us a new village state but leaves the old one
-entirely intact.
+اشیاء مربوط به بسته‌ها،  زمانی که جابه‌جا می شوند تغییری نمی کنند بلکه از نو ایجاد می شوند. متد `move` به ما وضعیت جدیدی از روستا را می دهد و حالت قبلی را دست‌نخورده باقی می گذارد.
 
 ```
 let first = new VillageState(
@@ -188,28 +141,15 @@ console.log(first.place);
 // → Post Office
 ```
 
-The move causes the parcel to be delivered, and this is reflected in
-the next state. But the initial state still describes the situation
-where the robot is at the post office and the parcel is undelivered.
+متد `move` باعث می شود که بسته، تحویل داده شود و این عمل در وضعیت بعدی قابل مشاهده است. اما وضعیت ابتدایی هنوز شرایطی را نشان می دهد که ربات در دفتر پست است و بسته تحویل داده نشده است.
 
-## Persistent data
+## داده‌های پایا (Persistent Data)
 
 {{index "persistent data structure", mutability, ["data structure", immutable]}}
 
-Data structures that don't change are called _((immutable))_ or
-_persistent_. They behave a lot like strings and numbers in that they
-are who they are and stay that way, rather than containing different
-things at different times.
+ساختارهای داده‌ای که تغییر نمی کنند را تغییرناپذیر (_((immutable))_) یا پایا (_persistent_) می‌نامند.  این ساختار‌ها، بسیار شبیه به رشته‌ها و اعداد عمل می کنند، یعنی همیشه آنی خواهند بود که هستند و به همین حالت می مانند، نه اینکه در زمان‌های مختلف محتوای مختلفی داشته باشند.
 
-In JavaScript, just about everything _can_ be changed, so working with
-values that are supposed to be persistent requires some restraint.
-There is a function called `Object.freeze` that changes an object so
-that writing to its properties is ignored. You could use that to make
-sure your objects aren't changed, if you want to be careful. Freezing
-does require the computer to do some extra work, and having updates
-ignored is just about as likely to confuse someone as having them do
-the wrong thing. So I usually prefer to just tell people that a given
-object shouldn't be messed with and hope they remember it.
+در جاوااسکریپت، تقریبا همه چیز را _می توان_ تغییر داد. بنابراین کار کردن با مقدارهایی که قرار است پایا باشند موانعی خواهد داشت.  تابعی به نام <bdo>`Object.freeze`</bdo> وجود دارد که در صورت اعمال به یک شیء، باعث می شود نتوان خاصیت‌های آن شیء را تغییر داد. اگر قصد دارید تا جوانب احتیاط را رعایت کنید، می توانید از این متد برای جلوگیری از تغییر شیءتان استفاده کنید. ثابت‌ نگه‌داشتن شیء باعث می شود که کامپیوتر کار بیشتری انجام دهد، و در نظر نگرفتن  به‌روز‌رسانی اشیاء، به احتمال زیاد افراد را به اشتباه‌ می اندازد. بنابراین من معمولا ترجیح می دهم که به دیگران اعلام کنم که یک فلان شیء را نباید دستکاری کرد و امیدوار باشم که دیگران هم رعایت کنند.
 
 ```
 let object = Object.freeze({value: 5});
@@ -218,44 +158,23 @@ console.log(object.value);
 // → 5
 ```
 
-Why am I going out of my way to not change objects when the language
-is obviously expecting me to?
+چرا اصرار دارم که اشیاء را تغییر ندهم، با اینکه زبان به روشنی این کار را مجاز می داند؟
 
-Because it helps me understand my programs. This is about complexity
-management again. When the objects in my system are fixed, stable
-things, I can consider operations on them in isolation—moving to
-Alice's house from a given start state always produces the same new
-state. When objects change over time, that adds a whole new dimension
-of complexity to this kind of reasoning.
+زیرا این کار به من در درک برنامه‌ها کمک می‌کند. این موضوع دوباره به مدیریت پیچیدگی برنامه باز می‌گردد.  زمانی که اشیاء در سیستم من چیزهایی ثابت و پایدار هستند، می توانم فرض کنم که عملیات روی آن‌ها در فضایی جداگانه انجام می پذیرد – رفتن به خانه‌ی Alice، از یک وضعیت ابتدایی داده شده، همیشه وضعیت جدید یکسانی را تولید می‌کند. زمانی که اشیاء در طول زمان تغییر می کنند، این کار باعث اضافه شدن بعد دیگری از پیچیدگی به این‌گونه نتیجه‌گیری می گردد.
 
-For a small system like the one we are building in this chapter, we
-could handle that bit of extra complexity. But the most important
-limit on what kind of systems we can build is how much we can
-understand. Anything that makes your code easier to understand makes
-it possible to build a more ambitious system.
+برای یک سیستم کوچک مانند چیزی که در این فصل در حال ساخت آن هستیم، می توانیم از پس این پیچیدگی اضافی بر بیاییم. اما مهم‌ترین محدودیتی که در نوع سیستم‌هایی که می توانیم بسازیم وجود دارد آن است که تا چه حد می توانیم آن سیستم‌ها را درک کنیم. هر چیزی که درک کد شما را آسان‌تر کند، باعث می شود که بتوانید سیستم بلندپروازانه‌تری بسازید.
 
-Unfortunately, although understanding a system built on persistent data
-structures is easier, _designing_ one, especially when your
-programming language isn't helping, can be a little harder. We'll
-look for opportunities to use persistent data structures in this
-book, but we'll also be using changeable ones.
+متاسفانه، با وجود اینکه درک سیستمی که با ساختارهای داده‌ی پایا ساخته شده آسان تر است، _طراحی_ آن، مخصوصا وقتی که خود زبان برنامه‌نویسی کمکی نمی‌کند، ممکن است کمی مشکل تر باشد. با این حال، ما به دنبال فرصت‌هایی برای استفاده از ساختارهای داده پایا در این کتاب خواهیم بود، همچنین از موارد قابل تغییر نیز استفاده خواهیم کرد.
 
-## Simulation
+## شبیه‌سازی
 
 {{index simulation, "virtual world"}}
 
-A delivery ((robot)) looks at the world and decides in which
-direction it wants to move. As such, we could say that a robot is a
-function that takes a `VillageState` object and returns the name of a
-nearby place.
+یک ربات تحویل دهنده به جهان پیرامون خود نگاه می‌کند و تصمیم می گیرد که از کدام جهت باید حرکت کند. بر این اساس، می توانیم بگوییم که یک ربات یک تابع است که یک شیء از نوع `VillageState` را گرفته و نام یک مکان نزدیک را برمی گرداند.
 
 {{index "runRobot function"}}
 
-Because we want robots to be able to remember things, so that they can
-make and execute plans, we also pass them their memory and allow them
-to return a new memory. Thus, the thing a robot returns is an object
-containing both the direction it wants to move in and a memory value
-that will be given back to it the next time it is called.
+به دلیل اینکه ربات‌ها قادر به برنامه‌ریزی و اجرای آن باشند، باید بتوانند چیزهایی به خاطر بسپارند. پس به آن‌ها حافظه‌شان را ارسال می کنیم و امکان برگرداندن حافظه‌ی جدید را نیز فراهم می‌سازیم . پس، چیزی که یک ربات برمی گرداند شیءای است که دارای دو چیز است:   جهتی که قرار است به سمت آن حرکت کند و یک مقدار حافظه که در فراخوانی بعد استفاده می شود.
 
 ```{includeCode: true}
 function runRobot(state, robot, memory) {
@@ -271,20 +190,14 @@ function runRobot(state, robot, memory) {
   }
 }
 ```
+ببینید یک ربات برای اینکه یک وضعیت داده شده را حل کند، چه کار باید انجام دهد.
+برای برداشتن بسته‌ها، باید به همه‌ی موقعیت‌هایی که بسته دارند برود و برای تحویل آن‌ها، باید به همه‌ی موقعیت‌هایی که بسته‌ای به آنجا آدرس‌دهی شده است سر بزند، البته بعد از اینکه بسته را تحویل گرفت.
 
-Consider what a robot has to do to "solve" a given state. It must pick
-up all parcels by visiting every location that has a parcel and
-deliver them by visiting every location that a parcel is addressed to,
-but only after picking up the parcel.
-
-What is the dumbest strategy that could possibly work? The robot could
-just walk in a random direction every turn. That means, with
-great likelihood, it will eventually run into all parcels and then
-also at some point reach the place where they should be delivered.
+احمقانه ترین استراتژی برای حل این موضوع چیست؟ ربات می تواند به صورت تصادفی هر بار به جهتی برود. معنای آن این است که با احتمال زیاد، در نهایت به همه‌ی بسته‌ها دست خواهد یافت و بالاخره به مکان‌هایی که باید آن‌ها را تحویل دهد نیز می رسد.
 
 {{index "randomPick function", "randomRobot function"}}
 
-Here's what that could look like:
+در این جا می توان نمونه‌ی این کد را دید:
 
 ```{includeCode: true}
 function randomPick(array) {
@@ -299,20 +212,11 @@ function randomRobot(state) {
 
 {{index "Math.random function", "Math.floor function", [array, "random element"]}}
 
-Remember that `Math.random()` returns a number between zero and
-one—but always below one. Multiplying such a number by the length of an
-array and then applying `Math.floor` to it gives us a random index for
-the array.
+به خاطر داشته باشید که متد <bdo>`Math.random()`</bdo> عددی بین صفر و یک تولید می‌کند که همیشه کمتر از یک است. ضرب این عدد در طول یک آرایه و بعد اعمال <bdo>` Math.floor`</bdo> به آن باعث می شود که به صورت تصادفی یکی از اندیس‌های آرایه را بدست بیاوریم.
 
-Since this robot does not need to remember anything, it ignores its
-second argument (remember that JavaScript functions can be called with
-extra arguments without ill effects) and omits the `memory` property
-in its returned object.
+به دلیل اینکه این ربات نیازی ندارد تا چیزی را به خاطر داشته باشد، پس آرگومان دوم در نظر گرفته نمی شود  ( به یاد دارید که در جاوااسکریپت می توان بدون ایجاد خطا، یک تابع را با آرگومان بیشتر فراخوانی کرد) و خاصیت `memory` را هم در شیء خروجی قرار نمی دهد.
 
-To put this sophisticated robot to work, we'll first need a way to
-create a new state with some parcels. A static method (written here by
-directly adding a property to the constructor) is a good place to put
-that functionality.
+برای بکار انداختن این ربات ، ابتدا لازم است راهی برای ایجاد یک وضعیت جدید به وسیله‌ی چند بسته پیدا کنیم. یک متد ایستا (در اینجا به طور مستقیم با افزودن یک خاصیت به سازنده تعریف می شود) جای خوبی برای این قابلیت است.
 
 ```{includeCode: true}
 VillageState.random = function(parcelCount = 5) {
@@ -331,11 +235,9 @@ VillageState.random = function(parcelCount = 5) {
 
 {{index "do loop"}}
 
-We don't want any parcels that are sent from the same place that they
-are addressed to. For this reason, the `do` loop keeps picking new
-places when it gets one that's equal to the address.
+بسته‌هایی که آدرس مبدا و مقصدشان یکی است را نیازی نیست در نظر بگیریم.  به همین علت، حلقه `do`  تا زمانی که مبدا و مقصد برابر باشد، به گرفتن مکان‌ها ادامه می دهد.
 
-Let's start up a virtual world.
+بیاید تا یک جهان مجازی را شروع کنیم.
 
 ```{test: no}
 runRobot(VillageState.random(), randomRobot);
@@ -344,39 +246,24 @@ runRobot(VillageState.random(), randomRobot);
 // → …
 // → Done in 63 turns
 ```
-
-It takes the robot a lot of turns to deliver the parcels because it
-isn't planning ahead very well. We'll address that soon.
+برای تحویل بسته‌ها، ربات باید حرکت‌های زیادی انجام دهد به این خاطر که از پیش به خوبی برنامه‌ریزی نشده است. به زودی این مشکل را حل خواهیم کرد.
 
 {{if interactive
 
-For a more pleasant perspective on the simulation, you can use the
-`runRobotAnimation` function that's available in [this chapter's
-programming environment](https://eloquentjavascript.net/code/#7).
-This runs the simulation, but instead of outputting text, it shows
-you the robot moving around the village map.
+برای دیدن نمایی بهتر از شبیه‌سازی، می توانید از تابع `runRobotAnimation` استفاده کنید که در [فضای برنامه‌نویسی این فصل](https://eloquentjavascript.net/code/#7) موجود است. این تابع برای شبیه‌سازی، به جای استفاده از متن ساده، از حرکت ربات در نقشه‌ی روستا استفاده می کند.
 
 ```{test: no}
 runRobotAnimation(VillageState.random(), randomRobot);
 ```
-
-The way `runRobotAnimation` is implemented will remain a mystery for
-now, but after you've read the [later chapters](dom) of this book,
-which discuss JavaScript integration in web browsers, you'll be able
-to guess how it works.
+نحوه‌ی پیاده‌سازی تابع `runRobotAnimation` فعلا سربسته می ماند، اما بعد از اینکه [فصل‌‌های بعدی](dom) کتاب را خواندید، که به موضوع جاوااسکریپت در مرورگر‌های وب می پردازد، می توانید حدس بزنید که چگونه کار می کند.
 
 if}}
 
-## The mail truck's route
+## مسیر ماشین پست
 
 {{index "mailRoute array"}}
 
-We should be able to do a lot better than the random ((robot)). An
-easy improvement would be to take a hint from the way real-world mail
-delivery works. If we find a route that passes all places in the
-village, the robot could run that route twice, at which point it is
-guaranteed to be done. Here is one such route (starting from the post
-office):
+باید بتوانیم کاری بهتر از ساخت یک ربات تصادفی انجام دهیم. یک بهبود ساده می تواند الهام گیری از سیستم تحویل پست در دنیای واقعی باشد . اگر مسیری پیدا کنیم که از همه‌ی خانه‌های روستا بگذرد، ربات می تواند از آن مسیر دو مرتبه عبور کند. با این کار می توان ضمانت کرد که ماموریتش را انجام می دهد. در این جا مسیری با این مشخصات آورده شده است (شروع از دفتر پست):
 
 ```{includeCode: true}
 const mailRoute = [
@@ -389,9 +276,7 @@ const mailRoute = [
 
 {{index "routeRobot function"}}
 
-To implement the route-following robot, we'll need to make use of
-robot memory. The robot keeps the rest of its route in its memory and
-drops the first element every turn.
+برای پیاده‌سازی ربات مسیرپیما، باید از حافظه‌ی ربات استفاده کنیم.  ربات مسیر باقی‌مانده را در حافظه‌اش نگه داری می کند و با هر بار جابه‌جایی، اولین عنصر  را از آن خارج می کند.
 
 ```{includeCode: true}
 function routeRobot(state, memory) {
@@ -402,8 +287,7 @@ function routeRobot(state, memory) {
 }
 ```
 
-This robot is a lot faster already. It'll take a maximum of 26 turns
-(twice the 13-step route) but usually less.
+این ربات از ربات قبلی بسیار سریع تر عمل می کند. در حالت بیشینه 26 حرکت خواهد داشت، ( دو برابر مسیر 13 گامه)، اما معمولا کمتر طول خواهد کشید.
 
 {{if interactive
 
@@ -413,45 +297,25 @@ runRobotAnimation(VillageState.random(), routeRobot, []);
 
 if}}
 
-## Pathfinding
+## مسیریابی
 
-Still, I wouldn't really call blindly following a fixed route
-intelligent behavior. The ((robot)) could work more efficiently if it
-adjusted its behavior to the actual work that needs to be done.
+هنوز، نمی توانم دنباله‌روی کورکورانه از یک مسیر ثابت را واقعا یک رفتار هوشمندانه بنامم. اگر رفتار ربات را به سمت کاری که واقعا باید انجام دهد اصلاح کنیم، می تواند با کارایی بیشتری عمل کند.
 
 {{index pathfinding}}
 
-To do that, it has to be able to deliberately move toward a given
-parcel or toward the location where a parcel has to be delivered.
-Doing that, even when the goal is more than one move away, will
-require some kind of route-finding function.
+برای این کار، باید بتواند به صورت دلخواه به سمت یک بسته‌ی مشخص، یا جایی که قرار است بسته تحویل داده شود حرکت کند. انجام این‌ کار، حتی زمانی که تا هدف تنها دو گام یا بیشتر فاصله دارد، به نوعی مسیریابی نیاز دارد.
 
-The problem of finding a route through a ((graph)) is a typical
-_((search problem))_. We can tell whether a given solution (a route)
-is a valid solution, but we can't directly compute the solution the
-way we could for 2 + 2. Instead, we have to keep creating potential
-solutions until we find one that works.
+مساله پیدا کردن یک مسیر در یک ((گراف))، یک _((مساله‌ی جستجوی))_ معمولی است. ما می توانیم بگوییم که یک راه‌حل داده‌شده (یک مسیر) راه حلی معتبر است؛ اما نمی توانیم به همان صورت که 2+2 را محاسبه می کنیم، به طور مستقیم راه حل را به دست بیاوریم. در عوض، باید به ایجاد راه‌حل‌های بالقوه ادامه دهیم تا زمانی که به مورد صحیح برسیم.
 
-The  number of possible routes through a graph is infinite. But
-when searching for a route from _A_ to _B_, we are interested only in
-the ones that start at _A_. We also don't care about routes that visit
-the same place twice—those are definitely not the most efficient route
-anywhere. So that cuts down on the number of routes that the route
-finder has to consider.
+تعداد مسیرهای ممکن در یک گراف نامتناهی است. اما زمانی که به دنبال مسیری از نقطه‌ی _A_ به _B_ هستیم، تنها به مسیرهایی توجه می کنیم که از نقطه‌ی _A_ شروع می شوند. همچنین به مسیرهایی که دوبار از یک مکان عبور می کنند، اهمیت نمی دهیم –  آن‌ها قطعا نمی توانند بهترین مسیر باشند. بنابراین، تعداد مسیرهایی که مسیریاب باید در نظر بگیرد کاهش می یابند.
 
-In fact, we are mostly interested in the _shortest_ route. So we want
-to make sure we look at short routes before we look at longer ones. A
-good approach would be to "grow" routes from the starting point,
-exploring every reachable place that hasn't been visited yet, until a
-route reaches the goal. That way, we'll only explore routes that are
-potentially interesting, and we'll find the shortest route (or one of the
-shortest routes, if there are more than one) to the goal.
+در واقع، ما بیشتر علاقمندیم تا _کوتاهترین_ مسیر را پیدا کنیم. بنابراین باید اطمینان حاصل کنیم که پیش از مسیرهای بلند‌تر، مسیرهای کوتاه بررسی می شوند. یک راه حل خوب می تواند این باشد که از نقطه‌ی شروع، مسیرها را “رشد” دهیم، و هر مکان قابل دسترسی که قبلا بازدید نکرده‌ایم را بررسی کنیم تا اینکه یک مسیر به هدفش برسد. به این ترتیب، ما فقط مسیرهایی را کشف خواهیم کرد که به صورت بالقوه مرتبط به نظر می‌رسند و درنتیجه کوتاه‌ترین مسیر را تا هدف پیدا خواهیم کرد ( یا یکی از کوتاه‌ترین مسیرها در صورتی که بیش از یک مسیر وجود داشته باشد).
 
 {{index "findRoute function"}}
 
 {{id findRoute}}
 
-Here is a function that does this:
+تابع زیر این کار را انجام می دهد:
 
 ```{includeCode: true}
 function findRoute(graph, from, to) {
@@ -468,39 +332,17 @@ function findRoute(graph, from, to) {
 }
 ```
 
-The exploring has to be done in the right order—the places that were
-reached first have to be explored first. We can't immediately explore
-a place as soon as we reach it because that would mean places reached
-_from there_ would also be explored immediately, and so on, even
-though there may be other, shorter paths that haven't yet been
-explored.
+بررسی مکان‌ها باید با ترتیب درست انجام شود – مکان‌هایی که ربات زودتر به آن ها رسیده است را باید زودتر بررسی کرد. نمی توانیم یک مکان را به محض اینکه به آن رسیدیم مورد بررسی قرار دهیم زیرا در این صورت مکان‌هایی که از آن نقطه به دست می‌آیند را نیز باید بلافاصله بررسی کنیم و به همین ترتیب ادامه دهیم؛ در حالیکه ممکن است مسیرهای کوتاه تری باشند که اصلا بررسی نشده اند.
 
-Therefore, the function keeps a _((work list))_. This is an array of
-places that should be explored next, along with the route that got us
-there. It starts with just the start position and an empty route.
+بنابراین، تابع _((فهرستی از کارها))_ را نگه داری می کند. این فهرست یک آرایه از مکان‌هایی است که باید در گام بعدی بررسی شود، به همراه مسیری که ما را به آنجا می‌رساند. این فهرست کار، در ابتدا فقط یک موقعیت شروع و یک مسیر خالی دارد.
 
-The search then operates by taking the next item in the list and
-exploring that, which means all roads going from that place are
-looked at. If one of them is the goal, a finished route can be
-returned. Otherwise, if we haven't looked at this place before, a new
-item is added to the list. If we have looked at it before, since we
-are looking at short routes first, we've found either a longer route
-to that place or one precisely as long as the existing one, and we
-don't need to explore it.
+سپس جستجو مورد بعدی در فهرست را می‌گیرد و آن را بررسی می کند، به این معنا که همه‌ی راه‌هایی که از آن مکان عبور می کنند دیده می شوند. اگر یکی از آن ها هدف باشد، یک مسیر کامل می تواند برگردانده شود. در غیر این صورت، اگر قبلا به این مکان نگاه نکرده باشیم، یک مورد جدید به فهرست اضافه می شود. اگر قبلا آن را دیده باشیم، از آنجا که ما اول مسیرهای کوتاه تر را بررسی می کنیم، یا یک مسیر طولانی تر به آن محل را پیدا کرده ایم یا مسیری دقیقا برابر با مسیر که در فهرست وجود دارد؛ پس نیازی نیست که آن را مورد بررسی قرار دهیم.
 
-You can visually imagine this as a web of known routes crawling out
-from the start location, growing evenly on all sides (but never
-tangling back into itself). As soon as the first thread reaches the
-goal location, that thread is traced back to the start, giving us our
-route.
+می توان آن را به عنوان یک شبکه‌ای مانند تار عنکبوت در نظر گرفت که از موقعیت شروع به صورت برابر و به سمت همه‌ی اضلاع به بیرون پیموده می شود ( اما تارها با هم قاطی و پیچیده نمی شوند). به محض اینکه اولین تار به مکان هدف رسید، این تار تا نقطه‌ی شروع رصد می شود و مسیر را مشخص می کند.
 
 {{index "connected graph"}}
 
-Our code doesn't handle the situation where there are no more work
-items on the work list because we know that our graph is _connected_,
-meaning that every location can be reached from all other locations.
-We'll always be able to find a route between two points, and the
-search can't fail.
+کد ما حالتی که در آرایه‌ی فهرست‌ کارها، موردی وجود نداشته باشد را در نظر نمی‌گیرد زیرا می دانیم که گراف ما یک گراف _متصل_ است (_connected_) به این معنی که هر مکان را می توان از همه‌ی مکان‌های دیگر بدست آورد. همیشه قادر خواهیم بود مسیری بین دو نقطه پیدا کنیم و عمل جستجو هرگز با شکست روبرو نمی شود.
 
 ```{includeCode: true}
 function goalOrientedRobot({place, parcels}, route) {
@@ -518,16 +360,11 @@ function goalOrientedRobot({place, parcels}, route) {
 
 {{index "goalOrientedRobot function"}}
 
-This robot uses its memory value as a list of directions to move in,
-just like the route-following robot. Whenever that list is empty, it
-has to figure out what to do next. It takes the first undelivered
-parcel in the set and, if that parcel hasn't been picked up yet, plots a
-route toward it. If the parcel _has_ been picked up, it still needs to be
-delivered, so the robot creates a route toward the delivery address instead.
+این ربات از مقدار حافظه‌ی خود به عنوان یک لیست از جهت‌ها برای حرکت استفاده می‌کند، درست مانند ربات مسیرپیما. هر زمان که این لیست خالی می شود، ربات باید گام بعدی را کشف کند. برای این‌کار، به سراغ اولین بسته‌ی تحویل داده نشده در این مجموعه می‌رود، و اگر آن بسته هنوز برداشته نشده بود، مسیری به سمت آن طرح ریزی می‌کند. اگر قبلا تحویل گرفته شده باشد، پس هنوز باید تحویل داده شود، بنابراین ربات، مسیری به سمت آدرس تحویل ایجاد می‌کند.
 
 {{if interactive
 
-Let's see how it does.
+بیایید ببینیم چگونه کار می‌کند.
 
 ```{test: no, startCode: true}
 runRobotAnimation(VillageState.random(),
@@ -536,26 +373,19 @@ runRobotAnimation(VillageState.random(),
 
 if}}
 
-This robot usually finishes the task of delivering 5 parcels in about
-16 turns. That's slightly better than `routeRobot` but still definitely not optimal.
+این ربات معمولا تحویل 5 بسته را در 16 حرکت انجام می دهد. کمی بهتر از `routeRobot` کار می‌کند اما قطعا هنوز بهینه نیست.
 
-## Exercises
+## تمرین‌ها
 
-### Measuring a robot
+### اندازه‌گیری یک ربات
 
 {{index "measuring a robot (exercise)", testing, automation, "compareRobots function"}}
 
-It's hard to objectively compare ((robot))s by just letting them solve
-a few scenarios. Maybe one robot just happened to get easier tasks or
-the kind of tasks that it is good at, whereas the other didn't.
+خیلی سخت بتوان ربات‌ها را بر اساس حل چند مساله‌ی محدود به طور صحیح مقایسه کرد. شاید یک ربات به صورت تصادفی با مساله‌های آسان روبرو شود یا مسائلی که در حل آن ها بهتر عمل می کند. اما دیگر ربات‌ها این شرایط را نداشته باشند.
 
-Write a function `compareRobots` that takes two robots (and their
-starting memory). It should generate 100 tasks and let each of
-the robots solve each of these tasks. When done, it should output the
-average number of steps each robot took per task.
+تابعی به نام `compareRobots` بنویسید که دو ربات را دریافت می‌کند (به همراه حافظه‌ی شروع‌شان).  تابع باید صد وظیفه ایجاد کرده و هر یک از ربات ها باید همه‌ی وظایف را انجام دهند. پس از پایان، متوسط تعداد گام‌هایی که هر ربات برای یک وظیفه برداشته است را برگرداند.
 
-For the sake of fairness, make sure you give each task to both
-robots, rather than generating different tasks per robot.
+برای رعایت عدالت، مطمئن شوید که هر وظیفه توسط هر دوی ربات ها انجام می شود و از ایجاد وظایف جدید برای هر ربات پرهیز کنید.
 
 {{if interactive
 
@@ -572,28 +402,19 @@ if}}
 
 {{index "measuring a robot (exercise)", "runRobot function"}}
 
-You'll have to write a variant of the `runRobot` function that,
-instead of logging the events to the console, returns the number of
-steps the robot took to complete the task.
+برای این‌کار باید نسخه‌ای متفاوت از تابع `runRobot` را بنویسید که به جای چاپ گزارش رخداد‌ها در کنسول مرورگر، تعداد گام‌هایی که ربات برای انجام وظیفه طی کرده است را برگرداند.
 
-Your measurement function can then, in a loop, generate new states and
-count the steps each of the robots takes. When it has generated enough
-measurements, it can use `console.log` to output the average for each
-robot, which is the total number of steps taken divided by the number
-of measurements.
+تابع اندازه‌گیری شما می تواند به وسیله‌ی یک حلقه، وضعیت‌های جدید تولید کند و تعداد گام‌های هر ربات‌ را بشمارد. هنگامی‌ که به تعداد کافی اندازه‌گیری انجام شد، می توان از <bdo>`console.log`</bdo> برای قراردادن متوسط گام‌های طی‌شده توسط هر ربات در خروجی استفاده کرد که این متوسط با تقسیم مجموع گام‌ها بر تعداد اندازه‌گیری‌ها بدست می‌آید.
 
 hint}}
 
-### Robot efficiency
+### کارایی ربات
 
 {{index "robot efficiency (exercise)"}}
 
-Can you write a robot that finishes the delivery task faster than
-`goalOrientedRobot`? If you observe that robot's behavior, what
-obviously stupid things does it do? How could those be improved?
+آیا می توانید رباتی بنویسید که وظیفه تحویل بسته‌ها را سریع تر از ربات `goalOrientedRobot` انجام دهد؟ با مشاهده‌ی دقیق رفتار آن، چه اشتباهات روشنی انجام می‌دهد؟ چگونه می توان آن ها را بهبود بخشید؟
 
-If you solved the previous exercise, you might want to use your
-`compareRobots` function to verify whether you improved the robot.
+اگر تمرین قبلی را حل کرده اید، ممکن است بخواهید از تابع `compareRobots` که نوشته اید برای برای بررسی بهبود ربات جدید استفاده کنید.
 
 {{if interactive
 
@@ -609,51 +430,32 @@ if}}
 
 {{index "robot efficiency (exercise)"}}
 
-The main limitation of `goalOrientedRobot` is that it considers only
-one parcel at a time. It will often walk back and forth across the
-village because the parcel it happens to be looking at happens to be
-at the other side of the map, even if there are others much closer.
+محدودیت اصلی ربات `goalOrientedRobot` این است که در هر لحظه فقط یک بسته‌ را در نظر می‌گیرد. با این‌ کار، حتی زمانی که دیگر بسته‌ها در نزدیکی آن هستند،  اغلب بین خانه‌های روستا به عقب و جلو حرکت می‌کند زیرا بسته‌ای که ممکن است به دنبال آن باشد شاید در طرف دیگر نقشه است.
 
-One possible solution would be to compute routes for all packages and
-then take the shortest one. Even better results can be obtained, if
-there are multiple shortest routes, by preferring the ones that go to
-pick up a package instead of delivering a package.
+یک راه‌حل محتمل می تواند این باشد که مسیر‌ها را برای همه‌ی بسته‌ها محاسبه کنید و کوتاه‌ترین آن‌ها را برگزینید. در شرایطی که چند مسیر کوتاه‌ در دسترس است، می تواند با ترجیح مسیرهای برداشتن بسته‌ها به مسیر‌های تحویل، نتیجه‌ی بهتری گرفت.
 
 hint}}
 
-### Persistent group
+### گروه پایا (Persistent Group)
 
 {{index "persistent group (exercise)", "persistent data structure", "Set class", "set (data structure)", "Group class", "PGroup class"}}
 
-Most data structures provided in a standard JavaScript environment
-aren't very well suited for persistent use. Arrays have `slice` and
-`concat` methods, which allow us to easily create new arrays without
-damaging the old one. But `Set`, for example, has no methods for
-creating a new set with an item added or removed.
+اکثر ساختارهای داده‌ای که به صورت استاندارد در جاوااسکریپت وجود دارند، برای استفاده به عنوان ساختار داده‌ی پایا، خیلی مناسب نیستند. آرایه ها دارای متدهای `slice`  و  `concat` می باشند که این امکان را فراهم می سازند تا آرایه های جدید را بدون تغییر آرایه‌ی اصلی ایجاد کنیم. اما مثلا `Set`، متدی برای ایجاد یک مجموعه‌ی جدید که آیتمی اضافه یا کم داشته باشد ندارد.
 
-Write a new class `PGroup`, similar to the `Group` class from [Chapter
-?](object#groups), which stores a set of values. Like `Group`, it has
-`add`, `delete`, and `has` methods.
+کلاس جدیدی به نام `PGroup` بنویسید، شبیه‌ به کلاس `Group` که در [فصل
+?](object#groups) نوشتید، که مجموعه‌ای از مقادیر را ذخیره می‌کند. مانند `Group` دارای متدهای `add،` `delete` و `has` خواهد بود.
 
-Its `add` method, however, should return a _new_ `PGroup` instance
-with the given member added and leave the old one unchanged.
-Similarly, `delete` creates a new instance without a given member.
+متد `add` آن، باید نمونه‌ی _جدیدی_  از `‌PGroup` را که شامل عضو جدید می باشد، تولید کند و نمونه‌ی قبلی را دست نخورده باقی بگذارد. به طور مشابه، متد `delete` نمونه‌ی جدیدی بدون عضو داده شده، تولید می‌کند.
 
-The class should work for values of any type, not just strings. It
-does _not_ have to be efficient when used with large amounts of
-values.
+کلاس مورد نظر باید بتواند علاوه بر رشته‌، هر نوع داده‌ای را به عنوان کلید قبول کند. نیازی _نیست_ تا کارایی بالایی در کار با تعداد بالای کلیدها داشته باشد.
 
 {{index [interface, object]}}
 
-The ((constructor)) shouldn't be part of the class's interface
-(though you'll definitely want to use it internally). Instead, there
-is an empty instance, `PGroup.empty`, that can be used as a starting
-value.
+((سازنده)) نباید بخشی از رابط کلاس باشد ( اگرچه حتما لازم است که به صورت درونی از آن استفاده کنید). در عوض، یک نمونه‌ی تهی به نام <bdo>`PGroup.empty`</bdo> باید باشد که بتوان از آن برای مقدار ابتدایی استفاده کرد.
 
 {{index singleton}}
 
-Why do you need only one `PGroup.empty` value, rather than having a
-function that creates a new, empty map every time?
+چرا به جای داشتن تابعی که بتواند هر بار یک نگاشت تهی جدید ایجاد کند، لازم است تا فقط یک <bdo>`PGroup.empty`</bdo> وجود داشته باشد؟
 
 {{if interactive
 
@@ -680,27 +482,18 @@ if}}
 
 {{index "persistent map (exercise)", "Set class", [array, creation], "PGroup class"}}
 
-The most convenient way to represent the set of member values
-is still as an array since arrays are easy to copy.
+همچنان سرراست‌ترین روش نمایش یک مجموعه‌ از اعضا، آرایه است،‌ زیرا آرایه‌ها را می توان به راحتی کپی کرد.
 
 {{index "concat method", "filter method"}}
 
-When a value is added to the group, you can create a new group with a
-copy of the original array that has the value added (for example, using
-`concat`). When a value is deleted, you filter it from the array.
+با اضافه‌شدن یک مقدار به گروه، می توانید با کپی کردن آرایه‌ی اصلی، گروه جدیدی ایجاد کنید که شامل عنصر جدید باشد (به عنوان مثال، به وسیله‌ی `concat`). با حذف یک مقدار، می توانید آن را از آرایه فیلتر کنید.
 
-The class's ((constructor)) can take such an array as argument and
-store it as the instance's (only) property. This array is never
-updated.
+سازنده‌ی کلاس می تواند این آرایه را به عنوان آرگومان دریافت کند و آن را به عنوان تنها خاصیت نمونه‌ (instance) ذخیره نماید. این آرایه هرگز تغییر نمی کند.
 
 {{index "static method"}}
 
-To add a property (`empty`) to a constructor that is not a method, you
-have to add it to the constructor after the class definition, as a
-regular property.
+برای افزودن یک خاصیت غیر متد (`empty`) به یک سازنده، باید بعد از تعریف کلاس، آن را مانند یک خاصیت معمولی به سازنده اضافه کنید.
 
-You need only one `empty` instance because all empty groups are the
-same and instances of the class don't change. You can create many
-different groups from that single empty group without affecting it.
+شما فقط به یک نمونه‌ی `empty` نیاز دارید زیرا تمامی گروه‌های تهی، مانند هم هستند و نمونه‌های کلاس تغییر نمی کنند. می توانید از همان گروه تهی واحد، گروه‌های متفاوت زیادی ایجاد کنید بدون آن‌که روی آن اثری داشته باشد.
 
 hint}}
