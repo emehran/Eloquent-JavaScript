@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/chapter/08_error.js"]}}}
 
-# Bugs and Errors
+# باگ‌ها و خطاها
 
 {{quote {author: "Brian Kernighan and P.J. Plauger", title: "The Elements of Programming Style", chapter: true}
 
@@ -14,59 +14,33 @@ quote}}
 
 {{index "Kernighan, Brian", "Plauger, P.J.", debugging, "error handling"}}
 
-Flaws in computer programs are usually called _((bug))s_. It makes
-programmers feel good to imagine them as little things that just
-happen to crawl into our work. In reality, of course, we put them
-there ourselves.
+معمولا در برنامه‌های کامپیوتری، به خطاها _((باگ به معنای حشره))_ می گویند. این نام‌گذاری حس خوبی به برنامه‌‌نویسان می دهد چون ایراد‌های برنامه را مانند حشرات کوچکی تصور می‌کنند که درون برنامه خزیده اند. البته که در حقیقت خود ما این باگ‌ها را ایجاد کرده ایم.
 
-If a program is crystallized thought, you can roughly categorize bugs
-into those caused by the thoughts being confused and those caused by
-mistakes introduced while converting a thought to code. The former
-type is generally harder to diagnose and fix than the latter.
+در یک برنامه که به تدریج ساخته شده است، تقریبا توانید باگ‌ها را به آن هایی که از اشتباه در منطق برنامه رخ داده اند و آن هایی که از اشتباه در هنگام تبدیل منطق برنامه به کد به وجود آمده اند، تقسیم بندی کنید. تشخیص و برطرف کردن  باگ‌های دسته‌ی اول معمولا با سختی بیشتری نسبت به دسته دوم همراه است.
 
-## Language
+## زبان
 
 {{index parsing, analysis}}
 
-Many mistakes could be pointed out to us automatically by the
-computer, if it knew enough about what we're trying to do. But here
-JavaScript's looseness is a hindrance. Its concept of bindings and
-properties is vague enough that it will rarely catch ((typo))s before
-actually running the program. And even then, it allows you to do some
-clearly nonsensical things without complaint, such as computing
-`true * "monkey"`.
+در هنگام برنامه‌نویسی، در صورتی که کامپیوتر به اندازه‌ی کافی از کاری که سعی در انجامش داریم بداند، می تواند خیلی از اشتباهات را به صورت خودکار شناسایی و به ما نشان دهد. اما سیستم تسامح محور جاوااسکریپت، خود یک مانع محسوب می شود. مفاهیم متغیرها و خاصیت‌ها در جاوااسکریپت به اندازه‌ی کافی ابهام دارند که جاوااسکریپت، به ندرت پیش از اجرای برنامه، می تواند به اشتباهات تایپی پی ببرد. و حتی بعد از آن نیز، به شما اجازه می دهد که بعضی کارهای کاملا بدون معنی مانند محاسبه <bdo>`true * "monkey"`</bdo> را بدون تولید خطا انجام دهید.
 
 {{index [syntax, error], [property, access]}}
 
-There are some things that JavaScript does complain about. Writing a
-program that does not follow the language's ((grammar)) will
-immediately make the computer complain. Other things, such as calling
-something that's not a function or looking up a property on an
-((undefined)) value, will cause an error to be reported when the
-program tries to perform the action.
+مواردی وجود دارد که در صورت بروز، جاوااسکریپت نسبت به آن ها واکنش نشان می‌دهد. مثلا، نوشتن برنامه‌ای که از قواعد دستوری زبان پیروی نکند باعث بروز خطا می شود. دیگر موارد، مانند فراخوانی چیزی که از نوع تابع نیست یا اشاره به یک خاصیت روی یک مقدار تعریف نشده، باعث بروز خطایی می شود که در هنگام انجام آن دستور، گزارش می شود.
 
 {{index NaN, error}}
 
-But often, your nonsense computation will merely produce `NaN` (not a
-number) or an undefined value, while the program happily continues,
-convinced that it's doing something meaningful. The mistake will
-manifest itself only later, after the bogus value has traveled through
-several functions. It might not trigger an error at all but silently
-cause the program's output to be wrong. Finding the source of such
-problems can be difficult.
+اما اغلب، انجام محاسبات بی‌معنا باعث تولید `NaN` (مقدار غیر عددی) می شود یا مقدار undefined را تولید می کند و برنامه با شادمانی ادامه می یابد و فرض می کند که آن محاسبه عمل معناداری بوده است. این اشتباه در آینده خودش را بروز می دهد زمانی که آن مقدار ناخواسته (جعلی) در طول برنامه بین توابع متعدد حرکت می کند. ممکن است اصلا خطایی تولید نکند اما به صورت چراغ‌خاموش باعث تولید خروجی غلط در برنامه می‌شود. پیدا کردن منبع این گونه خطاها می‌تواند واقعا سخت باشد.
 
-The process of finding mistakes—bugs—in programs is called
-_((debugging))_.
+روند پیدا کردن خطاها – باگ‌ها – را در برنامه‌ها، دیباگ کردن _((اشکال زدایی))_ می نامند.
 
-## Strict mode
+## حالت سخت‌گیرانه (Strict Mode)
 
 {{index "strict mode", [syntax, error], function}}
 
 {{indexsee "use strict", "strict mode"}}
 
-JavaScript can be made a _little_ stricter by enabling _strict
-mode_. This is done by putting the string `"use strict"` at the top of
-a file or a function body. Here's an example:
+به وسیله‌ی فعال کردن حالت strict یا سخت‌گیرانه، می توان جاوااسکریپت را _کمی_ بیشتر سخت‌گیر کرد. این کار را می توان با قرار دادن رشته‌ی `"use strict"` در بالای یک فایل یا بدنه‌ی یک تابع انجام داد:
 
 ```{test: "error \"ReferenceError: counter is not defined\""}
 function canYouSpotTheProblem() {
@@ -82,28 +56,13 @@ canYouSpotTheProblem();
 
 {{index "let keyword", [binding, global]}}
 
-Normally, when you forget to put `let` in front of your binding, as
-with `counter` in the example, JavaScript quietly creates a global
-binding and uses that. In strict mode, an ((error)) is reported
-instead. This is very helpful. It should be noted, though, that this
-doesn't work when the binding in question already exists as a global
-binding. In that case, the loop will still quietly overwrite the value
-of the binding.
+در حالت عادی، اگر فراموش کنید که `let` را ابتدای متغیر خود بگذارید، مثل متغیر `counter` در مثال، جاوااسکریپت بی سروصدا متغیری با همین نام در فضای عمومی (global) ایجاد کرده و از آن استفاده می کند. در حالت strict، به جای این کار ((یک خطا)) به شما نشان داده می شود. این کار خیلی مفید است. البته باید توجه داشت که اگر متغیر قبلا در فضای عمومی تعریف شده باشد دیگر خطایی تولید نمی شود، و مقدار آن توسط متغیر همنام در حلقه دوباره مقدار دهی می شود.
 
 {{index "this binding", "global object", undefined, "strict mode"}}
 
-Another change in strict mode is that the `this` binding holds the
-value `undefined` in functions that are not called as ((method))s.
-When making such a call outside of strict mode, `this` refers to the
-global scope object, which is an object whose properties are the
-global bindings. So if you accidentally call a method or constructor
-incorrectly in strict mode, JavaScript will produce an error as soon
-as it tries to read something from `this`, rather than happily writing
-to the global scope.
+یک تفاوت دیگر در حالت strict این است که در توابعی که به صورت متد فراخوانی نمی‌شوند،  متغیر `this` مقدار `undefined` را خواهد داشت. بیرون از این حالت (strict)، متغیر `this` به شی‌ء فضای سراسری (global) اشاره می کند، شیئی که خاصیت‌هایش همان متغیرهای سراسری می‌باشند. بنابراین، اگر به صورت تصادفی متدی یا سازنده‌ای را به شکل نادرست در حالت strict فراخوانی کنید، جاوااسکریپت به محض اینکه به قسمت خواندن مقدار `this` برسد به جای رجوع به فضای سراسری ، خطا تولید می کند.
 
-For example, consider the following code, which calls a
-((constructor)) function without the `new` keyword so that its `this`
-will _not_ refer to a newly constructed object:
+به عنوان مثال، کد پیش رو را در نظر بگیرید، کدی که یک تابع سازنده را بدون استفاده از کلیدواژه‌ی `new` فراخوانی می کند که در نتیجه `this` مربوط به آن، به شیء تازه ساخته شده، اشاره _نخواهد_ کرد:
 
 ```
 function Person(name) { this.name = name; }
@@ -114,9 +73,7 @@ console.log(name);
 
 {{index error}}
 
-So the bogus call to `Person` succeeded but returned an undefined
-value and created the global binding `name`. In strict mode, the
-result is different.
+بنابراین این فراخوانی جعلی `Person` اجرا خواهد شد اما مقدار undefined را تولید کرده و متغیر `name` را در فضای سراسری ایجاد می کند. در حالت strict نتیجه متفاوت خواهد بود.
 
 ```{test: "error \"TypeError: Cannot set property 'name' of undefined\""}
 "use strict";
@@ -124,41 +81,25 @@ function Person(name) { this.name = name; }
 let ferdinand = Person("Ferdinand"); // forgot new
 // → TypeError: Cannot set property 'name' of undefined
 ```
+بلافاصله به ما اعلام می شود که خطایی وجود دارد که این اعلام بسیار سودمند است.
 
-We are immediately told that something is wrong. This is helpful.
-
-Fortunately, constructors created with the `class` notation will
-always complain if they are called without `new`, making this less of
-a problem even in non-strict mode.
+خوشبختانه، سازنده‌هایی که با دستور  `class` ایجاد می شوند اگر بدون `new` فراخوانی شوند، خطا تولید می کنند که این باعث می شود کمی از مشکل حتی در حالت غیر strict کاسته شود.
 
 {{index parameter, [binding, naming], "with statement"}}
 
-Strict mode does a few more things. It disallows giving a function
-multiple parameters with the same name and removes certain problematic
-language features entirely (such as the `with` statement, which is so
-wrong it is not further discussed in this book).
+در حالت strict چند اتفاق دیگر نیز می افتد. در این حالت نمی توان تابعی تعریف کرد که پارامتر‌های مختلف آن نام یکسانی داشته باشند. همچنین بعضی از قسمت‌های مشکل‌ساز زبان را نیز به طور کلی حذف می کند. (مثل دستور `with،` که به علت بدرد نخور بودن در این کتاب بحث نمی شود.).
 
 {{index debugging}}
 
-In short, putting `"use strict"` at the top of your program rarely
-hurts and might help you spot a problem.
+کوتاه اینکه، قرار دادن `"use strict"`  در بالای برنامه به ندرت مشکل ایجاد می کند و ممکن است به شما در پیدا کردن و رفع یک مشکل کمک کند.
 
-## Types
+## انواع
 
-Some languages want to know the types of all your bindings and
-expressions before even running a program. They will tell you right
-away when a type is used in an inconsistent way. JavaScript considers
-types only when actually running the program, and even there often
-tries to implicitly convert values to the type it expects, so it's not
-much help.
+بعضی زبان‌های برنامه‌نویسی علاقمند هستند نوع متغیر‌ها و عبارت‌ها را قبل از اجرای برنامه در اختیار داشته باشند. با این کار، به محض استفاده‌ی نادرست از یک نوع داده، شما را از آن آگاه می کنند. جاوااسکریپت انواع داده را فقط زمانی در نظر می گیرد که برنامه را اجرا می کند، حتی در همان زمان هم سعی می کند که به صورت ضمنی مقدارها را به نوعی که انتظارش را دارد تبدیل کند، که این کار زیاد سودمند نیست.
 
-Still, types provide a useful framework for talking about programs. A
-lot of mistakes come from being confused about the kind of value that
-goes into or comes out of a function. If you have that information
-written down, you're less likely to get confused.
+با این حال، انواع داده چارچوب مفیدی برای بحث در مورد برنامه ها فراهم می کنند. خیلی از اشتباهات از آنجا ناشی می شود که در مورد نوع داده‌ای که به یک تابع ارسال می شود یا از آن دریافت می شود ابهام وجود دارد. اگر این گونه اطلاعات را مکتوب داشته باشید، کمتر دچار سردرگمی خواهید شد.
 
-You could add a comment like the following before the `goalOrientedRobot`
-function from the previous chapter to describe its type:
+می توانید توضیحی شبیه زیر به بالای تابع `goalOrientedRobot` مربوط به فصل پیش، اضافه کنید و نوع آن را توصیف کنید:
 
 ```
 // (VillageState, Array) → {direction: string, memory: Array}
@@ -166,59 +107,31 @@ function goalOrientedRobot(state, memory) {
   // ...
 }
 ```
+سبک‌های گوناگونی برای یادداشت کردن انواع داده در برنامه‌های جاوااسکریپت وجود دارد.
 
-There are a number of different conventions for annotating JavaScript
-programs with types.
-
-One thing about types is that they need to introduce their own
-complexity to be able to describe enough code to be useful. What do
-you think would be the type of the `randomPick` function that returns
-a random element from an array? You'd need to introduce a _((type
-variable))_, _T_, which can stand in for any type, so that you can
-give `randomPick` a type like `([T]) → T` (function from an array of
-*T*s to a *T*).
+یک نکته که در مورد انواع داده وجود دارد این است که لازم است پیچیدگی خودشان را داشته باشند زیرا تنها در صورتی مفید‌ هستند که بتوانند کدهای کافی را توصیف کنند. به نظر شما نوع داده‌ی تابع `randomPick`  که یک عنصر تصادفی را از آرایه برمی گرداند چیست؟ لازم است تا یک متغیر نوع معرفی کنید، _T_، که بتواند برای هر نوعی استفاده شود؛ در نتیجه بتوانید به تابع `randomPick` یک نوع شبیه <bdo>`([T]) → T`</bdo> اختصاص دهید ( تابعی از آرایه‌ای از *T*ها به یک *T*).
 
 {{index "type checking", TypeScript}}
 
 {{id typing}}
 
-When the types of a program are known, it is possible for the computer
-to _check_ them for you, pointing out mistakes before the program is
-run. There are several JavaScript dialects that add types to the
-language and check them. The most popular one is called
-[TypeScript](https://www.typescriptlang.org/). If you are interested
-in adding more rigor to your programs, I recommend you give it a try.
+زمانی که انواع داده‌ی یک برنامه شناخته شدند، اکنون می توان از کامپیوتر برای _بررسی_ آن‌ها استفاده نمود تا بتوانیم اشتباهات را قبل از اجرا تشخصی دهیم. گویش‌های متعددی از جاوااسکریپت وجود دارد که انواع داده را به زبان اضافه کرده و بررسی می کنند. محبوب ترین آن ها [TypeScript](https://www.typescriptlang.org/) است. اگر علاقه دارید تا صلابت و استحکام بیشتری به برنامه هایتان اضافه کنید، پیشنهاد می کنم که با آن آشنا شوید.
 
-In this book, we'll continue using raw, dangerous, untyped JavaScript
-code.
+در این کتاب ما از همان کدهای خام مشکل‌زای و بدون نوع جاوااسکریپت استفاده خواهیم کرد.
 
-## Testing
+## آزمودن (Testing)
 
 {{index "test suite", "run-time error", automation, testing}}
 
-If the language is not going to do much to help us find mistakes,
-we'll have to find them the hard way: by running the program and
-seeing whether it does the right thing.
+اگر زبان برنامه نویسی قرار نیست کمک خاصی به ما در پیدا کردن اشتباهات بکند، بایستی آن ها را از راهی سخت تر پیدا کنیم: با اجرای برنامه و مشاهده‌ی اینکه آیا درست کار می کند یا خیر.
 
-Doing this by hand, again and again, is a really bad idea. Not only is
-it annoying, it also tends to be ineffective since it takes too much
-time to exhaustively test everything every time you make a change.
+انجام این کار به صورت دستی و به تعداد زیاد واقعا ایده بدی است. نه تنها آزاردهنده است، بلکه در حقیقت غیر موثر خواهد بود؛ به این دلیل که با هر تغییر کوچک، زمان زیادی برای آزمودن همه چیز از ابتدا صرف می شود.
 
-Computers are good at repetitive tasks, and testing is the ideal
-repetitive task. Automated testing is the process of writing a program
-that tests another program. Writing tests is a bit more work than
-testing manually, but once you've done it, you gain a kind of
-superpower: it takes you only a few seconds to verify that your
-program still behaves properly in all the situations you wrote tests
-for. When you break something, you'll immediately notice, rather than
-randomly running into it at some later time.
+کامپیوترها کارهای تکراری را خیلی خوب انجام می دهند، و آزمودن یک کار تکراری ایده‌آل محسوب می شود. آزمودن خودکار روندی است که در آن برنامه‌ای نوشته می شود تا یک برنامه‌ی دیگر را بیازماید. نوشتن یک آزمون کار بیشتری از آزمودن دستی یک برنامه نیاز دارد، اما به محض اینکه آن را نوشتید به نوعی یک قدرت ماورایی بدست خواهید آورد: فقط چند ثانیه لازم است تا مطمئن شوید برنامه‌تان در همه‌ی شرایطی که برایش آزمون نوشته اید درست کار می کند یا خیر. زمانی که قسمتی از برنامه با مشکل روبرو می شود، بلافاصله متوجه آن خواهید شد، تا اینکه در آینده به صورت تصادفی با آن روبرو شوید.
 
 {{index "toUpperCase method"}}
 
-Tests usually take the form of little labeled programs that verify
-some aspect of your code. For example, a set of tests for the
-(standard, probably already tested by someone else) `toUpperCase`
-method might look like this:
+آزمون‌ها معمولا به شکل برنامه‌های کوچکی که هر کدام برچسبی دارند نوشته می شوند که بعضی از جنبه‌های کد شما را بازبینی می کنند. به عنوان مثال، یک مجموعه‌ی آزمون برای متد `toUpperCase` (متدهای استاندارد احتمالا توسط افراد دیگر آزموده شده اند.) ممکن است به شکل زیر باشد:
 
 ```
 function test(label, body) {
@@ -238,48 +151,27 @@ test("don't convert case-less characters", () => {
 
 {{index "domain-specific language"}}
 
-Writing tests like this tends to produce rather repetitive, awkward
-code. Fortunately, there exist pieces of software that help you build
-and run collections of tests (_((test suites))_) by providing a
-language (in the form of functions and methods) suited to expressing
-tests and by outputting informative information when a test fails.
-These are usually called _((test runners))_.
+نوشتن آزمون هایی شبیه بالا باعث می شود که کدهای تکراری و نسبتا نامناسبی تولید شود. خوشبختانه نرم‌افزارهایی وجود دارد که به شما در ساختن و اجرای مجموعه‌های آزمون، _((سری آزمون‌ها))_، کمک می کنند. این کار با فراهم نمودن یک زبان (به شکل توابع و متدها) که برای تولید آزمون مناسب هستند، صورت می گیرد که  اطلاعات مفیدی در زمان شکست خوردن یک آزمون تولید می‌کنند. به این نرم‌افزارها معمولا مجری آزمون (_((test runner))_) می گویند.
 
 {{index "persistent data structure"}}
 
-Some code is easier to test than other code. Generally, the more
-external objects that the code interacts with, the harder it is to set
-up the context in which to test it. The style of programming shown in
-the [previous chapter](robot), which uses self-contained persistent
-values rather than changing objects, tends to be easy to test.
+آزمودن بعضی کدها آسان‌تر است. عموما، هر چه بیشتر کد برنامه با اشیاء بیرونی در ارتباط باشد، به وجود آوردن فضایی که آزمون در آن صورت پذیرد سخت تر می شود. سبک برنامه‌نویسی‌ای که در [فصل پیش](robot) آمد، که از مقدارهای پایای مستقل استفاده می کرد، نسبت به استفاده از اشیاء تغییر پذیر،  قابلیت آزمودن آسان‌تری دارد.
 
-## Debugging
+## اشکال‌ زدایی
 
 {{index debugging}}
 
-Once you notice there is something wrong with your program
-because it misbehaves or produces errors, the next step is to figure
-out _what_ the problem is.
+بعد از اینکه متوجه وجود مشکلی در برنامه‌تان شدید چه به علت کارکرد اشتباه یا نمایش خطا، گام بعدی پیدا کردن مشکل است.
 
-Sometimes it is obvious. The ((error)) message will point at a
-specific line of your program, and if you look at the error
-description and that line of code, you can often see the problem.
+گاهی اوقات مشکل واضح است. متن ((خطا)) به خط خاصی از برنامه اشاره می کند و اگر به توضیحاتی که در خطا آمده و خطی که خطا در آن رخ داده است دقت کنید، معمولا مشکل را پیدا می کنید.
 
 {{index "run-time error"}}
 
-But not always. Sometimes the line that triggered the problem is
-simply the first place where a flaky value produced elsewhere gets
-used in an invalid way. If you have been solving the ((exercises)) in
-earlier chapters, you will probably have already experienced such
-situations.
+اما همیشه این طور نیست. گاهی اوقات خطی که مشکل را بروز داده فقط اولین جایی بوده است که مقدار مشکل‌دار، که خود در جای دیگری تولید شده، به صورت نادرستی به کار گرفته شده است. اگر تمرین‌هایی که در فصل‌ها پیش آمده است را حل کرده باشید حتما با موارد اینچنینی روبرو شده اید.
 
 {{index "decimal number", "binary number"}}
 
-The following example program tries to convert a whole number to a
-string in a given base (decimal, binary, and so on) by repeatedly
-picking out the last ((digit)) and then dividing the number to get rid
-of this digit. But the strange output that it currently produces
-suggests that it has a ((bug)).
+برنامه‌ی زیر سعی می کند یک عدد صحیح را بر اساس مبنای داده شده (دهدهی، دودویی،…)، به یک رشته تبدیل کند. برای این کار تابع به صورت مداوم، آخرین رقم را می گیرد و عدد را تقسیم می‌کند تا از آن رقم خلاص شود. اما خروجی عجیب غریب آن نشان می دهد که برنامه باگ دارد.
 
 ```
 function numberToString(n, base = 10) {
@@ -300,25 +192,15 @@ console.log(numberToString(13, 10));
 
 {{index analysis}}
 
-Even if you see the problem already, pretend for a moment that you
-don't. We know that our program is malfunctioning, and we want to find
-out why.
+اگر ایراد برنامه را پیدا کرده‌اید، فعلا فرض کنید از آن خبر ندارید. می دانیم که برنامه‌ی ما درست کار نمی کند و مایلیم علت آن را کشف کنیم.
 
 {{index "trial and error"}}
 
-This is where you must resist the urge to start making random changes
-to the code to see whether that makes it better. Instead, _think_. Analyze
-what is happening and come up with a ((theory)) of why it might be
-happening. Then, make additional observations to test this theory—or,
-if you don't yet have a theory, make additional observations to help
-you come up with one.
+این زمان دقیقا لحظه‌ای است که باید در مقابل وسوسه‌ی انجام تغییرات تصادفی برای حل مشکل، ایستادگی کنید. به جای آن، کمی _فکر_ کنید. آنچه در حال رخ دادن است را موشکافی کنید و نظریه‌ای پیدا کنید که بتواند این عملکرد را توضیح دهد. بعد، مشاهدات بیشتری برای آزمایش این نظریه ترتیب بدهید – یا اگر هنوز هیچ نظریه‌ای ندارید، مشاهدات بیشتری انجام دهید تا به شما در پیدا کردن یک نظریه کمک کند.
 
 {{index "console.log", output, debugging, logging}}
 
-Putting a few strategic `console.log` calls into the program is a good
-way to get additional information about what the program is doing. In
-this case, we want `n` to take the values `13`, `1`, and then `0`.
-Let's write out its value at the start of the loop.
+قرار دادن چند <bdo>`console.log`</bdo> استراتژیک در برنامه راه خوبی برای بدست آوردن اطلاعات بیشتر درباره‌ی شیوه‌ی عملکرد برنامه است. در این مورد، می خواهیم که `n` مقدار `13`، `1`، و سپس `0` را بگیرد. بیایید مقدار‌های این متغیر را در ابتدای حلقه چاپ کنیم.
 
 ```{lang: null}
 13
@@ -331,56 +213,31 @@ Let's write out its value at the start of the loop.
 
 {{index rounding}}
 
-_Right_. Dividing 13 by 10 does not produce a whole number. Instead of
-`n /= base`, what we actually want is `n = Math.floor(n / base)` so
-that the number is properly "shifted" to the right.
+_درست_ است. تقسیم `13` بر `10` عدد صحیح تولید نمی کند. بجای استفاده از <bdo>`n /= base`</bdo>،  چیزی که در واقع نیاز داریم <bdo>`n = Math.floor(n / base)`</bdo>  است که در این صورت عدد به درستی به سمت را “شیفت” داده می شود.
 
 {{index "JavaScript console", "debugger statement"}}
 
-An alternative to using `console.log` to peek into the program's
-behavior is to use the _debugger_ capabilities of your browser.
-Browsers come with the ability to set a _((breakpoint))_ on a specific
-line of your code. When the execution of the program reaches a line
-with a breakpoint, it is paused, and you can inspect the values of
-bindings at that point. I won't go into details, as debuggers differ
-from browser to browser, but look in your browser's ((developer
-tools)) or search the Web for more information.
+راه جایگزین استفاده از <bdo>`console.log`</bdo> در برنامه برای دانستن رفتار برنامه، استفاده از ابزارهای _اشکال‌زدایی_ مرورگر است. مرورگرها قابلیتی دارند که می توان با استفاده از آن در یک خط خاص از کد، یک نقطه‌ی توقف (_((breakpoint))_) ایجاد کرد. زمانی که اجرای برنامه به آن خط که دارای نقطه‌ی توقف است برسد ، برنامه متوقف می شود و می توانید مقادیر متغیرها را در آن نقطه بررسی کنید. قصد ندارم وارد جزئیات شوم زیرا ابزارهای رفع خطا در مرورگرهای مختلف متفاوت هستند ، می توانید به قسمت ابزارهای توسعه‌دهنده‌ی (Developer Tools) مرورگر خودتان رجوع کنید یا در اینترنت در باره‌ی آن جستجو کنید.
 
-Another way to set a breakpoint is to include a `debugger` statement
-(consisting of simply that keyword) in your program. If the
-((developer tools)) of your browser are active, the program will pause
-whenever it reaches such a statement.
+روش دیگر برای ایجاد یک نقطه‌ توقف استفاده از دستور `debugger` در برنامه است ( همین دستور با همین کلیدواژه). اگر ابزارهای توسعه‌دهنده مرورگر شما فعال است برنامه به محض اینکه به این دستور برسد متوقف می گردد.
 
-## Error propagation
+## انتشار خطا (Error propagation)
 
 {{index input, output, "run-time error", error, validation}}
 
-Not all problems can be prevented by the programmer, unfortunately. If
-your program communicates with the outside world in any way, it is
-possible to get malformed input, to become overloaded with work, or to
-have the network fail.
+متاسفانه نمی‌توان به‌وسیله‌ی برنامه‌نویس از بروز همه‌ی مشکلات برنامه جلوگیری کرد. اگر برنامه شما با جهان بیرون به هر شکلی در ارتباط باشد، ممکن است ورودی ناقصی دریافت کند که باعث کار اضافی و بیش از حد شود یا ارتباط با شبکه مختل شود.
 
 {{index "error recovery"}}
 
-If you're programming only for yourself, you can afford to just ignore
-such problems until they occur. But if you build something that is
-going to be used by anybody else, you usually want the program to do
-better than just crash. Sometimes the right thing to do is take the
-bad input in stride and continue running. In other cases, it is better
-to report to the user what went wrong and then give up. But in either
-situation, the program has to actively do something in response to the
-problem.
+اگر تنها برای خودتان برنامه نویسی می کنید، می توانید این گونه مشکلات را تا زمانی که رخ نداده اند، در نظر نگیرید. اما اگر چیزی می سازید که قرار است توسط دیگران استفاده شود، معمولا لازم است که در صورت بروز مشکل، برنامه به طور کامل از کار نیفتد و واکنش بهتری بروز دهد. گاهی کار درست این است که با وجود دریافت ورودی نامناسب به اجرای برنامه ادامه دهیم. در دیگر شرایط، خوب است گزارش علت مشکل را پیش از بستن برنامه به کاربر نشان دهیم. به هر حال در هر دو موقعیت، برنامه بایستی به صورت فعال کاری نسبت به مشکل به وجود آمده انجام دهد.
 
 {{index "promptInteger function", validation}}
 
-Say you have a function `promptInteger` that asks the user for a whole
-number and returns it. What should it return if the user inputs
-"orange"?
+فرض کنید تابعی به نام `promptNumber` دارید که از کاربر می خواهد تا عددی را وارد کند تا آن را برگرداند. اگر کاربر ورودی “orange” را بفرستد، خروجی تابع چه خواهد بود.؟
 
 {{index null, undefined, "return value", "special return value"}}
 
-One option is to make it return a special value. Common choices for
-such values are `null`, `undefined`, or -1.
+یک گزینه میتواند بازگرداندن یک مقدار خاص باشد. انتخاب رایج برای این شرایط،  <bdo>`null،`</bdo>  <bdo>`undefined`</bdo> یا <bdo>-1</bdo> است.
 
 ```{test: no}
 function promptNumber(question) {
@@ -392,21 +249,11 @@ function promptNumber(question) {
 console.log(promptNumber("How many trees do you see?"));
 ```
 
-Now any code that calls `promptNumber` must check whether an actual
-number was read and, failing that, must somehow recover—maybe by
-asking again or by filling in a default value. Or it could again
-return a special value to _its_ caller to indicate that it failed to
-do what it was asked.
+اکنون هر کدی که تابع `promptNumber` را فراخوانی می کند، باید بررسی کند که یک عدد واقعی خوانده شده باشد و در غیر این صورت، به نحوی باید آن را پوشش دهد – شاید با درخواست دوباره یا ارسال یک مقدار عددی پیش فرض. همچنین می تواند دوباره یک مقدار خاص را به فراخواننده خود برگرداند تا نشان دهد که مشکلی رخ داده است.
 
 {{index "error handling"}}
 
-In many situations, mostly when ((error))s are common and the caller
-should be explicitly taking them into account, returning a special
-value is a good way to indicate an error. It does, however, have its
-downsides. First, what if the function can already return every
-possible kind of value? In such a function, you'll have to do
-something like wrap the result in an object to be able to distinguish
-success from failure.
+در بسیاری از موقعیت ها، مخصوصا زمانی که خطاها رایج هستند و تابع فراخواننده باید صراحتا آن‌ها را در نظر بگیرد، بازگرداندن یک مقدار خاص راه خوبی برای شناسایی بروز یک خطا محسوب می شود. روش خوبی است اما مشکلات خود را نیز دارد. اول اینکه اگر تابع می توانست هر نوع ممکنی از مقدار را برگرداند چه خواهد شد؟ در تابعی با این ویژگی، برای اینکه بتوانید بین موفقیت و شکست تمایز ایجاد کنید، باید کاری انجام دهید؛ مانند قراردادن نتیجه‌ی تابع درون یک شیء.
 
 ```
 function lastElement(array) {
@@ -420,42 +267,23 @@ function lastElement(array) {
 
 {{index "special return value", readability}}
 
-The second issue with returning special values is that it can lead to
-awkward code. If a piece of code calls `promptNumber` 10 times,
-it has to check 10 times whether `null` was returned. And if its
-response to finding `null` is to simply return `null` itself, callers
-of the function will in turn have to check for it, and so on.
+مشکل بعدی با بازگرداندن مقدار‌های خاص این است که این کار می تواند منجر به کدی  نامناسب بشود. اگر کدی تابع `promptNumber` را 10 مرتبه فراخوانی کند، باید 10 بار چک کند که آیا `null` برگردانده شده یا خیر. و اگر حاصل بررسی `null`، خود با برگرداندن `null` مشخص شود، فراخواننده این تابع باید به آن نیز رسیدگی کند و الی آخر.
 
-## Exceptions
+## استثناءها (Exception)
 
 {{index "error handling"}}
 
-When a function cannot proceed normally, what we would _like_ to do is
-just stop what we are doing and immediately jump to a place that knows
-how to handle the problem. This is what _((exception handling))_ does.
+زمانی که یک تابع نمی تواند به صورت عادی به کار خود ادامه‌ دهد، کار درست این است که تابع متوقف شده و بلافاصله کنترل برنامه به قسمتی منتقل شود که برای حل این مشکل پیش بینی شده است. این کاری است که _((مدیریت استثناء))_ انجام می دهد.
 
 {{index ["control flow", exceptions], "raising (exception)", "throw keyword", "call stack"}}
 
-Exceptions are a mechanism that makes it possible for code that runs
-into a problem to _raise_ (or _throw_) an exception. An exception can
-be any value. Raising one somewhat resembles a super-charged return
-from a function: it jumps out of not just the current function but
-also its callers, all the way down to the first call that
-started the current execution. This is called _((unwinding the
-stack))_. You may remember the stack of function calls that was
-mentioned in [Chapter ?](functions#stack). An exception zooms down
-this stack, throwing away all the call contexts it encounters.
+استثناءها مکانیزمی هستند که برای کدی که دچار مشکل شده است این امکان را فراهم می کنند تا بتواند یک استثناء تولید (_صادر_) کند. یک استثناء می تواند هر مقداری باشد. صدور یک استثناء تاحدی شبیه به یک ابرخروجی از یک تابع است: نه تنها از تابع بیرون می آید بلکه از فراخواننده تابع نیز خارج می شود تا به اولین فراخوانی‌ای برسد که اجرای فعلی را شروع کرده است. به این کار بازکردن پشته می گویند.  شاید پشته‌ی فراخوانی توابع را که در [فصل ?](functions#stack) بحث شد به یاد داشته باشید. یک استثناء، این پشته را باز کرده و تمامی زمینه‌های فراخوانی‌ای را که می بیند از پشته بیرون می‌کشد.
 
 {{index "error handling", [syntax, statement], "catch keyword"}}
 
-If exceptions always zoomed right down to the bottom of the stack,
-they would not be of much use. They'd just provide a novel way to blow
-up your program. Their power lies in the fact that you can set
-"obstacles" along the stack to _catch_ the exception as it is zooming
-down. Once you've caught an exception, you can do something with it to
-address the problem and then continue to run the program.
+اگر استثناءها همیشه تا انتهای پشته‌ حرکت کنند، کار مفیدی صورت نداده‌اند. با این کار فقط راهی جدید برای بهم ریختن برنامه‌تان فراهم ساخته اند. قدرت آن ها در این واقعیت است که می توانید “موانعی” را در پشته ایجاد کنید تا بتوانید این استثناءها را هنگامی که در حال درنوردیدن پشته هستند _بگیرید_ (_catch_) (به دام بیاندازید). به محض اینکه یک استثناء را بگیرید، می توانید کاری برای حل مشکل انجام دهید و بعد از آن، برنامه به اجرای خود ادامه دهد.
 
-Here's an example:
+به مثال توجه کنید:
 
 {{id look}}
 ```
@@ -483,52 +311,29 @@ try {
 
 {{index "exception handling", block, "throw keyword", "try keyword", "catch keyword"}}
 
-The `throw` keyword is used to raise an exception. Catching one is
-done by wrapping a piece of code in a `try` block, followed by the
-keyword `catch`. When the code in the `try` block causes an exception
-to be raised, the `catch` block is evaluated, with the name in
-parentheses bound to the exception value. After the `catch` block
-finishes—or if the `try` block finishes without problems—the program
-proceeds beneath the entire `try/catch` statement.
+کلیدواژه‌ی `throw` برای صدور یک استثناء استفاده می شود.  گرفتن یک استثناء نیز با قراردادن کدها درون یک بلاک `try` صورت می گیرد که بعد از آن  `catch` می آید . اگر کدی که در بلاک `try` قرار دارد  باعث تولید یک استثناء شود، بلاک `catch` ارزیابی خواهد شد و نامی که درون پرانتز قرار گرفته به مقدار استثناء اختصاص می یابد.  بعد از این که اجرای بلاک `catch` اتمام یافت – یا در صورتی که بلاک `try` بدون مشکل اجرا شد – برنامه با اجرای کدهایی که زیر دستور <bdo>`try/catch`</bdo> قرار دارند، ادامه می یابد.
 
 {{index debugging, "call stack", "Error type"}}
 
-In this case, we used the `Error` ((constructor)) to create our
-exception value. This is a ((standard)) JavaScript constructor that
-creates an object with a `message` property. In most JavaScript
-environments, instances of this constructor also gather information
-about the call stack that existed when the exception was created, a
-so-called _((stack trace))_. This information is stored in the `stack`
-property and can be helpful when trying to debug a problem: it tells
-us the function where the problem occurred and which functions made
-the failing call.
+در این مثال، ما از سازنده‌ی `Error` استفاده کرده ایم تا مقدار استثناء را تولید کنیم. این تابع یک سازنده‌ی استاندارد جاوااسکریپت است که یک شیء با خاصیتی به نام `message` تولید می کند. در اکثر محیط‌های جاوااسکریپت، نمونه‌هایی که با این سازنده ایجاد می شوند،  اطلاعاتی درباره‌ی پشته‌ی فراخوانی دارند که در هنگام بروز استثناء وجود داشته است که اصطلاحا به آن ردپای پشته (_((stack trace))_) می گویند. این اطلاعات در خاصیت `stack` ذخیره می گردند و می توانند در زمان اشکال‌زدایی مفید باشند: تابعی که مشکل در آن رخ داده و توابعی که آن فراخوانی مشکل‌دار را انجام داده اند، به ما نشان داده می شوند.
 
 {{index "exception handling"}}
 
-Note that the `look` function completely ignores the possibility that
-`promptDirection` might go wrong. This is the big advantage of
-exceptions: error-handling code is necessary only at the point where
-the error occurs and at the point where it is handled. The functions
-in between can forget all about it.
+توجه داشته‌باشید که تابع `look` احتمال به مشکل خوردن تابع `promptDirection` را اصلا در نظر نمی‌گیرد. این یک مزیت بزرگ استفاده از استثناءها است: کد مدیریت خطا فقط جایی که خطا رخ می دهد یا جایی که خطا مدیریت می شود مورد نیاز است. توابع بین این دو می توانند اصلا به آن نپردازند.
 
-Well, almost...
+بسیارخوب، تقریبا …
 
-## Cleaning up after exceptions
+## پاکسازی بعد از استثناءها
 
 {{index "exception handling", "cleaning up", ["control flow", exceptions]}}
 
-The effect of an exception is another kind of control flow. Every
-action that might cause an exception, which is pretty much every
-function call and property access, might cause control to suddenly
-leave your code.
+تاثیر یک استثناء در برنامه، نوعی دیگر از جریان کنترل است. هر عملی که باعث تولید یک استثناء بشود، تقریبا هر فراخوانی تابع و دسترسی به خاصیت، ممکن است کنترل برنامه را از کد شما بگیرد.
 
-This means when code has several side effects, even if its
-"regular" control flow looks like they'll always all happen, an
-exception might prevent some of them from taking place.
+این یعنی وقتی یک کد اثرات جانبی متعددی دارد، حتی اگر جریان کنترل عادی آن به نظر برسد که همیشه برقرار خواهد بود، بروز یک استثناء ممکن است از اجرای بعضی از آن ها جلوگیری کند.
 
 {{index "banking example"}}
 
-Here is some really bad banking code.
+در اینجا کد بانکی بسیار بدی را مشاهده خواهید کرد:
 
 ```{includeCode: true}
 const accounts = {
@@ -552,34 +357,17 @@ function transfer(from, amount) {
 }
 ```
 
-The `transfer` function transfers a sum of money from a given account
-to another, asking for the name of the other account in the process.
-If given an invalid account name, `getAccount` throws an exception.
+تابع `transfer` عمل انتقال مقداری پول را از یک حساب داده شده به حسابی دیگر  انجام می دهد و نام حساب دیگر را در حین روند کار درخواست می کند. اگر نامی غیرمعتبر به آن داده شود، `getAccount` یک استثناء صادر می کند.
 
-But `transfer` _first_ removes the money from the account and _then_
-calls `getAccount` before it adds it to another account. If it is
-broken off by an exception at that point, it'll just make the money
-disappear.
+اما تابع  `transfer` _ابتدا_ پول را از حساب کم می کند، _بعد_ تابع `getAccount` را قبل از اضافه نمودن پول به حساب دیگر فراخوانی می کند. اگر این تابع در آن نقطه، به وسیله‌ی یک استثناء متوقف شود، پول مورد نظر ناپدید خواهد شد.
 
-That code could have been written a little more intelligently, for
-example by calling `getAccount` before it starts moving money around.
-But often problems like this occur in more subtle ways. Even functions
-that don't look like they will throw an exception might do so in
-exceptional circumstances or when they contain a programmer mistake.
+این کد را می توان کمی هوشمندانه تر نوشت، به عنوان مثال، می توان تابع`getAccount` را قبل از عمل انتقال پول فراخوانی نمود. معمولا مشکلاتی از این دست، به صورت نامحسوس رخ می دهند. حتی توابعی که ظاهرا قرار نیست یک استثناء تولید کنند،  در شرایطی خاص یا در مواردی با اشتباه برنامه نویس، ممکن است این کار را انجام دهند.
 
-One way to address this is to use fewer side effects. Again, a
-programming style that computes new values instead of changing
-existing data helps. If a piece of code stops running in the middle of
-creating a new value, no one ever sees the half-finished value, and
-there is no problem.
+یکی از راه‌های عبور از این مشکل استفاده کمتر از اثرات جانبی است. بازهم سبک برنامه‌نویسی‌ای که در آن به جای تغییر دادن داده‌های موجود، محاسبات روی مقادیر جدید انجام می شود، بسیار مفید خواهد بود. اگر کدی در میانه‌ی تولید یک مقدار جدید متوقف شود، کسی یک مقدار نیمه تمام را دریافت نخواهد کرد و مشکلی به وجود نمی آید.
 
 {{index block, "try keyword", "finally keyword"}}
 
-But that isn't always practical. So there is another feature that
-`try` statements have. They may be followed by a `finally` block
-either instead of or in addition to a `catch` block. A `finally` block
-says "no matter _what_ happens, run this code after trying to run the
-code in the `try` block."
+اما این کار همیشه هم شدنی نیست. بنابراین برای آن قابلیت دیگری در دستور `try` در نظر گرفته شده است. می توان بعد از `try`، به جای بلاک `catch` یا علاوه بر آن، از یک بلاک `finally` استفاده کرد. یک بلاک `finally` فارغ از این که چه اتفاقی می افتد همیشه بعد از اجرای کد بلاک `try‌`، اجرا می شود.
 
 ```{includeCode: true}
 function transfer(from, amount) {
@@ -598,76 +386,44 @@ function transfer(from, amount) {
 }
 ```
 
-This version of the function tracks its progress, and if, when
-leaving, it notices that it was aborted at a point where it had
-created an inconsistent program state, it repairs the damage it did.
+این نسخه از تابع، پیشرفت خود را رصد می کند، و در صورت بروز مشکل و خروج، متوجه ناتمام بودن وضعیت برنامه خواهد شد و آن را سامان می‌دهد.
 
-Note that even though the `finally` code is run when an exception
-is thrown in the `try` block, it does not interfere with the exception.
-After the `finally` block runs, the stack continues unwinding.
+توجه داشته باشید که با وجود اینکه کد مربوط به بلاک `finally` زمانی اجرا می‌شود که یک استثناء در بلاک `try` رخ می دهد، تداخلی با خود استثناء نخواهد داشت. بعد از اجرای بلاک  `finally،` پشته به بازشدن خود ادامه می دهد.
 
 {{index "exception safety"}}
 
-Writing programs that operate reliably even when exceptions pop up in
-unexpected places is hard. Many people simply don't bother, and
-because exceptions are typically reserved for exceptional
-circumstances, the problem may occur so rarely that it is never even
-noticed. Whether that is a good thing or a really bad thing depends on
-how much damage the software will do when it fails.
+نوشتن برنامه‌هایی که همیشه به شکل ایده‌آل عمل کند حتی زمانی که یک استثناء در موقعیت‌های پیش بینی نشده رخ می دهد، کار بسیار دشواری است. بسیار از برنامه‌نویسان خودشان را به زحمت نمی اندازند و چون معمولا استثناءها در شرایط خاصی رخ می دهند، این مشکل به ندرت به وجود می‌آید و کسی متوجه‌ آن نمی شود. خوب یا بد بودن آن بستگی به میزان خسارتی دارد که در صورت بروز به بار خواهد آورد.
 
-## Selective catching
+## گرفتن استثناءها به صورت گزینشی
 
 {{index "uncaught exception", "exception handling", "JavaScript console", "developer tools", "call stack", error}}
 
-When an exception makes it all the way to the bottom of the stack
-without being caught, it gets handled by the environment. What this
-means differs between environments. In browsers, a description of the
-error typically gets written to the JavaScript console (reachable
-through the browser's Tools or Developer menu). Node.js, the
-browserless JavaScript environment we will discuss in [Chapter
-?](node), is more careful about data corruption. It aborts the whole
-process when an unhandled exception occurs.
+زمانی که یک استثناء تا انتهای پشته بدون اینکه جایی گرفته شود حرکت می کند، در انتها توسط محیط اجرایی مدیریت می شود. معنای این عبارت برای محیط‌های مختلف متفاوت است. در مرورگرها، توصیفی از خطا معمولا در کنسول جاوااسکریپت نوشته می شود (که می توان در قسمت ابزار مروگر یا منوی توسعه‌دهنده (Developer Menu) آن را پیدا کرد). در node.js، محیط بدون مرورگر مبتنی بر جاوااسکریپت که در [فصل
+?](node) به آن خواهیم پرداخت، دقت بیشتری درباره‌ی خرابی داده‌ها لحاظ می شود. در صورت وجود یک استثناء مدیریت نشده، تمامی روند برنامه متوقف می شود.
 
 {{index crash, "error handling"}}
 
-For programmer mistakes, just letting the error go through is often
-the best you can do. An unhandled exception is a reasonable way to
-signal a broken program, and the JavaScript console will, on modern
-browsers, provide you with some information about which function calls
-were on the stack when the problem occurred.
+برای اشتباهات برنامه نویس، اغلب بهتر است بگذارید که خطا مسیر خودش را طی کند. یک استثناء مدیریت نشده، دلیل خوبی برای مشکل دار بودن یک برنامه است و کنسول جاوااسکریپت در مرورگرهای مدرن، اطلاعاتی در مورد فراخوانی‌هایی که در پشته در هنگام بروز مشکل وجود داشته اند، برای شما فراهم می کند.
 
 {{index "user interface"}}
 
-For problems that are _expected_ to happen during routine use,
-crashing with an unhandled exception is a terrible strategy.
+برای مشکلاتی که _پیش بینی می شود_ در هنگام استفاده از برنامه رخ دهد، متوقف شدن برنامه به خاطر یک استثناء مدیریت نشده، استراتژی وحشتناکی است.
 
 {{index [function, application], "exception handling", "Error type", [binding, undefined]}}
 
-Invalid uses of the language, such as referencing a nonexistent
-binding, looking up a property on `null`, or calling something
-that's not a function, will also result in exceptions being raised.
-Such exceptions can also be caught.
+استفاده‌های نادرست از زبان مانند ارجاع به متغیری که وجود ندارد، درخواست خاصیتی از مقدار `null` یا فراخوانی چیزی که از نوع تابع نیست، نیز باعث تولید استثناء می شود. این گونه استثناءها را نیز می توان گرفت و مدیریت کرد.
 
 {{index "catch keyword"}}
 
-When a `catch` body is entered, all we know is that _something_ in our
-`try` body caused an exception. But we don't know _what_ did or _which_
-exception it caused.
+زمانی که اجرای برنامه به بدنه‌ی `catch` می رسد، می دانیم که چیزی در بلاک `try` باعث تولید استثناء شده است. اما نمی دانیم چه چیزی یا کدام استثناء رخ داده است.
 
 {{index "exception handling"}}
 
-JavaScript (in a rather glaring omission) doesn't provide direct
-support for selectively catching exceptions: either you catch them all
-or you don't catch any. This makes it tempting to _assume_ that the
-exception you get is the one you were thinking about when you wrote
-the `catch` block.
+جاوااسکریپت (نسبتا در یک غفلت آشکار) از امکان گزینش مدیریت استثناءها به صورت رسمی پشتیبانی نمی کند: یا همه‌ی استثناءها را می گیرید یا هیچ کدام را نمی‌گیرد. این باعث می شود که در زمان نوشتن بلاک `catch` _تصور_ کنید استثنائی که دریافت کرده اید همانی هست که به آن فکر می کردید.
 
 {{index "promptDirection function"}}
 
-But it might not be. Some other ((assumption)) might be violated, or
-you might have introduced a bug that is causing an exception. Here is
-an example that _attempts_ to keep on calling `promptDirection`
-until it gets a valid answer:
+اما ممکن است آن نباشد. شاید این استثناء از فرض‌های اشتباه دیگری پدید آمده باشد یا ممکن است باگی را به‌وجود آورده باشید که باعث تولید یک استثناء شده است. در اینجا مثالی را مشاهده‌ می کنید که _سعی_ می کند فراخوانی تابع `promptDirection` را تا زمانی که یک پاسخ معتبر دریافت کند ادامه دهد:
 
 ```{test: no}
 for (;;) {
@@ -683,37 +439,19 @@ for (;;) {
 
 {{index "infinite loop", "for loop", "catch keyword", debugging}}
 
-The `for (;;)` construct is a way to intentionally create a loop that
-doesn't terminate on its own. We break out of the loop only when a
-valid direction is given. _But_ we misspelled `promptDirection`, which
-will result in an "undefined variable" error. Because the `catch`
-block completely ignores its exception value (`e`), assuming it knows
-what the problem is, it wrongly treats the binding error as indicating
-bad input. Not only does this cause an infinite loop, it 
-"buries" the useful error message about the misspelled binding.
+ساختار <bdo>`for (;;)`</bdo> روشی است که عامدانه حلقه‌ای ایجاد می‌کنیم که توسط خودش پایان نمی یابد. زمانی حلقه را می شکنیم که تابع یک جهت معتبر دریافت کند. اما `promptDirection` اشتباه تایپ شده است و خطای “undefined variable” را تولید می‌کند. بلاک `catch` در اینجا مقدار استثناء (`e`) را بررسی نمی کند و فرض می کند که از آن خبر دارد، در نتیجه خطای مربوط به اشتباه تایپی را به عنوان خطای ورودی نامعتبر در نظر می گیرد. این کار نه‌تنها یک حلقه‌ی بی‌نهایت تولید می کند، بلکه نمایش خطای مربوط به اشتباه‌ تایپی را نیز پنهان می کند.
 
-As a general rule, don't blanket-catch exceptions unless it is for the
-purpose of "routing" them somewhere—for example, over the network to
-tell another system that our program crashed. And even then, think
-carefully about how you might be hiding information.
+به عنوان یک قاعده عمومی، روی استثناءها را نپوشانید مگر اینکه قصد داشته باشید آن‌ها را به جایی دیگر هدایت کنید – مثلا در شبکه برای اعلان خرابی برنامه به سیستمی دیگر. حتی در این صورت نیز، با دقت در مورد پنهان کردن اطلاعات فکر کنید.
 
 {{index "exception handling"}}
 
-So we want to catch a _specific_ kind of exception. We can do this by
-checking in the `catch` block whether the exception we got is the one
-we are interested in and rethrowing it otherwise. But how do we
-recognize an exception?
+خوب قصد داریم تا یک نوع خاص از استثناء را بگیریم. می‌توانیم این کار را در بلاک `catch` انجام دهیم؛ به این صورت که استثناء دریافتی را بررسی می کنیم تا ببینیم همان چیزی است که انتظارش را داریم یا خیر. در غیر این صورت، دوباره استثناء را صادر می‌کنیم. اما چگونه می توان یک استثناء را شناسایی کرد؟
 
-We could compare its `message` property against the ((error)) message
-we happen to expect. But that's a shaky way to write code—we'd be
-using information that's intended for human consumption (the message)
-to make a programmatic decision. As soon as someone changes (or
-translates) the message, the code will stop working.
+می توانیم خاصیت `message` آن را با متن خطایی که قرار است دریافت کنیم مقایسه کنیم. اما این روش کدنویسی سست است – با این‌ کار، ما از اطلاعاتی برای تصمیم گیری در برنامه‌نویسی استفاده می کنیم که برای استفاده انسان تولید شده اند (متن خطا). به محض اینکه کسی این متن را تغییر دهد (یا ترجمه کند)، کد ما از کار خواهد افتاد.
 
 {{index "Error type", "instanceof operator", "promptDirection function"}}
 
-Rather, let's define a new type of error and use `instanceof` to
-identify it.
+در عوض، بیایید تا نوع جدیدی از خطا را ایجاد کنیم و از `instanceof`  برای شناسایی آن استفاده کنیم.
 
 ```{includeCode: true}
 class InputError extends Error {}
@@ -728,16 +466,11 @@ function promptDirection(question) {
 
 {{index "throw keyword", inheritance}}
 
-The new error class extends `Error`. It doesn't define its own
-constructor, which means that it inherits the `Error` constructor,
-which expects a string message as argument. In fact, it doesn't define
-anything at all—the class is empty. `InputError` objects behave like
-`Error` objects, except that they have a different class by which we
-can recognize them.
+کلاس جدید خطا، کلاس `Error` را گسترش می دهد (ارث‌بری). این کلاس، سازنده‌ی خودش را تعریف نمی کند، یعنی سازنده‌ی `Error` را به ارث می برد، که این سازنده رشته‌ای را به عنوان آرگومان دریافت می کند. در واقع، اصلا هیچ چیز تعریف نمی کند – کلاس تهی است. اشیاء `InputError` شبیه اشیاء `Error` رفتار می کنند با این تفاوت که آن ها کلاس متفاوتی دارند که می‌توان از آن برای شناسایی‌شان استفاده شود.
 
 {{index "exception handling"}}
 
-Now the loop can catch these more carefully.
+اکنون حلقه می تواند با دقت عمل بیشتری استثناءها را مدیریت کند.
 
 ```{test: no}
 for (;;) {
@@ -757,20 +490,16 @@ for (;;) {
 
 {{index debugging}}
 
-This will catch only instances of `InputError` and let unrelated
-exceptions through. If you reintroduce the typo, the undefined binding
-error will be properly reported.
+در این جا فقط نمونه‌های استثناء `InputError` گرفته و مدیریت می شوند و دیگر استثناءهای نامربوط به حال خود رها می شوند.  اگر دوباره خطای تایپی را تولید کنید، خطای مربوط به متغیر تعریف نشده به درستی گزارش خواهد شد.
 
-## Assertions
+## بیانیه‌ها (Assertions)
+
 
 {{index "assert function", assertion, debugging}}
 
-_Assertions_ are checks inside a program that verify that something is
-the way it is supposed to be. They are used not to handle situations
-that can come up in normal operation but to find programmer mistakes.
+_بیانیه‌ها_ در واقع آزمون‌هایی هستند که در برنامه قرار می‌گیرند تا صحت عملکرد چیز‌های مختلف را بررسی کنند. از آن ها برای مدیریت شرایطی که در عملیات معمولی رخ می دهد استفاده نمی شود؛ بلکه کاربرد آن‌ها در پیدا کردن اشتباهات برنامه نویس می‌باشد.
 
-If, for example, `firstElement` is described as a function that should
-never be called on empty arrays, we might write it like this:
+به عنوان مثال، `firstElement` به عنوان یک تابع توصیف شده است که هرگز نباید بر روی آرایه‌های خالی فراخوانی شود. ممکن است که آن را به این شکل بنویسیم:
 
 ```
 function firstElement(array) {
@@ -783,52 +512,30 @@ function firstElement(array) {
 
 {{index validation, "run-time error", crash, assumption}}
 
-Now, instead of silently returning undefined (which you get when
-reading an array property that does not exist), this will loudly blow
-up your program as soon as you misuse it. This makes it less likely
-for such mistakes to go unnoticed and easier to find their cause when
-they occur.
+حال، به جای اینکه بی سر و صدا مقدار undefined را برگردانیم‌ ( چیزی که در صورت خواندن خانه‌ای از آرایه که وجود ندارد، دریافت می کنید)، روش بالا باعث می شود که برنامه در صورت استفاده نادرست کلا متوقف شود. استفاده از این روش موجب می شود که اشتباهاتی از این دست کمتر نادیده گرفته شوند و آسان تر بتوان علت‌شان را پیدا کرد.
 
-I do not recommend trying to write assertions for every possible kind
-of bad input. That'd be a lot of work and would lead to very noisy
-code. You'll want to reserve them for mistakes that are easy to make
-(or that you find yourself making).
+پیشنهاد نمی کنم که از assertion برای هر گونه ورودی نادرست استفاده کنید. این نیاز به کار زیادی دارد و کدی شلوغ تولید می کند.  بهتر است که آن ها را برای اشتباهاتی که انجامشان ساده است (یا شما زیاد مرتکب آن ها می شوید) نگه دارید.
 
-## Summary
+## خلاصه
 
-Mistakes and bad input are facts of life. An important part of
-programming is finding, diagnosing, and fixing bugs. Problems can
-become easier to notice if you have an automated test suite or add
-assertions to your programs.
+اشتباهات و ورودی های نادرست واقعیت های زندگی هستند. یکی از بخش های مهم برنامه نویسی، پیداکردن، تشخیص و رفع باگ‌ها و اشکالات است. اگر مجموعه‌ای از آزمون‌های خودکار تعریف کرده باشید یا از assertion ها در برنامه‌هایتان استفاده نمایید، می توانید مشکلات برنامه را آسان‌تر شناسایی کنید.
 
-Problems caused by factors outside the program's control should
-usually be handled gracefully. Sometimes, when the problem can be
-handled locally, special return values are a good way to track them.
-Otherwise, exceptions may be preferable.
+باید مشکلاتی که توسط عوامل بیرون از کنترل برنامه ایجاد ‌می‌شوند را نیز به خوبی مدیریت کرد. گاهی اوقات، مثلا زمانی که می توان یک مشکل را به صورت محلی مدیریت کرد، استفاده از مقادیر خروجی خاص،‌ روش خوبی برای مدیریت خطاها محسوب می‌شود. در دیگر موارد، استفاده از استثناء‌ها ممکن است گزینه‌ی بهتری باشد.
 
-Throwing an exception causes the call stack to be unwound until the
-next enclosing `try/catch` block or until the bottom of the stack. The
-exception value will be given to the `catch` block that catches it,
-which should verify that it is actually the expected kind of exception
-and then do something with it. To help address the unpredictable
-control flow caused by exceptions, `finally` blocks can be used to
-ensure that a piece of code _always_ runs when a block finishes.
+صدور یک استثناء باعث می شود که پشته‌ی فراخوانی تا زمانی که به بلاک <bdo>`try/catch`</bdo> دربرگیرنده‌ی بعدی یا به پایان پشته برسد، باز بماند. مقدار استثناء به درون بلاک `catch` که آن را گرفته است، فرستاده می شود؛ که باید نوع آن شناسایی شود تا به آن واکنش متناسب داده شود. برای رفع مشکل جریان کنترل غیرقابل پیش‌بینی، که در صورت استفاده از استثناء‌ها به وجود می آید، می توان از بلاک‌های `finally` استفاده کرد تا اطمینان حاصل شود که یک کد خاص همیشه بعد از اتمام یک بلاک، اجرا خواهد شد.
 
-## Exercises
+## تمرین‌ها
 
-### Retry
+### تلاش مجدد
 
 {{index "primitiveMultiply (exercise)", "exception handling", "throw keyword"}}
 
-Say you have a function `primitiveMultiply` that in 20 percent of
-cases multiplies two numbers and in the other 80 percent of cases raises an
-exception of type `MultiplicatorUnitFailure`. Write a function that
-wraps this clunky function and just keeps trying until a call
-succeeds, after which it returns the result.
+
+فرض کنید تابعی به نام `primitiveMultiply` دارید که در 20 درصد از موارد، دو عدد را در هم ضرب می کند و در 80 درصد دیگر، استثنایی از نوع `MultiplicatorUnitFailure` تولید می کند. تابعی بنویسید که این تابع مشکل‌دار را پوشانده و تا زمانیکه یک فراخوانی موفق داشته باشد، به تلاش خود ادامه می دهد و بعد از آن نتیجه را بر‌می‌گرداند.
 
 {{index "catch keyword"}}
 
-Make sure you handle only the exceptions you are trying to handle.
+اطمینان حاصل کنید که فقط استثناء‌هایی را مدیریت می کنید که باید مدیریت شوند.
 
 {{if interactive
 
@@ -856,24 +563,17 @@ if}}
 
 {{index "primitiveMultiply (exercise)", "try keyword", "catch keyword", "throw keyword"}}
 
-The call to `primitiveMultiply` should definitely happen in a `try`
-block. The corresponding `catch` block should rethrow the exception
-when it is not an instance of `MultiplicatorUnitFailure` and ensure
-the call is retried when it is.
+فراخوانی تابع `primitiveMultiply` باید قطعا درون یک بلاک `try` قرار گیرد. بلاک `catch` مربوط به آن باید استثناء دریافتی را درصورتی که نمونه‌ای از `MultiplicatorUnitFailure` نباشد، دوباره صادر کند و اطمینان حاصل کند که در صورت وجود استثناء مورد نظر، تابع را دوباره فراخوانی می‌کند.
 
-To do the retrying, you can either use a loop that stops only when a
-call succeeds—as in the [`look` example](error#look) earlier in this
-chapter—or use ((recursion)) and hope you don't get a string of
-failures so long that it overflows the stack (which is a pretty safe
-bet).
+برای انجام عمل تلاش مجدد، می توانید از یک حلقه استفاده کنید که فقط زمانی متوقف می‌شود که یک فراخوانی، موفق می شود - مانند  [مثال `look`](error#look) که پیش‌تر در این فصل آمد - یا از روش بازگشتی استفاده کنید و امیدوار باشید که با رشته‌ای از شکست روبرو نمی‌شود که در این صورت باعث سرریز پشته خواهد شد.
 
 hint}}
 
-### The locked box
+### جعبه قفل شده
 
 {{index "locked box (exercise)"}}
 
-Consider the following (rather contrived) object:
+شیء (ساختگی) زیر را در نظر بگیرید:
 
 ```
 const box = {
@@ -890,16 +590,11 @@ const box = {
 
 {{index "private property", "access control"}}
 
-It is a ((box)) with a lock. There is an array in the box, but you can
-get at it only when the box is unlocked. Directly accessing the
-private `_content` property is forbidden.
+این شیء یک جعبه است که دارای یک قفل می‌باشد. درون این جعبه‌، یک آرایه وجود دارد؛ اما فقط زمانی می توانید به آن دسترسی داشته باشید که جعبه قفل نباشد. دسترسی مستقیم به خاصیت خصوصی <bdo>`_content`</bdo> ممنوع است.
 
 {{index "finally keyword", "exception handling"}}
 
-Write a function called `withBoxUnlocked` that takes a function value
-as argument, unlocks the box, runs the function, and then ensures that
-the box is locked again before returning, regardless of whether the
-argument function returned normally or threw an exception.
+تابعی به نام `withBoxUnlocked` بنویسید که یک مقدار تابع را به عنوان آرگومان دریافت می کند، جعبه را باز می کند، تابع را اجرا می کند، و بعد اطمینان حاصل می کند که قبل از برگرداندن آن، جعبه دوباره قفل شده باشد، فارغ از اینکه تابع آرگومان به صورت نرمال برگردانده شده است یا یک استثناء تولید کرده است.
 
 {{if interactive
 
@@ -936,19 +631,13 @@ console.log(box.locked);
 
 if}}
 
-For extra points, make sure that if you call `withBoxUnlocked` when
-the box is already unlocked, the box stays unlocked.
+برای برداشتن گامی بیشتر، مطمئن شود که اگر تابع `withBoxUnlocked` را در هنگام باز بودن جعبه فراخوانی می کنید، جعبه باز باقی بماند.
 
 {{hint
 
 {{index "locked box (exercise)", "finally keyword", "try keyword"}}
 
-This exercise calls for a `finally` block. Your function should first
-unlock the box and then call the argument function from inside a `try`
-body. The `finally` block after it should lock the box again.
+این تابع به یک بلاک `finally` نیاز دارد. تابع شما ابتدا باید جعبه را باز کند سپس تابع موجود در آرگومان را از درون یک بلاک `try` فراخوانی کند.  بلاک `finally` بعد از آن باید جعبه را دوباره قفل کند.
 
-To make sure we don't lock the box when it wasn't already locked,
-check its lock at the start of the function and unlock and lock
-it only when it started out locked.
-
+برای حصول اطمینان از قفل نکردن جعبه زمانی که پیش از این باز بوده است، قفل بودن‌ آن را در ابتدای تابع چک کنید و فقط زمانی آن را باز و بسته کنید که در ابتدا قفل بوده است.
 hint}}
