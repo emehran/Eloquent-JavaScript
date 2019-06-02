@@ -1,4 +1,4 @@
-# Regular Expressions
+# عبارات باقاعده
 
 {{quote {author: "Jamie Zawinski", chapter: true}
 
@@ -25,73 +25,46 @@ if}}
 
 {{index evolution, adoption, integration}}
 
-Programming ((tool))s and techniques survive and spread in a chaotic,
-evolutionary way. It's not always the pretty or brilliant ones that
-win but rather the ones that function well enough within the right
-niche or that happen to be integrated with another successful piece of
-technology.
+ابزارها و تکنیک‌های برنامه نویسی در طول زمان به شکلی نامنظم و تکاملی حفظ می‌شوند و گسترش می یابند. این‌طور نیست که همیشه آن‌هایی که درخشان یا  خوب هستند برنده شوند؛ بلکه تکنیک‌ها و ابزارهایی باقی‌ می‌مانند که در یک حوزه‌ی مناسب به اندازه‌ی کافی خوب عمل می کنند یا این ویژگی را دارند که با تکنولوژی موفق دیگری به خوبی یکپارچه و تلفیق می شوند.
 
 {{index "domain-specific language"}}
 
-In this chapter, I will discuss one such tool, _((regular
-expression))s_. Regular expressions are a way to describe ((pattern))s
-in string data. They form a small, separate language that is part of
-JavaScript and many other languages and systems.
+در این فصل، در باره‌ی یکی از این ابزارهای موفق، _((عبارات باقاعده))_، صحبت خواهم کرد. عبارات باقاعده روشی برای توصیف _((الگوها))_ در داده‌های متنی (رشته‌ای) می‌باشند. این عبارات، زبانی کوچک و مجزا را تشکیل می دهند که بخشی از زبان جاوااسکریپت و خیلی زبان‌ها و سیستم های دیگر محسوب می شوند.
 
 {{index [interface, design]}}
 
-Regular expressions are both terribly awkward and extremely useful.
-Their syntax is cryptic, and the programming interface JavaScript
-provides for them is clumsy. But they are a powerful ((tool)) for
-inspecting and processing strings. Properly understanding regular
-expressions will make you a more effective programmer.
+عبارات باقاعده، به طور همزمان هم خیلی بی‌قواره و هم فوق‌العاده کاربردی هستند. قواعد دستوری آن‌ها رمزگونه و رابط برنامه‌نویسی آن ها در جاوااسکریپت کمی نچسب است. اما ابزار بسیار قدرتمندی برای پردازش و وارسی رشته‌ها محسوب می شوند. درک صحیح عبارات باقاعده، شما را به برنامه‌نویس موثر‌تری تبدیل می کند.
 
-## Creating a regular expression
+## ایجاد عبارات باقاعده
 
 {{index ["regular expression", creation], "RegExp class", "literal expression", "slash character"}}
 
-A regular expression is a type of object. It can be either constructed
-with the `RegExp` constructor or written as a literal value by
-enclosing a pattern in forward slash (`/`) characters.
+یک عبارت باقاعده یک نوع شیء است. می توان آن را هم با سازنده‌ی `RegExp` و هم به طور مستقیم با قرار دادن یک الگو بین دو کاراکتر اسلش (`/`) ایجاد نمود.
 
 ```
 let re1 = new RegExp("abc");
 let re2 = /abc/;
 ```
-
-Both of those regular expression objects represent the same
-((pattern)): an _a_ character followed by a _b_ followed by a _c_.
+هر دوی عبارت‌های باقاعده‌ی بالا نمایانگر یک ((الگو)) می باشند: کاراکتر _a_ که بعد از آن _b_ و بعد _c_  می آید.
 
 {{index ["backslash character", "in regular expressions"], "RegExp class"}}
 
-When using the `RegExp` constructor, the pattern is written as a
-normal string, so the usual rules apply for backslashes.
+زمانی که از سازنده‌ی `RegExp` استفاده می شود، الگو به صورت رشته‌ی معمولی نوشته می شود؛ بنابراین قوانین معمول برای کاراکتر بک‌اسلش برقرار است.
 
 {{index ["regular expression", escaping], [escaping, "in regexps"], "slash character"}}
 
-The second notation, where the pattern appears between slash
-characters, treats backslashes somewhat differently. First, since a
-forward slash ends the pattern, we need to put a backslash before any
-forward slash that we want to be _part_ of the pattern. In addition,
-backslashes that aren't part of special character codes (like `\n`)
-will be _preserved_, rather than ignored as they are in strings, and
-change the meaning of the pattern. Some characters, such as question
-marks and plus signs, have special meanings in regular expressions and
-must be preceded by a backslash if they are meant to represent the
-character itself.
+در روش دوم که در آن الگو بین دو کاراکتر اسلش ظاهر می شود، تفسیر بک اسلش کمی متفاوت است. اول اینکه، به دلیل اینکه کاراکتر اسلش نشان دهنده پایان الگو است، بایستی یک بک اسلش را قبل از اسلشی که می خواهیم به عنوان بخشی از الگو تفسیر شود قرار دهیم. افزون بر آن، بک اسلش‌هایی که بخشی از کدکاراکترهای خاص (مانند <bdo>`\n`</bdo>) محسوب نمی شوند، بر خلاف حالت رشته‌ای، حفظ شده و باعث تغییر در معنای الگو خواهند شد. بعضی کاراکترها مثل علامت سوال یا مثبت، معانی خاصی در عبارات باقاعده دارند و اگر قرار است نمایانگر کاراکتر خودشان باشند، باید قبلشان یک بک اسلش قرار داده شود.
+
 
 ```
 let eighteenPlus = /eighteen\+/;
 ```
 
-## Testing for matches
+## آزمایش تطبیق الگو
 
 {{index matching, "test method", ["regular expression", methods]}}
 
-Regular expression objects have a number of methods. The simplest one
-is `test`. If you pass it a string, it will return a ((Boolean))
-telling you whether the string contains a match of the pattern in the
-expression.
+اشیاء عبارات باقاعده دارای تعدادی متد می باشند. ساده‌ترین آن ها متد `test` است. اگر به این متد یک رشته ارسال کنید، با برگرداندن یک مقدار بولی، به شما خواهد گفت که آیا در رشته‌ی داده شده نمونه‌ای مطابق الگوی عبارت باقاعده، وجود دارد یا خیر.
 
 ```
 console.log(/abc/.test("abcde"));
@@ -102,24 +75,18 @@ console.log(/abc/.test("abxde"));
 
 {{index pattern}}
 
-A ((regular expression)) consisting of only nonspecial characters
-simply represents that sequence of characters. If _abc_ occurs
-anywhere in the string we are testing against (not just at the start),
-`test` will return `true`.
+اگر در ((عبارات باقاعده)) هیچ کاراکتر خاصی استفاده نشود، آن عبارت معادل همان دنباله‌ی کاراکترها می باشد. اگر _abc_ در هر جای رشته‌ای که مورد آزمایش قرار داده ایم قرار گرفته باشد ( نه فقط در شروع رشته)، متد `test` مقدار `true` را تولید می کند.
 
-## Sets of characters
+
+## مجموعه‌های کاراکتر
 
 {{index "regular expression", "indexOf method"}}
 
-Finding out whether a string contains _abc_ could just as well be done
-with a call to `indexOf`. Regular expressions allow us to express more
-complicated ((pattern))s.
+فهمیدن اینکه آیا یک رشته حاوی _abc_ هست یا خیر را می توان به خوبی با متد  `indexOf`  نیز انجام داد. عبارات باقاعده به ما امکان تولید ((الگوهای)) پیچیده‌تری را می دهند.
 
-Say we want to match any ((number)). In a regular expression, putting
-a ((set)) of characters between square brackets makes that part of the
-expression match any of the characters between the brackets.
+فرض کنید قصد داریم همه‌ ((اعداد)) را شناسایی کنیم. در یک عبارت باقاعده، قرار دادن یک ((مجموعه‌)) کاراکتر درون براکت باعث می شود که آن بخش از عبارت با هر کاراکتری که بین براکت‌ها آمده است تطبیق یابد.
 
-Both of the following expressions match all strings that contain a ((digit)):
+هر دوی عبارت‌های زیر همه‌ی رشته‌هایی که دارای رقم هستند را شامل می شود:
 
 ```
 console.log(/[0123456789]/.test("in 1992"));
@@ -130,32 +97,26 @@ console.log(/[0-9]/.test("in 1992"));
 
 {{index "hyphen character"}}
 
-Within square brackets, a hyphen (`-`) between two characters can be
-used to indicate a ((range)) of characters, where the ordering is
-determined by the character's ((Unicode)) number. Characters 0 to 9
-sit right next to each other in this ordering (codes 48 to 57), so
-`[0-9]` covers all of them and matches any ((digit)).
+برای مشخص کرد یک بازه از کاراکترها می توان درون براکت‌ها از یک کاراکتر (‍`-`) بین دو کاراکتر استفاده کرد که ترتیب کاراکترها توسط کد یونیکد آن‌ها مشخص می شود. کاراکترهای ۰ تا ۹ کنار هم و در بازه‌ی یونیکد (کدهای 48 تا 57) قرار دارند بنابراین <bdo>`[0-9]`</bdo> همه‌ی آن ها را پوشش داده و هر رقمی را شامل می شود.
 
 {{index [whitespace, matching], "alphanumeric character", "period character"}}
 
-A number of common character groups have their own
-built-in shortcuts. Digits are one of them: `\d` means the same thing
-as `[0-9]`.
+برای بعضی از گروه‌های کاراکتری روش کوتاه‌تری هم از پیش تعریف شده است. اعداد یکی از آن ها هستند: مثلا <bdo>`\d`</bdo> معنایی مشابه <bdo>`[0-9]`</bdo> دارد.
 
 {{index "newline character", [whitespace, matching]}}
 
 {{table {cols: [1, 5]}}}
 
-| `\d`    | Any ((digit)) character
-| `\w`    | An alphanumeric character ("((word character))")
-| `\s`    | Any whitespace character (space, tab, newline, and similar)
-| `\D`    | A character that is _not_ a digit
-| `\W`    | A nonalphanumeric character
-| `\S`    | A nonwhitespace character
-| `.`     | Any character except for newline
+| `\d`    | هر کاراکتر عددی
+| `\w`    | یک کاراکتر از نوع عدد یا حرف الفبا (“کاراکتر کلمه”)
+| `\s`    | همه‌ی کاراکترهای فضای‌خالی ( فاصله، تب، خط جدید، و مشابه آن ها)
+| `\D`    | کاراکتری که از نوع عدد _نباشد_
+| `\W`    | کاراکتری که عدد و حرف الفبا نباشد
+| `\S`    | کاراکتری که فضای خالی محسوب نشود
+| `.`     | همه‌ی کاراکترها به جز کاراکتر خط جدید
 
-So you could match a ((date)) and ((time)) format like 01-30-2003
-15:20 with the following expression:
+بنابراین می توانید فرمت ((تاریخ)) و ((زمانی)) شبیه <bdo>01-30-2003
+15:20</bdo> را با عبارت زیر شناسایی کنید:
 
 ```
 let dateTime = /\d\d-\d\d-\d\d\d\d \d\d:\d\d/;
@@ -167,23 +128,15 @@ console.log(dateTime.test("30-jan-2003 15:20"));
 
 {{index ["backslash character", "in regular expressions"]}}
 
-That looks completely awful, doesn't it? Half of it is backslashes,
-producing a background noise that makes it hard to spot the actual
-((pattern)) expressed. We'll see a slightly improved version of this
-expression [later](regexp#date_regexp_counted).
+ظاهر عبارت بالا خیلی بی‌قواره است، درست است؟ نیمی از آن بک‌اسلش است که الگو را بیش از حد شلوغ کرده و تشخیص معنای آن را سخت نموده‌ است. در [ادامه](regexp#date_regexp_counted) با نسخه‌ای از آن که کمی بهبود یافته است آشنا خواهیم شد.
 
 {{index [escaping, "in regexps"], "regular expression", set}}
 
-These backslash codes can also be used inside ((square brackets)). For
-example, `[\d.]` means any digit or a period character. But the period
-itself, between square brackets, loses its special meaning. The same
-goes for other special characters, such as `+`.
+این کدهای بک‌اسلش را همچنین می توان درون براکت استفاده کرد. به عنوان مثال، <bdo>`[\d.]`</bdo> به معنای یک رقم یا یک کاراکتر نقطه است. اما خود نقطه وقتی داخل براکت قرار می گیرد معنای خاصش را از دست می دهد. این قضیه برای دیگر کاراکتر های خاص مثل `+` هم برقرار است.
 
 {{index "square brackets", inversion, "caret character"}}
 
-To _invert_ a set of characters—that is, to express that you want to
-match any character _except_ the ones in the set—you can write a caret
-(`^`) character after the opening bracket.
+برای _معکوس_ کردن یک مجموعه‌ی کاراکتر – به این معنا که شما قصد دارید هر کاراکتری _بجز_ آنهایی که در مجموعه مشخص شده اند را بیان کنید – می توانید از یک کاراکتر (`^`) بعد از براکت شروع بازه استفاده کنید.
 
 ```
 let notBinary = /[^01]/;
@@ -193,18 +146,15 @@ console.log(notBinary.test("1100100010200110"));
 // → true
 ```
 
-## Repeating parts of a pattern
+## تکرار بخش‌هایی از یک الگو
 
 {{index ["regular expression", repetition]}}
 
-We now know how to match a single digit. What if we want to match a
-whole number—a ((sequence)) of one or more ((digit))s?
+می دانیم که چگونه یک عدد یا رقم را شناسایی کنیم.  چه باید کرد اگر بخواهیم که یک عدد کامل – دنباله‌ای از یک یا بیشتر رقم - را هدف قرار بدهیم؟
 
 {{index "plus character", repetition, "+ operator"}}
 
-When you put a plus sign (`+`) after something in a regular
-expression, it indicates that the element may be repeated more than
-once. Thus, `/\d+/` matches one or more digit characters.
+زمانی که از یک علامت مثبت (`+`) را بعد از چیزی در یک عبارت باقاعده قرار می‌دهید، این علامت نشان می دهد که آن عنصر ممکن است یک بار یا بیشتر تکرار شود. بنابراین ، <bdo> `/\d+/`</bdo> به معنای مطابقت عبارت با تعداد یک یا بیشتر از کاراکترهای عددی خواهد بود.
 
 ```
 console.log(/'\d+'/.test("'123'"));
@@ -219,17 +169,11 @@ console.log(/'\d*'/.test("''"));
 
 {{index "* operator", asterisk}}
 
-The star (`*`) has a similar meaning but also allows the pattern to
-match zero times. Something with a star after it never prevents a
-pattern from matching—it'll just match zero instances if it can't find
-any suitable text to match.
+کاراکتر ستاره (`*`) معنای مشابهی دارد با این تفاوت که به الگو اجازه می دهد تا صفر بار تکرار (نبودن کاراکتر) را هم شامل شود. اگر بعد از چیزی کاراکتر ستاره قرار گیرد باعث می شود که الگو همیشه چیزی برای مطابقت پیدا کند - در صورتی که نتواند متنی برای مطابقت پیدا کند، با نبود آن عنصر مطابقت خواهد داد.
 
 {{index "British English", "American English", "question mark"}}
 
-A question mark makes a part of a pattern _((optional))_, meaning it
-may occur zero times or one time. In the following example, the _u_
-character is allowed to occur, but the pattern also matches when it is
-missing.
+استفاده از علامت سوال (?) در یک الگو به معنای _((اختیاری))_ بودن است، یعنی ممکن است که آن عنصر نباشد یا یک بار حاضر باشد. در مثال پیش رو، کاراکتر _u_ اختیاری است و می تواند باشد و در صورت نبودن هم الگو صدق خواهد کرد.
 
 ```
 let neighbor = /neighbou?r/;
@@ -241,17 +185,12 @@ console.log(neighbor.test("neighbor"));
 
 {{index repetition, [braces, "in regular expression"]}}
 
-To indicate that a pattern should occur a precise number of times, use
-braces. Putting `{4}` after an element, for example, requires it
-to occur exactly four times. It is also possible to specify a
-((range)) this way: `{2,4}` means the element must occur at least
-twice and at most four times.
+برای مشخص کردن این موضوع که یک الگو باید به تعداد دقیقی رخ دهد، می توانید از
+کروشه استفاده کنید؛ به عنوان مثال، قرار دادن `{4}` بعد از یک عنصر، باعث می‌شود که الگو انتظار داشته باشد آن عنصر دقیقا 4 مرتبه رخ داده باشد. همچنین می توان یک بازه را نیز مشخص نمود:‌ <bdo>`{2,4}`</bdo> به این معنا است که این عنصر باید حداقل دو مرتبه و حداکثر چهار مرتبه رخ دهد.
 
 {{id date_regexp_counted}}
 
-Here is another version of the ((date)) and ((time)) pattern that
-allows both single- and double-((digit)) days, months, and hours. It
-is also slightly easier to decipher.
+اینجا نسخه‌ی دیگر از الگوی تشخیص تاریخ و زمان را داریم که امکان تشخیص روز، ماه و ساعت به هر دو فرمت تک رقمی و دو رقمی را دارد. همچنین درک این الگو کمی راحت‌تر از الگوی پیشین است.
 
 ```
 let dateTime = /\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/;
@@ -259,9 +198,7 @@ console.log(dateTime.test("1-30-2003 8:45"));
 // → true
 ```
 
-You can also specify open-ended ((range))s when using braces
-by omitting the number after the comma. So, `{5,}` means five or more
-times.
+همچنین می توانید بازه‌هایی که انتهایی باز دارند را نیز مشخص کنید. این کار با حذف رقم پس از ویرگول انجام می شود. بنابراین، <bdo>`{5,}`</bdo> به معنای پنج یا بیشتر می باشد.
 
 ## Grouping subexpressions
 
