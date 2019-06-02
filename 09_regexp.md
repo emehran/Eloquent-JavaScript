@@ -200,14 +200,12 @@ console.log(dateTime.test("1-30-2003 8:45"));
 
 همچنین می توانید بازه‌هایی که انتهایی باز دارند را نیز مشخص کنید. این کار با حذف رقم پس از ویرگول انجام می شود. بنابراین، <bdo>`{5,}`</bdo> به معنای پنج یا بیشتر می باشد.
 
-## Grouping subexpressions
+## دسته‌بندی زیرعبارات
 
 {{index ["regular expression", grouping], grouping, [parentheses, "in regular expressions"]}}
 
-To use an operator like `*` or `+` on more than one element at a time,
-you have to use parentheses. A part of a regular expression that
-is enclosed in parentheses counts as a single element as far as the
-operators following it are concerned.
+برای استفاده از یک عملگر مانند `*` یا `+` روی بیش از یک عنصر در آنِ واحد، باید از پرانتز استفاده کنید.
+از دید عملگرهایی که بعد از عبارت‌های داخل پرانتز قرار می‌گیرند، هر عبارت محصور بین پرانتز به عنوان یک عنصر در نظر گرفته می شود.
 
 ```
 let cartoonCrying = /boo+(hoo+)+/i;
@@ -217,25 +215,18 @@ console.log(cartoonCrying.test("Boohoooohoohooo"));
 
 {{index crying}}
 
-The first and second `+` characters apply only to the second _o_ in
-_boo_ and _hoo_, respectively. The third `+` applies to the whole
-group `(hoo+)`, matching one or more sequences like that.
+کاراکترهای `+` اول و دوم فقط به _o_ دوم از _boo_ و _hoo_ اعمال می شوند. کاراکتر `+` سوم به کل گروه <bdo>`(hoo+)`</bdo> اعمال می شود و یک یا بیش از یک بار تکرار آن الگو را شامل می‌شود.
 
 {{index "case sensitivity", capitalization, ["regular expression", flags]}}
 
-The `i` at the end of the expression in the example makes this regular
-expression case insensitive, allowing it to match the uppercase _B_ in
-the input string, even though the pattern is itself all lowercase.
+کاراکتر `i` که در انتهای عبارت مثال آمده است باعث می شود که عبارت باقاعده به بزرگی و کوچکی حروف حساس نباشد، یعنی کاراکتر _B_ بزرگ هم در رشته‌ی ورودی تطبیق خواهد خورد، با وجود اینکه الگو خودش به حروف کوچک نوشته شده است.
 
-## Matches and groups
+
+## تطبیق‌ها و گروه‌ها
 
 {{index ["regular expression", grouping], "exec method", [array, "RegExp match"]}}
 
-The `test` method is the absolute simplest way to match a regular
-expression. It tells you only whether it matched and nothing else.
-Regular expressions also have an `exec` (execute) method that will
-return `null` if no match was found and return an object with
-information about the match otherwise.
+متد `test` ساده ترین راهی است که برای تطبیق یک عبارت باقاعده استفاده می شود. این متد فقط تطبیق و عدم تطبیق عبارت را مشخص می کند و دیگر هیچ. عبارات باقاعده همچنین متدی به نام `exec` (به معنای اجرا) دارند که در صورت نبود تطبیق، مقدار `null` را بر‌می گرداند و در صورت وجود تطبیق، شیئی شامل اطلاعاتی راجع به آن تولید می کند.
 
 ```
 let match = /\d+/.exec("one two 100");
@@ -247,15 +238,11 @@ console.log(match.index);
 
 {{index "index property", [string, indexing]}}
 
-An object returned from `exec` has an `index` property that tells us
-_where_ in the string the successful match begins. Other than that,
-the object looks like (and in fact is) an array of strings, whose
-first element is the string that was matched. In the previous example,
-this is the sequence of ((digit))s that we were looking for.
+شیءای که از یک متد `exec` برگردانده می شود خاصیتی به نام `index` دارد که نقطه شروع تطبیق پیدا شده را در رشته به ما می نشان می دهد. علاوه بر آن، این شیء شبیه به ( و در واقع یک ) آرایه‌ای از رشته‌ها است، که عنصر اولش رشته‌ای است که با الگو مطابقت داشته است – در مثال قبل ، دنباله‌ای از ((اعداد)) که به دنبال آن بودیم.
 
 {{index [string, methods], "match method"}}
 
-String values have a `match` method that behaves similarly.
+مقدارهای رشتهای متدی به نام `match` دارند که به شکل مشابهی عمل می کند.
 
 ```
 console.log("one two 100".match(/\d+/));
@@ -264,12 +251,7 @@ console.log("one two 100".match(/\d+/));
 
 {{index grouping, "capture group", "exec method"}}
 
-When the regular expression contains subexpressions grouped with
-parentheses, the text that matched those groups will also show up in
-the array. The whole match is always the first element. The next
-element is the part matched by the first group (the one whose opening
-parenthesis comes first in the expression), then the second group, and
-so on.
+زمانی که یک عبارت باقاعده شامل زیرعبارتهایی باشد که با پرانتز گروه‌بندی شده اند، متن‌هایی که با آن گروه‌ها مطابقت دارند نیز درون یک آرایه نمایش داده خواهد شد. تطبیق کامل همیشه در همان عنصر اول است. عنصر بعدی آرایه متعلق به بخشی است که توسط اولین گروه تطبیق یافته است (گروهی که پرانتز شروعش در عبارت اول آمده است)، سپس گروه دوم و الی آخر.
 
 ```
 let quotedText = /'([^']*)'/;
@@ -279,10 +261,7 @@ console.log(quotedText.exec("she said 'hello'"));
 
 {{index "capture group"}}
 
-When a group does not end up being matched at all (for example, when
-followed by a question mark), its position in the output array will
-hold `undefined`. Similarly, when a group is matched multiple times,
-only the last match ends up in the array.
+زمانی که برای یک گروه تطبیقی در رشته پیدا نمی شود (به عنوان مثال، زمانی که بعد از گروه علامت سوال قرار گرفته باشد) موقعیت آن در آرایه‌ی خروجی به صورت `undefined` خواهد بود. به طور مشابه، اگر یک گروه چندین تطبیق داشته باشد، فقط آخرین آن‌ها در آرایه قرار خواهد گرفت.
 
 ```
 console.log(/bad(ly)?/.exec("bad"));
@@ -293,14 +272,10 @@ console.log(/(\d)+/.exec("123"));
 
 {{index "exec method", ["regular expression", methods], extraction}}
 
-Groups can be useful for extracting parts of a string. If we don't
-just want to verify whether a string contains a ((date)) but also
-extract it and construct an object that represents it, we can wrap
-parentheses around the digit patterns and directly pick the date out
-of the result of `exec`.
+از قابلیت گروه‌ها می توان برای استخراج قسمت‌های یک رشته استفاده کرد. به عنوان مثال، زمانی که فقط بودن یک تاریخ در یک رشته برای ما مهم نیست و قصد داریم تا آن را از دل آن استخراج کرده و شیئی حاوی آن بسازیم، می
+توانیم با استفاده از پرانتز در الگوی ارقام، به طور مستقیم آن را در نتیجه‌ی `exec` مجزا کنیم.
 
-But first we'll take a brief detour, in which we discuss the built-in way to
-represent date and ((time)) values in JavaScript.
+اما ابتدا، یک فاصله‌ی کوتاه بگیریم و کمی در رابطه‌با راه از پیش تعریف شده برای نمایش مقادیر زمان و تاریخ در جاوااسکریپت صحبت کنیم.
 
 ## The Date class
 
