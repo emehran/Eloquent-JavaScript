@@ -277,13 +277,11 @@ console.log(/(\d)+/.exec("123"));
 
 اما ابتدا، یک فاصله‌ی کوتاه بگیریم و کمی در رابطه‌با راه از پیش تعریف شده برای نمایش مقادیر زمان و تاریخ در جاوااسکریپت صحبت کنیم.
 
-## The Date class
+## کلاس Date
 
 {{index constructor, "Date class"}}
 
-JavaScript has a standard class for representing ((date))s—or, rather,
-points in ((time)). It is called `Date`. If you simply create a date
-object using `new`, you get the current date and time.
+جاوااسکریپت کلاس استانداردی برای نمایش تاریخ‌ها – یا به عبارتی نقاطی در زمان – دارد. این کلاس `Date` نامیده می شود. اگر با `new` یک کلاس تاریخ ایجاد کنید، زمان و تاریخ فعلی را خواهید گرفت.
 
 ```{test: no}
 console.log(new Date());
@@ -292,7 +290,7 @@ console.log(new Date());
 
 {{index "Date class"}}
 
-You can also create an object for a specific time.
+همچنین می توانید یک شیء برای یک تاریخ مشخص ایجاد کنید.
 
 ```
 console.log(new Date(2009, 11, 9));
@@ -303,20 +301,13 @@ console.log(new Date(2009, 11, 9, 12, 59, 59, 999));
 
 {{index "zero-based counting", [interface, design]}}
 
-JavaScript uses a convention where month numbers start at zero (so
-December is 11), yet day numbers start at one. This is confusing and
-silly. Be careful.
+جاوااسکریپت از قراردادی استفاده می کند که در آن ماه‌ها از صفر شروع می شوند (بنابراین ماه دسامبر برابر 11 خواهد شد)، اما روزها از یک شروع می شوند. این به نظر گیج کننده و احمقانه می‌رسد. پس دقت داشته باشید.
 
-The last four arguments (hours, minutes, seconds, and milliseconds)
-are optional and taken to be zero when not given.
+چهار آرگومان آخر (hours, minutes, seconds و milliseconds) اختیاری هستند و اگر مشخص نشوند با صفر مقداردهی می شوند.
 
 {{index "getTime method"}}
 
-Timestamps are stored as the number of milliseconds since the start of
-1970, in the UTC ((time zone)). This follows a convention set by
-"((Unix time))", which was invented around that time. You can use
-negative numbers for times before 1970. The `getTime` method on a date
-object returns this number. It is big, as you can imagine.
+برچسب‌های ثبت زمان (timestamp) به عنوان تعداد هزارم ثانیه‌هایی ذخیره‌ می شوند که از شروع سال 1970 میلادی در ناحیه زمانی UTC می گذرد. این روش بر اساس "((Unix time))" است که خود حدود همان سال اختراع شد. می توانید برای زمان‌های قبل از 1970 از اعداد منفی استفاده کنید. متد `getTime` روی یک شیء Date این عدد را￼ تولید می کند. این عدد همانطور که می توانید حدس بزنید رقم بزرگی است.
 
 ```
 console.log(new Date(2013, 11, 19).getTime());
@@ -327,22 +318,15 @@ console.log(new Date(1387407600000));
 
 {{index "Date.now function", "Date class"}}
 
-If you give the `Date` constructor a single argument, that argument is
-treated as such a millisecond count. You can get the current
-millisecond count by creating a new `Date` object and calling
-`getTime` on it or by calling the `Date.now` function.
+اگر به تابع سازنده‌ی `Date` یک آرگومان ارسال نمایید، این آرگومان به عنوان همان شمارش هزارم‌ ثانیه‌ها تفسیر می شود. می توانید تعداد هزام‌ثانیه‌های لحظه‌ی کنونی را با ایجاد یک شیء جدید `Date` و فراخوانی متد `getTime` روی آن یا با فراخوانی تابع <bdo>`Date.now`</bdo> بدست بیاورید.
 
 {{index "getFullYear method", "getMonth method", "getDate method", "getHours method", "getMinutes method", "getSeconds method", "getYear method"}}
 
-Date objects provide methods such as `getFullYear`, `getMonth`,
-`getDate`, `getHours`, `getMinutes`, and `getSeconds` to extract their
-components. Besides `getFullYear` there's also `getYear`, which gives
-you the year minus 1900 (`98` or `119`) and is mostly useless.
+اشیاء Date متدهایی مانند `getFullYear،` `getMonth،` `getDate،` `getHours`، `getMinutes`، و `getSeconds` را فراهم می کنند که بتوان اجزای یک تاریخ را به وسیله‌ی آن‌ها استخراج کرد. در کنار متد `getFullYear،` متدی به نام `getYear` وجود دارد، که سال را با کسر از 1900 تولید می کند (مثل `98` یا `119` ) که تقریبا کاربردی ندارد.
 
 {{index "capture group", "getDate method", [parentheses, "in regular expressions"]}}
 
-Putting parentheses around the parts of the expression that we are
-interested in, we can now create a date object from a string.
+با قراردادن پرانتز دور بخش‌های عبارتی که به آن نیاز داریم، می توانیم شیء تاریخ را از یک رشته ایجاد کنیم.
 
 ```
 function getDate(string) {
@@ -356,35 +340,21 @@ console.log(getDate("1-30-2003"));
 
 {{index destructuring, "underscore character"}}
 
-The `_` (underscore) binding is ignored and used only to skip the
-full match element in the array returned by `exec`.
+کاراکتر خط زیرین (`_`) که در مثال به عنوان یک متغیر استفاده شده است، در اینجا استفاده‌ای ندارد و فقط برای عبور از خانه‌ی اول آرایه‌ی تولیدی `exec` استفاده شده است.
 
-## Word and string boundaries
+## مرز‌های واژه و رشته
 
 {{index matching, ["regular expression", boundary]}}
 
-Unfortunately, `getDate` will also happily extract the nonsensical
-date 00-1-3000 from the string `"100-1-30000"`. A match may happen
-anywhere in the string, so in this case, it'll just start at the
-second character and end at the second-to-last character.
+متاسفانه، متد `getDate` همچنین تاریخ‌های غلطی مانند <bdo>00-1-3000</bdo> را از رشته‌ی <bdo>`"100-1-30000"`</bdo> استخراج می کند. یک تطبیق ممکن است در هرجای رشته رخ بدهد، بنابراین در این مورد، از کاراکتر دوم این رشته شروع می شود و در کاراکتر یکی مانده به پایان، تمام می شود.
 
 {{index boundary, "caret character", "dollar sign"}}
 
-If we want to enforce that the match must span the whole string, we
-can add the markers `^` and `$`. The caret matches the start of the
-input string, whereas the dollar sign matches the end. So, `/^\d+$/`
-matches a string consisting entirely of one or more digits, `/^!/`
-matches any string that starts with an exclamation mark, and `/x^/`
-does not match any string (there cannot be an _x_ before the start of
-the string).
+اگر بخواهیم تطبیق شامل کل رشته باشد، باید بااستفاده از نشانگرهای `^` و `$` این کار را انجام دهیم. کاراکتر `^`، شروع رشته‌ی ورودی را مشخص می کند، در حالیکه کاراکتر `$`، این کار را برای پایان انجام می‌دهد. بنابراین <bdo>`/^\d+$/`</bdo> رشته‌ای را تطبیق خواهد داد که کلا دارای یک یا بیش از یک رقم باشد،<bdo>`/^!/`</bdo> شامل همه‌ی رشته‌هایی می شود که با یک علامت تعجب شروع شده باشند، و <bdo>`/x^/`</bdo> هیچ رشته‌ای را شامل نخواهد شد (نمی توان یک کاراکتر _x_ را قبل از کاراکتر شروع یک رشته تصور کرد).
 
 {{index "word boundary", "word character"}}
 
-If, on the other hand, we just want to make sure the date starts and
-ends on a word boundary, we can use the marker `\b`. A word boundary
-can be the start or end of the string or any point in the string that
-has a word character (as in `\w`) on one side and a nonword character
-on the other.
+اگر، از سوی دیگر، بخواهیم مطمئن شویم که تاریخ مورد نظر در مرزهای یک کلمه شروع و پایان می‌یابد، می توانیم از نشانگر <bdo>`\b`</bdo> استفاده کنیم. یک مرز کلمه می تواند شروع یا پایان یک رشته یا هر نقطه‌ای در رشته باشد که یک کارکتر از نوع کلمه ( حرف الفبا یا رقم مثل <bdo>`\w`</bdo>) در یک سمت داشته باشد و یک کاراکتر غیر‌کلمه‌ای در سمت دیگر￼ داشته باشد.
 
 ```
 console.log(/cat/.test("concatenate"));
@@ -395,9 +365,7 @@ console.log(/\bcat\b/.test("concatenate"));
 
 {{index matching}}
 
-Note that a boundary marker doesn't match an actual character. It just
-enforces that the regular expression matches only when a certain
-condition holds at the place where it appears in the pattern.
+توجه داشته باشید که یک نشانگر تعیین مرز (حدود) خود کاراکتری را تطبیق نمی دهد. این نشانگر فقط باعث می شود که عبارت باقاعده فقط زمانی تطبیق بخورد که یک شرط مشخص در نقطه‌ای که نشانگر در الگو قرار گرفته برقرار باشد.
 
 ## Choice patterns
 
