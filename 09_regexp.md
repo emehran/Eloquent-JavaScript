@@ -367,18 +367,13 @@ console.log(/\bcat\b/.test("concatenate"));
 
 توجه داشته باشید که یک نشانگر تعیین مرز (حدود) خود کاراکتری را تطبیق نمی دهد. این نشانگر فقط باعث می شود که عبارت باقاعده فقط زمانی تطبیق بخورد که یک شرط مشخص در نقطه‌ای که نشانگر در الگو قرار گرفته برقرار باشد.
 
-## Choice patterns
+## الگوهای انتخاب
 
 {{index branching, ["regular expression", alternatives], "farm example"}}
 
-Say we want to know whether a piece of text contains not only a number
-but a number followed by one of the words _pig_, _cow_, or _chicken_,
-or any of their plural forms.
+فرض کنید بخواهیم بدانیم که در یک رشته‌ی متنی عددی وجود دارد که بعد از آن یکی از کلمه‌های _pig_, _cow_, یا _chicken_ به صورت مفرد یا جمع آمده باشد.
 
-We could write three regular expressions and test them in turn, but
-there is a nicer way. The ((pipe character)) (`|`) denotes a
-((choice)) between the pattern to its left and the pattern to its
-right. So I can say this:
+می توانیم سه عبارت باقاعده‌ی مجزا نوشته و هر کدام را به نوبت روی نوشته آزمایش کنیم. اما یک راه بهتر نیز وجود دارد. کاراکتر پایپ (|) امکان انتخاب بین الگوی سمت راست و چپش را فراهم می کند. بنابراین می توانیم بنویسیم:
 
 ```
 let animalCount = /\b\d+ (pig|cow|chicken)s?\b/;
@@ -390,136 +385,72 @@ console.log(animalCount.test("15 pigchickens"));
 
 {{index [parentheses, "in regular expressions"]}}
 
-Parentheses can be used to limit the part of the pattern that the pipe
-operator applies to, and you can put multiple such operators next to
-each other to express a choice between more than two alternatives.
+می توان با استفاده از پرانتز بخش‌هایی از الگو که عملگر پایپ روی آنها اعمال می شود را محدود کرد، و نیز می توان چندین عملگر پایپ را کنار هم قرار داد تا امکان انتخاب بین بیش از دو جایگزین را فراهم نمود.
 
-## The mechanics of matching
-
+## مکانیک تطبیق‌دهی
 {{index ["regular expression", matching], [matching, algorithm], "search problem"}}
 
-Conceptually, when you use `exec` or `test`, the regular expression
-engine looks for a match in your string by trying to match the
-expression first from the start of the string, then from the second
-character, and so on, until it finds a match or reaches the end of the
-string. It'll either return the first match that can be found or fail
-to find any match at all.
+از نظر مفهومی، زمانی که از متد `exec` یا `test` استفاده می کنید، موتور عبارت باقاعده به دنبال تطبیقی در رشته‌ی شما می گردد و سعی دارد این کار را با تطبیق دادن عبارت از ابتدای رشته انجام دهد، سپس از کاراکتر دوم، و همین طور ادامه می دهد تا اینکه تطبیقی پیدا کند یا به انتهای رشته داده شده برسد. در پایان رشته، یا اولین تطبیق ممکن را برمی‌گرداند یا جستجو با شکست روبرو می شود.
 
 {{index ["regular expression", matching], [matching, algorithm]}}
 
-To do the actual matching, the engine treats a regular expression
-something like a ((flow diagram)). This is the diagram for the
-livestock expression in the previous example:
+موتور جاوااسکریپت برای انجام تطبیق، با عبارت باقاعده مانند یک نمودار جریان برخورد می کند. نمودار پایین برای عبارت مربوط به مثال حیوانات است:
+
 
 {{figure {url: "img/re_pigchickens.svg", alt: "Visualization of /\\b\\d+ (pig|cow|chicken)s?\\b/"}}}
 
 {{index traversal}}
 
-Our expression matches if we can find a path from the left side of the
-diagram to the right side. We keep a current position in the string,
-and every time we move through a box, we verify that the part of the
-string after our current position matches that box.
+عبارت ما موفق به تطبیق خواهد شد اگر بتوانیم مسیری از سمت چپ نمودار به سمت راست آن بیابیم. موقعیت￼ فعلی را در رشته حفظ می کنیم، و هر بار که به سمت یک مستطیل حرکت می کنیم، مطمئن می شویم که بخشی از رشته که بعد از موقعیت فعلی ما قرار دارد با آن مستطیل تطبیق دارد.
 
-So if we try to match `"the 3 pigs"` from position 4, our progress
-through the flow chart would look like this:
+بنابراین اگر سعی کنیم که رشته‌ی `"the 3 pigs"` را از موقعیت 4 تطبیق دهیم، پیشروی ما در نمودار چیزی شبیه به زیر می شود:
 
- - At position 4, there is a word ((boundary)), so we can move past
-   the first box.
 
- - Still at position 4, we find a digit, so we can also move past the
-   second box.
+ - در موقعیت 4، یک مرز واژه وجود دارد، پس باید از اولین مستطیل عبور کنیم.
 
- - At position 5, one path loops back to before the second (digit)
-   box, while the other moves forward through the box that holds a
-   single space character. There is a space here, not a digit, so we
-   must take the second path.
+ - هنوز در موقعیت 4 هستیم، یک عدد می بینیم، پس می توان از مستطیل بعدی نیز عبور کرد.
 
- - We are now at position 6 (the start of _pigs_) and at the three-way
-   branch in the diagram. We don't see _cow_ or _chicken_ here, but we
-   do see _pig_, so we take that branch.
+ - در موقعیت 5، یک مسیر به مستطیل دوم (رقم) بر می گردد، در حالیکه مسیر دیگر به سمت مستطیلی می رود که یک کاراکتر فضای خالی را نگه می دارد. در اینجا یک فضای خالی وجود دارد، نه یک رقم، پس باید از مسیر دوم برویم.
 
- - At position 9, after the three-way branch, one path skips the _s_
-   box and goes straight to the final word boundary, while the other
-   path matches an _s_. There is an _s_ character here, not a word
-   boundary, so we go through the _s_ box.
+-  اکنون در موقعیت 6 (شروع رشته‌ی pigs) قرار داریم و در شاخه‌ی سه‌راهی نمودار.  _cow_ و _chiken_ را اینجا نمی بینیم اما _pig_ را می بینیم پس به سراغ آن شاخه می رویم.
 
- - We're at position 10 (the end of the string) and can match only a
-   word ((boundary)). The end of a string counts as a word boundary,
-   so we go through the last box and have successfully matched this
-   string.
+- در موقعیت 9، بعد از شاخه‌ی سه راهی، یک مسیر مستطیل _s_ را نادیده‌ می‌گیرد و مستقیما به مرز واژه‌ی نهایی می رود، درحالیکه مسیر دیگر یک _s_ را تطبیق می دهد. در اینجا ما یک کاراکتر _s_ داریم نه یک مرز کلمه، پس به سراغ مستطیل _s_ می رویم.
+
+- در موقعیت 10 (پایان رشته) قرار گرفته ایم و تنها می توانیم یک مرز کلمه را تطبیق دهیم. پایان رشته به معنای یک مرز کلمه است؛ پس به سراغ آخرین مستطیل می رویم و با موفقیت این رشته را تطبیق می دهیم.
 
 {{id backtracking}}
 
-## Backtracking
+## عقب‌گرد
 
 {{index ["regular expression", backtracking], "binary number", "decimal number", "hexadecimal number", "flow diagram", [matching, algorithm], backtracking}}
 
-The regular expression `/\b([01]+b|[\da-f]+h|\d+)\b/` matches either a
-binary number followed by a _b_, a hexadecimal number (that is, base
-16, with the letters _a_ to _f_ standing for the digits 10 to 15)
-followed by an _h_, or a regular decimal number with no suffix
-character. This is the corresponding diagram:
+عبارت باقاعده‌ی <bdo>`/\b([01]+b|[\da-f]+h|\d+)\b/`</bdo> یکی از اعداد زیر را تطبیق می دهد: یک عدد دودویی که بعد از آن یک _b_ آمده باشد، یک عدد هگزادسیمال ( عددی در مبنای 16 که دارای حروف _a_ تا _f_ است که برای اعداد 10 تا 15 استفاده می شوند) که بعد از آن یک _h_ قرار گرفته، یا یک عدد ده‌دهی معمولی که هیچ پسوندی ندارد. نمودار زیر مربوط به این عبارت است:
 
 {{figure {url: "img/re_number.svg", alt: "Visualization of /\\b([01]+b|\\d+|[\\da-f]+h)\\b/"}}}
 
 {{index branching}}
 
-When matching this expression, it will often happen that the top
-(binary) branch is entered even though the input does not actually
-contain a binary number. When matching the string `"103"`, for
-example, it becomes clear only at the 3 that we are in the wrong
-branch. The string _does_ match the expression, just not the branch we
-are currently in.
+در زمان تطبیق این عبارت، اغلب اینگونه می شود که علی رغم اینکه ممکن است ورودی دارای عدد دودویی نباشد، اما شاخه‌ی بالایی (دودویی) انتخاب می شود. در زمان تطبیق رشته‌ی `"103"` به عنوان مثال، فقط زمانی متوجه می شویم که در شاخه‌ی اشتباهی قرار داریم که به کاراکتر 3 برسیم. رشته با عبارت تطبیق دارد اما نه لزوما با شاخه‌ای که در حال حاضر در آن قرار گرفته ایم.
 
 {{index backtracking, "search problem"}}
 
-So the matcher _backtracks_. When entering a branch, it remembers its
-current position (in this case, at the start of the string, just past
-the first boundary box in the diagram) so that it can go back and try
-another branch if the current one does not work out. For the string
-`"103"`, after encountering the 3 character, it will start trying the
-branch for hexadecimal numbers, which fails again because there is no
-_h_ after the number. So it tries the decimal number branch. This one
-fits, and a match is reported after all.
+بنابراین تطبیق‌دهنده عقب‌گرد انجام می ‌دهد. هنگام ورود به یک شاخه، موقعیت کنونی خودش را به￼ خاطر می سپارد (در اینجا، در ابتدای رشته، درست قبل از اولین مستطیل مرز (محدوده) در نمودار) با این کار می تواند به عقب برگردد و اگر شاخه‌ی فعلی جواب نداد به سراغ شاخه‌ی دیگری برود. برای رشته‌ی `"103"` بعد از مواجه با کاراکتر 3، به سراغ شاخه‌ی اعداد هگزادسیمال می رود، که نتیجه‌‌ای نخواهد داشت به این دلیل که بعد از عدد، هیج کاراکتر _h_ ای وجود ندارد. بنابراین به سراغ شاخه‌ی عدد ده‌دهی می رود. این شاخه انتخاب درستی است و یک تطبیق در پایان گزارش داده می شود.
 
 {{index [matching, algorithm]}}
 
-The matcher stops as soon as it finds a full match. This means that if
-multiple branches could potentially match a string, only the first one
-(ordered by where the branches appear in the regular expression) is
-used.
+تطبیق‌گر به محض اینکه یک تطبیق کامل پیدا می‌کند متوقف می شود. معنای این کار این است که اگر چندین شاخه‌ی بالقوه برای تطبیق یک رشته موجود باشد، فقط اولین شاخه (به ترتیبی که شاخه در عبارت منظم قرار گرفته است) استفاده می شود.
 
-Backtracking also happens for ((repetition)) operators like + and `*`.
-If you match `/^.*x/` against `"abcxe"`, the `.*` part will first try
-to consume the whole string. The engine will then realize that it
-needs an _x_ to match the pattern. Since there is no _x_ past the end
-of the string, the star operator tries to match one character less.
-But the matcher doesn't find an _x_ after `abcx` either, so it
-backtracks again, matching the star operator to just `abc`. _Now_ it
-finds an _x_ where it needs it and reports a successful match from
-positions 0 to 4.
+عقب‌گرد همچنین برای عملگرهای تکرار مثل `+` و `*` نیز اتفاق می افتد. اگر الگوی <bdo>`/^.*x/`</bdo> را روی رشته‌ی `"abcxe"` تطبیق دهید، قسمت <bdo>`.*`</bdo>، ابتدا سعی می کند که تمام رشته را مصرف کند. موتور سپس متوجه می شود که نیاز به یک _x_ دارد تا بتواند الگو را تطبیق دهد. چون هیچ _x_ ای قبل از پایان رشته وجود ندارد، عملگر `*` سعی می کند تا یک کاراکتر کمتر را تطبیق دهد. اما تطبیق‌گر، _x_ را بعد از `abcx` نیز پیدا نمی کند بنابراین عقب‌گرد دوباره اتفاق می افتد که موجب می شود عملگر ستاره فقط `abc` را تطبیق دهد. _اکنون_ یک _x_ درست جایی که لازمش دارد پیدا می کند و آن را به عنوان یک تطبیق موفق از موقعیت 0 تا 4 گزارش می دهد.
 
 {{index performance, complexity}}
 
-It is possible to write regular expressions that will do a _lot_ of
-backtracking. This problem occurs when a pattern can match a piece of
-input in many different ways. For example, if we get confused while
-writing a binary-number regular expression, we might accidentally
-write something like `/([01]+)+b/`.
+می توان عبارات باقاعده‌ای نوشت که در آن‌ها تعداد _زیادی_ عقب‌گرد انجام شود. این مشکل زمانی رخ می دهد که یک الگو می تواند یک ورودی را به شیوه‌های زیاد و متفاوتی تطبیق دهد. به عنوان مثال، اگر هنگام نوشتن یک عبارت باقاعده برای یک عدد دودویی حواسمان نباشد، ممکن است تصادفا چیزی شبیه <bdo>`/([01]+)+b/`</bdo> بنویسیم.
 
 {{figure {url: "img/re_slow.svg", alt: "Visualization of /([01]+)+b/",width: "6cm"}}}
 
 {{index "inner loop", [nesting, "in regexps"]}}
 
-If that tries to match some long series of zeros and ones with no
-trailing _b_ character, the matcher first goes through the inner
-loop until it runs out of digits. Then it notices there is no _b_, so
-it backtracks one position, goes through the outer loop once, and
-gives up again, trying to backtrack out of the inner loop once more.
-It will continue to try every possible route through these two loops.
-This means the amount of work _doubles_ with each additional
-character. For even just a few dozen characters, the resulting match
-will take practically forever.
+اگر این الگو سعی کند که سری‌های بلندی از صفر و یک‌ها را بدون کاراکتر پایانی _b_ تطبیق دهد، تطبیق‌گر ابتدا سراغ حلقه‌ی درونی می رود تا اینکه تمامی اعداد تمام شوند. سپس متوجه می شود که کاراکتر _b_ وجود ندارد، بنابراین یک مکان (موقعیت) عقب‌گردد می کند، یک بار به سراغ حلقه‌ی بیرونی می رود و نتیجه‌ای نمی گیرد، دوباره برای خروج از حلقه‌ی درونی عقب‌گرد انجام می دهد. یعنی مقدار کار انجام شده به ازای هر کاراکتر دو برابر می شود. حتی برای چند دوجین کاراکتر، عمل تطبیق در واقع برای همیشه طول خواهد کشید.
 
 ## The replace method
 
