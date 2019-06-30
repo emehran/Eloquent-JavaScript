@@ -242,7 +242,7 @@ console.log(match.index);
 
 {{index [string, methods], "match method"}}
 
-مقدارهای رشتهای متدی به نام `match` دارند که به شکل مشابهی عمل می کند.
+مقدارهای رشته‌ای متدی به نام `match` دارند که به شکل مشابهی عمل می کند.
 
 ```
 console.log("one two 100".match(/\d+/));
@@ -452,12 +452,11 @@ console.log(animalCount.test("15 pigchickens"));
 
 اگر این الگو سعی کند که سری‌های بلندی از صفر و یک‌ها را بدون کاراکتر پایانی _b_ تطبیق دهد، تطبیق‌گر ابتدا سراغ حلقه‌ی درونی می رود تا اینکه تمامی اعداد تمام شوند. سپس متوجه می شود که کاراکتر _b_ وجود ندارد، بنابراین یک مکان (موقعیت) عقب‌گردد می کند، یک بار به سراغ حلقه‌ی بیرونی می رود و نتیجه‌ای نمی گیرد، دوباره برای خروج از حلقه‌ی درونی عقب‌گرد انجام می دهد. یعنی مقدار کار انجام شده به ازای هر کاراکتر دو برابر می شود. حتی برای چند دوجین کاراکتر، عمل تطبیق در واقع برای همیشه طول خواهد کشید.
 
-## The replace method
+## متد replace
 
 {{index "replace method", "regular expression"}}
 
-String values have a `replace` method that can be used to replace
-part of the string with another string.
+مقادیر رشته‌ای دارای متدی به نام `replace` هستند که می توان از آن برای جایگزینی بخشی از رشته با رشته‌ای دیگر استفاده کرد.
 
 ```
 console.log("papa".replace("p", "m"));
@@ -466,10 +465,7 @@ console.log("papa".replace("p", "m"));
 
 {{index ["regular expression", flags], ["regular expression", global]}}
 
-The first argument can also be a regular expression, in which case the
-first match of the regular expression is replaced. When a `g` option
-(for _global_) is added to the regular expression, _all_ matches in
-the string will be replaced, not just the first.
+آرگومان اول این متد همچنین می تواند یک عبارت باقاعده باشد، که در این صورت، اولین تطبیق پیدا شده توسط عبارت باقاعده، با رشته‌ی مورد نظر جایگزین می شود. زمانی که گزینه‌ی `g` (سراسری)  به عبارت باقاعده اضافه شود، به جای جایگزینی اولین مورد، تمامی تطبیق‌های پیداشده در رشته، جایگزین خواهند شد.
 
 ```
 console.log("Borobudur".replace(/[ou]/, "a"));
@@ -480,20 +476,19 @@ console.log("Borobudur".replace(/[ou]/g, "a"));
 
 {{index [interface, design], argument}}
 
-It would have been sensible if the choice between replacing one match
-or all matches was made through an additional argument to `replace` or
-by providing a different method, `replaceAll`. But for some
-unfortunate reason, the choice relies on a property of the regular
-expression instead.
+بهتر به نظر می رسید اگر گزینه‌ی  انتخاب بین جایگزینی همه‌ی تطبیق‌ها یا یک تطبیق،
+به شکل یک آرگومان مجزا برای متد `replace` تعریف می شد یا اینکه متدی متفاوت برای
+آن در نظر گرفته می شد؛ مانند `replaceAll`. اما از بد روزگار، این گزینه وابسته به
+خاصیتی در عبارت باقاعده می باشد.
 
 {{index grouping, "capture group", "dollar sign", "replace method", ["regular expression", grouping]}}
 
-The real power of using regular expressions with `replace` comes from
-the fact that we can refer to matched groups in the replacement
-string. For example, say we have a big string containing the names of
-people, one name per line, in the format `Lastname, Firstname`. If we
-want to swap these names and remove the comma to get a `Firstname
-Lastname` format, we can use the following code:
+قدرت اصلی استفاده از عبارات باقاعده به وسیله‌ی متد `replace` اینجا است که
+می‌توانیم به گروه‌های تطبیق خورده در رشته‌ی جایگزین رجوع کنیم. به عنوان مثال،
+فرض کنید که یک رشته‌ی بزرگ که حاوی نام افراد است در اختیار داریم، در هر خط یک
+نام وجود دارد و فرمت آن به شکل <bdo>`Lastname, Firstname`</bdo> می‌باشد. اگر بخواهیم ترتیب
+قرار گیری نام‌ها را عوض کرده و ویرگول بین آن را حذف کنیم، می توانیم از کد زیر
+استفاده کنیم:
 
 ```
 console.log(
@@ -504,19 +499,19 @@ console.log(
 //   Philip Wadler
 ```
 
-The `$1` and `$2` in the replacement string refer to the parenthesized
-groups in the pattern. `$1` is replaced by the text that matched
-against the first group, `$2` by the second, and so on, up to `$9`.
-The whole match can be referred to with `$&`.
+<bdo>`$1`</bdo> و <bdo>`$2`</bdo> در رشته‌ی جایگزین به گروه‌هایی که با پرانتز در
+الگو مشخص شده اند اشاره می‌کنند. <bdo>`$1`</bdo> توسط متنی که با اولین گروه تطبیق
+یافته جایگزین می شود، <bdo>`$2`</bdo> نیز با دومین گروه و الی آخر تا
+<bdo>`$9`</bdo>. تطبیق کلی را می توان با <bdo>`$&`</bdo> مورد ارجاع قرار داد.
 
 {{index [function, "higher-order"], grouping, "capture group"}}
 
-It is possible to pass a function—rather than a string—as the second
-argument to `replace`. For each replacement, the function will be
-called with the matched groups (as well as the whole match) as
-arguments, and its return value will be inserted into the new string.
+می توان یک تابع را به جای رشته به عنوان آرگومان دوم متد `replace` ارسال کرد.
+برای هر جایگزینی، این تابع فراخوانی می شود درحالیکه دسته‌ی تطبیق خورده (همچنین
+تطبیق کامل) به عنوان آرگومان به آن ارسال می شود و مقداری که برمی گرداند در
+رشته‌ی جدید قرار می گیرد.
 
-Here's a small example:
+به مثال کوچک زیر توجه نمایید:
 
 ```
 let s = "the cia and fbi";
@@ -525,7 +520,7 @@ console.log(s.replace(/\b(fbi|cia)\b/g,
 // → the CIA and FBI
 ```
 
-Here's a more interesting one:
+و مثالی جالب‌تر:
 
 ```
 let stock = "1 lemon, 2 cabbages, and 101 eggs";
@@ -542,22 +537,22 @@ console.log(stock.replace(/(\d+) (\w+)/g, minusOne));
 // → no lemon, 1 cabbage, and 100 eggs
 ```
 
-This takes a string, finds all occurrences of a number followed by an
-alphanumeric word, and returns a string wherein every such occurrence
-is decremented by one.
+این مثال رشته‌ای را می گیرد، تمامی دفعات تکرار یک عدد که بعد از آن یک کاراکتر
+کلمه (منظور کاراکتری از جنس حرف و عدد است) آمده باشد را پیدا می کند و رشته‌ای
+برمی گرداند که در آن هر تطبیق پیدا شده یک واحد کاهش یافته است.
 
-The `(\d+)` group ends up as the `amount` argument to the function,
-and the `(\w+)` group gets bound to `unit`. The function converts
-`amount` to a number—which always works since it matched `\d+`—and
-makes some adjustments in case there is only one or zero left.
+گروه <bdo>`(\d+)`</bdo> به عنوان آرگومان `amount` در تابع استفاده شده است، و
+گروه <bdo>`(\w+)`</bdo> به `unit` اختصاص یافته است. این تابع `amount` را به یک
+عدد تبدیل می کند – این عمل همیشه درست کار خواهد کرد چرا که توسط <bdo>`\d+`</bdo>
+تطبیق خورده است – و آن را در صورتی که فقط یک و صفر باقی مانده باشد، تغییراتی می
+دهد.
 
-## Greed
+## عملگر‌های حریصانه
 
 {{index greed, "regular expression"}}
 
-It is possible to use `replace` to write a function that removes all
-((comment))s from a piece of JavaScript ((code)). Here is a first
-attempt:
+می توان از متد `replace` برای نوشتن تابعی که همه‌ی توضیحات را از قطعه کدی
+جاوااسکریپت حذف کند استفاده نمود. اولین تلاش ما برای این کار به شکل زیر است:
 
 ```{test: wrap}
 function stripComments(code) {
@@ -573,38 +568,38 @@ console.log(stripComments("1 /* a */+/* b */ 1"));
 
 {{index "period character", "slash character", "newline character", "empty set", "block comment", "line comment"}}
 
-The part before the _or_ operator matches two slash characters
-followed by any number of non-newline characters. The part for
-multiline comments is more involved. We use `[^]` (any character that
-is not in the empty set of characters) as a way to match any
-character. We cannot just use a period here because block comments can
-continue on a new line, and the period character does not match
-newline characters.
 
-But the output for the last line appears to have gone wrong. Why?
+قسمتی که قبل از عملگر "یا" (or) آمده است مطابق با دو کاراکتر _اسلشی_ خواهد بود
+که می تواند بعد از آن ها هر کاراکتری غیر از کاراکترهای خط جدید بیاید. بخشی که
+مربوط به توضیحات چندخطه می باشد کمی پیچیده تر است. ما از <bdo>`[^]`</bdo> (به
+معنای هر کاراکتر که در یک مجموعه‌ی تهی از کاراکترها جا نمی گیرد) به عنوان روشی
+برای تطبیق همه‌ی کاراکترها استفاده کرده ایم. نمی توانیم فقط از یک نقطه (.) برای
+این منظور در اینجا استفاده کنیم چراکه بلاکهای کامنت را می توان در چند خط نوشت و
+کاراکتر نقطه کاراکترهای خطوط جدید را تطبیق نمی دهد.
+
+اما خروجی خط آخر به نظر می رسد که دارای اشتباه باشد. چرا؟
 
 {{index backtracking, greed, "regular expression"}}
 
-The `[^]*` part of the expression, as I described in the section on
-backtracking, will first match as much as it can. If that causes the
-next part of the pattern to fail, the matcher moves back one character
-and tries again from there. In the example, the matcher first tries to
-match the whole rest of the string and then moves back from there. It
-will find an occurrence of `*/` after going back four characters and
-match that. This is not what we wanted—the intention was to match a
-single comment, not to go all the way to the end of the code and find
-the end of the last block comment.
+قسمت <bdo>`[^]*`</bdo> عبارت، همانطور که در قسمت عقب‌گرد توضیح دادم، در ابتدا تا
+ آنجایی که می تواند تطبیق می‌دهد. اگر این کار منجر به این شود که بخش بعدی الگو
+ شکست بخورد، تطبیق‌گر یک کاراکتر به عقب برگشته و از آن نقطه دوباره تلاش می کند.
+ در مثال بالا، تطبیق‌گر ابتدا تلاش می کند تا کل رشته‌ی باقیمانده را تطبیق دهد
+ سپس از آنجا به عقب برگردد. این موجب خواهد شد که یک نمونه از <bdo>`*/`</bdo> را
+ بعد از اینکه چهار کاراکتر به عقب برمی گردد تطبیق دهد. این چیزی نیست که به دنبال
+ آن بودیم- قصد ما این بود که یک توضیح را تطبیق دهیم، نه اینکه تا انتهای کدهای
+ برنامه را برای پیدا کردن پایان￼ آخرین بلاک توضیحات پیمایش کنیم.
 
-Because of this behavior, we say the repetition operators (`+`, `*`,
-`?`, and `{}`) are _((greed))y_, meaning they match as much as they
-can and backtrack from there. If you put a ((question mark)) after
-them (`+?`, `*?`, `??`, `{}?`), they become nongreedy and start by
-matching as little as possible, matching more only when the remaining
-pattern does not fit the smaller match.
+به خاطر این عملکرد، به عملگرهای تکرار <bdo>(`+`, `*`, `?`, و `{}`)</bdo>
+عملگرهای _حریصانه_ می گوییم، به این معنا که تا جای که می توانند تطبیق می دهند
+بعد به عقب برمی گردنند. اگر بعد از آن ها یک علامت سوال قرار دهید <bdo> (`+?`,
+`*?`, `??`, `{}?`)</bdo>، دیگر حریص نخواهند بود و با حداقل تطبیق شروع می کنند ،
+زمانی به تطبیق بیشتر می پردازند که الگوی باقیمانده با تطبیقی کوچکتر مطابقت
+نداشته باشد.
 
-And that is exactly what we want in this case. By having the star
-match the smallest stretch of characters that brings us to a `*/`, we
-consume one block comment and nothing more.
+و این دقیقا آن چیزی است که در این مورد آن را می خواهیم. با تطبیق کوچکترین
+ بازه‌هایی از کاراکترها به وسیله‌ی ستاره که مارا به یک <bdo>`*/`</bdo> برساند،
+ ما فقط یک بلاک توضیحات را انتخاب کردیم و نه چیز بیشتری را.
 
 ```{test: wrap}
 function stripComments(code) {
@@ -614,24 +609,22 @@ console.log(stripComments("1 /* a */+/* b */ 1"));
 // → 1 + 1
 ```
 
-A lot of ((bug))s in ((regular expression)) programs can be traced to
-unintentionally using a greedy operator where a nongreedy one would
-work better. When using a ((repetition)) operator, consider the
-nongreedy variant first.
+زمانی که یک عملگر غیرحریصانه‌ کارکرد بهتری برای مسئله دارد، اگر بدون دلیل و
+آگاهی از یک عملگر حریصانه استفاده کنید، ممکن است با باگ‌های زیادی در برنامه‌ روبرو شوید.
+هنگام استفاده از یک عملگر تکرار، بهتر است ابتدا به سراغ نسخه‌ی غیر حریصانه آن
+بروید.
 
-## Dynamically creating RegExp objects
+
+## ساخت اشیاء RegExp به صورت پویا
 
 {{index ["regular expression", creation], "underscore character", "RegExp class"}}
 
-There are cases where you might not know the exact ((pattern)) you
-need to match against when you are writing your code. Say you want to
-look for the user's name in a piece of text and enclose it in
-underscore characters to make it stand out. Since you will know the
-name only once the program is actually running, you can't use the
-slash-based notation.
+در بعضی مواقع، ممکن است هنگام کدنویسی، الگوی مورد نیاز جهت تطبیق مشخص نباشد. فرض کنید که می‌خواهید به دنبال نام کاربر در یک متن بگردید و آن را توسط یک
+جفت کاراکتر خط زیرین محصور کنید تا بتوان آن‌را شناسایی کرد. به دلیل اینکه فقط در هنگام اجرای
+برنامه نام مورد نظر مشخص می شود، نمی توان از روش استفاده از اسلش بهره برد.
 
-But you can build up a string and use the `RegExp` ((constructor)) on
-that. Here's an example:
+اما می توانید یک رشته تولید کنید و از سازنده‌ی `RegExp` روی آن استفاده کنید. به مثال
+توجه کنید:
 
 ```
 let name = "harry";
@@ -643,20 +636,21 @@ console.log(text.replace(regexp, "_$1_"));
 
 {{index ["regular expression", flags], ["backslash character", "in regular expressions"]}}
 
-When creating the `\b` ((boundary)) markers, we have to use two
-backslashes because we are writing them in a normal string, not a
-slash-enclosed regular expression. The second argument to the `RegExp`
-constructor contains the options for the regular expression—in this
-case, `"gi"` for global and case insensitive.
+هنگام نوشتن نشان‌گرهای محدوده‌ی (مرز) <bdo>`\b`</bdo> ، باید از دو بک‌اسلش استفاده کنیم به
+این علت که آن ها را در یک رشته‌ی نرمال می نویسیم نه یک عبارت باقاعده که توسط
+اسلش محصور شده است. آرگومان دوم سازنده‌ی `RegExp` مربوط به گزینه‌های مربوط به عبارت
+باقاعده است – در این مثال، `"gi"` برای مشخص کردن سراسری بودن و غیرحساس بودن به
+حروف بزرگ و کوچک است.
 
-But what if the name is `"dea+hl[]rd"` because our user is a ((nerd))y
-teenager? That would result in a nonsensical regular expression that
-won't actually match the user's name.
+
+اما چه می شود اگر نام کاربر مورد نظر  <bdo>`"dea+hl[]rd"`</bdo> باشد که متعلق یک نوجوان خوره‌ی
+کامپیوتر است؟ این نام باعث می شود که یک عبارت باقاعده‌ی بی معنا تولید شود که منجر
+به تطبیق نام کاربر نمی شود.
 
 {{index ["backslash character", "in regular expressions"], [escaping, "in regexps"], ["regular expression", escaping]}}
 
-To work around this, we can add backslashes before any character that
-has a special meaning.
+راه حل این مشکل، اضافه کردن بک‌اسلش قبل از هر
+کاراکتری که معنای خاصی دارد است.
 
 ```
 let name = "dea+hl[]rd";
@@ -667,14 +661,15 @@ console.log(text.replace(regexp, "_$&_"));
 // → This _dea+hl[]rd_ guy is super annoying.
 ```
 
-## The search method
+## متد search
 
 {{index ["regular expression", methods], "indexOf method", "search method"}}
 
-The `indexOf` method on strings cannot be called with a regular
-expression. But there is another method, `search`, that does expect a
-regular expression. Like `indexOf`, it returns the first index on
-which the expression was found, or -1 when it wasn't found.
+
+متد `indexOf` که روی رشته ها کار می کرد را نمی توان با یک عبارت باقاعده فراخواند.
+اما متد دیگری به نام `search` وجود دارد که یک عبارت باقاعده را دریافت می کند.
+درست مانند `indexOf`، این متد نیز اولین خانه‌ی خروجی را به عبارتی که پیدا شد اختصاص می دهد و یا
+ در صورت پیدا نکردن نتیجه،  <bdo>-1</bdo> را بر می گرداند.
 
 ```
 console.log("  word".search(/\S/));
@@ -683,33 +678,32 @@ console.log("    ".search(/\S/));
 // → -1
 ```
 
-Unfortunately, there is no way to indicate that the match should start
-at a given offset (like we can with the second argument to `indexOf`),
-which would often be useful.
+متاسفانه، راهی برای مشخص کردن نقطه‌ی
+شروع برای تطبیق وجود ندارد (شبیه کاری که می توانیم با آرگومان دوم `indexOf`
+انجام دهیم) که در صورت وجود کاربرد داشت.
 
-## The lastIndex property
+
+## خاصیت lastIndex
 
 {{index "exec method", "regular expression"}}
 
-The `exec` method similarly does not provide a convenient way to start
-searching from a given position in the string. But it does provide an
-*in*convenient way.
+متد `exec` نیز راهی مناسب برای شروع جستجو از یک موقعیت داده شده در یک رشته را
+پشتیبانی نمی کند. اما یک راه غیر سرراست برای این کار وجود دارد.
 
 {{index ["regular expression", matching], matching, "source property", "lastIndex property"}}
 
-Regular expression objects have properties. One such property is
-`source`, which contains the string that expression was created from.
-Another property is `lastIndex`, which controls, in some limited
-circumstances, where the next match will start.
+اشیائی که از نوع عبارت باقاعده هستند دارای خاصیت‌هایی هستند. یکی از این خاصیت‌ها
+`source` است، که رشته‌ای که عبارت از آن تولید شده است را نگهداری می کند. یک خاصیت
+دیگر ، `lastIndex` است که در شرایط محدودی کنترل می کند که تطبیق بعدی از کجا شروع
+خواهد شد.
 
 {{index [interface, design], "exec method", ["regular expression", global]}}
 
-Those circumstances are that the regular expression must have the
-global (`g`) or sticky (`y`) option enabled, and the match must happen
-through the `exec` method. Again, a less confusing solution would have
-been to just allow an extra argument to be passed to `exec`, but
-confusion is an essential feature of JavaScript's regular expression
-interface.
+این شرایط این است که عبارت باقاعده باید گزینه‌های سراسری (`g`) یا چسبنده (`y`)
+را فعال داشته باشد و تطبیق باید با متد `‌exec` صورت پذیرد. دوباره، یک راه حل کمتر
+گیج کننده می توانست این باشد که اجازه داده شود که یک آرگومان اضافی برای این کار
+به متد `exec` فرستاده می شود، اما گیج کنندگی یکی از ویژگی‌های اساسی رابط عبارت
+باقاعده در جاوااسکریپت است.
 
 ```
 let pattern = /y/g;
@@ -723,15 +717,15 @@ console.log(pattern.lastIndex);
 
 {{index "side effect", "lastIndex property"}}
 
-If the match was successful, the call to `exec` automatically updates
-the `lastIndex` property to point after the match. If no match was
-found, `lastIndex` is set back to zero, which is also the value it has
-in a newly constructed regular expression object.
+اگر تطبیق با موفقیت انجام شد،فراخوانی `exec` به طور خودکار خاصیت `lastIndex` را به
+روز رسانی کرده تا به نقطه‌ی بعد از تطبیق اشاره کند. اگر تطبیقی پیدا نشود،
+`lastIndex` مقدار صفر را خواهد گرفت، که مقداری است که شیء در هنگام ایجاد
+یک عبارات باقاعده جدید نگه‌داری می کند.
 
-The difference between the global and the sticky options is that, when
-sticky is enabled, the match will succeed only if it starts directly
-at `lastIndex`, whereas with global, it will search ahead for a
-position where a match can start.
+تفاوت بین گزینه‌ی سراسری و چسبنده این است که در حالت فعال بودن گزینه‌ی چسبنده،
+زمانی تطبیق موفق خواهد بود که مستقیما از نقطه‌ی `lastIndex` شروع شود درحالیکه در
+حالت سراسری، جستجو رو به جلو انجام خواهد شد تا به موقعیتی برسد که یک تطبیق بتواند شروع شود.
+
 
 ```
 let global = /abc/g;
@@ -744,10 +738,10 @@ console.log(sticky.exec("xyz abc"));
 
 {{index bug}}
 
-When using a shared regular expression value for multiple `exec`
-calls, these automatic updates to the `lastIndex` property can cause
-problems. Your regular expression might be accidentally starting at an
-index that was left over from a previous call.
+اگر از یک عبارت باقاعده‌ی مشترک برای چندین فراخوانی `exec` استفاده کنیم این
+به‌روز‌رسانی های خودکار خاصیت `lastIndex` می تواند مشکل‌ساز باشد. عبارت
+باقاعده‌ی شما ممکن است تصادفا از اندیسی شروع شود که از فراخوانی قبلی به جا مانده
+باشد.
 
 ```
 let digit = /\d/g;
@@ -759,29 +753,28 @@ console.log(digit.exec("and now: 1"));
 
 {{index ["regular expression", global], "match method"}}
 
-Another interesting effect of the global option is that it changes the
-way the `match` method on strings works. When called with a global
-expression, instead of returning an array similar to that returned by
-`exec`, `match` will find _all_ matches of the pattern in the string
-and return an array containing the matched strings.
+
+یک اثر جالب توجه دیگر در صورت استفاده از گزینه‌ی سراسری این است که باعث می شود
+کارکرد متد `match` روی رشته‌ها، متفاوت باشد. زمانی که این متد با عبارتی سراسری
+فراخوانی شود، به جای اینکه آرایه‌ای شبیه چیزی که از `exec` برگردانده می شد تولید
+کند، متد `match` تمامی تطبیق‌های الگوی درون رشته را پیدا می کند و آرایه‌ای حاوی
+تمام رشته‌های تطبیق خورده تولید می کند.
 
 ```
 console.log("Banana".match(/an/g));
 // → ["an", "an"]
 ```
+بنابراین با احتیاط سراغ عبارات‌ باقاعده‌ی سراسری بروید. معمولا تنها مواردی که
+لازم است به سراغ آن‌ها بروید هنگامی است که به فراخوانی متد `replace` نیاز دارید
+و همچنین مواقعی که لازم است تا صراحتا از `lastIndex` استفاده کنید.
 
-So be cautious with global regular expressions. The cases where they
-are necessary—calls to `replace` and places where you want to
-explicitly use `lastIndex`—are typically the only places where you
-want to use them.
-
-### Looping over matches
+### پیمایش تطبیق‌ها
 
 {{index "lastIndex property", "exec method", loop}}
 
-A common thing to do is to scan through all occurrences of a pattern
-in a string, in a way that gives us access to the match object in the
-loop body. We can do this by using `lastIndex` and `exec`.
+یکی از کارهای رایج این است که تمامی موارد رخ‌داد یک الگو در رشته را در بدنه‌ی
+حلقه پیمایش کنیم به شکلی که شیء تطبیق شده در دسترس ما باشد. برای این‌کار می
+توانیم از متدهای `lastIndex` و `exec` استفاده کنیم.
 
 ```
 let input = "A string with 3 numbers in it... 42 and 88.";
@@ -797,23 +790,23 @@ while (match = number.exec(input)) {
 
 {{index "while loop", ["= operator", "as expression"], [binding, "as state"]}}
 
-This makes use of the fact that the value of an ((assignment))
-expression (`=`) is the assigned value. So by using `match =
-number.exec(input)` as the condition in the `while` statement, we
-perform the match at the start of each iteration, save its result in a
-binding, and stop looping when no more matches are found.
+این مثال از این واقعیت استفاده می کند که مقدار یک عبارت تخصیص (`=`)، مقدار انتساب
+داده شده است. بنابراین با استفاده از <bdo>`match =
+number.exec(input)`</bdo> به عنوان قسمت شرط
+دستور `while،` تطبیق را در شروع هر تکرار￼ حلقه اجرا می کنیم و نتیجه‌ی آن را در یک
+متغیر ذخیره می کنیم، و هنگامی پیمایش حلقه را متوقف می کنیم که تطبیقی پیدا نشود.
 
 {{id ini}}
-## Parsing an INI file
+## تجزیه‌ی یک فایل ini
 
 {{index comment, "file format", "enemies example", "INI file"}}
 
-To conclude the chapter, we'll look at a problem that calls for
-((regular expression))s. Imagine we are writing a program to
-automatically collect information about our enemies from the
-((Internet)). (We will not actually write that program here, just the
-part that reads the ((configuration)) file. Sorry.) The configuration
-file looks like this:
+برای به پایان رساندن این فصل، به سراغ مسئله‌ای می رویم که به دست عبارات باقاعده
+حل می شود. فرض کنید که در حال نوشتن برنامه‌ای هستیم که به طور خودکار اطلاعاتی
+درباره‌ی دشمنانمان از سطح اینترنت جمع آوری می کند. (واقعا قرار نیست این
+برنامه‌ را در اینجا بنویسیم، فقط بخشی را می نویسیم که فایل حاوی تنظیمات را می
+خواند. از این بابت متاسفم.) فایل تنظیمات به این شکل است:
+
 
 ```{lang: "text/plain"}
 searchengine=https://duckduckgo.com/?q=$1
@@ -834,34 +827,32 @@ outputdir=/home/marijn/enemies/davaeorn
 
 {{index grammar}}
 
-The exact rules for this format (which is a widely used format,
-usually called an _INI_ file) are as follows:
+قوانین حاکم بر این فایل (که فرمتی بسیار رایج است و معمولا یک فایل INI نامیده می
+شود) به صورت زیر است:
 
-- Blank lines and lines starting with semicolons are ignored.
+- خطوط خالی و خط‌هایی که با نقطه‌ویرگول شروع می شوند صرف نظر می شوند.
 
-- Lines wrapped in `[` and `]` start a new ((section)).
+- خطوطی که بین <bdo>`[`</bdo> و <bdo>`]`</bdo> محصور هستند یک بخش جدید را شروع می کنند.
 
-- Lines containing an alphanumeric identifier followed by an `=`
-  character add a setting to the current section.
+- خطوطی که حاوی یک شناسه‌ی عددی-حرفی هستند که بعد از آن کاراکتر `=` می آید، یک
+  گزینه به تنظیمات بخش فعلی اضافه می کنند.
 
-- Anything else is invalid.
+- هر چیز دیگری غیر از موارد بالا نامعتبر شناخته می شود.
 
-Our task is to convert a string like this into an object whose
-properties hold strings for settings written before the first
-section header and subobjects for sections, with those subobjects
-holding the section's settings.
+وظیفه‌ی ما این است که رشته‌ای شبیه این را به یک شیء تبدیل کنیم که خاصیت‌هایش
+رشته‌های تنظیمات نوشته شده قبل از اولین بخش را نگه‌داری می کنند و زیر‌شیءهایش
+به بخش‌ها تعلق دارند که هر زیر‌شیء تنظیمات یک بخش را در خود دارد.
 
 {{index "carriage return", "line break", "newline character"}}
 
-Since the format has to be processed ((line)) by line, splitting up
-the file into separate lines is a good start. We saw
-the `split` method in [Chapter ?](data#split).
-Some operating systems, however, use not just a newline character to
-separate lines but a carriage return character followed by a newline
-(`"\r\n"`). Given that the `split` method also allows a regular
-expression as its argument, we can use a regular expression like
-`/\r?\n/` to split in a way that allows both `"\n"` and `"\r\n"`
-between lines.
+
+به دلیل اینکه این فرمت باید خط به خط پردازش شود، تقسیم فایل به خطوط مجزا شروع
+خوبی به نظر می رسد. ما متد `split` را در [فصل ?](data#split) دیدیم. بعضی سیستم عامل‌ها، به هر دلیلی، فقط از کاراکتر خط جدید برای جداسازی خطوط
+استفاده نمی کنند بلکه از یک کاراکتر بازگشت به ابتدای خط و بعد از آن کاراکتر خط
+جدید برای این کار استفاده می کنند <bdo>(`"\r\n"`)</bdo>. با درنظر گرفتن اینکه می دانیم می‌توان به متد `split`، یک عبارات باقاعده ارسال کرد می توانیم جداسازی خطوط را با عبارت
+باقاعده ای شبیه <bdo>`/\r?\n/`</bdo> انجام دهیم که باعث می شود هم <bdo>`"\n"`</bdo> و هم <bdo>`"\r\n"`</bdo> در نظر
+گرفته شود.
+
 
 ```{startCode: true}
 function parseINI(string) {
@@ -890,68 +881,61 @@ city=Tessaloniki`));
 
 {{index "parseINI function", parsing}}
 
-The code goes over the file's lines and builds up an object.
-Properties at the top are stored directly into that object, whereas
-properties found in sections are stored in a separate section object.
-The `section` binding points at the object for the current section.
+کد بالا به این صورت عمل می کند که خط به خط فایل را پردازش کرده و یک شیء می سازد.
+خاصیت‌های قسمت بالایی مستقیما درون شیء ذخیره می شوند، درحالیکه خاصیت‌هایی که در
+بخش‌ها قرار دارند به صورت جداگانه در￼ شیئی  مختص هر بخش قرار می گیرند. متغیر
+`section` به شیء بخش کنونی اشاره می کند.
 
-There are two kinds of significant lines—section headers or property
-lines. When a line is a regular property, it is stored in the current
-section. When it is a section header, a new section object is created,
-and `section` is set to point at it.
+دو نوع قابل توجه خط وجود دارد – سرتیترهای بخش یا خطوط خاصیت ها. زمانی که یک خط
+معرف یک خاصیت معمولی است، در بخش فعلی ذخیره می شود. زمانی که معرف یک سرتیتر بخش
+است، یک شیء جدید برای بخش مورد نظر ایجاد می شود و `section` به آن تخصیص می یابد.
 
 {{index "caret character", "dollar sign", boundary}}
 
-Note the recurring use of `^` and `$` to make sure the expression
-matches the whole line, not just part of it. Leaving these out results
-in code that mostly works but behaves strangely for some input, which
-can be a difficult bug to track down.
+توجه داشته باشید که استفاده‌ی مکرر از `^` و `$` برای این است که مطمئن شویم عبارت
+تمام خط را تطبیق می دهد نه فقط بخشی از آن را. اگر از آن ها استفاده نشود، کد در
+اکثر مواقع کار می‌کند اما برای بعضی ورودی ها رفتار عجیبی از خود نشان دهد که ممکن
+است اشکال زدایی آن سخت باشد.
 
 {{index "if keyword", assignment, ["= operator", "as expression"]}}
 
-The pattern `if (match = string.match(...))` is similar to the trick
-of using an assignment as the condition for `while`. You often aren't
-sure that your call to `match` will succeed, so you can access the
-resulting object only inside an `if` statement that tests for this. To
-not break the pleasant chain of `else if` forms, we assign the result
-of the match to a binding and immediately use that assignment as the
-test for the `if` statement.
+الگوی <bdo>`if (match = string.match(...))`</bdo> شبیه به ترفندی است که از عبارت تخصیص به
+عنوان شرط `while` استفاده کردیم. اغلب اطمینان ندارید که فراخوانی `match` موفق خواهد
+شد، بنابراین می توانید فقط درون یک دستور `if` که آن را آزمایش می کند به نتیجه‌ی
+آن دسترسی داشته باشید. برای جلوگیری از شکستن زنجیره‌ی <bdo>`else if`</bdo>،  نتیجه‌ی تطبیق را
+به متغیری اختصاص دادیم و بلافاصله آن تخصیص را به عنوان شرط دستور `if` استفاده
+کرده ایم.
+
 
 {{index [parentheses, "in regular expressions"]}}
 
-If a line is not a section header or a property, the function checks
-whether it is a comment or an empty line using the expression
-`/^\s*(;.*)?$/`. Do you see how it works? The part between the
-parentheses will match comments, and the `?` makes sure it also
-matches lines containing only whitespace. When a line doesn't match
-any of the expected forms, the function throws an exception.
+اگر یک خط، سرتیتر بخش یا یک خاصیت نباشد، تابع با استفاده از عبارت <bdo>`/^\s*(;.*)?$/`</bdo>
+بررسی می کند که آیا این خط توضیح است یا خطی خالی. متوجه نحوه‌ی کارکرد آن شدید؟ قسمتی که
+داخل پرانتز است توضیحات را تطبیق می دهد و علامت سوال `?` اطمینان حاصل می کند که
+خطوطی که فقط فضای خالی هستند شناسایی شوند. اگر خطی با هیچکدام از اشکال قابل
+انتظار تطبیق نخورد، تابع یک استثنا تولید (رها) می کند.
 
-## International characters
+## کاراکترهای بین‌المللی
 
 {{index internationalization, Unicode, ["regular expression", internationalization]}}
 
-Because of JavaScript's initial simplistic implementation and the fact
-that this simplistic approach was later set in stone as ((standard))
-behavior, JavaScript's regular expressions are rather dumb about
-characters that do not appear in the English language. For example, as
-far as JavaScript's regular expressions are concerned, a "((word
-character))" is only one of the 26 characters in the Latin alphabet
-(uppercase or lowercase), decimal digits, and, for some reason, the
-underscore character. Things like _é_ or _β_, which most definitely
-are word characters, will not match `\w` (and _will_ match uppercase
-`\W`, the nonword category).
+به دلیل اینکه پیاده‌سازی اولیه جاوااسکریپت بسیار ساده بوده است و این واقعیت که
+این شیوه‌ی ساده محور بعدها به عنوان یک استاندارد رفتاری در نظر گرفته شد، عبارات
+باقاعده در جاوااسکریپت نسبتا برای کاراکترهای غیر انگلیسی، حرفی برای گفتن ندارند.
+به عنوان مثال، در عبارات باقاعده جاوااسکریپت، یک “کاراکتر کلمه” فقط شامل 26
+حرف لاتین (حروف بزرگ و کوچک)، اعداد ده‌دهی، و به دلایلی کاراکتر خط زیرین می شود.
+چیزهایی مثل _é_ یا _β_ که قطعا کاراکتر کلمه محسوب می شوند توسط <bdo>`\w`</bdo> تطبیق نمی خورند (
+و با <bdo>`\W`</bdo> تطبیق می خورند، دسته‌ی کاراکترهای غیر کلمه).
+
 
 {{index [whitespace, matching]}}
 
-By a strange historical accident, `\s` (whitespace) does not have this
-problem and matches all characters that the Unicode standard considers
-whitespace, including things like the ((nonbreaking space)) and the
-((Mongolian vowel separator)).
+به خاطر یک اتفاق نامعلوم در گذشته، <bdo>`\s`</bdo> (فضای خالی) این مشکل را ندارد و همه‌ی
+کاراکترهایی که استاندارد یونیکد به عنوان فضای خالی درنظر می گیرد را شامل می شود،
+مثل کاراکترهایی از قبیل نیم‌فاصله و جداکننده حروف صدادار در زبان مغولی.
 
-Another problem is that, by default, regular expressions work on code
-units, as discussed in [Chapter ?](higher_order#code_units), not
-actual characters. This means characters that are composed of two
-code units behave strangely.
+مشکل دیگر این است که به طور پیش فرض عبارات باقاعده روی واحدهای کد عمل می‌کنند؛ نه روی کاراکترهای واقعی؛ همانطور که در [فصل ?](higher_order#code_units) بحث شد. معنای آن این است که با کاراکترهایی
+که از دو واحد کد تشکیل شده اند به شکل نامشخصی رفتار می شود.
 
 ```
 console.log(/🍎{3}/.test("🍎🍎🍎"));
@@ -962,22 +946,21 @@ console.log(/<.>/u.test("<🌹>"));
 // → true
 ```
 
-The problem is that the 🍎 in the first line is treated as two code
-units, and the `{3}` part is applied only to the second one.
-Similarly, the dot matches a single code unit, not the two that make
-up the rose ((emoji)).
+مشکل اینجاست که 🍎 در خط اول به عنوان دو واحد کد شناخته می شود، و <bdo>`{3}`</bdo> فقط به
+واحد دوم اعمال می شود. به طور مشابه، عملگر نقطه فقط یک واحد کد را می شناسد نه دو
+واحدی که ایموجی گل رز را می سازند.
 
-You must add a `u` option (for ((Unicode))) to your regular
-expression to make it treat such characters properly. The wrong
-behavior remains the default, unfortunately, because changing that
-might cause problems for existing code that depends on it.
+برای اینکه عبارت باقاعده این گونه کاراکترها را در نظر بگیرد باید گزینه‌ی `u`
+(یونیکد) را استفاده کنید. متاسفانه به صورت پیش‌فرض این اشکال وجود خواهد
+داشت چون تغییر آن ممکن است مشکلاتی را برای کدهای نوشته شده از قبل که به این رفتار
+وابستگی دارند به وجود بیاورد.
 
 {{index "character category", [Unicode, property]}}
 
-Though this was only just standardized and is, at the time of writing,
-not widely supported yet, it is possible to use `\p` in a regular
-expression (that must have the Unicode option enabled) to match all
-characters to which the Unicode standard assigns a given property.
+اگرچه این قضیه به تازگی استاندارد شده است، و در هنگام نوشتن این کتاب، هنوز به
+طور گسترده از آن پشتیبانی نمی شود، می توان از <bdo>`\p`</bdo> در یک عبارت باقاعده (
+عبارتی که باید گزینه‌ی یونیکد را فعال داشته باشد) برای تطبیق همه‌ی کاراکترهایی که
+استاندارد یونیکد برای آن‌ها خاصیتی در نظر گرفته است، استفاده کرد.
 
 ```{test: never}
 console.log(/\p{Script=Greek}/u.test("α"));
@@ -990,106 +973,100 @@ console.log(/\p{Alphabetic}/u.test("!"));
 // → false
 ```
 
-Unicode defines a number of useful properties, though finding the one
-that you need may not always be trivial. You can use the
-`\p{Property=Value}` notation to match any character that has the
-given value for that property. If the property name is left off, as in
-`\p{Name}`, the name is assumed to be either a binary property such as
-`Alphabetic` or a category such as `Number`.
+یونیکد تعدادی خاصیت مفید تعریف می کند، اگرچه پیدا کردن خاصیتی که نیاز شما باشد
+ممکن است که همیشه ساده نباشد. می توانید از دستور <bdo>`\p{Property=Value}`</bdo> برای
+تطبیق هر کاراکتری که مقدار داده شده را برای آن خاصیت داشته باشد استفاده کنید.
+اگر نام خاصیت را همانطور که در <bdo>`\p{Name}`</bdo> می بینید حذف کنیم، نام آن یا به عنوان یک
+خاصیت دودویی مثل `Alphabetic` در نظر گرفته می شود یا یک دسته مثل `Number`.
 
 {{id summary_regexp}}
 
-## Summary
+## خلاصه
 
-Regular expressions are objects that represent patterns in strings.
-They use their own language to express these patterns.
+عبارات باقاعده اشیائی هستند که الگوها را در رشته‌ها نشان می دهند. این عبارات از
+زبانی مخصوص به خود برای بیان این الگوها استفاده می کنند.
 
 {{table {cols: [1, 5]}}}
 
-| `/abc/`     | A sequence of characters
-| `/[abc]/`   | Any character from a set of characters
-| `/[^abc]/`  | Any character _not_ in a set of characters
-| `/[0-9]/`   | Any character in a range of characters
-| `/x+/`      | One or more occurrences of the pattern `x`
-| `/x+?/`     | One or more occurrences, nongreedy
-| `/x*/`      | Zero or more occurrences
-| `/x?/`      | Zero or one occurrence
-| `/x{2,4}/`  | Two to four occurrences
-| `/(abc)/`   | A group
-| `/a|b|c/`   | Any one of several patterns
-| `/\d/`      | Any digit character
-| `/\w/`      | An alphanumeric character ("word character")
-| `/\s/`      | Any whitespace character
-| `/./`       | Any character except newlines
-| `/\b/`      | A word boundary
-| `/^/`       | Start of input
-| `/$/`       | End of input
+| `/abc/`     | یک دنباله از کاراکترها
+| `/[abc]/`   | یک کاراکتر از یک مجموعه کاراکتر
+| `/[^abc]/`  | یک کاراکتر که در مجموعه‌ی مشخص شده نباشد
+| `/[0-9]/`   | یک کاراکتر که در یک بازه از کاراکترها قرار دارد
+| `/x+/`      | یک یا بیش از یک بار وقوع الگوی `x`
+| `/x+?/`     | یک یا بیش از یک بار وقوع به صورت غیر حریصانه
+| `/x*/`      | صفر یا بیش از صفر بار وقوع الگوی `x`
+| `/x?/`      | صفر یا یک بار وقوع
+| `/x{2,4}/`  | دو تا چهار بار وقوع
+| `/(abc)/`   | یک دسته یا گروه
+| `/a|b|c/`   | یکی از الگوهای متعدد
+| `/\d/`      | یک کاراکتر رقمی (عدد)
+| `/\w/`      | یک کاراکتر حرف-عددی (یک کاراکتر کلمه)
+| `/\s/`      | یک کاراکتر فضای خالی (هر نوعی)
+| `/./`       | هر کاراکتری به جز کاراکتر خط جدید
+| `/\b/`      | یک مرز کلمه
+| `/^/`       | شروع ورودی
+| `/$/`       | پایان ورودی
 
-A regular expression has a method `test` to test whether a given
-string matches it. It also has a method `exec` that, when a match is
-found, returns an array containing all matched groups. Such an array
-has an `index` property that indicates where the match started.
+یک عبارت باقاعده دارای متدی به نام `test` است که رشته‌ی داده شده را جهت تطبیق با
+عبارت بررسی می کند. همچنین متدی به نام `exec` دارد که در صورت پیدا کردن تطبیق،
+آرایه‌ای تولید می کند که همه‌ی گروه‌های تطبیق خورده را دربر دارد. این آرایه دارای
+خاصیتی به نام `index` است که نقطه‌ی شروع تطبیق را مشخص می کند.
 
-Strings have a `match` method to match them against a regular
-expression and a `search` method to search for one, returning only the
-starting position of the match. Their `replace` method can replace
-matches of a pattern with a replacement string or function.
+رشته‌ها دارای متدی به نام `match` می‌باشند که برای تطبیق آن ها با یک عبارات
+باقاعده استفاده می شود. متدی به نام `search` دارند که برای جستجوی یک عبارت
+استفاده می شود که تنها موقعیت شروع تطبیق یافته شده را برمی‌گرداند. متد `replace`
+رشته‌ها می تواند تطبیق‌های پیدا شده برای یک الگو را با یک رشته یا تابع جایگزین
+کند.
 
-Regular expressions can have options, which are written after the
-closing slash. The `i` option makes the match case insensitive. The
-`g` option makes the expression _global_, which, among other things,
-causes the `replace` method to replace all instances instead of just
-the first. The `y` option makes it sticky, which means that it will
-not search ahead and skip part of the string when looking for a match.
-The `u` option turns on Unicode mode, which fixes a number of problems
-around the handling of characters that take up two code units.
+عبارات باقاعده می توانند گزینه‌هایی هم داشته باشند که بعد از اسلش پایانی نوشته
+می شوند. گزینه‌ی `i` باعث می شود که تطبیق به بزرگی و کوچکی حروف حساس نباشد. گزینه‌ی
+`g` عبارت را _سراسری_ می کند که علاوه بر نتایج دیگر، در متد `replace` باعث می شود که
+همه‌ی نمونه‌ها جایگزین شوند نه فقط اولین مورد. گزینه‌ی `y` باعث می شود که عبارت
+چسبنده شود، که معنای آن این است که به سمت جلو جستجو نخواهد کرد و بخشی از رشته
+را در هنگام جستجو برای تطبیق در نظر نمی گیرد. گزینه‌ی `u` حالت یونیکد را فعال می
+کند که مشکلات مربوط به کاراکترهایی که دو واحد کد اشغال می کنند را برطرف می کند.
 
-Regular expressions are a sharp ((tool)) with an awkward handle. They
-simplify some tasks tremendously but can quickly become unmanageable
-when applied to complex problems. Part of knowing how to use them is
-resisting the urge to try to shoehorn things that they cannot cleanly
-express into them.
+عبارت‌های باقاعده مانند چاقوی تیزی هستند که دسته‌ی نامناسبی دارند. بعضی از کارها را به شدت
+ساده می کنند اما زمانی که به مسائل پیچیده اعمال می شوند می توانند به سرعت غیر قابل کنترل شوند.
+بخشی از فرهنگ صحیح استفاده از عبارات باقاعده  این است که برای چیزهایی که به روشنی به وسیله‌ی آن‌ها قابل بیان نیستند به سراغشان نرویم.
 
-## Exercises
+## تمرین‌ها
 
 {{index debugging, bug}}
 
-It is almost unavoidable that, in the course of working on these
-exercises, you will get confused and frustrated by some regular
-expression's inexplicable ((behavior)). Sometimes it helps to enter
-your expression into an online tool like
-[_https://debuggex.com_](https://www.debuggex.com/) to see whether its
-visualization corresponds to what you intended and to ((experiment))
-with the way it responds to various input strings.
+تقریبا غیر قابل اجتناب است که در حین انجام تمرین‌های این فصل، با دیدن بعضی از
+رفتارهای پیچیده‌ی عبارات باقاعده، دچار سردرگمی و ناامیدی نشوید. گاهی اوقات بهتر
+است که عبارتتان را در ابزارهای آنلاینی
+مثل [_https://debuggex.com_](https://www.debuggex.com/) وارد کنید تا ببینید تجسم
+عبارتتان با آنچه در نظر داشته اید ارتباط دارد یا خیر و با توجه به واکنش آن
+رشته‌های ورودی متفاوتی را آزمایش کنید.
 
-### Regexp golf
+### گلف Regexp
 
 {{index "program size", "code golf", "regexp golf (exercise)"}}
 
-_Code golf_ is a term used for the game of trying to express a
-particular program in as few characters as possible. Similarly,
-_regexp golf_ is the practice of writing as tiny a regular expression
-as possible to match a given pattern, and _only_ that pattern.
+_گلف کد_ اصطلاحی است که برای تلاش نوشتن برنامه‌ای با حداقل کاراکتر به کار
+می‌رود. به طور مشابه _regexp golf_، تمرین نوشتن کوتاه‌ترین عبارت باقاعده‌ای است
+که برای تطبیق یک الگوی داده شده می توان نوشت و _فقط_ همان الگو باید تطبیق بخورد.
 
 {{index boundary, matching}}
 
-For each of the following items, write a ((regular expression)) to
-test whether any of the given substrings occur in a string. The
-regular expression should match only strings containing one of the
-substrings described. Do not worry about word boundaries unless
-explicitly mentioned. When your expression works, see whether you can
-make it any smaller.
+برای هر یک از آیتم‌های زیر، عبارت باقاعده‌ای بنویسید و تست کنید هر کدام از
+زیررشته‌های داده شده در یک رشته موجود هستند یا خیر. عبارت باقاعده‌ای که می نویسید
+باید فقط رشته‌هایی را تطبیق دهد که یکی از زیر رشته‌های داده شده را داشته باشند.
+نیازی نیست نگران مرزهای کلمات باشید مگر اینکه به طور صریح ذکر شده باشد. وقتی
+عبارت باقاعده‌ی شما به طور صحیح کار کرد، ببینید توانید آن را کوتاه تر بنویسید؟
 
- 1. _car_ and _cat_
- 2. _pop_ and _prop_
- 3. _ferret_, _ferry_, and _ferrari_
- 4. Any word ending in _ious_
- 5. A whitespace character followed by a period, comma, colon, or semicolon
- 6. A word longer than six letters
- 7. A word without the letter _e_ (or _E_)
+ 1. _car_ و _cat_
+ 2. _pop_ و _prop_
+ 3. _ferret_, _ferry_, و _ferrari_
+ 4. هر کلمه‌ای که با _ious_ پایان پذیرد
+ 5. یک کاراکتر فضای خالی که بعد از نقطه، ویرگول، دونقطه، یا نقطه‌ویرگول بیاید
+ 6. کلمه‌ای که از شش حرف بیشتر باشد
+ 7. یک کلمه بدون داشتن حرف _e_ (یا _E_)
 
-Refer to the table in the [chapter summary](regexp#summary_regexp) for
-help. Test each solution with a few test strings.
+به جدولی که در [خلاصه فصل](regexp#summary_regexp) آمده است برای کمک گرفتن رجوع کنید. هر راه حل را با
+چندین رشته‌ی آزمایشی بررسی کنید.
 
 {{if interactive
 ```
@@ -1138,20 +1115,19 @@ function verify(regexp, yes, no) {
 
 if}}
 
-### Quoting style
+### سبک نقل قول کردن
 
 {{index "quoting style (exercise)", "single-quote character", "double-quote character"}}
 
-Imagine you have written a story and used single ((quotation mark))s
-throughout to mark pieces of dialogue. Now you want to replace all the
-dialogue quotes with double quotes, while keeping the single quotes
-used in contractions like _aren't_.
+تصور کنید که یک داستان نوشته شده دارید و از علامت نقل قول تکی در طول کتاب برای
+مشخص کردن دیالوگ‌ها استفاده کرده اید. اکنون قصد دارید که همه‌ی علامت‌های تکی نقل
+قول را با علامت‌های جفتی عوض کنید و حواستان هم باشد که علامت‌های نقل قول تکی که در
+اختصار‌هایی مثل _aren't_ آمده اند را عوض نکنید.
 
 {{index "replace method"}}
 
-Think of a pattern that distinguishes these two
-kinds of quote usage and craft a call to the `replace` method that
-does the proper replacement.
+به الگویی فکر کنید که این دو نوع نقل قول را تمییز دهد و از `replace` برای جایگزینی صحیح
+استفاده کنید.
 
 {{if interactive
 ```{test: no}
@@ -1180,17 +1156,16 @@ that are not matched will be replaced by nothing.
 
 hint}}
 
-### Numbers again
+### دوباره اعداد
 
 {{index sign, "fractional number", [syntax, number], minus, "plus character", exponent, "scientific notation", "period character"}}
 
-Write an expression that matches only JavaScript-style ((number))s. It
-must support an optional minus _or_ plus sign in front of the number,
-the decimal dot, and exponent notation—`5e-3` or `1E10`—again with an
-optional sign in front of the exponent. Also note that it is not
-necessary for there to be digits in front of or after the dot, but the
-number cannot be a dot alone. That is, `.5` and `5.` are valid
-JavaScript numbers, but a lone dot _isn't_.
+عبارتی بنویسید که فقط اعداد سبک جاوااسکریپت را تطبیق دهد. عبارت باید علامت
+منفی یا مثبت را در جلوی عدد به صورت اختیاری پشتیبانی کند، همچنین نقطه‌ی ممیز و
+نماد توان – <bdo>`5e-3`</bdo> یا <bdo>`1E10`</bdo> – را دوباره با علامت اختیاری جلوی توان پشتیبانی کند.
+همچنین توجه داشته باشید که لازم نیست که بعد از نقطه‌ی ممیز حتما رقم بیابد اما
+نباید عدد  فقط شامل یک نقطه‌ی تنها باشد. بنابراین <bdo>`.5`</bdo>٫ و  <bdo>`5.`</bdo> اعدادی معتبر در
+جاوااسکریپت محسوب می شوند اما یک نقطه‌ی تنها _این طور نیست_.
 
 {{if interactive
 ```{test: no}
