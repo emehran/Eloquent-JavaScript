@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/packages_chapter_10.js", "code/chapter/07_robot.js"]}}}
 
-# Modules
+# ماژول‌ها
 
 {{quote {author: "Tef", title: "Programming is Terrible", chapter: true}
 
@@ -14,163 +14,152 @@ quote}}
 
 {{index organization, [code, "structure of"]}}
 
-The ideal program has a crystal-clear structure. The way it works is
-easy to explain, and each part plays a well-defined role.
+یک برنامه‌ی ایده‌آل دارای ساختاری شفاف و روشن است. به راحتی می توان کارکرد آن
+را توضیح داد و هر بخش￼ آن نقشی را ایفا می کند که به خوبی تعریف شده است.
 
 {{index "organic growth"}}
 
-A typical real program grows organically. New pieces of functionality
-are added as new needs come up. Structuring—and preserving
-structure—is additional work. It's work that will pay off only in the
-future, the _next_ time someone works on the program. So it is
-tempting to neglect it and allow the parts of the program to become
-deeply entangled.
+معمولا یک برنامه‌ی واقعی به شکلی ارگانیک رشد می کند. قابلیت‌های جدید، همانطور که لازم
+می شوند به برنامه افزوده شوند. ساختاردهی – و حفظ ساختار – کاری مجزایی است. کاری است که
+فقط در آینده با مزایای آن روبرو می‌شوید زمانی که کسی دوباره روی برنامه قرار است کار کند. پس
+ممکن است وسوسه‌انگیز باشد که از آن غفلت کنید و بگذارید بخش‌های برنامه عمیقا دچار
+آشفتگی شوند.
 
 {{index readability, reuse, isolation}}
 
-This causes two practical issues. First, understanding such a system
-is hard. If everything can touch everything else, it is difficult to
-look at any given piece in isolation. You are forced to build up a
-holistic understanding of the entire thing. Second, if you want to
-use any of the functionality from such a program in another situation,
-rewriting it may be easier than trying to disentangle it from its
-context.
+در عمل این غفلت دو اشکال ایجاد می کند. اول اینکه درک یک سیستم بدون‌ ساختار مشکل است.
+اگر همه‌ی بخش‌های برنامه در تماس با دیگر بخش‌ها باشند، سخت می توان بخشی از برنامه را
+به صورت جداگانه بررسی نمود. شما مجبورید که درکی کلی و جامع از برنامه داشته باشید.
+دوم اینکه، اگر بخواهید هر کدام از قابلیت‌های برنامه‌ای اینچنینی را در جایی دیگر
+استفاده کنید، از اول نوشتن آن قابلیت ممکن است از جداسازی آن از برنامه، آسان تر
+باشد.
 
-The phrase "((big ball of mud))" is often used for such large,
-structureless programs. Everything sticks together, and when you try
-to pick out a piece, the whole thing comes apart, and your hands get
-dirty.
+اصطلاح “big ball of mud” (توپ‌ بزرگ گلی) اغلب برای برنامه‌های بزرگی که ساختاری ندارند استفاده می
+شود. همه چیز به هم چسبیده است و زمانی که قصد دارید یک قسمت را جدا کنید، کل آن
+قسمت یا برنامه متلاشی می شود و دستانتان را کثیف کند.
 
-## Modules
+
+## ماژول‌ها
 
 {{index dependency, [interface, module]}}
 
-_Modules_ are an attempt to avoid these problems. A ((module)) is a
-piece of program that specifies which other pieces it relies on
-and which functionality it provides for other modules
-to use (its _interface_).
+استفاده از _ماژول‌ها_ تلاشی برای اجتناب از این گونه مشکلات است. یک ماژول بخشی از
+برنامه است که مشخص می کند به کدام بخش‌های دیگر از برنامه وابسته است (وابستگی‌های
+آن) و چه قابلیتی برای استفاده‌ی دیگر ماژول ها فراهم می کند (_رابط_ آن).
 
 {{index "big ball of mud"}}
 
-Module interfaces have a lot in common with object interfaces, as we
-saw them in [Chapter ?](object#interface). They make part of the
-module available to the outside world and keep the rest private. By
-restricting the ways in which modules interact with each other, the
-system becomes more like ((LEGO)), where pieces interact through
-well-defined connectors, and less like mud, where everything mixes
-with everything.
+رابط‌های ماژول شباهت‌ زیادی با رابط‌های شیء دارند، همانطور که با آن ها در[فصل ?](object#interface)
+آشنا شدیم. رابط‌ها بخشی از ماژول را در دسترس جهان بیرون می گذارند و بقیه‌ی قسمت
+ها را به صورت خصوصی حفظ می کنند. با محدودسازی راه‌های تعامل ماژول‌ها با یکدیگر ، سیستم بیشتر
+شبیه لگو می شود، جایی که قطعات توسط متصل‌کننده‌هایی که به خوبی تعریف شده اند با هم
+تعامل دارند و کمتر به توپ گلی شباهت دارد که همه چیز در آن با هم مخلوط شده است.
 
 {{index dependency}}
 
-The relations between modules are called _dependencies_. When a module
-needs a piece from another module, it is said to depend on that
-module. When this fact is clearly specified in the module itself, it
-can be used to figure out which other modules need to be present to be
-able to use a given module and to automatically load dependencies.
+ارتباطات بین ماژول ها را _وابستگی‌ها_ می نامند. زمانی که یک ماژول به بخشی از یک
+ماژول دیگر نیاز دارد، گفته می شود که به آن ماژول وابستگی دارد. زمانی که این
+وابستگی در خود ماژول به صورت مشخص اعلام شود، می توان از آن برای شناسایی دیگر
+ماژول‌هایی که لازم است برای اجرای یک ماژول خاص حضور داشته باشند استفاده کرد و به
+صورت خودکار آن وابستگی‌ها را بارگذاری کرد.
 
-To separate modules in that way, each needs it own private ((scope)).
+برا جداسازی ماژول‌ها به این روش ، لازم است هر کدام محدوده‌ی خصوصی خودش را داشته
+باشد.
 
-Just putting your JavaScript code into different ((file))s does not
-satisfy these requirements. The files still share the same global
-namespace. They can, intentionally or accidentally, interfere with
-each other's bindings. And the dependency structure remains unclear.
-We can do better, as we'll see later in the chapter.
+فقط قرار دادن کدهای جاوااسکریپت در فایل های جداگانه این امکان را فراهم نمی کند.
+فایل‌ها همچنان فضای نام سراسری یکسانی را به صورت مشترک استفاده می کنند. ممکن است به صورت
+تصادفی یا آگاهانه بین متغیرهای یکدیگر تداخل ایجاد کنند و ساختار وابستگی همچنان
+غیر شفاف خواهد ماند. می توان کار بهتری کرد که در ادامه خواهیم دید.
 
 {{index design}}
 
-Designing a fitting module structure for a program can be difficult.
-In the phase where you are still exploring the problem, trying 
-different things to see what works, you might want to not worry about
-it too much since it can be a big distraction. Once you have
-something that feels solid, that's a good time to take a step back and
-organize it.
+طراحی یک ساختار ماژول مناسب برای یک برنامه ممکن است سخت باشد. در مرحله‌ای که هنوز
+در حال بررسی مشکل هستید، و چیزهای متفاوتی را آزمایش می کنید، ممکن است علاقه‌ای
+نداشته باشید که زیاد به ساختاردهی فکر کنید، چرا که می تواند باعث حواسپرتی زیادی
+بشود. وقتی به نتیجه‌ای استوار و قابل اتکا رسیدید ، آن زمان مناسب برای اقدام جهت
+سازماندهی برنامه خواهد بود.
 
-## Packages
+## بسته‌ها
 
 {{index bug, dependency, structure, reuse}}
 
-One of the advantages of building a program out of separate pieces,
-and being actually able to run those pieces on their own, is that you
-might be able to apply the same piece in different programs.
+یکی از مزایای ساختن یک برنامه بر اساس قسمت‌های جداگانه، و داشتن قابلیت اجرای آن
+قسمت‌ها به صورت مستقل، این است که ممکن است بتوانید آن قسمت‌ها را در برنامه‌های
+مختلف به کار ببرید.
 
 {{index "parseINI function"}}
 
-But how do you set this up? Say I want to use the `parseINI` function
-from [Chapter ?](regexp#ini) in another program. If it is clear what
-the function depends on (in this case, nothing), I can just copy all the
-necessary code into my new project and use it. But then, if I find a
-mistake in that code, I'll probably fix it in whichever program 
-I'm working with at the time and forget to also fix it in the other
-program.
+اما چگونه آن را راه‌اندازی می کنید؟ فرض کنیم من می خواهم که تابع `parseINI` را که
+در [فصل ?](regexp#ini) نوشتیم در برنامه‌ی دیگری استفاده کنم. اگر روشن باشد که این تابع چه
+وابستگی‌هایی دارد (که در اینجا ندارد)، می توانم به سادگی کدهای مورد نیاز را به
+پروژه‌ی جدیدم کپی کنم و از آن استفاده کنم. اما در این صورت اگر مشکلی در آن کد
+پیدا کنم، احتمالا آن مشکل را فقط در برنامه‌ای که در حال کار روی آن هستم رفع
+خواهم کرد و فراموش می کنم که در برنامه‌ی دیگر نیز آن را اصلاح کنم.
 
 {{index duplication, "copy-paste programming"}}
 
-Once you start duplicating code, you'll quickly find yourself wasting
-time and energy moving copies around and keeping them up-to-date.
+به محض اینکه به کپی کردن کدها اقدام کنید متوجه خواهید شد که با جابجا کردن کپی‌ها
+بین برنامه ها و به روز رسانی آن ها وقت و انرژی خودتان را تلف می کنید.
 
-That's where _((package))s_ come in. A package is a chunk of code that
-can be distributed (copied and installed). It may contain one or more
-modules and has information about which other packages it depends on.
-A package also usually comes with documentation explaining what it
-does so that people who didn't write it might still be able to use
-it.
+اینجا‌ است که بسته‌ها _((package))s_ کاربرد خواهند داشت. یک بسته یک قطعه کد است که
+می‌تواند توزیع شود (کپی و نصب شود). یک بسته می تواند دارای یک یا چند ماژول باشد
+و همچنین اطلاعاتی در باره‌ی دیگر بسته‌هایی که به آنها وابسته است دارد. یک بسته همچنین
+همراه با مستنداتی می آید که کارکرد آن را شرح می دهد، بنابراین کسانی که بسته را
+ننوشته اند قادر خواهند بود که از آن استفاده کنند.
 
-When a problem is found in a package or a new feature is added, the
-package is updated. Now the programs that depend on it (which may also
-be packages) can upgrade to the new ((version)).
+زمانی که مشکلی در یک بسته شناسایی شود یا ویژگی جدیدی به آن افزوده شود بسته به
+روز رسانی می گردد. اکنون برنامه‌هایی که به آن وابستگی داشته اند (که خود ممکن
+است بسته باشند ) می توانند به نسخه جدیدتر به‌روز شوند.
 
 {{id modules_npm}}
 
 {{index installation, upgrading, "package manager", download, reuse}}
 
-Working in this way requires ((infrastructure)). We need a place to
-store and find packages and a convenient way to install and upgrade
-them. In the JavaScript world, this infrastructure is provided by
-((NPM)) ([_https://npmjs.org_](https://npmjs.org)).
+کارکردن به این روش نیاز به زیرساخت دارد. جایی را نیاز داریم که بسته‌ها را ذخیره و
+جستجو کنیم و راهی￼ سرراست برای نصب و به روز رسانی آن ها لازم است. در دنیای
+جاوااسکریپت این زیرساخت توسط NPM در ([_https://npmjs.org_](https://npmjs.org)) فراهم شده است.
 
-NPM is two things: an online service where one can download (and
-upload) packages and a program (bundled with Node.js) that helps you
-install and manage them.
+NPM دارای دو بخش است: یک سرویس آنلاین که افراد می توانند به بارگیری و
+بارگذاری بسته‌ها اقدام کنند و یک برنامه (که به همراه Node.js می آید) که به شما
+کمک می کند که آن ها را مدیریت کنید.
 
 {{index "ini package"}}
 
-At the time of writing, there are more than half a million different
-packages available on NPM. A large portion of those are rubbish, I
-should mention, but almost every useful, publicly available package
-can be found on there. For example, an INI file parser, similar to the
-one we built in [Chapter ?](regexp), is available under the package
-name `ini`.
+در زمان نوشتن این کتاب، بیش از نیم میلیون بسته در NPM وجود دارد. باید بگم که بخش
+زیادی از این بسته‌ها بدرد نخور هستند اما تقریبا هر بسته‌ی مفیدی که عموما در دسترس
+باشد را می توان آنجا پیدا کرد. به عنوان مثال، یک تجزیه‌گر فایل ini، شبیه به چیزی
+که خودمان در  [فصل ?](regexp) ساختیم، در بسته‌ای به نام `ini` وجود دارد.
+
 
 {{index "command line"}}
 
-[Chapter ?](node) will show how to install such packages locally using
-the `npm` command line program.
+[فصل ?](node) شما را با نحوه‌ی نصب بسته‌ها به صورت محلی و با استفاده از برنامه‌ی خط فرمان
+`npm` آشنا خواهد کرد.
 
-Having quality packages available for download is extremely valuable.
-It means that we can often avoid reinventing a program that 100
-people have written before and get a solid, well-tested
-implementation at the press of a few keys.
+در دسترس داشتن بسته‌های باکیفیت قابل دانلود بسیار ارزشمند است. این بدین معناست
+که می توان از اختراع دوباره یک برنامه در بیشتر مواقع جلوگیری کنیم، برنامه ای که
+صدها نفر قبل تر نوشته اند و می توان آن را با چند حرکت به صورت استوار و تست شده
+پیاده سازی کرد.
 
 {{index maintenance}}
 
-Software is cheap to copy, so once someone has written it,
-distributing it to other people is an efficient process. But writing
-it in the first place _is_ work, and responding to people who have
-found problems in the code, or who want to propose new features, is
-even more work.
+کپی کردن یک نرم افزار آسان است، بنابراین اگر کسی آن را نوشته باشد، انتشار آن
+بین دیگر افراد روند کارآمدی محسوب می شود. اما به عنوان فرد اول نوشتن آن کار می
+برد و پاسخ دادن به افرادی که مشکلاتی را در کد پیدا می‌کنند یا درخواست ویژگی جدیدی
+را دارند، کار بیشتری می طلبد.
 
-By default, you own the ((copyright)) to the code you write, and other
-people may use it only with your permission. But because some people
-are just nice and because publishing good software can help make you
-a little bit famous among programmers, many packages are published
-under a ((license)) that explicitly allows other people to use it.
+به صورت پیش فرض، شما مالک کپی‌رایت کدی هستید که می نویسید و دیگر افراد فقط با
+اجازه‌ی شما می توانند از آن استفاده کنند. اما به دلیل اینکه بعضی افراد باحال
+(nice) هستند و اینکه انتشار یک نرم افزار خوب باعث کمی شهرت بین برنامه نویسان می
+شود، خیلی از بسته‌ها تحت مجوزی منتشر می شوند که به صراحت اجازه استفاده دیگران از
+برنامه را می دهد.
 
-Most code on ((NPM)) is licensed this way. Some licenses require you
-to also publish code that you build on top of the package under the
-same license. Others are less demanding, just requiring that you keep
-the license with the code as you distribute it. The JavaScript
-community mostly uses the latter type of license. When using other
-people's packages, make sure you are aware of their license.
+بیشتر کدهایی که در NPM وجود دارند دارای چنین مجوزی هستند. بعضی از مجوزها از شما
+می خواهند که کدی که با استفاده از بسته نوشته‌اید را با همان مجوز منتشر کنید. بعضی
+دیگر کمتر درخواستی دارند و فقط لازم است که مجوزی که همراه بسته وجود دارد را در
+هنگام توزیع کنار آن نگه دارید. بیشتر جامعه‌ی برنامه نویسی جاوااسکریپت از این نوع
+مجوز استفاده می کنند. زمانی که از بسته‌های دیگر افراد استفاده می کنید، مطمئن شوید
+که از مجوز آن آگاهی دارید.
 
 ## Improvised modules
 
@@ -414,7 +403,7 @@ console.log(parse("x = 10\ny = 20"));
 
 ## ECMAScript modules
 
-((CommonJS modules)) work quite well and, in combination with NPM, 
+((CommonJS modules)) work quite well and, in combination with NPM,
 have allowed the JavaScript community to start sharing code on a large
 scale.
 
@@ -615,7 +604,7 @@ states. And because the data is now wrapped in a specialized object
 type, all code that interacts with it has to know about that type,
 creating unnecessary interdependencies.
 
-Often defining new data structures can't be avoided—only a few 
+Often defining new data structures can't be avoided—only a few
 basic ones are provided by the language standard, and many types of
 data have to be more complex than an array or a map. But when an
 array suffices, use an array.
