@@ -1142,17 +1142,11 @@ if}}
 
 {{index "quoting style (exercise)", boundary}}
 
-The most obvious solution is to replace only quotes with a nonword
-character on at least one side—something like `/\W'|'\W/`. But you
-also have to take the start and end of the line into account.
+روشن‌ترین راه حل برای این مسئله این است که فقط نقل‌قول‌هایی را جایگزین کنید که حداقل در یک سمت آن یک غیرکلمه قرار داشته باشد مثل <bdo>`/\W'|'\W/`</bdo>. اما همچنین لازم است تا شروع و پایان خط را هم در نظر داشته باشید.
 
 {{index grouping, "replace method", [parentheses, "in regular expressions"]}}
 
-In addition, you must ensure that the replacement also includes the
-characters that were matched by the `\W` pattern so that those are not
-dropped. This can be done by wrapping them in parentheses and
-including their groups in the replacement string (`$1`, `$2`). Groups
-that are not matched will be replaced by nothing.
+علاوه بر این، باید اطمینان حاصل کنید که جایگزینی شامل کاراکترهایی که توسط <bdo>`\W`</bdo> تطبیق می خورند هم باشد تا از قلم نیفتند. این کار را می توان با قرار دادن آن‌ها درون پرانتز و استفاده از گروه‌هایشان در رشته‌ی جایگزینی <bdo>(`$1`, `$2`)</bdo> انجام داد. گروه‌هایی که تطبیق نمی خورند با چیزی جایگزین نمی شوند.
 
 hint}}
 
@@ -1193,23 +1187,22 @@ if}}
 
 {{index ["regular expression", escaping], ["backslash character", "in regular expressions"]}}
 
-First, do not forget the backslash in front of the period.
+ابتدا، فراموش نکنید که بک‌اسلش را در جلوی نقطه قرار دهید.
 
-Matching the optional ((sign)) in front of the ((number)), as well as
-in front of the ((exponent)), can be done with `[+\-]?` or `(\+|-|)`
-(plus, minus, or nothing).
+تطبیق علامت اختیاری در جلوی یک عدد، همچنین جلوی یک توان، را می توان با استفاده از
+<bdo>`[+\-]?`</bdo> یا <bdo>`(\+|-|)`</bdo> انجام داد. (مثبت، منفی یا هیچی)
 
 {{index "pipe character"}}
 
-The more complicated part of the exercise is the problem of matching
-both `"5."` and `".5"` without also matching `"."`. For this, a good
-solution is to use the `|` operator to separate the two cases—either
-one or more digits optionally followed by a dot and zero or more
-digits _or_ a dot followed by one or more digits.
+بخش پیچیده‌تر این تمرین این است که چه‌طور هر دوی <bdo>`"5."`</bdo> و
+<bdo>`".5"`</bdo> را بدون تطبیق خوردن `"."` تطبیق بزنید. برای این‌کار، یک راه
+خوب این است که از `|` برای جداسازی دو حالت استفاده شود - یک یا دو رقم که ممکن
+است با یک نقطه و صفر یا ارقام بیشتر ادامه یابد یا نقطه‌ای که به همراه یک را
+چندین رقم بیاید.
 
 {{index exponent, "case sensitivity", ["regular expression", flags]}}
 
-Finally, to make the _e_ case insensitive, either add an `i` option to
-the regular expression or use `[eE]`.
+سرانجام، برای اینکه _e_ را غیرحساس به بزرگی/کوچکی حروف داشته باشید، اضافه کردن گزینه‌ی
+`i` به انتهای عبارت باقاعده یا استفاده از `[eE]` مشکل را حل خواهد کرد.
 
 hint}}
