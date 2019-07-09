@@ -161,23 +161,23 @@ NPM دارای دو بخش است: یک سرویس آنلاین که افرا�
 مجوز استفاده می کنند. زمانی که از بسته‌های دیگر افراد استفاده می کنید، مطمئن شوید
 که از مجوز آن آگاهی دارید.
 
-## Improvised modules
+## فراهم ساختن ماژول‌ها
 
-Until 2015, the JavaScript language had no built-in module system.
-Yet people had been building large systems in JavaScript for more than a decade, and they _needed_ ((module))s.
+قبل از 2015 در جاوااسکریپت سیستم ماژول داخلی وجود نداشت. با این وجود برنامه نویسان برای
+بیشتر از یک دهه، سیستم های بزرگی را برنامه نویسی می کردند درحالیکه _نیاز_ به
+ماژول‌ها وجود داشت.
 
 {{index [function, scope], [interface, module], [object, as module]}}
 
-So they designed their own ((module system))s on top of the language.
-You can use JavaScript functions to create local scopes and
-objects to represent module interfaces.
+بنابراین آن ها سیستم ماژول خودشان را با استفاده از خود زبان طراحی کردند. می
+توان از توابع جاوااسکریپت برای ایجاد حوزه‌های محلی و از اشیاء به
+عنوان رابط‌های ماژول استفاده کرد.
 
 {{index "Date class", "weekDay module"}}
 
-This is a module for going between day names and numbers (as returned
-by `Date`'s `getDay` method). Its interface consists of `weekDay.name`
-and `weekDay.number`, and it hides its local binding `names` inside
-the scope of a function expression that is immediately invoked.
+مثال زیر یک ماژول برای انتخاب بین نام روزها و عددشان است ( که از متد `getDay` مربوط به
+`Date` استفاده می کند). رابط آن از <bdo>`weekDay.name`</bdo> و <bdo>`weekDay.number`</bdo> تشکیل شده است
+و متغیر محلی `names` را در حوزه‌ی یک تابع که بلادرنگ فراخوانی می شود پنهان می کند.
 
 ```
 const weekDay = function() {
@@ -195,15 +195,14 @@ console.log(weekDay.name(weekDay.number("Sunday")));
 
 {{index dependency, [interface, module]}}
 
-This style of modules provides ((isolation)), to a certain degree, but
-it does not declare dependencies. Instead, it just puts its
-interface into the ((global scope)) and expects its dependencies,
-if any, to do the same. For a long time this was the main approach
-used in web programming, but it is mostly obsolete now.
+این سبک از ماژول‌ها، تا حدی ایزوله کردن را فراهم می کند، اما وابستگی را
+پشتیبانی نمی کند. به جای آن، رابطش را در حوزه‌ی سراسری قرار می دهد، و انتظار
+دارد که در صورت وجود، وابستگی‌هایش تعریف شده باشند تا بتواند کاری مشابه سیستم
+وابستگی‌ها انجام دهد. برای مدتی طولانی این روش در برنامه نویسی وب استفاده می شد
+اما الان تقریبا از رده خارج شده است.
 
-If we want to make dependency relations part of the code, we'll have
-to take control of loading dependencies. Doing that requires being
-able to execute strings as code. JavaScript can do this.
+اگر قصد دارید ارتباطات مربوط به وابستگی را به عنوان بخشی از کد داشته باشید،
+بایستی مدیریت بارگیری وابستگی‌ها را به عهده بگیرید. برای این کار لازم است بتوانیم رشته‌ها را به عنوان کد اجرا کنیم. این کار در جاوااسکریپت قابل اجرا است.
 
 {{id eval}}
 
