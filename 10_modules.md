@@ -206,20 +206,19 @@ console.log(weekDay.name(weekDay.number("Sunday")));
 
 {{id eval}}
 
-## Evaluating data as code
+## ارزیابی داده‌ها به عنوان کد‌های اجرایی
 
 {{index evaluation, interpretation}}
 
-There are several ways to take data (a string of code) and run it as
-part of the current program.
+راه‌های متعددی برای گرفتن داده‌ها (یک رشته از کد) و اجرای آن به عنوان بخشی از
+برنامه کنونی وجود دارد.
 
 {{index isolation, eval}}
 
-The most obvious way is the special operator `eval`, which will
-execute a string in the _current_ ((scope)). This is usually a bad idea
-because it breaks some of the properties that scopes normally have,
-such as it being easily predictable which binding a given name refers
-to.
+روشن ترین راه، استفاده از عملگر `eval` است که رشته‌ای را در قلمروی (scope)
+_فعلی_ اجرا می کند. این ایده معمولا ایده‌ی بدی محسوب می شود چرا که باعث از بین
+رفتن بعضی از خاصیت‌هایی می شود که در قلمرو‌ها به صورت نرمال وجود دارند، مثل حدس
+زدن آسان متغیری که یک نام مشخص به آن ارجاع می دهد.
 
 ```
 const x = 1;
@@ -236,11 +235,11 @@ console.log(x);
 
 {{index "Function constructor"}}
 
-A less scary way of interpreting data as code is to use the `Function`
-constructor. It takes two arguments: a string containing a
-comma-separated list of argument names and a string containing the
-function body. It wraps the code in a function value so that it gets
-its own scope and won't do odd things with other scopes.
+یک راه کم‌خطرتر تفسیر داده به عنوان کد، استفاده از سازنده `Function` است. این
+تابع دو آرگومان دریافت می کند: یک رشته که حاوی یک لیست جدا شده با ویرگول از نام
+آرگومان‌ها است و یک رشته که حاوی بدنه تابع است. این تابع کد را درون یک مقدار
+تابع می‌پوشاند بنابراین قلمروی مختص به خودش خواهد داشت و تداخلی با دیگر قلمروها
+نخواهد داشت.
 
 ```
 let plusOne = Function("n", "return n + 1;");
@@ -248,9 +247,9 @@ console.log(plusOne(4));
 // → 5
 ```
 
-This is precisely what we need for a module system. We can wrap the
-module's code in a function and use that function's scope as module
-((scope)).
+این دقیقا همان‌ چیزی است که برای یک سیستم ماژول نیاز داریم. می توانیم کدهای ماژول را
+درون یک تابع قرار دهیم و از قلمروی مربوط به تابع به عنوان قلمروی ماژول استفاده
+نماییم.
 
 ## CommonJS
 
@@ -258,35 +257,35 @@ module's code in a function and use that function's scope as module
 
 {{index "CommonJS modules"}}
 
-The most widely used approach to bolted-on JavaScript modules is
-called _CommonJS modules_. ((Node.js)) uses it and is the system used
-by most packages on ((NPM)).
+رایج ترین شیوه‌ای که برای اضافه کردن ماژول‌ها به جاوااسکریپت استفاده می شود،
+ماژول‌های _CommonJS_ می‌باشد. <bdo>Node.js</bdo> از آن استفاده می کند و سیستمی است که
+بیشتر بسته‌های NPM از آن استفاده می کنند.
 
 {{index "require function", [interface, module]}}
 
-The main concept in CommonJS modules is a function called `require`.
-When you call this with the module name of a dependency, it makes sure
-the module is loaded and returns its interface.
+مفهوم اصلی در ماژول‌های CommonJS تابعی به نام `‌require` است. زمانی که از این تابع
+به همراه نام ماژول یک وابستگی استفاده می کنید، این تابع اطمینان حاصل می کند
+که ماژول مورد نظر بارگیری شده است و رابط آن را برمی گرداند.
 
 {{index "exports object"}}
 
-Because the loader wraps the module code in a function, modules
-automatically get their own local scope. All they have to
-do is call `require` to access their dependencies and put their
-interface in the object bound to `exports`.
+به دلیل اینکه بارگیرنده‌ (loader)، ماژول مورد نظر را درون یک تابع قرار می دهد، ماژول‌ها به
+صورت خودکار قلمروی‌ محلی خودشان را می گیرند. تنها کاری که بایستی بکنند این است که
+تابع `require` را فراخوانی کنند تا به وابستگی های آن ها دسترسی داشته باشند و
+رابطشان را در شیئی که به `exports` تخصیص یافته قرار دهند.
 
 {{index "formatDate module", "Date class", "ordinal package", "date-names package"}}
 
-This example module provides a date-formatting function. It uses two
-((package))s from NPM—`ordinal` to convert numbers to strings like
-`"1st"` and `"2nd"`, and `date-names` to get the English names for
-weekdays and months. It exports a single function, `formatDate`, which
-takes a `Date` object and a ((template)) string.
+این ماژول به عنوان مثال، یک تابع ویرایش تاریخ فراهم می سازد (date-formatting).
+اینجا از دو بسته از NMP استفاده می شود – بسته‌ی `ordinal` برای تبدیل اعداد به
+رشته‌های شبیه `"1st"` و `"2nd"` , و بسته‌ی <bdo>`date-names`</bdo> برای گرفتن نام‌های انگلیسی روزهای
+هفته و ماه‌ها. این ماژول یک تابع به نام `fomatDate` را صادر (export) می کند که یک شیء `Date` و
+یک رشته به عنوان قالب دریافت‌ می کند.
 
-The template string may contain codes that direct the format, such as
-`YYYY` for the full year and `Do` for the ordinal day of the month.
-You could give it a string like `"MMMM Do YYYY"` to get output like
-"November 22nd 2017".
+رشته‌ی قالب می تواند حاوی کدهایی باشد که فرمت
+تاریخ را مشخص می کند مثل `YYYY` برای نمایش سال به صورت کامل و `‌Do` برای نام‌های
+ترتیبی روزهای ماه. می توانید به آن رشته‌ای به شکل <bdo>`"MMMM Do YYYY"`</bdo> برای دریافت
+چیزی شبیه <bdo>"November 22nd 2017"</bdo> ارسال کنید.
 
 ```
 const ordinal = require("ordinal");
@@ -306,13 +305,13 @@ exports.formatDate = function(date, format) {
 
 {{index "destructuring binding"}}
 
-The interface of `ordinal` is a single function, whereas `date-names`
-exports an object containing multiple things—`days` and `months` are
-arrays of names. Destructuring is very convenient when creating
-bindings for imported interfaces.
+رابط `ordinal` یک تابع ساده است در حالیکه <bdo>`date-names`</bdo> یک شیء را که حاوی چند چیز
+متفاوت است صادر می کند- دو مقداری که در نام های آرایه‌ها استفاده کردیم. استفاده
+از روش تخریب (Destructuring) برای ایجاد متغیر برای رابط‌های وارد شده بسیار مناسب
+است.
 
-The module adds its interface function to `exports` so that modules
-that depend on it get access to it. We could use the module like this:
+ماژول تابع رابط خودش را به `exports` اضافه می کند در نتیجه ماژول‌های وابسته، به آن
+دسترسی خواهند داشت. می توانیم از این ماژول به این صورت استفاده کنیم:
 
 ```
 const {formatDate} = require("./format-date");
@@ -326,7 +325,7 @@ console.log(formatDate(new Date(2017, 9, 13),
 
 {{id require}}
 
-We can define `require`, in its most minimal form, like this:
+می توان `require` را در کوتاه ترین شکل خودش  تعریف کرد:
 
 ```{test: wrap, sandbox: require}
 require.cache = Object.create(null);
@@ -345,53 +344,49 @@ function require(name) {
 
 {{index [file, access]}}
 
-In this code, `readFile` is a made-up function that reads a file and
-returns its contents as a string. Standard JavaScript provides no such
-functionality—but different JavaScript environments, such as the
-browser and Node.js, provide their own ways of accessing files.
-The example just pretends that `readFile` exists.
+در این کد، `readFile` یک تابع ساختگی است که یک فایل را خوانده و محتوای آن را به
+صورت رشته برمی‌گرداند. جاوااسکریپت استاندارد، این قابلیت را فراهم نمی کند – اما
+محیط‌های متفاوت جاوااسکریپت مثل مرورگر و <bdo>Node.js</bdo>، راه‌های خودشان را برای دسترسی به
+فایل‌ها فراهم می سازند. مثال بالا فقط وانمود می کند که `readFile` وجود دارد.
 
 {{index cache, "Function constructor"}}
 
-To avoid loading the same module multiple times, `require` keeps a
-store (cache) of already loaded modules. When called, it first checks
-if the requested module has been loaded and, if not, loads it. This
-involves reading the module's code, wrapping it in a function, and
-calling it.
+برای جلوگیری از بارگیری چندباره‌ی یک ماژول ، `require` ماژول‌هایی که تاکنون
+بارگیری شده اند را جایی (در حافظه‌ی نهان) نگه داری می کند. در زمان فراخوانی،
+ابتدا بارگیری ماژول خواسته شده را در گذشته بررسی می کند و در صورت نبود،
+آن را بارگیری می کند. این روند شامل خواندن کد ماژول، قرار دادن آن درون یک
+تابع و فراخوانی آن می شود.
 
 {{index "ordinal package", "exports object", "module object", [interface, module]}}
 
-The interface of the `ordinal` package we saw before is not an
-object but a function. A quirk of the CommonJS modules is that,
-though the module system will create an empty interface object for you
-(bound to `exports`), you can replace that with any value by
-overwriting `module.exports`. This is done by many modules to export a
-single value instead of an interface object.
+رابط بسته‌ی `ordinal` که قبل تر دیدیم یک شیء نیست بلکه یک تابع است. یک ایراد وارده
+به ماژول‌های CommonJS این است که اگرچه سیستم ماژول، یک رابط به صورت شیئی خالی برای شما ایجاد
+می کند (که در `exports` قرار می گیرد)، می توانید آن را با هر مقداری که بخواهید
+به وسیله‌ی بازنویسی خاصیت <bdo>`module.exports`</bdo> جایگزین کنید. این کار را
+خیلی از ماژول ها انجام می دهند تا بتوانند یک مقدار ساده را به جای یک شیء رابط
+صادر کنند.
 
-By defining `require`, `exports`, and `module` as ((parameter))s for
-the generated wrapper function (and passing the appropriate values
-when calling it), the loader makes sure that these bindings are
-available in the module's ((scope)).
+
+با تعریف `require`، `exports`، و `module` به عنوان پارامترهای تابع پوشش دهنده‌ی تولید شده (و ارسال مقدارهای مناسب در هنگام فراخوانی)، بارگیرنده‌ اطمینان حاصل می
+کند که این متغیرها در قلمروی مربوط به ماژول در دسترس خواهند بود.
 
 {{index resolution, "relative path"}}
 
-The way the string given to `require` is translated to an actual
-filename or web address differs in different systems. When it starts with
-`"./"` or `"../"`, it is generally interpreted as relative to the
-current module's filename. So `"./format-date"` would be the file
-named `format-date.js` in the same directory.
+روشی که در آن، رشته‌ی داده شده به `require` به یک نام فایل واقعی یا یک آدرس وب
+تفسیر می شود، در سیستم های مختلف متفاوت است. زمانی که این رشته با
+<bdo>`"./"`</bdo> یا <bdo>`"../"`</bdo> شروع می شود عموما نسبت به نام فایل ماژول
+فعلی در نظر گرفته می شود. بنابراین <bdo>`"./format-date"`</bdo> فایلی به نام
+<bdo>`format-date.js`</bdo> که در همان پوشه قرار دارد در نظر گرفته می شود.
 
-When the name isn't relative, Node.js will look for an installed
-package by that name. In the example code in this chapter, we'll
-interpret such names as referring to NPM packages. We'll go into more
-detail on how to install and use NPM modules in [Chapter ?](node).
+
+زمانی که نام نسبی نیست، <bdo>Node.js<bdo> به جستجوی بسته ای با همان نام اقدام می کند. در
+کد مثال این فصل، ما این گونه نام‌ها را به عنوان بسته‌های NPM تفسیر می کنیم. در [فصل ?](node) به جزئیات نصب و استفاده از ماژول‌های NPM خواهیم پرداخت.
 
 {{id modules_ini}}
 
 {{index "ini package"}}
-
-Now, instead of writing our own INI file parser, we can use one from
-((NPM)).
+اکنون به جای نوشتن تجزیه‌گر فایل INI خودمان، می توانیم از یکی از بسته‌های موجود در
+NPM استفاده کنیم.
 
 ```
 const {parse} = require("ini");
