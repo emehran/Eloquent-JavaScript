@@ -395,31 +395,30 @@ console.log(parse("x = 10\ny = 20"));
 // → {x: "10", y: "20"}
 ```
 
-## ECMAScript modules
+## ماژول‌های ECMASCRIPT
 
-((CommonJS modules)) work quite well and, in combination with NPM,
-have allowed the JavaScript community to start sharing code on a large
-scale.
+ماژول‌های CommonJS به خوبی کار می کنند و ترکیب آن ها با NPM به جامعه‌ی
+برنامه‌نویسان جاوااسکریپت اجازه داده است که کدها را در مقیاس بزرگ به اشتراک
+بگذارند.
 
 {{index "exports object", linter}}
 
-But they remain a bit of a duct-tape ((hack)). The ((notation)) is
-slightly awkward—the things you add to `exports` are not available in
-the local ((scope)), for example. And because `require` is a normal
-function call taking any kind of argument, not just a string literal,
-it can be hard to determine the dependencies of a module without
-running its code.
+اما کمی لازم است تا دستی به سر و روی آن‌ها کشید. ظاهر نوشتاری آن اندکی مشکل دارد
+– به عنوان مثال چیزهایی که به `exports` اضافه می کند در قلمروی محلی در دسترس
+نیستند. و به دلیل اینکه `require` یک فراخوانی به یک تابع معمولی است که هر نوع
+آرگومانی را قبول می کند، نه فقط مقادیر رشته‌ای، تشخیص وابستگی‌های یک ماژول بدون
+اجرای کدهای آن می توان سخت شود.
 
 {{index "import keyword", dependency, "ES modules"}}
 
 {{id es}}
 
-This is why the JavaScript standard from 2015 introduces its own,
-different module system. It is usually called _((ES modules))_, where
-_ES_ stands for ((ECMAScript)). The main concepts of dependencies and
-interfaces remain the same, but the details differ. For one thing, the
-notation is now integrated into the language. Instead of calling a
-function to access a dependency, you use a special `import` keyword.
+به همین علت است که جاوااسکریپت استاندارد از 2015 سیستم ماژول متفاوت خودش را
+معرفی کرد که معمولا _((ES modules))_ نامیده می شود. _ES_ مخفف _ECMAScript_
+است. مفاهیم اصلی وابستگی‌ها و رابط‌ها به همان صورت باقی می ماند اما جزئیات آن‌ها متفاوت
+است. برای یک مورد ، نشان‌گذاری اکنون درون زبان یکپارچه شده است. به جای فراخوانی
+یک تابع برای دسترسی به یک وابستگی، از کلید‌واژه‌ی مخصوصی به نام `import` استفاده می
+کنید.
 
 ```
 import ordinal from "ordinal";
@@ -430,35 +429,33 @@ export function formatDate(date, format) { /* ... */ }
 
 {{index "export keyword", "formatDate module"}}
 
-Similarly, the `export` keyword is used to export things. It may
-appear in front of a function, class, or binding definition (`let`,
-`const`, or `var`).
+به طور مشابه، کلیدواژه‌ی `export` برای صدور استفاده می شود. می توان از آن در
+ابتدای یک تابع، کلاس، یا تعریف متغیر استفاده کرد <bdo>(`let`,
+`const`, یا `var`)</bdo>
 
 {{index [binding, exported]}}
 
-An ES module's interface is not a single value but a set of named
-bindings. The preceding module binds `formatDate` to a function. When
-you import from another module, you import the _binding_, not the
-value, which means an exporting module may change the value of the
-binding at any time, and the modules that import it will see its new
-value.
+یک رابط ماژول ES، یک مقدار واحد نیست بلکه مجموعه‌ای از متغیرهای نامگذاری شده است.
+ماژولی که در بالا آمده است `formatDate` را به یک تابع تخصیص می دهد. زمانی که از
+یک ماژول دیگر اقدام به _وارد کردن_ می کنید شما متغیر را وارد می کنید نه مقدار آن
+را که معنای آن این است که یک صدور ماژول ممکن است مقدار یک متغیر را در هر زمانی
+تغییر دهد و ماژول‌هایی که آن را وارد کرده اند، مقدار جدیدش را خواهند دید.
 
 {{index "default export"}}
 
-When there is a binding named `default`, it is treated as the module's
-main exported value. If you import a module like `ordinal` in the
-example, without braces around the binding name, you get its `default`
-binding. Such modules can still export other bindings under different
-names alongside their `default` export.
+زمانی که متغیری به نام `default` وجود داشته باشد، آن به عنوان مقدار صادر شده‌ی اصلی
+ماژول در نظر گرفته می شود. اگر ماژولی مانند `ordinal` را که در مثال آمد، بدون
+استفاده از براکت‌ها دور نام متغیر وارد کنید، متغیر￼ `default` آن ماژول را
+دریافت می کنید. این گونه ماژول‌ها می توانند در کنار صدور `default`، متغیرهای دیگری را هم با نام‌های مختلف صادر
+کنند.
 
-To create a default export, you write `export default` before an
-expression, a function declaration, or a class declaration.
+برای ایجاد یک صدور پیش فرض (default) می توانید از <bdo>`export default`</bdo> قبل از یک
+عبارت، تعریف تابع یا کلاس استفاده کنید.
 
 ```
 export default ["Winter", "Spring", "Summer", "Autumn"];
 ```
-
-It is possible to rename imported bindings using the word `as`.
+می توان نام متغیرهایی که وارد شده اند را با استفاده از `as` تغییر داد.
 
 ```
 import {days as dayNames} from "date-names";
@@ -466,24 +463,23 @@ import {days as dayNames} from "date-names";
 console.log(dayNames.length);
 // → 7
 ```
+یک تفاوت مهم دیگر این است که عمل وارد کردن ماژول ES قبل از این که اجرای اسکریپت
+ماژول شروع شود اتفاق می‌افتد. یعنی تعریف `import` درون تابع یا بلوک‌ها ظاهر نمی
+شود و نام وابستگی‌ها باید به صورت رشته محصور در نقل قول باشد نه عبارت‌های
+دلخواه.
 
-Another important difference is that ES module imports happen before
-a module's script starts running. That means `import` declarations
-may not appear inside functions or blocks, and the names of
-dependencies must be quoted strings, not arbitrary expressions.
+در زمان نوشتن این کتاب، جامعه‌ی برنامه‌نویسان جاوااسکریپت در مسیر استفاده از این سبک
+ماژول‌ها هستند. اما این روند به آهستگی اتفاق می افتد. چند سالی طول کشید بعد از
+مشخص شدن فرمت جدید، که مرورگرها و Node.js شروع به پشتیبانی از آن کردند. و اگرچه
+آن‌ها تقریبا از آن پشتیبانی کامل می کنند اما این پشتیبانی هنوز با ایراداتی
+روبرو است و بحث‌هایی پیرامون شیوه‌ی توزیع این گونه ماژول ها در NPM هنوز در جریان
+است.
 
-At the time of writing, the JavaScript community is in the process of
-adopting this module style. But it has been a slow process. It took
-a few years, after the format was specified, for browsers and Node.js
-to start supporting it. And though they mostly support it now, this
-support still has issues, and the discussion on how such modules
-should be distributed through ((NPM)) is still ongoing.
+خیلی از برنامه‌ها را با ماژول‌های ES می نویسند و به صورت خودکار به دیگر فرمت‌ها در
+هنگام انتشار تبدیل می کنند. ما در دوره‌ی گذار به سر می بریم که در آن دو سیستم
+مدیریت ماژول همزمان استفاده می شوند و خوب است که قادر باشیم کدها را در هر دو
+سیستم بنویسیم و بخوانیم.
 
-Many projects are written using ES modules and then automatically
-converted to some other format when published. We are in a
-transitional period in which two different module systems are used
-side by side, and it is useful to be able to read and write code in
-either of them.
 
 ## Building and bundling
 
