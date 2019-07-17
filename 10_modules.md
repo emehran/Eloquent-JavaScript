@@ -481,149 +481,136 @@ console.log(dayNames.length);
 سیستم بنویسیم و بخوانیم.
 
 
-## Building and bundling
+## ساخت و بسته‌بندی
 
 {{index compilation, "type checking"}}
 
-In fact, many JavaScript projects aren't even, technically, written in
-JavaScript. There are extensions, such as the type checking
-((dialect)) mentioned in [Chapter ?](error#typing), that are widely
-used. People also often start using planned extensions to the language
-long before they have been added to the platforms that actually run
-JavaScript.
+در واقع خیلی از پروژه‌های جاوااسکریپت حتی ، از لحاظ فنی، در زبان جاوااسکریپت
+نوشته نمی شوند. افزونه‌هایی وجود دارد که به طور گسترده استفاده می شوند مانند
+همان گویشی از جاوااسکریپت که به انواع داده حساس بود و در [فصل ?](error#typing) ذکر شد. برنامه
+نویسان اغلب شروع به استفاده از افزونه‌هایی می کنند که خیلی پیش‌تر برای اضافه شدن به پلتفرم‌ها برنامه ریزی شده اند.
 
-To make this possible, they _compile_ their code, translating it from
-their chosen JavaScript dialect to plain old JavaScript—or even to a
-past version of JavaScript—so that old ((browsers)) can run it.
+برای اجرایی کردن این کار، کدهایشان را کامپایل می کنند، کد را از گویش
+جاوااسکریپت مورد نظرشان به جاوااسکریپت ساده ترجمه می کنند – یا حتی به یک نسخه‌ی
+قدیمی از جاوااسکریپت ترجمه می کنند که مرورگرهای قدیمی بتوانند آن را اجرا کنند.
 
 {{index latency, performance, [file, access], [network, speed]}}
 
-Including a modular program that consists of 200 different
-files in a ((web page)) produces its own problems. If fetching a
-single file over the network takes 50 milliseconds, loading
-the whole program takes 10 seconds, or maybe half that if you can
-load several files simultaneously. That's a lot of wasted time.
-Because fetching a single big file tends to be faster than fetching a
-lot of tiny ones, web programmers have started using tools that roll
-their programs (which they painstakingly split into modules) back into
-a single big file before they publish it to the Web. Such tools are
-called _((bundler))s_.
+قرار دادن یک برنامه‌ی ماژولار (پیمانهای) که از 200 فایل متفاوت تشکیل
+شده است در یک صفحه‌ی وب مشکلات خودش را خواهد داشت. اگر دریافت و استفاده از یک
+فایل در شبکه 50 هزارم ثانیه زمان بگیرد، کل برنامه ده ثانیه زمان خواهد گرفت یا
+شاید نیمی از آن زمان اگر بتوانیم چندین فایل را همزمان بارگیری کنید. این زمان
+زیادی را تلف خواهد کرد. به دلیل اینکه بارگیری یک فایل بزرگ واحد، از تعداد زیادی
+فایل کوچک، عموما سریع تر اتفاق می افتد. برنامه نویسان وب به سراغ ابزارهایی رفته
+اند که برنامه‌هایشان را (که با زحمت به ماژول ها
+تقسیم کرده اند) گرفته و تبدیل به یک فایل بزرگ کند قبل از اینکه بخواهند برنامه
+را در وب منتشر کنند. این ابزار￼ را بسته‌ساز می نامند _((bundler))s_.
 
 {{index "file size"}}
 
-And we can go further. Apart from the number of files, the _size_ of
-the files also determines how fast they can be transferred over the
-network. Thus, the JavaScript community has invented _((minifier))s_.
-These are tools that take a JavaScript program and make it smaller by
-automatically removing comments and whitespace, renaming bindings, and
-replacing pieces of code with equivalent code that take up less space.
+و می توانیم پارا فراتر بگذاریم. جدا از تعداد فایل‌ها، حجم این فایل‌ها هم در سرعت
+انتقالشان در شبکه تعیین کننده است. بنابراین، جامعه‌ی جاوااسکریپت کاران، ابزارهای
+فشرده ساز را اختراع کردند (minifier). این ابزار یک برنامه‌ی جاوااسکریپت را گرفته
+و با حذف توضیحات، فضاهای خالی، تغییر نام متغیرها و جایگزینی بعضی کدها با
+معادل‌های کوچک تر، حجم آن را کاهش می دهند.
 
 {{index pipeline, tool}}
 
-So it is not uncommon for the code that you find in an NPM package or
-that runs on a web page to have gone through _multiple_ stages of
-transformation—converted from modern JavaScript to historic
-JavaScript, from ES module format to CommonJS, bundled, and minified.
-We won't go into the details of these tools in this book since they
-tend to be boring and change rapidly. Just be aware that the
-JavaScript code you run is often not the code as it was written.
+پس اصلا دور از انتظار نیست که که کدی که در یک بسته‌ی NPM یافته اید یا در یک صفحه‌ی
+وب اجرا می شود پیش از آن مراحل مختلفی از تبدیل را طی کرده باشد – تبدیل از
+جاوااسکریپت مدرن به جاوااسکریپت قدیمی‌تر، از ماژول‌های ES به CommonJS، بسته‌بندی
+شده و فشرده شده باشد. در این کتاب به جزئیات مربوط به این ابزار نمی پردازیم، چون هم
+کسل کننده خواهد بود هم به سرعت تغییر می کنند. فقط حواستان باشد که کدی که شما
+معمولا اجرا می کنید اغلب همانی نیست که نوشته شده است.
 
-## Module design
+## طراحی ماژول
 
 {{index [module, design], [interface, module], [code, "structure of"]}}
 
-Structuring programs is one of the subtler aspects of programming. Any
-nontrivial piece of functionality can be modeled in various ways.
+ساختاردهی به یک برنامه یکی از جنبه‌های حساس و ظریف از برنامه نویسی محسوب می شود.
+هر قطعه‌ی معناداری از قابلیت‌ها را می توان به اشکال مختلفی مدلسازی کرد.
 
-Good program design is subjective—there are trade-offs involved and
-matters of taste. The best way to learn the value of well-structured
-design is to read or work on a lot of programs and notice what works
-and what doesn't. Don't assume that a painful mess is "just the way it
-is". You can improve the structure of almost everything by putting
-more thought into it.
+طراحی یک برنامه‌ی خوب، سلیقه‌ای  است – مصالحه‌هایی پیش می‌آید که سلیقه در آن دخیل
+است. بهترین راه برای یادگیری ارزش یک طراحی دارای ساختار خوب، این است که برنامه‌های
+زیادی را مورد مطالعه قرار دهید یا با آن ها کار کنید تا متوجه شوید که چه چیزی
+مفید و چه چیز نادرست است. تصور نکنید که درهم‌ریختگی و آشفتگی به هر حال پیش خواهد
+آمد. تقریبا هر چیزی را با صرف کمی تفکر بیشتر می توان با سازماندهی بهتر کرد.
 
 {{index [interface, module]}}
 
-One aspect of module design is ease of use. If you are designing
-something that is intended to be used by multiple people—or even by
-yourself, in three months when you no longer remember the specifics of
-what you did—it is helpful if your interface is simple and
-predictable.
+یکی از جنبه‌های طراحی ماژول که باید رعایت شود، آسانی استفاده است. اگر چیزی را می سازید که قرار است
+توسط کاربران متعددی استفاده شود (یا حتی توسط خودتان، طی مدت سه ماه، زمانی که
+دیگر جزئیات کاری که انجام داده اید را به خاطر نمی آورید) اگر رابط برنامه‌ی شما
+ساده و قابل تشخیص باشد کمک زیادی می کند.
+
 
 {{index "ini package", JSON}}
 
-That may mean following existing conventions. A good example is the
-`ini` package. This module imitates the standard `JSON` object by
-providing `parse` and `stringify` (to write an INI file) functions,
-and, like `JSON`, converts between strings and plain objects. So the
-interface is small and familiar, and after you've worked with it once,
-you're likely to remember how to use it.
+ممکن است معنای آن این باشد که از قرارداد‌های موجود پیروی کنید. یک مثال خوب می تواند
+بسته‌ی `ini` باشد. این ماژول کار بسته‌ی استاندارد `JSON` را با فراهم نمودن `parse` و
+`stringify` (برای نوشتن یک فایل INI) تقلید می کند و شبیه `JSON` عمل تبدیل بین رشته‌ها
+و اشیاء ساده را انجام می دهد. بنابراین رابط در اینجا کوچک و آشنا است و بعد از
+اینکه برای اولین بار از آن استفاده کنید احتمالا روش استفاده از آن را به خاطر
+خواهید داشت.
 
 {{index "side effect", "hard disk", composability}}
 
-Even if there's no standard function or widely used package to
-imitate, you can keep your modules predictable by using simple ((data
-structure))s and doing a single, focused thing. Many of the INI-file
-parsing modules on NPM provide a function that directly reads such a
-file from the hard disk and parses it, for example. This makes it
-impossible to use such modules in the browser, where we don't have
-direct file system access, and adds complexity that would have been
-better addressed by _composing_ the module with some file-reading
-function.
+حتی اگر هیچ تابع استاندارد یا بسته‌ای که به طور گسترده استفاده می شود برای تقلید
+وجود نداشت، می توانید با￼ استفاده از ساختارهای داده‌ی ساده و تمرکز بر انجام یک
+کار، ماژول های خودتان را قابل پیشبینی کنید. به عنوان مثال، خیلی از بسته‌های تجزیه‌ی
+فایل INI در NPM تابعی دارند که مستقیما یک فایل ini را از دیسک سخت خوانده و تجزیه
+می کند. این کار باعث می شود که نتوان از این ماژول‌ها در مرورگر استفاده کرد، به
+دلیل اینکه در مرورگر به طور مستقیم به سیستم فایل دسترسی نداریم و پیچیدگی ای
+اضافه می کند که بهتر بود با ترکیب ماژول با یک تابع خواندن فایل دیگر، حل می شد.
 
 {{index "pure function"}}
 
-This points to another helpful aspect of module design—the ease with
-which something can be composed with other code. Focused modules that
-compute values are applicable in a wider range of programs than bigger
-modules that perform complicated actions with side effects. An INI
-file reader that insists on reading the file from disk is useless in a
-scenario where the file's content comes from some other source.
+این موضوع به یکی دیگر از جنبه‌های مفیدی که در طراحی ماژول وجود دارد اشاره می کند – آسانی ترکیب با
+کدهای دیگر. ماژول‌هایی که تمرکز روی کار خاصی دارند و مقدارها را محاسبه می کنند در
+طیف گسترده‌تری از برنامه ها کاربرد دارند نسبت به ماژول‌های بزرگتری که کارهای
+پیچیده‌ای انجام می دهند و دارای اثرات جانبی هستند. خواننده‌ی فایل INIای که اصرار
+به خواندن فایل از دیسک سخت را دارد در مواردی که محتوای فایل از دیگر منابع می
+آید بدون کاربرد خواهد بود.
 
 {{index "object-oriented programming"}}
 
-Relatedly, stateful objects are sometimes useful or even necessary,
-but if something can be done with a function, use a function. Several
-of the INI file readers on NPM provide an interface style that
-requires you to first create an object, then load the file into your
-object, and finally use specialized methods to get at the results.
-This type of thing is common in the object-oriented tradition, and
-it's terrible. Instead of making a single function call and moving on,
-you have to perform the ritual of moving your object through various
-states. And because the data is now wrapped in a specialized object
-type, all code that interacts with it has to know about that type,
-creating unnecessary interdependencies.
+همچنین، اشیاء دارای وضعیت (stateful) گاهی اوقات مفید هستند یا حتی لازم
+اند اما اگر چیزی را بتوان با یک تابع انجام داد، از تابع استفاده کنید. تعدادی از
+بسته‌های خواننده‌ی فایل INI در NPM، سبکی را برای رابط خود استفاده کرده اند که ابتدا
+از شما می خواهند که یک شیء ایجاد کنید، بعد فایل مورد نظر را درون شیء بارگیری
+کنید و درنهایت از متدهای خاصی برای گرفتن نتایج استفاده کنید. این کار در سنت شیء
+گرایی رایج است و باید گفت بسیار بد است. به جای ساختن یک فراخوانی تابع و ادامه
+حرکت، باید تشریفات حرکت شیء تان بین وضعیت‌های مختلف را انجام دهید. و به دلیل
+اینکه داده‌ها اکنون در یک نوع خاصی از شیء قرار گرفته اند، تمام کدی که با آن در
+ارتباط است باید آن نوع را بداند که باعث ایجاد وابستگی‌های درونی بی‌فایده می شود.
 
-Often defining new data structures can't be avoided—only a few
-basic ones are provided by the language standard, and many types of
-data have to be more complex than an array or a map. But when an
-array suffices, use an array.
+اغلب نمی‌توان توان از تعریف ساختارهای داده‌ی جدید صرف نظر کرد – فقط تعداد کمی از موارد
+اساسی و پایه‌ای توسط زبان استاندارد فراهم شده است و خیلی از انواع داده می بایست
+پیچیده تر از یک آرایه یا یک نگاشت (map) باشد. اما زمانی که یک آرایه کافی است،
+از همان استفاده کنید.
 
-An example of a slightly more complex data structure is the graph from
-[Chapter ?](robot). There is no single obvious way to represent a
-((graph)) in JavaScript. In that chapter, we used an object whose
-properties hold arrays of strings—the other nodes reachable from that
-node.
+یک نمونه از ساختار داده‌های کمی پیچیده تر، گراف است که در [فصل ?](robot) ذکر شد. یک
+راه یکسان و مشخص برای نمایش یک گراف در جاوااسکریپت وجود ندارد. در آن فصل، ما
+از یک شیء که خاصیت‌هایش آرایه‌هایی از رشته‌ها را نگه داری می کردند استفاده کردیم –
+گره‌هایی که از یک گره قابل دستیابی بودند.
 
-There are several different pathfinding packages on ((NPM)), but none
-of them uses this graph format. They usually allow the graph's edges to
-have a weight, which is the cost or distance associated with it. That isn't
-possible in our representation.
+
+بسته‌های متعددی در باره‌ی مسیریابی در NPM وجود دارند اما هیچ کدامشان از این فرمت
+گراف استفاده نمی کنند. معمولا این بسته ها به لبه‌های گراف امکان داشتن وزن را می
+دهند، که همان فاصله یا هزینه‌ای است که به آن‌ها اختصاص داده شده است. در نمایش ما این‌کار ممکن نیست.
 
 {{index "Dijkstra, Edsger", pathfinding, "Dijkstra's algorithm", "dijkstrajs package"}}
 
-For example, there's the `dijkstrajs` package. A well-known approach
-to pathfinding, quite similar to our `findRoute` function, is called
-_Dijkstra's algorithm_, after Edsger Dijkstra, who first wrote it
-down. The `js` suffix is often added to package names to indicate the
-fact that they are written in JavaScript. This `dijkstrajs` package
-uses a graph format similar to ours, but instead of arrays, it uses
-objects whose property values are numbers—the weights of the edges.
+به عنوان مثال، بسته‌ای به نام `dijkstrajs` وجود دارد. یک راه حل شناخته شده برای
+مسیریابی، که نسبتا شبیه به تابع `findRoute` ما است، _الگوریتم دیکسترا_ است که ادسخر
+دیکسترا آن را نوشت. پسوند `js` معمولا به انتهای￼ بسته‌ها اضافه می شود تا نشان دهد
+که آن ها به زبان جاوااسکریپت نوشته شده اند. بسته‌ی `dijkstrajs` از یک فرمت گراف
+شبیه به فرمت ما استفاده می کند اما به جای آرایه‌ها از اشیاء استفاده می کند که
+مقدارهای خاصیت‌هایش از جنس اعداد هستند – وزن وزن‌ لبه‌ها.
 
-So if we wanted to use that package, we'd have to make sure that our
-graph was stored in the format it expects. All edges get the same
-weight since our simplified model treats each road as having the
-same cost (one turn).
+بنابراین اگر بخواهیم از آن بسته استفاده کنیم، بایستی اطمینان حاصل کنیم که گراف
+ما در فرمتی که بسته پشتیبانی می کند ذخیره شده باشد. همه‌ی لبه‌ها وزن یکسانی می گیرند زیرا مدل ساده‌شده‌ی
+ما برای هر مسیر هزینه‌ی یکسانی در نظر می گیرد (یک دور).
 
 ```
 const {find_path} = require("dijkstrajs");
@@ -639,12 +626,11 @@ for (let node of Object.keys(roadGraph)) {
 console.log(find_path(graph, "Post Office", "Cabin"));
 // → ["Post Office", "Alice's House", "Cabin"]
 ```
-
-This can be a barrier to composition—when various packages are using
-different data structures to describe similar things, combining them
-is difficult. Therefore, if you want to design for composability,
-find out what ((data structure))s other people are using and, when
-possible, follow their example.
+این خود مانعی برای ترکیب پذیری محسوب می شود – زمانی که بسته‌های متنوع از
+ساختارهای متفاوتی برای توصیف چیزهای یکسان استفاده می کنند، ترکیب آن ها سخت
+خواهد شد. بنابراین، اگر قصد دارید ترکیب پذیری را هم در طراحی لحاظ کنید، توجه
+کنید که چه ساختارهای داده‌ای دیگر برنامه نویسان استفاده می کنند و هر وقت ممکن شد
+از روش آن ها استفاده کنید.
 
 ## Summary
 
