@@ -323,79 +323,79 @@ callbackهای متعددی ارسال کنیم، توابع مبتنی بر pro
 می رسند: ورودی ها را به عنوان آرگومان می گیرند و خروجی شان را تولید می کنند.
 تنها تفاوت این است که خروجی ممکن است هنوز در دسترس نباشد.
 
-## Failure
+## شکست
 
 {{index "exception handling"}}
 
-Regular JavaScript computations can fail by throwing an exception.
-Asynchronous computations often need something like that. A network
-request may fail, or some code that is part of the asynchronous
-computation may throw an exception.
+محاسبات عادی جاوااسکریپت می توانند با شکست روبرو شده و یک استثنا را تولید کنند.
+محاسبات ناهمگام هم اغلب به چیزی شبیه به آن نیاز دارند. ممکن است یک درخواست در
+شبکه با شکست روبرو شود یا کدی که بخشی از یک محاسبه‌ی ناهمگام است استثنایی را
+تولید کند.
 
 {{index "callback function", error}}
 
-One of the most pressing problems with the callback style of
-asynchronous programming is that it makes it extremely difficult to
-make sure failures are properly reported to the callbacks.
+یکی از حیاتی‌ترین مشکلاتی که در سبک مبتنی بر callback برنامه‌نویسی ناهمگام وجود
+دارد این است که در این سبک، گزارش صحیح شکست‌ها به توابع callback بسیار دشوار
+است.
 
-A widely used convention is that the first argument to the callback is
-used to indicate that the action failed, and the second contains the
-value produced by the action when it was successful. Such callback
-functions must always check whether they received an exception and
-make sure that any problems they cause, including exceptions thrown by
-functions they call, are caught and given to the right function.
+یکی از راه حل های رایج برای آن این است که آرگومان اول callback برای مشخص کردن
+شکست عمل در نظر می گیرند و دومین آرگومان، حاوی مقداری خواهد بود که در صورت موفقیت عمل،
+تولید می شود. این گونه توابع callback باید همیشه بررسی کنند که آیا استثنایی
+دریافت کرده اند یا خیر و اطمینان حاصل کنند که هر مشکلی که ایجاد می کنند، مانند
+استثناهای تولیدی توسط توابعی که فراخوانی می‌کنند، مدیریت شده و به تابع
+درستی داده می شود.
 
 {{index "rejecting (a promise)", "resolving (a promise)", "then method"}}
 
-Promises make this easier. They can be either resolved (the action
-finished successfully) or rejected (it failed). Resolve handlers (as
-registered with `then`) are called only when the action is successful,
-and rejections are automatically propagated to the new promise that is
-returned by `then`. And when a handler throws an exception, this
-automatically causes the promise produced by its `then` call to be
-rejected. So if any element in a chain of asynchronous actions fails,
-the outcome of the whole chain is marked as rejected, and no success
-handlers are called beyond the point where it failed.
+promiseها این کار را ساده تر کرده اند. می توان آن ها را resolve (نتیجه یابی
+) کرد (عمل با موفقیت به پایان رسیده) یا رد (reject) کرد (شکست خورده است). توابع
+رسیدگی کننده به موفقیت (که با متد `then` ثبت شده اند) فقط زمانی فراخوانی می شوند
+که عمل باموفقیت انجام شده باشد و rejectها به صورت خودکار به یک promise جدید
+سپرده‌ می شوند که توسط `then` برگردانده می شود. و زمانی که یک تابع گرداننده (handler)
+استثنا تولید می کند، این به طور خودکار سبب می شود که promise ای که توسط فراخوانی
+متد thenاش تولید شده است رد بشود. بنابراین اگر یکی از عناصری که در زنجیره‌ی اعمال
+ناهمگام قرار دارد با شکست روبرو شود، خروجی تمام زنجیره به عنوان “رد شده” یا rejected در نظر
+گرفته می شود، و هیچ تابع گرداننده‌ی دیگری بعد از نقطه‌ای که با مشکل روبرو شده است
+فراخوانی نمی شود.
 
 {{index "Promise.reject function", "Promise class"}}
 
-Much like resolving a promise provides a value, rejecting one also
-provides one, usually called the _reason_ of the rejection. When an
-exception in a handler function causes the rejection, the exception
-value is used as the reason. Similarly, when a handler returns a
-promise that is rejected, that rejection flows into the next promise.
-There's a `Promise.reject` function that creates a new,
-immediately rejected promise.
+بسیار شبیه به نتیجه‌یابی یک promise که مقداری را فراهم می ساخت، رد شدن آن نیز
+مقداری را فراهم می کند، که معمولا به عنوان دلیل رد شدن شناخته می شود. زمانی که
+یک استثنا در یک تابع گرداننده باعث رد شدن می شود، مقدار استثنا به عنوان دلیل
+استفاده می شود. به طور مشابه زمانی که یک گرداننده، یک promise را برمی گرداند که
+رد شده است، این پذیرفته‌نشدن به درون promise بعدی جریان می یابد. تابعی به نام
+<bdo>`Promise.reject`</bdo> وجود دارد که یک promise رد شده جدید بلافاصله ایجاد می کند.
 
 {{index "catch method"}}
 
-To explicitly handle such rejections, promises have a `catch` method
-that registers a handler to be called when the promise is rejected,
-similar to how `then` handlers handle normal resolution. It's also very
-much like `then` in that it returns a new promise, which resolves to
-the original promise's value if it resolves normally and to the
-result of the `catch` handler otherwise. If a `catch` handler throws
-an error, the new promise is also rejected.
+رای رسیدگی صریح به این گونه رد شدن‌ها، promise ها دارای متدی به نام `catch` هستند
+که یک گرداننده را برای￼ فراخوانی در هنگام رد شدن ثبت می کند، شبیه به گرداننده‌های
+`then` که در موارد یافتن نتیجه صحیح استفاده می شدند. از این لحاظ نیز بسیار شبیه
+به `then` است که یک promise جدید برمی گرداند که در صورت نتیجه‌یابی بدون مشکل به نتیجه‌ی
+promise اصلی منجر می شود و در غیر این صورت به نتیجه‌ی گرداننده‌ی `catch`. اگر یک گرداننده‌ی `catch`
+خطایی تولید کند، promise جدید نیز رد می شود.
 
 {{index "then method"}}
 
-As a shorthand, `then` also accepts a rejection handler as a second
-argument, so you can install both types of handlers in a single method
-call.
+به عنوان یک راه خلاصه تر، متد `then` همچنین یک گرداننده‌ی عدم پذیرش نیز به عنوان
+آرگومان دوم قبول می کند، بنابراین می توانید هر دوی گرداننده‌ها را با یک فراخوانی
+متد ثبت کنید.
 
-A function passed to the `Promise` constructor receives a second
-argument, alongside the resolve function, which it can use to reject
-the new promise.
+تابعی که به سازنده‌ی `Promise` ارسال می شود در کنار تابع موفقیت (resolve)
+آرگومان دومی را دریافت می کند، که می تواند برای رد کردن promise جدید استفاده
+شود.
 
-The chains of promise values created by calls to `then` and `catch`
-can be seen as a pipeline through which asynchronous values or
-failures move. Since such chains are created by registering handlers,
-each link has a success handler or a rejection handler (or both)
-associated with it. Handlers that don't match the type of outcome
-(success or failure) are ignored. But those that do match are called,
-and their outcome determines what kind of value comes next—success
-when it returns a non-promise value, rejection when it throws an
-exception, and the outcome of a promise when it returns one of those.
+
+زنجیره‌ی مقدارهای promise که با فراخوانی‌هایی که به `then` و `catch` زده شده است
+تولید شده را می توان به عنوان یک خط لوله در طول مقدارهای ناهمگام یا حرکت‌های منجر
+به شکست دانست. به دلیل این که این زنجیره به وسیله‌ی ثبت گرداننده‌ها تولید می شود،
+هر پیوند دارای یک گرداننده‌ی موفقیت یا عدم پذیرش (یا هر دو) است که به آن ارتباط
+دارد. گرداننده‌هایی که تطبیقی با نوع خروجی (موفقیت یا شکست) ندارند در نظر گرفته
+نمی شوند. اما آن هایی که هماهنگ هستند فراخوانی می شوند و خروجی آن ها مشخص می
+کند چه نوع مقداری در ادامه‌ خواهد آمد – موفقیت در زمانی که یک مقدار غیر promise
+بر می گرداند، عدم پذیرش زمانی که یک استثنا تولید می شود، و خروجی یک promise
+زمانی که یکی از آن ها را بر می گرداند.
 
 ```{test: no}
 new Promise((_, reject) => reject(new Error("Fail")))
@@ -411,50 +411,50 @@ new Promise((_, reject) => reject(new Error("Fail")))
 
 {{index "uncaught exception", "exception handling"}}
 
-Much like an uncaught exception is handled by the environment,
-JavaScript environments can detect when a promise rejection isn't
-handled and will report this as an error.
+بسیار شبیه به یک استثنای مدیریت نشده که توسط محیط رسیدگی می شود ، محیط های
+جاوااسکریپت می توانند تشخیص دهند در چه زمانی یک عدم موفقیت promise رسیدگی نشده
+است و آن را به عنوان یک خطا گزارش خواهند داد.
 
-## Networks are hard
+## شبکه‌ها دشوار هستند
 
 {{index [network, reliability]}}
 
-Occasionally, there isn't enough light for the ((crow))s' mirror
-systems to transmit a signal or something is blocking the path of the
-signal. It is possible for a signal to be sent but never received.
+گاهی اوقات، نور کافی برای سیستم انعکاس نور کلاغ‌ها برای انتقال سیگنال وجود ندارد،
+یا چیزی مسیر سیگنال را مسدود کرده است. ممکن است سیگنالی فرستاده شود ولی هرگز
+دریافت نشود.
 
 {{index "send method", error, timeout}}
 
-As it is, that will just cause the callback given to `send` to never
-be called, which will probably cause the program to stop without even
-noticing there is a problem. It would be nice if, after a given period
-of not getting a response, a request would _time out_ and report
-failure.
+در این صورت، این باعث می شود که تابع callback ای که به متد `send` داده شده است
+هرگز فراخوانی نشود، که احتمالا موجب توقف برنامه بدون هیچ گونه اعلام مشکل می شود.
+خوب بود اگر بعد از یک دوره‌ی زمانی مشخص شده که پاسخی دریافت نشود، یک
+درخواست به صورت خودکار منقضی می شد و یک شکست گزارش می شد.
 
-Often, transmission failures are random accidents, like a car's
-headlight interfering with the light signals, and simply retrying the
-request may cause it to succeed. So while we're at it, let's make our
-request function automatically retry the sending of the request a few
-times before it gives up.
+
+اغلب، شکست های مربوط به ارسال به صورت تصادفی اتفاق می افتند، مانند بروز تداخل
+بین چراغ جلوی یک خودرو با￼ سیگنال‌های نوری، و در این صورت فقط دوباره فرستان
+درخواست مشکل را برطرف می کند. بنابراین هنگامی که هنوز در آن نقطه قرار داریم،
+اجازه بدهید تابع درخواست را طوری تنظیم کنیم که به طور خودکار قبل از اینکه دست از کار بکشد چندین بار
+درخواست را ارسال کند.
+
 
 {{index "Promise class", "callback function", [interface, object]}}
 
-And, since we've established that promises are a good thing, we'll
-also make our request function return a promise. In terms of what they
-can express, callbacks and promises are equivalent. Callback-based
-functions can be wrapped to expose a promise-based interface, and
-vice versa.
 
-Even when a ((request)) and its ((response)) are successfully
-delivered, the response may indicate failure—for example, if the
-request tries to use a request type that hasn't been defined or the
-handler throws an error. To support this, `send` and
-`defineRequestType` follow the convention mentioned before, where the
-first argument passed to callbacks is the failure reason, if any, and
-the second is the actual result.
+و به دلیل اینکه قبول کرده ایم که promise ها مفید هستند، پس تابع درخواست را
+تغییر می دهیم تا یک promise برگرداند. در رابطه با کاری که می توانند انجام دهند
+تفاوتی بین callback ها و promise ها وجود‌ ندارد. توابع مبتنی بر callback را می توان
+پوشاند به شکلی که رابطی promise گونه داشته باشند و همین طور برعکس.
 
-These can be translated to promise resolution and rejection by our
-wrapper.
+
+حتی زمانی که یک درخواست و پاسخ آن با موفقیت تحویل داده می شوند، پاسخ ممکن است
+نشانگر یک شکست باشد – به عنوان مثال، اگر درخواست تلاش کند که از نوع درخواستی
+استفاده کند که تعریف نشده است یا گرداننده یک خطا تولید کند. برای پشتیبانی از
+این، `send` و `defineRequestType` از قراردادی پیروی می کنند که قبل تر ذکر شد جاییکه
+اولین آرگومان فرستاده شده با تابع callback، دلیل شکست خواهد بود، در صورت وجود
+البته، و دومین آرگومان نتیجه‌ی واقعی خواهد بود.
+
+این‌ها را می توان به وسیله‌ی یک پوشاننده (wrapper) به پذیرش و عدم پذیرش promise ترجمه کرد.
 
 {{index "Timeout class", "request function", retry}}
 
@@ -483,41 +483,38 @@ function request(nest, target, type, content) {
 
 {{index "Promise class", "resolving (a promise)", "rejecting (a promise)"}}
 
-Because promises can be resolved (or rejected) only once, this will
-work. The first time `resolve` or `reject` is called determines the
-outcome of the promise, and any further calls, such as the timeout
-arriving after the request finishes or a request coming back after
-another request finished, are ignored.
+به دلیل اینکه promise ها می توانند فقط یک بار موفق شوند (یا رد بشوند)، این روش
+کار خواهد کرد. اولین باری که `resolve` یا `reject` فراخوانی می شوند، خروجی promise را
+معین می کنند، و هر فراخوانی ای در بعد، مانند timeout که بعد از پایان درخواست می
+رسد یا درخواستی که بعد از یک پایان یک درخواست دیگر برمی گردد، در نظر گرفته نمی
+شوند.
 
 {{index recursion}}
 
-To build an asynchronous ((loop)), for the retries, we need to use a
-recursive function—a regular loop doesn't allow us to stop and wait
-for an asynchronous action. The `attempt` function makes a single
-attempt to send a request. It also sets a timeout that, if no response
-has come back after 250 milliseconds, either starts the next attempt
-or, if this was the fourth attempt, rejects the promise with an
-instance of `Timeout` as the reason.
+برای ساخت یک حلقه‌ی ناهمگام، برای تلاش‌های اضافی، لازم است تا از یک تابع بازگشتی
+استفاده کنیم – یک حلقه‌ی معمولی امکان توقف و صبر برای یک عمل ناهمگام را فراهم نمی
+کند. تابع `attemp` یک تلاش واحد برای ارسال یک درخواست ترتیب می دهد. همچنین یک زمان
+انقضا تنظیم می کند، اگر پاسخی بعد از 250 هزارم ثانیه نیامد ، یا تلاش بعد را شروع
+کند یا اگر این چهارمین تلاش بود ، promise را رد می‌کند و به عنوان دلیل عدم پذیرش هم
+یک نمونه از `Timeout` را استفاده می‌کند.
 
 {{index idempotence}}
 
-Retrying every quarter-second and giving up when no response has come
-in after a second is definitely somewhat arbitrary. It is even
-possible, if the request did come through but the handler is just
-taking a bit longer, for requests to be delivered multiple times.
-We'll write our handlers with that problem in mind—duplicate messages
-should be harmless.
 
-In general, we will not be building a world-class, robust network
-today. But that's okay—crows don't have very high expectations yet
-when it comes to computing.
+تلاش مجدد هر یک چهارم ثانیه و توقف در صورت نیامدن پاسخ پس از گذشت یک ثانیه،
+قطعاً تا حدودی دلخواه است. البته حتی ممکن است که درخواست دریافت شود اما تابع گرداننده
+کند عمل کند که باعث شود عمل دریافت چندین بار صورت گیرد. ما توابع گرداننده‌ را طوری می نویسیم
+که این مشکل را پوشش دهیم و پیغام‌های تکراری ضرری برای سیستم نداشته باشد.
+
+به طور عمومی، قرار نیست که یک شبکه‌ی بی نقص در سطح جهانی را امروز بسازیم. اما قابل قبول
+خواهد بود- کلاغ‌ها انتظارات خیلی بالایی در رابطه با محاسبات ندارند.
 
 {{index "defineRequestType function", "requestType function"}}
 
-To isolate ourselves from callbacks altogether, we'll go ahead and
-also define a wrapper for `defineRequestType` that allows the handler
-function to return a promise or plain value and wires that up to the
-callback for us.
+برای اینکه خودمان را به طور کامل از callback ها رها کنیم، پیش‌تر خواهیم رفت و
+همچنین یک پوشش برای تابع `defineRequestType` تعریف خواهیم کرد که به تابع گرداننده
+اجازه بدهد تا یک promise یا مقداری ساده را برگرداند و آن را به callback برای ما
+متصل کند.
 
 ```{includeCode: true}
 function requestType(name, handler) {
@@ -536,37 +533,35 @@ function requestType(name, handler) {
 
 {{index "Promise.resolve function"}}
 
-`Promise.resolve` is used to convert the value returned by `handler`
-to a promise if it isn't already.
+<bdo>`Promise.resolve`</bdo> برای تبدیل مقدار بازگشتی از `handler` به یک promise استفاده می شود؛ اگر قبلا انجام نشده باشد.
 
 {{index "try keyword", "callback function"}}
 
-Note that the call to `handler` had to be wrapped in a `try` block to
-make sure any exception it raises directly is given to the callback.
-This nicely illustrates the difficulty of properly handling errors
-with raw callbacks—it is easy to forget to properly route
-exceptions like that, and if you don't do it, failures won't get
-reported to the right callback. Promises make this mostly automatic
-and thus less error-prone.
+توجه داشته باشید فراخوانی به تابع `handler` بایستی درون یک بلاک `try` قرار می گرفت،
+تا اطمینان حاصل شود هر استثنایی که تولید می کند مستقیما به تابع callback داده می
+شود. این به خوبی سختی رسیدگی درست به خطاها در مدل callback های خام را نشان می
+دهد – به راحتی می ممکن است مدیریت صحیح استثناها را فراموش کنیم؛ مانند بالا و
+اگر این کار را انجام ندهید، شکست‌ها به callback درستی گزارش نمی شوند. در promise ها،
+این کار را به طور خودکار انجام می می‌شود بنابراین کمتر خطاساز خواهند بود.
 
-## Collections of promises
+## مجموعه‌ای از promise ها
 
 {{index "neighbors property", "ping request"}}
 
-Each nest computer keeps an array of other nests within transmission
-distance in its `neighbors` property. To check which of those are
-currently reachable, you could write a function that tries to send a
-`"ping"` request (a request that simply asks for a response) to each
-of them and see which ones come back.
+هر کامپیوتر لانه دارای آرایه‌ای از دیگر لانه‌ها می‌باشد که درون محدوده‌ی مخابره
+قرار دارند و آن را در خاصیت `neighbors` آن ذخیره می کند. برای بررسی اینکه کدام
+یک از آن ها در حال حاضر در دسترس هستند، می توانید تابعی بنویسید که تلاش کند تا
+یک درخواست `“ping”` (درخواستی که فقط برای دریافت پاسخ ارسال می شود) را به هر یک از
+لانه ها ارسال کند و مشاهده کنید کدام درخواست پاسخ داده می شود.
 
 {{index "Promise.all function"}}
 
-When working with collections of promises running at the same time,
-the `Promise.all` function can be useful. It returns a promise that
-waits for all of the promises in the array to resolve and then
-resolves to an array of the values that these promises produced (in
-the same order as the original array). If any promise is rejected, the
-result of `Promise.all` is itself rejected.
+زمانی که با مجموعه‌ای از promise ها کار می کنید که در یک زمان یکسان اجرا می شوند،
+تابع <bdo>`Promise.all`</bdo> می تواند مفید باشد. این تابع یک promise را برمی گرداند که برای
+همه‌ی promise های درون آرایه صبر می کند تا به نتیجه برسند و بعد نتیجه را درون یک
+آرایه از مقدارهایی که این promise ها تولید کرده اند می ریزد (به همان ترتیبی که
+در آرایه‌ی اصلی آمده بودند). اگر یک promise رد شده باشد، نتیجه‌ی <bdo>`Promise.all`</bdo>
+خودش نیز رد می شود.
 
 ```{includeCode: true}
 requestType("ping", () => "pong");
@@ -584,29 +579,26 @@ function availableNeighbors(nest) {
 
 {{index "then method"}}
 
-When a neighbor isn't available, we don't want the entire combined
-promise to fail since then we still wouldn't know anything. So the
-function that is mapped over the set of neighbors to turn them into
-request promises attaches handlers that make successful requests
-produce `true` and rejected ones produce `false`.
+زمانی که یک همسایه در دسترس نیست، دوست نداریم که تمامی promise ترکیب شده با شکست
+روبرو شود، در آن موقع ما هنوز چیزی نمی دانیم. بنابراین تابعی که بر روی مجموعه‌ی
+همسایه‌ها اعمال شده است تا هر یک از￼ آن ها را به درخواست‌های promise تبدیل کند،
+گرداننده‌هایی الصاق می کند تا درخواست های موفق `true` را تولید کنند و رد شده ها
+`false` را برگردانند.
 
 {{index "filter method", "map method", "some method"}}
 
-In the handler for the combined promise, `filter` is used to remove
-those elements from the `neighbors` array whose corresponding value is
-false. This makes use of the fact that `filter` passes the array index
-of the current element as a second argument to its filtering function
-(`map`, `some`, and similar higher-order array methods do the same).
+در گرداننده‌ای که برای promise ترکیب شده در نظر گرفته شده است، `filter` برای حذف
+آن عناصر از آرایه‌ی `neighbors` می‌باشد. عناصری که مقدار متناظرشان برابر با false می‌باشد.
+این کار از این واقعیت بهره می برد که `filter` اندیس عنصر فعلی در آرایه‌ را به عنوان آرگومان
+دومش به تابع فیلترش (مانند `map`، `some` یا دیگر توابع رده‌بالای آرایه‌ها که مشابه عمل می کنند) ارسال می کند.
 
-## Network flooding
+## جریان سیل‌ آسا در شبکه
+این واقعیت که لانه‌ها فقط می توانند با همسایه‌هایشان ارتباط برقرار کنند در مفید
+بودن این شبکه مانع ایجاد می کند.
 
-The fact that nests can talk only to their neighbors greatly inhibits
-the usefulness of this network.
-
-For broadcasting information to the whole network, one solution is to
-set up a type of request that is automatically forwarded to neighbors.
-These neighbors then in turn forward it to their neighbors, until the
-whole network has received the message.
+برای رساندن اطلاعات به کل شبکه، یک راه حل این است که نوع درخواستی تنظیم شود که
+به صورت خودکار به دیگر همسایه‌ها مخابره شود. این همسایه ها سپس آن اطلاعات
+را به همسایه‌هایشان منتقل می کنند تا زمانی که کل شبکه پیام را گرفته باشد.
 
 {{index "sendGossip function"}}
 
@@ -635,11 +627,11 @@ requestType("gossip", (nest, message, source) => {
 
 {{index "everywhere function", "gossip property"}}
 
-To avoid sending the same message around the network forever, each
-nest keeps an array of gossip strings that it has already seen. To
-define this array, we use the `everywhere` function—which runs code on
-every nest—to add a property to the nest's `state` object, which is
-where we'll keep nest-local state.
+برای جلوگیری از ارسال یک پیام یکسان در شبکه به صورت همیشگی، هر لانه آرایه‌ای از
+رشته‌هایی که قبلا دیده شده اند را نگه داری می کند. برای تعریف این آرایه، از تابع
+`everywhere` استفاده می کنیم – که کد را روی هر لانه اجرا می کند – برای افزودن یک
+خاصیت به شیء state لانه، که جایی است که ما وضعیت محلی لانه را نگه داری خواهیم
+کرد.
 
 When a nest receives a duplicate gossip message, which is very likely
 to happen with everybody blindly resending them, it ignores it. But
