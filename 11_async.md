@@ -592,7 +592,7 @@ function availableNeighbors(nest) {
 این کار از این واقعیت بهره می برد که `filter` اندیس عنصر فعلی در آرایه‌ را به عنوان آرگومان
 دومش به تابع فیلترش (مانند `map`، `some` یا دیگر توابع رده‌بالای آرایه‌ها که مشابه عمل می کنند) ارسال می کند.
 
-## جریان سیل‌ آسا در شبکه
+## جریان سیل‌گونه در شبکه
 این واقعیت که لانه‌ها فقط می توانند با همسایه‌هایشان ارتباط برقرار کنند در مفید
 بودن این شبکه مانع ایجاد می کند.
 
@@ -633,24 +633,23 @@ requestType("gossip", (nest, message, source) => {
 خاصیت به شیء state لانه، که جایی است که ما وضعیت محلی لانه را نگه داری خواهیم
 کرد.
 
-When a nest receives a duplicate gossip message, which is very likely
-to happen with everybody blindly resending them, it ignores it. But
-when it receives a new message, it excitedly tells all its neighbors
-except for the one who sent it the message.
+زمانی که یک لانه یک پیام تکراری را دریافت کند، که احتمالش جایی که
+هر لانه پیام‌ها را ندید بازارسال می کند وجود دارد، از آن پیام صرف نظر می شود. اما زمانی که
+پیامی جدید را دریافت می کند، آن پیام را با هیجان به همه‌ی لانه‌ها به جز لانه‌ای که
+فرستنده‌ی پیام بوده است ارسال می کند.
 
-This will cause a new piece of gossip to spread through the network
-like an ink stain in water. Even when some connections aren't
-currently working, if there is an alternative route to a given nest,
-the gossip will reach it through there.
+این باعث می شود که شبیه به پخش شدن جوهر در آب، خبر جدیدی در شبکه پخش شود . حتی
+زمانی که بعضی از ارتباطات در دسترس نیستند، اگر مسیر جایگزینی به یک لانه‌ی مشخص
+وجود داشته باشد، خبر از آن طریق به آن لانه خواهد رسید.
 
 {{index "flooding"}}
 
-This style of network communication is called _flooding_—it floods the
-network with a piece of information until all nodes have it.
+این سبک از ارتباطات شبکه‌ای را سیل‌گونه (flooding) می گویند – مانند سیل تمام شبکه
+را با اطلاعات فرا‌ می‌گیرد تا این که همه‌ی گره ها را پوشش دهد.
 
 {{if interactive
 
-We can call `sendGossip` to see a message flow through the village.
+با فراخوانی `sendGossip` می توانیم جریان پیغام درون روستا را مشاهده کنیم.
 
 ```
 sendGossip(bigOak, "Kids with airgun in the park");
@@ -658,34 +657,33 @@ sendGossip(bigOak, "Kids with airgun in the park");
 
 if}}
 
-## Message routing
+## مسیردهی پیام
 
 {{index efficiency}}
 
-If a given node wants to talk to a single other node, flooding is not
-a very efficient approach. Especially when the network is big, that
-would lead to a lot of useless data transfers.
+اگر یک گره بخواهد با یک گره‌ی مشخص دیگر ارتباط برقرار کند، سبک سیل‌گونه زیاد
+بهینه نخواهد بود. مخصوصا زمانی که شبکه بزرگ باشد، که باعث می‌شود میزان زیادی مخابره
+اطلاعات بدون کاربرد صورت گیرد.
 
 {{index "routing"}}
 
-An alternative approach is to set up a way for messages to hop from
-node to node until they reach their destination. The difficulty with
-that is it requires knowledge about the layout of the network. To
-send a request in the direction of a faraway nest, it is necessary to
-know which neighboring nest gets it closer to its destination. Sending
-it in the wrong direction will not do much good.
+یک راه حل جایگزین این است که برای پیام‌ها راهی در نظر گرفته شود تا از گره‌ای به
+گره‌های دیگر بپرند تا به گره‌ی مقصد برسند. مشکل این روش این است که بایستی اطلاعاتی
+در باره‌ی نقشه‌ی شبکه داشته باشیم. برای ارسال درخواستی به سمت یک گره دور، لازم است
+بدانیم کدام لانه‌های همسایه پیام را به مقصد نزدیک تر می کنند. ارسال آن به سمتی
+اشتباه مارا به هدف نمی‌رساند.
 
-Since each nest knows only about its direct neighbors, it doesn't have
-the information it needs to compute a route. We must somehow spread
-the information about these connections to all nests, preferably in a
-way that allows it to change over time, when nests are abandoned or
-new nests are built.
+به دلیل اینکه هر لانه فقط همسایه‌های مجاورش را می‌شناسد، اطلاعات کافی برای محاسبه
+یک مسیر را در دست ندارد. باید به شیوه‌ای اطلاعات این اتصالات را بین همه‌ی لانه‌ها
+منتشر کنیم. ترجیحا به روشی که بتوان در آینده در آن تغییر ایجاد کرد مثلا زمانی‌که
+که یک لانه متروکه می شود یا لانه‌ی جدیدی ساخته می شود.
 
 {{index flooding}}
 
-We can use flooding again, but instead of checking whether a given
-message has already been received, we now check whether the new set of
-neighbors for a given nest matches the current set we have for it.
+می توانیم دوباره به سراغ روش سیل‌گونه برویم، اما به جای
+استفاده از آن برای بررسی دریافت یک پیام، اکنون بررسی می کنیم آیا مجموعه‌ی
+همسایه‌ها برای یک گره‌ی مشخص با مجموعه‌ای که اکنون برای آن در دسترس داریم مطابقت
+دارد یا خیر.
 
 {{index "broadcastConnections function", "connections binding"}}
 
@@ -718,28 +716,28 @@ everywhere(nest => {
 
 {{index JSON, "== operator"}}
 
-The comparison uses `JSON.stringify` because `==`, on objects or
-arrays, will return true only when the two are the exact same value,
-which is not what we need here. Comparing the JSON strings is a crude
-but effective way to compare their content.
+در مقایسه از <bdo>`JSON.stringify`</bdo> استفاده می شود چرا که `==`، روی اشیاء و آرایه‌ها، فقط
+زمانی true برمی گرداند که هر دو طرف دارای مقدار یکسانی باشند، که چیزی نیست که ما
+در اینجا لازم داریم. مقایسه‌ی رشته‌های JSON جالب به نظر نمی رسد اما روشی موثر برای
+مقایسه‌ی محتوای آن ها است.
 
-The nodes immediately start broadcasting their connections, which
-should, unless some nests are completely unreachable, quickly give
-every nest a map of the current network ((graph)).
+
+گره‌ها بلافاصله شروع به مخابره‌ی اتصالاتشان می کنند، که باید به سرعت به هر لانه یک
+نقشه از گراف فعلی شبکه را بدهد، مگر اینکه بعضی از لانه‌ها کلا در دسترس نباشند.
 
 {{index pathfinding}}
 
-A thing you can do with graphs is find routes in them, as we saw in
-[Chapter ?](robot). If we have a route toward a message's
-destination, we know which direction to send it in.
+یکی از کارهایی که در گراف‌ها می توان انجام داد پیدا کردن مسیر‌ها در آن‌ها است ،
+همانطور که در [فصل ?](robot) دیدیم. اگر مسیری به سمت یک مقصد پیام داشته باشیم، می دانیم
+از کدام جهت باید اقدام به ارسال آن کنیم.
 
 {{index "findRoute function"}}
 
-This `findRoute` function, which greatly resembles the `findRoute`
-from [Chapter ?](robot#findRoute), searches for a way to reach a given
-node in the network. But instead of returning the whole route, it just
-returns the next step. That next nest will itself, using its current
-information about the network, decide where _it_ sends the message.
+این تابع `findRoute`، که بسیار شباهت به تابع `findRoute` [فصل ?](robot#findRoute) دارد،
+برای رسیدن به
+یک گره مشخص شده در شبکه به جستجو می پردازد. اما به جای برگرداندن تمام مسیر، فقط
+گام بعدی را برمی گرداند. لانه‌ی بعدی خودش، از اطلاعات فعلی اش در رابطه با شبکه
+استفاده خواهد کرد و تصمیم می گیرد که کجا پیغام را بفرستد.
 
 ```{includeCode: true}
 function findRoute(from, to, connections) {
@@ -757,11 +755,11 @@ function findRoute(from, to, connections) {
 }
 ```
 
-Now we can build a function that can send long-distance messages. If
-the message is addressed to a direct neighbor, it is delivered as
-usual. If not, it is packaged in an object and sent to a neighbor that
-is closer to the target, using the `"route"` request type, which will
-cause that neighbor to repeat the same behavior.
+اکنون می توانیم تابعی بسازیم که می تواند پیغام‌ها را به نقاط دور ارسال کند. اگر
+پیام مورد نظر مقصدش یک همسایه‌ی مجاور بود، به طور معمولی تحویل داده می شود. در
+غیر این صورت، درون یک شیء قرار گرفته و به همسایه‌ای ارسال می شود که به هدف نزدیک
+تر است، با استفاده از نوع درخواست `"route"` که باعث می شود آن همسایه نیز این
+رفتار را تکرار کند.
 
 {{index "routeRequest function"}}
 
@@ -785,8 +783,8 @@ requestType("route", (nest, {target, type, content}) => {
 
 {{if interactive
 
-We can now send a message to the nest in the church tower, which is
-four network hops removed.
+اکنون می‌توانیم پیامی به لانه‌ای که در برج کلیسا قرار دارد ارسال کنیم که چهار
+گام در شبکه نیاز دارد.
 
 ```
 routeRequest(bigOak, "Church Tower", "note",
@@ -797,27 +795,24 @@ if}}
 
 {{index [network, abstraction], layering}}
 
-We've constructed several layers of functionality on top of a
-primitive communication system to make it convenient to use.
-This is a nice (though simplified) model of how real computer networks
-work.
+تاکنون لایه‌های متعددی از قابلیت‌ها را روی یک سیستم ارتباطی اولیه ساخته ایم تا
+استفاده از آن را راحت و سرراست کنیم. این مدل (البته ساده شده‌ی) خوبی از چگونگی
+عملکرد شبکه‌های کامپیوتر در واقعیت است.
 
 {{index error}}
 
-A distinguishing property of computer networks is that they aren't
-reliable—abstractions built on top of them can help, but you can't
-abstract away network failure. So network programming is typically
-very much about anticipating and dealing with failures.
+یک خاصیت متمایز کننده در شبکه‌های کامپیوتری این است که آن ها قابل اتکا نیستند –
+تجریدهایی که بر اساس آن‌ها انجام می‌ شود می توانند مفید باشند، اما شکست شبکه را نمی توان با آن‌ها پوشش داد. بنابراین برنامه‌نویسی تحت شبکه نوعا با
+انتظار خرابی (failure) در شبکه و مدیریت آن سر و کار دارد.
 
-## Async functions
+## توابع Async
 
-To store important information, ((crow))s are known to duplicate it
-across nests. That way, when a hawk destroys a nest, the information
-isn't lost.
+برای ذخیره‌ی اطلاعات مهم، کلاغ‌ها اطلاعات را بین لانه‌ها تکثیر می کنند. در این روش
+، زمانی که یک شاهین یکی از لانه‌ها را از بین می برد، اطلاعات از بین نخواهند رفت.
 
-To retrieve a given piece of information that it doesn't have in its
-own storage bulb, a nest computer might consult random other nests in
-the network until it finds one that has it.
+برای بازیابی یک بخش از اطلاعات که در بافت موجود در خود لانه وجود ندارد، یک
+کامپیوتر لانه ممکن است با لانه‌های تصادفی در شبکه ارتباط بگیرد تا اینکه آن
+لانه‌ای که اطلاعات را دارد پیدا شود.
 
 {{index "findInStorage function", "network function"}}
 
@@ -855,35 +850,31 @@ function findInRemoteStorage(nest, name) {
 
 {{index "Map class", "Object.keys function", "Array.from function"}}
 
-Because `connections` is a `Map`, `Object.keys` doesn't work on it. It
-has a `keys` _method_, but that returns an iterator rather than an
-array. An iterator (or iterable value) can be converted to an array
-with the `Array.from` function.
+به دلیل اینکه `connections` از جنس `Map` است، <bdo>`Object.keys`</bdo> روی آن جواب نمی دهد. متد
+`keys` در این شیء هم وجود دارد اما یک شمارنده را برمی گرداند نه یک آرایه. یک
+شمارنده (یا مقدار شمارنده) را می توان به وسیله‌ی <bdo>`Array.from`</bdo> به آرایه تبدیل کرد.
 
 {{index "Promise class", recursion}}
 
-Even with promises this is some rather awkward code. Multiple
-asynchronous actions are chained together in non-obvious ways. We
-again need a recursive function (`next`) to model looping through the
-nests.
+حتی با وجود استفاده از promise ها این کد نسبتا شکل خوبی ندارد.
+عملیات متعدد ناهمگام با هم زنجیر شده اند به صورتی که اصلا خوانا و واضح نیست. دوباره
+نیاز به یک تابع بازگشتی داریم (`next`) تا بتوانیم حلقه (looping) را بین لانه‌ها مدل
+سازی کنیم.
 
 {{index "synchronous programming", "asynchronous programming"}}
 
-And the thing the code actually does is completely linear—it always
-waits for the previous action to complete before starting the next
-one. In a synchronous programming model, it'd be simpler to express.
+و این که کاری که این کد درواقع انجام می دهد کاملا خطی است – همیشه منتظر اتمام
+عمل قبلی پیش از شروع￼ عمل بعدی می ماند. در یک مدل برنامه نویسی همگام ، ساده‌تر می
+توان این کارها را پیاده سازی کرد.
 
 {{index "async function", "await keyword"}}
 
-The good news is that JavaScript allows you to write pseudo-synchronous
-code to describe asynchronous computation. An `async` function is a
-function that implicitly returns a
-promise and that can, in its body, `await` other promises in a way
-that _looks_ synchronous.
+خبر خوب این است که جاوااسکریپت این امکان را فراهم کرده است که کدهای شبه-همگام بنویسید.
+یک تابع `async` تابعی است که به طور ضمنی یک promise را بر‌می‌گرداند و می تواند در بدنه‌اش ، به وسیله‌ی دستور `await` منتظر دیگر promiseها باشد به طوری که همگام به نظر برسد.
 
 {{index "findInStorage function"}}
 
-We can rewrite `findInStorage` like this:
+می توانیم تابع `findInStorage` را به شکل زیر بازنویسی کنیم.
 
 ```
 async function findInStorage(nest, name) {
@@ -907,12 +898,11 @@ async function findInStorage(nest, name) {
 
 {{index "async function", "return keyword", "exception handling"}}
 
-An `async` function is marked by the word `async` before the
-`function` keyword. Methods can also be made `async` by writing
-`async` before their name. When such a function or method is called,
-it returns a promise. As soon as the body returns something, that
-promise is resolved. If it throws an exception, the promise is
-rejected.
+یک تابع async را می توان با واژه‌ی `async` قبل از کلیدواژه‌ی `function` مشخص کرد.
+متدها را نیز می توان با نوشتن آن قبل از نام متد تبدیل به `async` کرد . زمانی که
+تابع یا متدی با این خصوصیت فراخوانی شود یک promise را تولید خواهد کرد. به محض این که
+بدنه‌ی تابع چیزی را برگرداند، آن promise نتیجه‌یابی می شود. اگر
+استثنایی تولید کند، promise رد می شود.
 
 {{if interactive
 
@@ -925,33 +915,31 @@ if}}
 
 {{index "await keyword", ["control flow", asynchronous]}}
 
-Inside an `async` function, the word `await` can be put in front of an
-expression to wait for a promise to resolve and only then continue
-the execution of the function.
+درون یک تابع `async،` واژه‌ی `await` را می توان در ابتدای یک عبارت قرار داد تا تابع
+برای دریافت نتیجه‌ی promise منتظر بماند و بعد از آن به ادامه‌ی اجرای تابع
+بپردازد.
 
-Such a function no longer, like a regular JavaScript function, runs
-from start to completion in one go. Instead, it can be _frozen_ at any
-point that has an `await`, and can be resumed at a later time.
+این گونه توابع دیگر مانند توابع معمولی جاوااسکریپت از ابتدا تا انتها در یک حرکت
+اجرا نمی شوند. بلکه ممکن است در هر نقطه‌ای که یک `await` دارند ایست کنند و بعدا به
+ادامه مسیرشان بپردازند.
 
-For non-trivial asynchronous code, this notation is usually more
-convenient than directly using promises. Even if you need to do
-something that doesn't fit the synchronous model, such as perform
-multiple actions at the same time, it is easy to combine `await` with
-the direct use of promises.
+برای کدهای ناهمگام مهم، استفاده از این روش معمولا مناسب تر است از استفاده از
+promise ها. حتی اگر لازم است که کاری انجام بدهید که مناسب مدل همگام نیست، مثل
+اجرای چندین کار در یک زمان، به آسانی می توان `await` را با استفاده مستقیم از
+promise ها ترکیب کرد.
 
-## Generators
+## مولدها Generators
 
 {{index "async function"}}
 
-This ability of functions to be paused and then resumed again is not
-exclusive to `async` functions. JavaScript also has a feature called
-_((generator))_ functions. These are similar, but without the
-promises.
+این قابلیت در توابع که می توانند متوقف شده و بعدا دوباره به مسیرشان ادامه بدهند
+فقط مخصوص به توابع `async` نیست. جاوااسکریپت قابلیتی به نام توابع _((generator))_
+(مولد) دارد. این توابع به طور مشابه عمل می کنند اما بدون promise ها.
 
-When you define a function with `function*` (placing an asterisk after
-the word `function`), it becomes a generator. When you call a
-generator, it returns an ((iterator)), which we already saw in
-[Chapter ?](object).
+زمانی که تابعی را با `function*` (یک ستاره بعد از کلیدواژه‌ی function قرار می
+دهید)، تعریف می کنید، باعث می شود که آن تابع به یک مولد تبدیل شود. زمانی که یک
+تابع مولد فراخوانی می شود، یک تکرار‌کننده (iterator) را برمی گرداند که￼ پیش تر در [فصل ?](object) دیده
+ایم.
 
 ```
 function* powers(n) {
@@ -971,17 +959,14 @@ for (let power of powers(3)) {
 
 {{index "next method", "yield keyword"}}
 
-Initially, when you call `powers`, the function is frozen at its
-start. Every time you call `next` on the iterator, the function runs
-until it hits a `yield` expression, which pauses it and causes the
-yielded value to become the next value produced by the iterator. When
-the function returns (the one in the example never does), the iterator
-is done.
+در ابتدا، وقتی که تابع `powers` را فراخوانی می کنید، تابع در ابتدای خودش ایست می
+کند. هر بار که `next` را روی تکرارکننده فراخوانی می کنید، تابع تا رسیدن به یک عبارت
+`yield` اجرا می شود، و دوباره متوقف شده و مقداری که به وسیله‌ی `yield` حاصل شده است
+به عنوان مقدار بعدی تولیدی توسط تکرارکننده در نظر گرفته می شود. زمانی که تابع به
+پایان می رسد (که در این مثال هرگز اتفاق نمی افتد) تکرارکننده نیز به پایان می رسد.
 
-Writing iterators is often much easier when you use generator
-functions. The iterator for the `Group` class (from the exercise in
-[Chapter ?](object#group_iterator)) can be written with this
-generator:
+نوشتن تکرارکننده‌ها اغلب در هنگام استفاده از توابع مولد ساده تر می باشد. تکرارکننده‌ی
+مربوط به کلاس `Groupe` (مربوط به تمرین [فصل ?](object#group_iterator)) را می توان با این مولد بازنویسی کرد:
 
 {{index "Group class"}}
 
@@ -1002,22 +987,20 @@ class Group {
 
 {{index [state, in iterator]}}
 
-There's no longer a need to create an object to hold the iteration
-state—generators automatically save their local state every time
-they yield.
+دیگر نیازی نیست که یک شیء را ایجاد کرده تا وضعیت تکرار را نگه داری کنیم – مولدها
+این کار را به صورت خودکار با ذخیره‌ی وضعیت محلی‌شان با هر بار خواندن yield انجام می دهند.
 
-Such `yield` expressions may occur only directly in the generator
-function itself and not in an inner function you define inside of it.
-The state a generator saves, when yielding, is only its _local_
-environment and the position where it yielded.
+عبارت‌های `yield` فقط می توانند مستقیما درون خود تابع مولد استفاده شوند نه درون
+تابعی که درون مولد تعریف می کنید. وضعیتی که یک مولد در هنگام اجرای yield ذخیره
+می کند ، فقط شامل محیط محلی آن و موقعیتی که در آنجا yield انجام شده می شود.
 
 {{index "await keyword"}}
 
-An `async` function is a special type of generator. It produces a
-promise when called, which is resolved when it returns (finishes) and
-rejected when it throws an exception. Whenever it yields (awaits) a
-promise, the result of that promise (value or thrown exception) is the
-result of the `await` expression.
+یک تابع `async` یک نوع خاص از یک مولد است. در هنگام فراخوانی یک promise تولید می
+کند که در هنگام پایان تابع به نتیجه می رسد و زمانی که یک استثنا تولید می کنند
+reject می شوند. هر وقت که این تابع یک promise را yield می کند (به عبارتی با
+`await` منتظر یک promise می ماند)، نتیجه‌ی آن promise (مقدار یا استثنای تولید
+شده) نتیجه‌ی عبارت `await` خواهد بود.
 
 ## The event loop
 
