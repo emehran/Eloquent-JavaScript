@@ -46,7 +46,7 @@ _پردازشگر_ نامیده می￼ شود. برنامه‌هایی که ت�
 برنامه خبردار شده و به نتایج دست خواهد یافت (به عنوان مثال می توان به خواندن
 اطلاعات از دیسک سخت اشاره کرد).
 
-می توان برنامه نویسی همگام و ناهمگام را با یک مثال کوچک مقایسه کرد: برنامه‌ای
+می توان برنامه‌نویسی همگام و ناهمگام را با یک مثال کوچک مقایسه کرد: برنامه‌ای
 که از دو منبع در شبکه، اطلاعاتی دریافت می کند و بعد نتایج را با هم ترکیب می کند.
 
 {{index "synchronous programming"}}
@@ -89,10 +89,10 @@ thread داده شده محسوب می شود. در مدل ناهمگام، شر
 خطی اجرا می شوند نامناسب باشد. در ادامه این فصل با راه‌هایی برای حل این ناهمگونی
 آشنا خواهیم شد.
 
-هر دو پلتفرم مهم برنامه نویسی جاوااسکریپت – مرورگرها و <bdo>Node.js</bdo> –
+هر دو پلتفرم مهم برنامه‌نویسی جاوااسکریپت – مرورگرها و <bdo>Node.js</bdo> –
 عملیاتی که ممکن است زمانگیر باشند را به صورت ناهمگام اجرا می کنند و از نخ‌ها
-(threads) استفاده نمی کنند. به دلیل اینکه برنامه نویسی روی thread ها کار سختی
-محسوب می شود (در این نوع برنامه نویسی درک کارکرد برنامه، به دلیل انجام چند کار
+(threads) استفاده نمی کنند. به دلیل اینکه برنامه‌نویسی روی thread ها کار سختی
+محسوب می شود (در این نوع برنامه‌نویسی درک کارکرد برنامه، به دلیل انجام چند کار
 در آن واحد بسیار سخت‌تر می شود)، روش ناهمگام عموما چیز خوبی محسوب می شود.
 
 ## فناوری کلاغ‌ها
@@ -130,14 +130,14 @@ thread داده شده محسوب می شود. در مدل ناهمگام، شر
 
 {{figure {url: "img/Hieres-sur-Amby.png", alt: "A network of crow nests in a small village"}}}
 
-در نمونه‌ای شگفت‌انگیز از تکامل همگرا، کامپیوترهای کلاغ‌ها، جاوااسکریپت را اجرا می کنند. در این فصل قرار است بعضی از قابلیت‌های پایه‌ای شبکه را برایشان برنامه نویسی کنیم.
+در نمونه‌ای شگفت‌انگیز از تکامل همگرا، کامپیوترهای کلاغ‌ها، جاوااسکریپت را اجرا می کنند. در این فصل قرار است بعضی از قابلیت‌های پایه‌ای شبکه را برایشان برنامه‌نویسی کنیم.
 
 
 ## callbacks - فراخوان برگشتی
 
 {{indexsee [function, callback], "callback function"}}
 
-یکی از راه‌های برنامه نویسی ناهمگام این است توابعی که یک کار زمانگیر را انجام می
+یکی از راه‌های برنامه‌نویسی ناهمگام این است توابعی که یک کار زمانگیر را انجام می
 دهند یک آرگومان اضافی دریافت کنند، یک تابع callback. تابع اصلی اجرا شده و پایان
 می پذیرد بعد تابع callback با نتایج دریافتی از تابع اصلی فراخوانی می گردد.
 
@@ -185,7 +185,7 @@ bigOak.readStorage("food caches", caches => {
 ```
 (تمامی متغیرها و رشته‌ها از زبان کلاغی به زبان انگلیسی ترجمه شده اند.)
 
-این سبک از برنامه نویسی شدنی است اما با هر بار عمل همگام، میزان تورفتگی اضافه
+این سبک از برنامه‌نویسی شدنی است اما با هر بار عمل همگام، میزان تورفتگی اضافه
 می شود ،چرا که به تابع دیگر نیاز خواهید داشت. برای انجام کارهای پیچیده‌تر ، مثل
 انجام چند عمل در یک زمان واحد، این شیوه‌ی کدنویسی می تواند کمی بدقواره شود.
 
@@ -864,7 +864,7 @@ function findInRemoteStorage(nest, name) {
 {{index "synchronous programming", "asynchronous programming"}}
 
 و این که کاری که این کد درواقع انجام می دهد کاملا خطی است – همیشه منتظر اتمام
-عمل قبلی پیش از شروع￼ عمل بعدی می ماند. در یک مدل برنامه نویسی همگام ، ساده‌تر می
+عمل قبلی پیش از شروع￼ عمل بعدی می ماند. در یک مدل برنامه‌نویسی همگام ، ساده‌تر می
 توان این کارها را پیاده سازی کرد.
 
 {{index "async function", "await keyword"}}
@@ -1002,30 +1002,28 @@ reject می شوند. هر وقت که این تابع یک promise را yield �
 `await` منتظر یک promise می ماند)، نتیجه‌ی آن promise (مقدار یا استثنای تولید
 شده) نتیجه‌ی عبارت `await` خواهد بود.
 
-## The event loop
+## حلقه‌ی رویداد
 
 {{index "asynchronous programming", scheduling, "event loop", timeline}}
 
-Asynchronous programs are executed piece by piece. Each piece may
-start some actions and schedule code to be executed when the action
-finishes or fails. In between these pieces, the program sits idle,
-waiting for the next action.
+برنامه‌های ناهمگام به صورت بخش بخش اجرا می شوند. هر بخش ممکن است کارهایی را شروع
+کند و کدهایی را هم برنامه ریزی کند که در صورت پایان یا شکست آن کارها اجرا شوند.
+بین این بخش ها، برنامه بیکار می نشیند و منتظر کار بعدی خواهد ماند.
 
 {{index "setTimeout function"}}
 
-So callbacks are not directly called by the code that scheduled them.
-If I call `setTimeout` from within a function, that function will have
-returned by the time the callback function is called. And when the
-callback returns, control does not go back to the function that
-scheduled it.
+بنابراین callbackها به طور مستقیم توسط کدی که آن ها را زمانبندی کرده اند
+فراخوانی نمی شوند. اگر من تابع `setTimeout` را از درون یک تابع فراخوانی کنم، آن
+تابع زمانی برگردانده می شود که تابع callback فراخوانی می￼ شود. و زمانی که تابع
+callback اجرا و بر‌می‌گردد، کنترل برنامه به تابعی که آن را زمانبندی
+کرده بود بر نخواهد گشت.
 
 {{index "Promise class", "catch keyword", "exception handling"}}
 
-Asynchronous behavior happens on its own empty function ((call
-stack)). This is one of the reasons that, without promises, managing
-exceptions across asynchronous code is hard. Since each callback
-starts with a mostly empty stack, your `catch` handlers won't be on
-the stack when they throw an exception.
+رفتار ناهمگام، در تابع تهی خودش (پشته‌ی فراخوانی) اتفاق می‌افتد.
+این یکی از دلایلی است که بدون استفاده از promiseها، مدیریت استثناها در کدهای
+ناهمگام مشکل است. به دلیل اینکه هر callback با یک پشته‌ی تقریبا خالی شروع می شود،
+گرداننده‌های `catch` شما در پشته در هنگام بروز یک استثنا در پشته نخواهند بود.
 
 ```
 try {
@@ -1040,17 +1038,16 @@ try {
 
 {{index thread, queue}}
 
-No matter how closely together events—such as timeouts or incoming
-requests—happen, a JavaScript environment will run only one program at
-a time. You can think of this as it running a big loop _around_ your
-program, called the _event loop_. When there's nothing to be done,
-that loop is stopped. But as events come in, they are added to a queue,
-and their code is executed one after the other. Because no two things
-run at the same time, slow-running code might delay the handling of
-other events.
+اهمیتی ندارد چقدر این رخدادها به هم نزدیک باشند- مانند timeoutها یا درخواست‌های
+وارده – ، یک محیط جاوااسکریپت فقط یک برنامه را در یک لحظه اجرا می کند. می توان
+این را به عنوان اجرای یک حلقه‌ی بزرگ دور برنامه شما تصور کرد که به آن حلقه‌ی
+رخداد (event loop) می گویند. وقتی کاری دیگر برای انجام نمانده باشد ، حلقه از کار
+می ایستد. اما با ورود رخدادها، آن‌ها به یک صف اضافه می شوند و کدهایشان یکی بعد از
+دیگری اجرا می شوند. بدلیل اینکه هیچگاه دو کار در یک لحظه اجرا نمی شود، کدهای کند
+و زمانگیر ممکن است در رسیدگی به دیگر رخدادها تاخیر ایجاد کنند.
 
-This example sets a timeout but then dallies until after the
-timeout's intended point of time, causing the timeout to be late.
+در این مثال یک timeout تنظیم می شود، اما اجرای آن به بعد از زمان اجرای در نظر
+گرفته شده به تاخیر می‌افتد.
 
 ```
 let start = Date.now();
@@ -1065,9 +1062,9 @@ console.log("Wasted time until", Date.now() - start);
 
 {{index "resolving (a promise)", "rejecting (a promise)", "Promise class"}}
 
-Promises always resolve or reject as a new event. Even if a promise is
-already resolved, waiting for it will cause your callback to run after
-the current script finishes, rather than right away.
+promise ها همیشه به عنوان یک رخداد جدید، رد یا حل‌ و فصل می‌شوند. حتی اگر یک
+promise از پیش به نتیجه رسیده باشد، انتظار برای آن باعث می شود که callback شما
+بعد از پایان اسکریپت کنونی اجرا شود، نه به صورت فوری.
 
 ```
 Promise.resolve("Done").then(console.log);
@@ -1076,22 +1073,22 @@ console.log("Me first!");
 // → Done
 ```
 
-In later chapters we'll see various other types of events that run on
-the event loop.
+در فصل‌های بعدی انواع مختلفی از رخدادها را مشاهده خواهیم کرد که روی حلقه‌ی
+رخدادها اجرا می شوند.
 
-## Asynchronous bugs
+## باگ‌ها در مدل برنامه‌نویسی ناهمگام
 
 {{index "asynchronous programming", [state, transitions]}}
 
-When your program runs synchronously, in a single go, there are no
-state changes happening except those that the program itself
-makes. For asynchronous programs this is different—they may have
-_gaps_ in their execution during which other code can run.
+زمانی که برنامه‌ی شما به صورت همگام اجرا می شود، در یک اجرای واحد، هیچ تغییر
+وضعیتی به جز آن هایی که خود برنامه ایجاد می کند وجود ندارد. در برنامه‌های
+ناهمگام قضیه متفاوت است- ممکن است شامل وقفه‌هایی در اجرایشان باشند که در این وقفه‌ها
+ دیگر کدها می توانند اجرا شوند.
 
-Let's look at an example. One of the hobbies of our crows is to count
-the number of chicks that hatch throughout the village every year.
-Nests store this count in their storage bulbs. The following code tries to
-enumerate the counts from all the nests for a given year:
+اجازه بدهید تا به مثالی نگاه کنیم. یکی از سرگرمی‌های کلاغ‌های ما این است که تعداد
+جوجه‌هایی که از تخم بیرون می آیند در طول یک سال در روستا را بشمارند. لانه‌ها این
+عدد را در بافت‌های ذخیره‌سازی‌شان حفظ می کنند. کد پیش رو تلاش می کند تا تمامی اعداد
+موجود در همه‌ی لانه‌ها را برای یک سال مشخص بشمارد.
 
 {{index "anyStorage function", "chicks function"}}
 
@@ -1114,18 +1111,19 @@ async function chicks(nest, year) {
 
 {{index "async function"}}
 
-The `async name =>` part shows that ((arrow function))s can also be
-made `async` by putting the word `async` in front of them.
+قسمت <bdo>`async name =>`</bdo> نشان می دهد که توابع پیکانی ((arrow functions))
+را همچنین می توان به صورت `async` با قرار دادن واژه‌ی `async` در ابتدای آن ایجاد
+کرد.
 
 {{index "Promise.all function"}}
 
-The code doesn't immediately look suspicious...it maps the `async`
-arrow function over the set of nests, creating an array of promises,
-and then uses `Promise.all` to wait for all of these before returning
-the list they build up.
+کد ما در نگاه اول نادرست به نظر نمی‌رسد... تابع پیکانی `async` بر روی
+مجموعه‌ی لانه‌ها نگاشت می شود، آرایه‌‌ای از promiseها تولید می شود و سپس از
+<bdo>`Promise.all`</bdo> برای انتظار برای همه‌ی این‌ها قبل از بازگشتن از لیستی که می‌سازند
+استفاده می شود.
 
-But it is seriously broken. It'll always return only a single line of
-output, listing the nest that was slowest to respond.
+اما این کد مطمئنا مشکل دارد. خروجی آن همیشه لانه‌ای است که کند‌ترین پاسخ را
+داشته است.
 
 {{if interactive
 
@@ -1135,31 +1133,30 @@ chicks(bigOak, 2017).then(console.log);
 
 if}}
 
+می توانید علت این مشکل را بیابید؟
+
 Can you work out why?
 
 {{index "+= operator"}}
 
-The problem lies in the `+=` operator, which takes the _current_ value
-of `list` at the time where the statement starts executing and then,
-when the `await` finishes, sets the `list` binding to be that value
-plus the added string.
+مشکل در قسمت عملگر <bdo>`+=`</bdo> قرار دارد، که مقدار فعلی لیست را در زمانی که دستور شروع به
+اجرا می کند می گیرد و بعد از اینکه دستور `await` به پایان می رسد، متغیر `list` را
+معادل با آن مقدار به اضافه رشته‌ی افزوده شده قرار می دهد.
 
 {{index "await keyword"}}
 
-But between the time where the statement starts executing and the time
-where it finishes there's an asynchronous gap. The `map` expression
-runs before anything has been added to the list, so each of the `+=`
-operators starts from an empty string and ends up, when its storage
-retrieval finishes, setting `list` to a single-line list—the result of
-adding its line to the empty string.
+اما در این میان جایی که دستور شروع به اجرا می کند و زمانی که به اتمام می رسد یک
+وقفه‌ی ناهمگام وجود دارد. عبارت `map` قبل از اینکه چیزی به لیست اضافه شود، اجرا می
+شود بنابراین هرکدام از عملگرهای <bdo>`+=`</bdo> با یک رشته‌ی خالی شروع می کنند و به پایان می
+رسند، زمانی که بازیابی مخزنش به اتمام برسد، متغیر `list` را برابر با یک لیست
+تک-خطی قرار می دهد — نتیجه افزودن خطش به رشته‌ی تهی.
 
 {{index "side effect"}}
 
-This could have easily been avoided by returning the lines from the
-mapped promises and calling `join` on the result of `Promise.all`,
-instead of building up the list by changing a binding. As usual,
-computing new values is less error-prone than changing existing
-values.
+بجای اینکه لیست را با تغییر یک متغیر بسازیم،
+با برگرداندن خطوط از promiseهای نگاشت شده و فراخوانی `join` روی نتیجه‌ی
+<bdo>`Promise.all`</bdo>، می توان به سادگی از این اشکال جلوگیری کرد. به طور
+معمول، محاسبه‌ی مقدارهای جدید نسبت به تغییر مقادیر فعلی کمتر خطاساز هستند.
 
 {{index "chicks function"}}
 
@@ -1173,58 +1170,53 @@ async function chicks(nest, year) {
 }
 ```
 
-Mistakes like this are easy to make, especially when using `await`,
-and you should be aware of where the gaps in your code occur. An
-advantage of JavaScript's _explicit_ asynchronicity (whether through
-callbacks, promises, or `await`) is that spotting these gaps is
-relatively easy.
+اشتباهاتی شبیه این خیلی ساده اتفاق می افتند مخصوصا زمانی که از `await` استفاده می
+کنیم، و باید حواستان به￼ جایی که وقفه‌ها در کدتان رخ می دهد باشد. یک مزیت برنامه
+نویسی ناهمگام (چه با استفاده از callbackها ، promise ها یا await) به صورت صریح
+در جاوااسکریپت، این است که پیدا کردن این وقفه‌ها نسبتا ساده است.
 
-## Summary
+## خلاصه
 
-Asynchronous programming makes it possible to express waiting for
-long-running actions without freezing the program during these
-actions. JavaScript environments typically implement this style of
-programming using callbacks, functions that are called when the
-actions complete. An event loop schedules such callbacks to be called
-when appropriate, one after the other, so that their execution does
-not overlap.
+برنامه‌نویسی ناهمگام این امکان را فراهم می سازد که بتوان برای کارهای اجرایی
+زمانگیر صبر کرد بدون اینکه برنامه در حین انجام این کارها متوقف شود. محیط‌های
+جاوااسکریپت نوعا این سبک از برنامه‌نویسی را با استفاده از callback ها پیاده سازی
+می کنند، توابعی که که زمانی که کارهای مورد نظر پایان می پذیرد فراخوانی می شوند.
+یک حلقه‌ی رخداد، این توابع callback را زمانبندی می کند تا در زمان مناسب فراخوانی
+شوند، یکی پس از دیگری، تا اجرای آن‌ها با تداخل روبرو نشود.
 
-Programming asynchronously is made easier by promises, objects that
-represent actions that might complete in the future, and `async`
-functions, which allow you to write an asynchronous program as if it
-were synchronous.
+برنامه‌نویسی ناهمگام با استفاده از promise ها آسان تر می شود، اشیائی که نماینده‌ی
+کارهایی هستند که ممکن است در آینده تکمیل شوند، و توابع `async`، که به
+شما این امکان را می دهد تا یک برنامه‌ی ناهمگام را به شکلی بنویسید که انگار همگام
+است.
 
-## Exercises
+## تمرین‌ها
 
-### Tracking the scalpel
+### رهگیری چاقوی جراحی
 
 {{index "scalpel (exercise)"}}
 
-The village crows own an old scalpel that they occasionally use on
-special missions—say, to cut through screen doors or packaging. To be
-able to quickly track it down, every time the scalpel is moved to
-another nest, an entry is added to the storage of both the nest that
-had it and the nest that took it, under the name `"scalpel"`, with its
-new location as the value.
+کلاغ‌های روستا یک چاقوی جراحی قدیمی دارند که گاهی اوقات از آن برای ماموریت‌های خاص
+استفاده می می‌کنند — فرض کنید، برای بریدن توری درها یا بسته ها. برای اینکه بتوان
+به سرعت آن را رهگیری کرد، هربار که چاقو به لانه‌ی دیگری منتقل می شد، یک مدخل به
+مخزن هر دو لانه اضافه می شد، لانه‌ای که آن را داشت و لانه‌ای که آن را دریافت
+کرده است و این مدخل با نام `"scalpel"` و با مقداری برای محل جدیدش ذخیره می شود.
 
-This means that finding the scalpel is a matter of following the
-breadcrumb trail of storage entries, until you find a nest where that
-points at the nest itself.
+این به این معنا است که برای پیدا کردن چاقو باید به تاریخچه‌ی نشانه‌های موجود در
+مخزن مراجعه کرد تا اینکه به لانه‌ای برسید که به خودش ارجاع می دهد.
 
 {{index "anyStorage function", "async function"}}
 
-Write an `async` function `locateScalpel` that does this, starting at
-the nest on which it runs. You can use the `anyStorage` function
-defined earlier to access storage in arbitrary nests. The scalpel has
-been going around long enough that you may assume that every nest has
-a `"scalpel"` entry in its data storage.
+یک تابع `async` به نام `locateScalpel` ایجاد کنید که این کار را انجام می دهد که از
+لانه‌ای که روی آن اجرا می شود شروع می کند. می توانید از تابع `anyStorage` که پیش
+تر تعریف شده برای دسترسی به لانه‌های مورد نظر استفاده کنید. چاقو از مدت زمان مدیدی
+است که بین لانه‌ها دست به دست می شود که می توان نتیجه گرفت که هر لانه یک مدخل
+`"scalpel"` را در مخزنش دارد.
 
-Next, write the same function again without using `async` and `await`.
+در گام بعدی، همین تابع را بدون استفاده از `async` و `await` بنویسید.
 
 {{index "exception handling"}}
 
-Do request failures properly show up as rejections of the returned
-promise in both versions? How?
+آیا شکست‌های درخواست‌ها به درستی به عنوان عدم پذیرش یک promise برگردانده شده، نمایش داده می شوند در￼ هر دو نسخه؟ چگونه؟
 
 {{if interactive
 
@@ -1247,55 +1239,44 @@ if}}
 
 {{index "scalpel (exercise)"}}
 
-This can be done with a single loop that searches through the nests,
-moving forward to the next when it finds a value that doesn't match
-the current nest's name and returning the name when it finds a
-matching value. In the `async` function, a regular `for` or `while`
-loop can be used.
+این کار را می توان به وسیله‌ی یک حلقه که درون‌ لانه‌ها را می‌گردد صورت داد، اگر مقداری مطابق
+نام لانه‌ی فعلی پیدا کند آن را بر‌می گرداند و درغیر این صورت به سراغ لانه‌ی بعدی می رود. در تابع `async`، یک دستور `for` یا `while` می تواند استفاده شود.
 
 {{index recursion}}
 
-To do the same in a plain function, you will have to build your loop
-using a recursive function. The easiest way to do this is to have that
-function return a promise by calling `then` on the promise that
-retrieves the storage value. Depending on whether that value matches
-the name of the current nest, the handler returns that value or a
-further promise created by calling the loop function again.
+برای انجام این کار در یک تابع ساده، باید حلقه‌ی خودتان را به وسیله‌ی یک تابع بازگشتی بنویسید. آسان ترین روش انجام این کار این است که تابع یک promise را با فراخوانی `then` روی promiseای که مقدار ذخیره‌شده را بر‌می‌گرداند بنویسید. بسته به اینکه آن مقدار با نام لانه‌ی فعلی مطابقت داشته باشد یا خیر ، تابع گرداننده،
+یا آن مقدار را بر‌می‌گرداند یا یک promise دیگر با فراخوانی دوباره‌ی تابع بر‌می‌گرداند.
 
-Don't forget to start the loop by calling the recursive function once
-from the main function.
+فراموش نکنید که حلقه‌ را با یک بار فراخوانی تابع بازگشتی از درون تابع اصلی شروع کنید.
 
 {{index "exception handling"}}
 
-In the `async` function, rejected promises are converted to exceptions
-by `await`. When an `async` function throws an exception, its promise
-is rejected. So that works.
+در تابع `async`، promiseهای رد شده به وسیله‌ی `await` به استثنا تبدیل می‌شوند.
+زمانی که یک تابع `async` یک استثنا تولید می کند، promise آن رد شده است.
 
-If you implemented the non-`async` function as outlined earlier, the way
-`then` works also automatically causes a failure to end up in the
-returned promise. If a request fails, the handler passed to `then`
-isn't called, and the promise it returns is rejected with the same
-reason.
+اگر تابع را بدون استفاده از `async` همانطور که مشخص شده است پیاده سازی کنید، نحوه‌ی عملکرد پیش‌فرض
+`then` نیز باعث تولید یک شکست برای پایان دادن promise برگشتی می شود. اگر درخواستی با شکست روبرو شود،
+گرداننده‌ای که به `then` ارسال می‌شود، فراخوانی نمی‌گردد و promiseای که برمی‌گرداند به همان دلیل رد می‌شود.
 
 hint}}
 
-### Building Promise.all
+### ساختن Promise.all
 
 {{index "Promise class", "Promise.all function", "building Promise.all (exercise)"}}
 
-Given an array of ((promise))s, `Promise.all` returns a promise that
-waits for all of the promises in the array to finish. It then
-succeeds, yielding an array of result values. If a promise
-in the array fails, the promise returned by `all` fails too, with the
-failure reason from the failing promise.
+با داشتن یک آرایه از promise ها، متد <bdo>`Promise.all`</bdo> یک promise را برمی گرداند که
+برای همه‌ی promise های موجود در آرایه، منتظر می ماند تا پایان یابند. در صورت
+موفقیت، آرایه‌ای از مقدارهای نتایج تولید می شود. اگر یک promise موجود در
+آرایه با شکست روبرو شود، promise ای که به وسیله `all` برگردانده می شود نیز با
+شکست روبرو می شود، همراه با دلیل شکست promise مشکل خورده.
 
-Implement something like this yourself as a regular function
-called `Promise_all`.
+تابعی به نام `Promise_all` بنویسید که همین کار را انجام دهد.
 
-Remember that after a promise has succeeded or failed, it can't
-succeed or fail again, and further calls to the functions that resolve
-it are ignored. This can simplify the way you handle failure of your
-promise.
+به خاطر داشته‌باشید که بعد از اینکه یک promise موفق شود یا با شکست روبرو شود، دیگر
+نمی تواند دوباره موفق یا شکست بخورد و فراخوانی‌های بعدی به توابعی که برای نتیجه‌یابی
+آن اقدام می کنند صرف نظر می شوند. این می تواند راهی که شما شکست‌ها را در promise
+تان رسیدگی می کنید ساده تر سازد.
+
 
 {{if interactive
 
