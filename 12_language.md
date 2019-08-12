@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/chapter/12_language.js"], zip: "node/html"}}}
 
-# Project: A Programming Language
+# پروژه: نوشتن یک زبان برنامه‌نویسی
 
 {{quote {author: "Hal Abelson and Gerald Sussman", title: "Structure and Interpretation of Computer Programs", chapter: true}
 
@@ -13,54 +13,53 @@ quote}}
 
 {{figure {url: "img/chapter_picture_12.jpg", alt: "Picture of an egg with smaller eggs inside", chapter: "framed"}}}
 
-Building your own ((programming language)) is surprisingly easy (as
-long as you do not aim too high) and very enlightening.
+نوشتن زبان برنامه‌نویسی خودتان به طرز شگفت‌آوری آسان و آموزنده است (تا زمانی
+که سطح انتظاراتتان زیاد￼ بالا نباشد).
 
-The main thing I want to show in this chapter is that there is no
-((magic)) involved in building your own language. I've often felt that
-some human inventions were so immensely clever and complicated that
-I'd never be able to understand them. But with a little reading and
-experimenting, they often turn out to be quite mundane.
+
+هدف اصلی من در این فصل این است که به شما نشان دهم نوشتن زبان برنامه‌نویسی خودتان
+چیزی ماوارایی و جادویی نیست. خیلی وقت‌ها احساس می کردم بعضی از اختراعات انسان ها به شدت
+هوشمندانه و پیچیده است و من هرگز نمی توانم آن ها را درک کنم. اما با کمی مطالعه
+و آزمایش، اغلب متوجه می شدم که اتفاقا معمولی و شدنی هستند.
 
 {{index "Egg language", [abstraction, "in Egg"]}}
 
-We will build a programming language called Egg. It will be a tiny,
-simple language—but one that is powerful enough to express any
-computation you can think of. It will allow simple ((abstraction))
-based on ((function))s.
+در این فصل یک زبان برنامه‌نویسی خواهیم ساخت که نام آن Egg می‌باشد. این زبان
+بسیار ساده و کوچک خواهد بود – اما به اندازه‌ی کافی قدرتمند خواهد بود تا بتواند
+هر محاسبه‌ای که تصور می‌کنید را انجام دهد. در این زبان می توان با استفاده از
+توابع، تجرید‌های ساده را به وجود آورد.
 
 {{id parsing}}
 
-## Parsing
+## تجزیه
 
 {{index parsing, validation, [syntax, "of Egg"]}}
 
-The most immediately visible part of a programming language is its
-_syntax_, or notation. A _parser_ is a program that reads a piece
-of text and produces a data structure that reflects the structure of
-the program contained in that text. If the text does not form a valid
-program, the parser should point out the error.
+در چشم ترین قسمت یک زبان برنامه‌نویسی، گرامر (_syntax_) یا شیوه‌ی نشان‌گذاری آن
+است. یک تجزیه‌گر (_parser_) برنامه‌ای است که متنی را خوانده و ساختار داده‌ای تولید می کند که
+نمایانگر ساختار برنامه‌ای است که در آن متن قرار دارد. اگر آن متن یک برنامه‌ی
+معتبر را شکل نداده باشد، تجزیه‌گر باید خطایی تولید کند.
 
 {{index "special form", [function, application]}}
 
-Our language will have a simple and uniform syntax. Everything in Egg
-is an ((expression)). An expression can be the name of a binding, a
-number, a string, or an _application_. Applications are used for
-function calls but also for constructs such as `if` or `while`.
+زبان برنامه‌نویسی ما گرامری ساده و یکپارچه خواهد داشت. همه چیز در زبان Egg از جنس
+عبارت خواهند بود. یک عبارت می تواند نام یک متغیر، یک عدد، یک رشته، یا یک
+کاربرد (application) باشد. کاربردها برای فراخوانی توابع استفاده می شوند؛ همچنین
+برای ساختارهایی مثل `if` و `while` نیز استفاده می شوند.
 
 {{index "double-quote character", parsing, [escaping, "in strings"], [whitespace, syntax]}}
 
-To keep the parser simple, strings in Egg do not support anything like
-backslash escapes. A string is simply a sequence of characters that
-are not double quotes, wrapped in double quotes. A number is a
-sequence of digits. Binding names can consist of any character that is
-not whitespace and that does not have a special meaning in the syntax.
+برای این که تجزیه‌گر را ساده نگه داریم، رشته‌ها در زبان Egg چیزهایی مثل گریز با
+بک‌اسلش را پشتیبانی نمی کنند. یک رشته به طور ساده دنباله‌ای از کاراکترها است که
+شامل نقل‌قول جفتی نمی‌باشد و توسط نقل قول جفتی محصور می‌شود. یک عدد برابر با دنباله‌ای از
+ارقام است. در نام متغیرها می می‌توان از هر کاراکتری به جز فضای خالی و کاراکترهایی که
+معنای خاصی در گرامر زبان دارند استفاده نمود.
 
 {{index "comma character", [parentheses, arguments]}}
 
-Applications are written the way they are in JavaScript, by putting
-parentheses after an expression and having any number of
-((argument))s between those parentheses, separated by commas.
+کاربردها به همان سبکی که در جاوااسکریپت هستند نوشته می شوند: بعد از یک عبارت
+پرانتز قرار می‌گیرد که درون آن هر تعداد آرگومان مجاز می‌باشد که به وسیله‌ی
+ویرگول از هم جدا می‌شوند.
 
 ```{lang: null}
 do(define(x, 10),
@@ -71,31 +70,29 @@ do(define(x, 10),
 
 {{index block, [syntax, "of Egg"]}}
 
-The ((uniformity)) of the ((Egg language)) means that things that are
-((operator))s in JavaScript (such as `>`) are normal bindings in this
-language, applied just like other ((function))s. And since the
-syntax has no concept of a block, we need a `do` construct to
-represent doing multiple things in sequence.
+یکریختی مورد نظر در زبان Egg به این معنا است که چیزهایی که در جاوااسکریپت به
+عنوان عملگر محسوب می شدند (مثل `>`)، در این زبان متغیرهایی معمولی می‌باشند که
+مثل دیگر قابلیت‌ها به کار گرفته می شوند. و به دلیل اینکه در گرامر این زبان
+مفهومی به نام بلاک وجود ندارد، به ساختاری به نام `do` نیاز داریم بتوانیم انجام
+متوالی چند عمل را نمایش دهیم.
 
 {{index "type property", parsing, ["data structure", tree]}}
 
-The data structure that the parser will use to describe a program
-consists of ((expression)) objects, each of which has a `type`
-property indicating the kind of expression it is and other properties
-to describe its content.
+ساختار داده‌ای که تجزیه‌گر از آن برای توصیف یک برنامه استفاده خواهد کرد از اشیاء
+((عبارت)) تشکیل شده است که هر کدام از آن ها یک خاصیت `type` دارد که نمایانگر نوع آن
+عبارت و خاصیت‌های دیگری برای توصیف محتوای آن دارد.
 
 {{index identifier}}
 
-Expressions of type `"value"` represent literal strings or numbers.
-Their `value` property contains the string or number value that they
-represent. Expressions of type `"word"` are used for identifiers
-(names). Such objects have a `name` property that holds the
-identifier's name as a string. Finally, `"apply"` expressions
-represent applications. They have an `operator` property that refers
-to the expression that is being applied, as well as an `args` property that
-holds an array of argument expressions.
+عبارت‌های نوع `"value"` نمایانگر رشته‌ها و اعداد خام می‌باشند. خاصیت `value` آن ها حاوی
+مقدار رشته یا عددی است که نماینده آن هستند. عبارت‌های نوع `"word"` برای شناسه‌ها
+(نام‌ها) استفاده می شوند. این گونه اشیاء دارای خاصیتی به نام `name` می باشند که نام
+شناسه‌ را به عنوان یک رشته نگه‌داری می کند. در آخر، عبارت `"apply"` نمایانگر یک
+کاربرد است. این عبارت‌ها دارای یک خاصیت به نام `operator` می باشند که به عبارتی
+اشاره می کند مورد استعمال قرار گرفته است و خاصیتی به نام `args` دارند که آرایه‌ای از
+عبارت‌های آرگومان را نگه‌داری می کند.
 
-The `>(x, 5)` part of the previous program would be represented like this:
+بخش <bdo>`>(x, 5)`</bdo> از برنامه‌ی قبلی به شکل زیر نمایش داده می شود:
 
 ```{lang: "application/json"}
 {
@@ -110,44 +107,40 @@ The `>(x, 5)` part of the previous program would be represented like this:
 
 {{indexsee "abstract syntax tree", "syntax tree", ["data structure", tree]}}
 
-Such a data structure is called a _((syntax tree))_. If you
-imagine the objects as dots and the links between them as lines
-between those dots, it has a ((tree))like shape. The fact that
-expressions contain other expressions, which in turn might contain
-more expressions, is similar to the way tree branches split and split
-again.
+این گونه از ساختار داده را _درخت گرامر_ می گویند. اگر اشیاء را به عنوان نقطه در
+نظر بگیرید و پیوندهای بین‌شان را به عنوان خطوط بین نقطه‌ها، نمای آن شبیه به درخت
+خواهد بود. این واقعیت که عبارت‌ها خود از عبارت‌های دیگری تشکیل می شوند ، که آن
+ها هم ممکن است شامل عبارت‌های دیگری باشند ، شبیه به شاخه‌های درخت است که خود
+دارای شاخه‌های دیگر هستند.
 
 {{figure {url: "img/syntax_tree.svg", alt: "The structure of a syntax tree",width: "5cm"}}}
 
 {{index parsing}}
 
-Contrast this to the parser we wrote for the configuration file format
-in [Chapter ?](regexp#ini), which had a simple structure: it split the
-input into lines and handled those lines one at a time. There were
-only a few simple forms that a line was allowed to have.
+این را با تجزیه‌گری که برای فایل تنظیمات در [فصل ?](regexp#ini) نوشتیم مقایسه کنید، که ساختاری
+ساده داشت: ورودی را به خطوطی تقسیم می کرد و همه‌ی آن خطوط را یکی یکی رسیدگی می
+کرد. خطوط فقط می‌توانستند شکل‌های محدودی داشته باشند.
 
 {{index recursion, [nesting, "of expressions"]}}
 
-Here we must find a different approach. Expressions are not separated
-into lines, and they have a recursive structure. Application
-expressions _contain_ other expressions.
+در اینجا باید راه حلی دیگری پیدا کنیم. عبارت‌ها توسط خطوط جدا نمی شوند و ساختاری
+بازگشتی دارند. عبارت‌های کاربردی (application) حاوی عبارت‌های دیگر می‌باشند.
 
 {{index elegance}}
 
-Fortunately, this problem can be solved very well by writing a parser
-function that is recursive in a way that reflects the recursive nature
-of the language.
+خوشبختانه، این مشکل را می توان به خوبی با نوشتن یک تابع بازگشتی تجزیه‌گر حل نمود
+به صورتی که نمایانگر ماهیت بازگشتی زبان باشد.
 
 {{index "parseExpression function", "syntax tree"}}
 
-We define a function `parseExpression`, which takes a string as input
-and returns an object containing the data structure for the expression
-at the start of the string, along with the part of the string left
-after parsing this expression. When parsing subexpressions (the
-argument to an application, for example), this function can be called
-again, yielding the argument expression as well as the text that
-remains. This text may in turn contain more arguments or may be the
-closing parenthesis that ends the list of arguments.
+تابعی به نام `parseExpression` را تعریف می کنیم که رشته‌ای را به عنوان ورودی دریافت
+می کند و یک شیء را باز می گرداند که حاوی ساختار داده‌ی مورد نظر برای عبارتی است که در
+ابتدای رشته آمده است، به همراه بخشی از رشته که بعد از تجزیه آن عبارت باقی می
+ماند. در زمان تجزیه‌ زیر عبارت‌ها (مثلا آرگومان‌های ورودی یک کاربرد)، این تابع
+را می توان دوباره فراخوانی کرد تا عبارت آرگومان را به همراه متن باقی مانده
+تولید کند. ممکن است که این متن، حاوی آرگومان‌های بیشتر یا پرانتز‌ آخر لیست ورودی‌ها باشد.
+
+اولین بخش تجزیه‌گر به این صورت خواهد بود:
 
 This is the first part of the parser:
 
@@ -177,30 +170,28 @@ function skipSpace(string) {
 
 {{index "skipSpace function", [whitespace, syntax]}}
 
-Because Egg, like JavaScript, allows any amount of whitespace
-between its elements, we have to repeatedly cut the whitespace off the
-start of the program string. That is what the `skipSpace` function
-helps with.
+به دلیل این که زبان Egg مانند جاوااسکریپت امکان استفاده از فضاهای خالی بین عناصر
+را مجاز می شمرد، می بایست مکررا فضاهای خالی را از ابتدای یک رشته‌ی برنامه حذف
+کنیم. این کار توسط تابع `skipSpace` صورت می گیرد.
 
 {{index "literal expression", "SyntaxError type"}}
 
-After skipping any leading space, `parseExpression` uses three
-((regular expression))s to spot the three atomic elements that Egg
-supports: strings, numbers, and words. The parser constructs a
-different kind of data structure depending on which one matches. If
-the input does not match one of these three forms, it is not a valid
-expression, and the parser throws an error. We use `SyntaxError`
-instead of `Error` as the exception constructor, which is another standard
-error type, because it is a little more specific—it is also the error
-type thrown when an attempt is made to run an invalid JavaScript
-program.
+بعد از چشم‌پوشی از فضاهای خالی ابتدایی، تابع `parseExpression` از سه عبارت باقاعده
+برای شناسایی سه عنصر اساسی که زبان Egg از آن‌ها پشتیبانی می کند شامل: رشته‌ها،
+اعداد و کلمه‌ها، استفاده می کند. تجزیه‌گر با توجه به اینکه کدام یک از آن عناصر
+تطبیق بخورد ساختار‌داده‌ی متفاوتی را تولید می کند. اگر ورودی با هیچ کدام از آن سه
+شکل تطبیق نخورد، آن عبارت معتبر نخواهد بود و تجزیه‌گر یک خطا تولید می کند. ما از
+`SyntaxError` به جای `Error` به عنوان تابع سازنده استثنا استفاده می کنیم که یک نوع
+خطای استاندارد دیگر است، به این دلیل که این نوع کمی اختصاصی تر است – همچنین این
+نوع خطا زمانی تولید می شود که تلاشی برای اجرای یک برنامه نامعتبر جاوااسکریپت
+صورت می گرفته باشد.
 
 {{index "parseApply function"}}
 
-We then cut off the part that was matched from the program string and
-pass that, along with the object for the expression, to `parseApply`,
-which checks whether the expression is an application. If so, it
-parses a parenthesized list of arguments.
+سپس آن قسمت که تطبیق خورده است را از رشته‌ی برنامه حذف می کنیم و رشته را به
+همراه شیء متعلق به عبارت، به `parseApply` ارسال می کنیم که بررسی کند آیا عبارت از نوع
+کاربرد (application) است. اگر بود، تابع قسمت داخل پرانتز را – لیست آرگومان‌ها –
+تجزیه می کند.
 
 ```{includeCode: true}
 function parseApply(expr, program) {
@@ -227,29 +218,28 @@ function parseApply(expr, program) {
 
 {{index parsing}}
 
-If the next character in the program is not an opening parenthesis,
-this is not an application, and `parseApply` returns the expression it
-was given.
+اگر کاراکتر بعدی در برنامه یک پرانتز آغاز نباشد، پس ورودی یک کاربرد نیست و تابع
+`parseApply` عبارتی که دریافت کرده بود را بر‌می‌گرداند.
 
 {{index recursion}}
 
-Otherwise, it skips the opening parenthesis and creates the ((syntax
-tree)) object for this application expression. It then recursively
-calls `parseExpression` to parse each argument until a closing
-parenthesis is found. The recursion is indirect, through `parseApply`
-and `parseExpression` calling each other.
+در غیر این صورت، از پرانتز آغاز عبور کرده و شیء درخت گرامر را برای این عبارت
+کاربرد می سازد. سپس به صورت بازگشتی تابع `parseExpression` را فراخوانی می کند تا
+هر یک از آرگومان‌ها را تا زمانیکه به یک پرانتز پایان برسد تجزیه کند. عمل بازگشتی
+به صورت غیر مستقیم است، و با فراخوانی یکدیگر `parseApply` و `parseExpression` صورت
+می پذیرد.
 
-Because an application expression can itself be applied (such as in
-`multiplier(2)(1)`), `parseApply` must, after it has parsed an
-application, call itself again to check whether another pair of
-parentheses follows.
+به دلیل اینکه می توان یک عبارت کاربرد را اجرا کرد (مثل عبارت <bdo>`multiplier(2)(1)`</bdo>)،
+تابع `parseApply` باید بعد از آن که یک کاربرد را تجزیه کرد خودش را دوباره
+فراخوانی کند تا اگر جفت پرانتز دیگری در ادامه آمده است متوجه آن بشود.
+
 
 {{index "syntax tree", "Egg language", "parse function"}}
 
-This is all we need to parse Egg. We wrap it in a convenient `parse`
-function that verifies that it has reached the end of the input string
-after parsing the expression (an Egg program is a single expression),
-and that gives us the program's data structure.
+این تمام چیزی است که برای قسمت تجزیه‌ی Egg نیاز داریم. آن را در تابعی سرراست به
+نام `parse` قرار می دهیم که بررسی می کند آیا بعد از تجزیه‌ی عبارت (یک برنامه‌ی Egg
+یک عبارت واحد است) به انتهای رشته‌ی ورودی رسیده باشد و به ما ساختار دادهی برنامه
+را تحویل دهد.
 
 ```{includeCode: strip_log, test: join}
 function parse(program) {
@@ -269,10 +259,9 @@ console.log(parse("+(a, 10)"));
 
 {{index "error message"}}
 
-It works! It doesn't give us very helpful information when it fails
-and doesn't store the line and column on which each expression starts,
-which might be helpful when reporting errors later, but it's good
-enough for our purposes.
+کار می کند! این تابع اطلاعات خیلی مفیدی در زمان بروز شکست به ما نمی دهد و خط و ستونی که
+در آن عبارت شروع می شود را ذخیره نمی کند، که اگر بود، در زمان گزارش خطاها در
+آینده کاربرد داشت، اما به هر حال برای هدف فعلی ما به اندازه کافی خوب است.
 
 ## The evaluator
 
