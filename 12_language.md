@@ -263,15 +263,14 @@ console.log(parse("+(a, 10)"));
 در آن عبارت شروع می شود را ذخیره نمی کند، که اگر بود، در زمان گزارش خطاها در
 آینده کاربرد داشت، اما به هر حال برای هدف فعلی ما به اندازه کافی خوب است.
 
-## The evaluator
+## ارزیاب
 
 {{index "evaluate function", evaluation, interpretation, "syntax tree", "Egg language"}}
 
-What can we do with the syntax tree for a program? Run it, of course!
-And that is what the evaluator does. You give it a syntax tree and a
-scope object that associates names with values, and it will evaluate
-the expression that the tree represents and return the value that this
-produces.
+با داشتن درخت گرامر یک برنامه چه می تواند کرد؟ البته که اجرای آن! و
+این چیزی است که ارزیاب انجام می دهد. ارزیاب، یک درخت گرامر و یک قلمروی شیء که
+مقادیر را به نام‌ها اختصاص می دریافت می کند و عبارتی را که درخت نمایش می دهد،
+ ارزیابی می کند و مقداری که این عبارت تولید می کند را برمی‌گرداند.
 
 ```{includeCode: true}
 const specialForms = Object.create(null);
@@ -305,45 +304,42 @@ function evaluate(expr, scope) {
 
 {{index "literal expression", scope}}
 
-The evaluator has code for each of the ((expression)) types. A literal
-value expression produces its value. (For example, the expression
-`100` just evaluates to the number 100.) For a binding, we must check
-whether it is actually defined in the scope and, if it is, fetch the
-binding's value.
+ارزیاب برای هر نوعی از عبارت‌ها کد به خصوصی دارد. عبارتی که شامل یک مقدار ساده
+باشد، معادل خود مقدار خواهد بود. (به عنوان مثال، عبارت `100` فقط به عنوان عدد `100`
+ارزیابی می شود) برای یک متغیر، باید بررسی کنیم که در قلمروی مورد نظر تعریف
+شده باشد و در این صورت مقدار آن متغیر را بدست بیاوریم.
 
 {{index [function, application]}}
 
-Applications are more involved. If they are a ((special form)), like
-`if`, we do not evaluate anything and pass the argument expressions,
-along with the scope, to the function that handles this form. If it is
-a normal call, we evaluate the operator, verify that it is a function,
-and call it with the evaluated arguments.
+کاربردها کمی پیچیده‌تر هستند. اگر در شکل خاصی باشند، مانند `if`، چیزی را ارزیابی
+نمی کنیم و عبارت‌های آرگومان را به همراه قلمرو به تابعی که این شکل را رسیدگی می کند
+ارسال می کنیم. اگر یک فراخوانی معمولی باشد، عملگر را ارزیابی کرده، اطمینان حاصل
+می کنیم که یک تابع باشد، و آن را با آرگومان‌های ارزیابی شده فراخوانی می کنیم.
 
-We use plain JavaScript function values to represent Egg's function
-values. We will come back to this [later](language#egg_fun), when the
-special form called `fun` is defined.
+برای نمایش مقدارهای تابع Egg از مقدارهای تابع جاوااسکریپت استفاده خواهیم کرد. در
+[ادامه](language#egg_fun) به این بخش باز خواهیم گشت، زمانی که شکل خاصی که `fun` خوانده می شود تعریف
+شده باشد.
 
 {{index readability, "evaluate function", recursion, parsing}}
 
-The recursive structure of `evaluate` resembles the similar structure
-of the parser, and both mirror the structure of the language itself.
-It would also be possible to integrate the parser with the evaluator
-and evaluate during parsing, but splitting them up this way makes the
-program clearer.
+ساختار بازگشتی `evaluate` به ساختاری مشابه تجزیه‌گر نزدیک است و هر دو بازتاب ساختار
+خود زبان هستند. همچنین می توانستیم ارزیاب و تجزیه‌گر را یکپارچه کنیم و در حین
+تجزیه، ارزیابی را نیز انجام دهیم، اما جدا کردن آن ها به این سبک باعث شفافیت
+بیشتر برنامه می شود.
 
 {{index "Egg language", interpretation}}
 
-This is really all that is needed to interpret Egg. It is that simple.
-But without defining a few special forms and adding some useful values
-to the ((environment)), you can't do much with this language yet.
+این تمام چیزی است که برای تفسیر Egg مورد نیاز است. به همین سادگی. اما هنوز بدون
+تعریف چندین شکل خاص و افزودن چند مقدار مفید به محیط، نمی توان کار زیادی با
+این زبان انجام داد.
 
-## Special forms
+## شکل‌های خاص
 
 {{index "special form", "specialForms object"}}
 
-The `specialForms` object is used to define special syntax in Egg. It
-associates words with functions that evaluate such forms. It is
-currently empty. Let's add `if`.
+شیء `specialForm` برای تعریف گرامر ویژه در Egg استفاده می شود. این شیء کلمه‌ها را
+به توابعی که این شکل‌ها را ارزیابی می کنند انتساب می دهد. فعلا این شیء تهی است.
+بیایید  `if` را به آن اضافه کنیم.
 
 ```{includeCode: true}
 specialForms.if = (args, scope) => {
@@ -359,28 +355,26 @@ specialForms.if = (args, scope) => {
 
 {{index "conditional execution", "ternary operator", "?: operator", "conditional operator"}}
 
-Egg's `if` construct expects exactly three arguments. It will evaluate
-the first, and if the result isn't the value `false`, it will evaluate
-the second. Otherwise, the third gets evaluated. This `if` form is
-more similar to JavaScript's ternary `?:` operator than to
-JavaScript's `if`. It is an expression, not a statement, and it
-produces a value, namely, the result of the second or third argument.
+ساختار `if` در Egg دقیقا به سه آرگومان نیاز دارد. اولین آرگومان را ارزیابی می
+کند، و اگر نتیجه‌ی آن برابر با مقدار `false` نبود، به سراغ ارزیابی دومی می رود. در
+غیر این صورت، سومین آرگومان ارزیابی می شود. این شکل `if` بیشتر شبیه به عملگر
+سه‌تای <bdo>`?:`</bdo> در جاوااسکریپت است تا دستور `if` در آن. این یک عبارت است، نه یک
+دستور و مقداری را تولید می کند که همان نتیجه‌ی آرگومان دوم و سوم می‌باشد.
 
 {{index Boolean}}
 
-Egg also differs from JavaScript in how it handles the condition value
-to `if`. It will not treat things like zero or the empty string as
-false, only the precise value `false`.
+Egg همچنین در چگونگی رسیدگی به مقدار شرط در عبارت `if` با جاواسکریپت تفاوت دارد.
+این عبارت چیزهایی مثل صفر یا رشته‌ی خالی را `false` در نظر نمی گیرد، فقط مقدار
+دقیق `false` را در نظر می گیرد.
 
 {{index "short-circuit evaluation"}}
 
-The reason we need to represent `if` as a special form, rather than a
-regular function, is that all arguments to functions are evaluated
-before the function is called, whereas `if` should evaluate only
-_either_ its second or its third argument, depending on the value of
-the first.
+علت نمایش `if` به عنوان یک شکل خاص به جای یک تابع معمولی، این است که تمامی
+آرگومان‌ها در توابع قبل از این که تابع فراخوانی بشود ارزیابی می شوند در حالیکه
+`if` بایستی فقط بعد از یکی از آرگومان‌ها دوم یا سوم بسته به مقدار آرگومان اول
+ارزیابی شود.
 
-The `while` form is similar.
+شکل خاص `while` به همین صورت است.
 
 ```{includeCode: true}
 specialForms.while = (args, scope) => {
@@ -397,9 +391,9 @@ specialForms.while = (args, scope) => {
 };
 ```
 
-Another basic building block is `do`, which executes all its arguments
-from top to bottom. Its value is the value produced by the last
-argument.
+یکی دیگر از بلاک‌ها ساختاری پایه `do` است که تمامی آرگومان‌هایش را از بالا به
+پایین اجرا می کند. مقدار آن برابر با مقداری است که توسط آرگومان آخر تولید می
+شود.
 
 ```{includeCode: true}
 specialForms.do = (args, scope) => {
@@ -413,12 +407,13 @@ specialForms.do = (args, scope) => {
 
 {{index ["= operator", "in Egg"], [binding, "in Egg"]}}
 
-To be able to create bindings and give them new values, we also
-create a form called `define`. It expects a word as its first argument
-and an expression producing the value to assign to that word as its
-second argument. Since `define`, like everything, is an expression, it
-must return a value. We'll make it return the value that was assigned
-(just like JavaScript's `=` operator).
+برای این که قادر باشیم تا متغیرهایی ایجاد کنیم و مقادیر جدیدی را به آن ها
+اختصاص دهیم، همچنین نیاز به تعریف شکلی به نام `define` داریم. این شکل به عنوان
+آرگومان اول یک واژه را دریافت می کند و به عنوان آرگومان دوم، عبارتی را که منجر
+به تولید مقداری می شود که قرار است به آن واژه منتسب شود. به دلیل این که `define`
+مثل هر چیز دیگر، یک عبارت است باید مقداری را برگرداند. ما طوری آن را می سازیم
+که مقداری که به آن انتساب یافته را برگرداند (درست شبیه عملگر `=` در
+جاوااسکریپت).
 
 ```{includeCode: true}
 specialForms.define = (args, scope) => {
@@ -431,19 +426,18 @@ specialForms.define = (args, scope) => {
 };
 ```
 
-## The environment
+## محیط
 
 {{index "Egg language", "evaluate function", [binding, "in Egg"]}}
 
-The ((scope)) accepted by `evaluate` is an object with properties
-whose names correspond to binding names and whose values correspond to
-the values those bindings are bound to. Let's define an object to
-represent the ((global scope)).
+قلمرویی که توسط `evaluate` قبول می شود یک شیء است که خاصیت‌هایی دارد که نام
+آن‌ها متناظر با نام متغیرها می‌باشد و مقادیر آن برابر مقدار آن متغیرها خواهد
+بود. بیایید شیئی را تعریف کنیم که نماینده قلمروی سراسری باشد.
 
-To be able to use the `if` construct we just defined, we must have
-access to ((Boolean)) values. Since there are only two Boolean values,
-we do not need special syntax for them. We simply bind two names to
-the values `true` and `false` and use them.
+برای این که بتوان از ساختار `if` که پیش‌تر تعریف کرده ایم استفاده کنیم باید به
+مقادیر بولی دسترسی داشته باشیم. به دلیل این که فقط دو مقدار بولی وجوددارد، نیاز
+به گرامر خاصی برای آن ها نداریم. کافی است تا دو مقدار `true` و `false` را به دو نام
+منتسب کنیم و از آن ها استفاده کنیم.
 
 ```{includeCode: true}
 const topScope = Object.create(null);
@@ -451,8 +445,7 @@ const topScope = Object.create(null);
 topScope.true = true;
 topScope.false = false;
 ```
-
-We can now evaluate a simple expression that negates a Boolean value.
+اکنون می توانیم یک عبارت ساده را که یک مقدار بولی را معکوس میکند ارزیابی کنیم.
 
 ```
 let prog = parse(`if(true, false, true)`);
@@ -462,20 +455,16 @@ console.log(evaluate(prog, topScope));
 
 {{index arithmetic, "Function constructor"}}
 
-To supply basic ((arithmetic)) and ((comparison)) ((operator))s, we
-will also add some function values to the ((scope)). In the interest
-of keeping the code short, we'll use `Function` to synthesize a bunch
-of operator functions in a loop, instead of defining them
-individually.
+برای فراهم ساختن عملگرهای اصلی حسابی و مقایسه، همچنین چند مقدار تابع به قلمرو
+اضافه خواهیم کرد. به خاطر علاقه به کوتاه نگه داشتن کد، به جای تعریف جداگانه‌ی هر کدام، از سازنده‌ی `Function` برای ترکیب چند تابع عملگر در یک حلقه استفاده می کنیم.
 
 ```{includeCode: true}
 for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
   topScope[op] = Function("a, b", `return a ${op} b;`);
 }
 ```
-
-A way to ((output)) values is also useful, so we'll wrap
-`console.log` in a function and call it `print`.
+داشتن راهی برای چاپ مقادیر نیز بسیار کاربردی خواهد بود، بنابراین <bdo>`console.log`</bdo> را
+در یک تابع قرار می دهیم و نام ان را `print` می گذاریم:
 
 ```{includeCode: true}
 topScope.print = value => {
@@ -486,9 +475,9 @@ topScope.print = value => {
 
 {{index parsing, "run function"}}
 
-That gives us enough elementary tools to write simple programs. The
-following function provides a convenient way to parse a program and
-run it in a fresh scope:
+با این کار به اندازه کافی ابزارهای مقدماتی برای نوشتن برنامه‌های ساده در اختیار
+خواهیم داشت. توابع پیش رو راهی مناسب براب تجزیه‌ی یک برنامه و اجرای آن در یک
+قلمروی جدید را فراهم می سازند.
 
 ```{includeCode: true}
 function run(program) {
@@ -498,9 +487,9 @@ function run(program) {
 
 {{index "Object.create function", prototype}}
 
-We'll use object prototype chains to represent nested scopes so that
-the program can add bindings to its local scope without changing the
-top-level scope.
+ما از زنجیره‌ی پروتوتایپ شیء برای نمایش قلمروهای تودرتو استفاده خواهیم کرد، تا
+برنامه بتواند متغیرهای خودش را به قلمروی محلی بدون ایجاد تغییر در قلمروی بالادست
+اضافه کند.
 
 ```
 run(`
@@ -516,23 +505,22 @@ do(define(total, 0),
 
 {{index "summing example", "Egg language"}}
 
-This is the program we've seen several times before, which computes
-the sum of the numbers 1 to 10, expressed in Egg. It is clearly uglier
-than the equivalent JavaScript program—but not bad for a language
-implemented in less than 150 ((lines of code)).
+این برنامه‌ای است که تاکنون چندین بار دیده‌ایم، که مجموع اعداد ‍‍1 تا 10 را
+محاسبه می کند و به زبان Egg نوشته شده است. قطعا ظاهر این برنامه از برنامه‌ی
+معادل جاوااسکریپتش زشت‌تر است – اما برای زبان برنامه‌نویسی‌ای که با کمتر از 150
+خط کدنویسی پیاده‌سازی شده است بد نیست.
 
 {{id egg_fun}}
 
-## Functions
+## توابع
 
 {{index function, "Egg language"}}
 
-A programming language without functions is a poor programming
-language indeed.
+یک زبان برنامه‌نویسی بدون داشتن توابع، زبانی فقیر محسوب می شود.
 
-Fortunately, it isn't hard to add a `fun` construct, which treats its
-last argument as the function's body and uses all arguments before
-that as the names of the function's parameters.
+خوشبختانه، به آسانی می توان یک ساختار `fun` به زبان افزود، که آرگومان آخرش
+را به عنوان بدنه‌ی تابع در نظر بگیرد و از آرگومان های قبلی به عنوان نام
+پارامترهای تابع استفاده کند.
 
 ```{includeCode: true}
 specialForms.fun = (args, scope) => {
@@ -562,10 +550,9 @@ specialForms.fun = (args, scope) => {
 
 {{index "local scope"}}
 
-Functions in Egg get their own local scope. The function produced by
-the `fun` form creates this local scope and adds the argument bindings
-to it. It then evaluates the function body in this scope and returns
-the result.
+توابع در Egg، قلمروی محلی خودشان را دریافت می کنند. تابعی که با `fun` تولید می شود
+قلمروی محلی خودش را ایجاد کرده و آرگومان‌هایش را به آن مقید می کند. سپس بدنه‌ی
+تابع را در این قلمرو ارزیابی کرده و نتیجه را باز می گرداند.
 
 ```{startCode: true}
 run(`
@@ -584,74 +571,65 @@ do(define(pow, fun(base, exp,
 // → 1024
 ```
 
-## Compilation
+## کامپایل کردن
 
 {{index interpretation, compilation}}
 
-What we have built is an interpreter. During evaluation, it acts
-directly on the representation of the program produced by the parser.
+چیزی که تاکنون ساخته‌ایم یک مفسر است. در طول ارزیابی، این مفسر به طور مستقیم روی
+چیزی که توسط تجزیه‌گر تولید شده عمل می نماید.
 
 {{index efficiency, performance, [binding, definition], [memory, speed]}}
 
-_Compilation_ is the process of adding another step between the
-parsing and the running of a program, which transforms the program
-into something that can be evaluated more efficiently by doing as much
-work as possible in advance. For example, in well-designed languages
-it is obvious, for each use of a binding, which binding is being
-referred to, without actually running the program. This can be used to
-avoid looking up the binding by name every time it is accessed,
-instead directly fetching it from some predetermined memory
-location.
+کامپایل کردن روندی است که در آن گامی دیگر بین تفسیر و اجرای برنامه اضافه می
+شود، که کد برنامه را به چیزی که بتوان با کارایی بیشتری ارزیابی کرد تبدیل می کند
+و این کار با انجام حداکثر کار ممکن قبل از مرحله‌ی ارزیابی میسر می شود. به عنوان
+مثال، در زبان‌هایی که خوب طراحی شده اند، در زمان استفاده از یک متغیر، به روشنی می
+توان فهمید که کدام متغیر مورد اشاره است، بدون اینکه نیاز باشد برنامه واقعا اجرا
+شود. این کار باعث می شود که از جستجوی متغیر بر اساس نام در هر بار استفاده از آن
+جلوگیری شود، و به جای آن مستقیما آن را از قسمت‌های مشخصی از حافظه به‌دست بیاوریم.
 
-Traditionally, ((compilation)) involves converting the program to
-((machine code)), the raw format that a computer's processor can
-execute. But any process that converts a program to a different
-representation can be thought of as compilation.
+به طور سنتی، کامپایل شامل تبدیل برنامه به کد ماشین می شود، فرمت خامی که یک
+پردازنده‌ی کامپیوتر می تواند اجرا کند. اما هر روندی که برنامه را به نمایش متفاوتی
+تبدیل کند را می توان به عنوان کامپایل در نظر گرفت.
 
 {{index simplicity, "Function constructor", transpilation}}
 
-It would be possible to write an alternative ((evaluation)) strategy
-for Egg, one that first converts the program to a JavaScript program,
-uses `Function` to invoke the JavaScript compiler on it, and then runs
-the result. When done right, this would make Egg run very fast while
-still being quite simple to implement.
+می توان یک استراتژی ارزیابی جایگزین برای Egg، نوشت که در آن ابتدا برنامه را به
+یک برنامه‌ی جاوااسکریپت تبدیل کند، از `Function` برای فراخوانی جاوااسکریپت برای
+کامپایل آن استفاده کند و سپس نتیجه را اجرا کند. اگر این کار به درستی انجام شود باعث می
+شود که Egg خیلی سریع تر اجرا شود در حالیکه سادگی پیادهسازی را هنوز با خود دارد.
 
-If you are interested in this topic and willing to spend some time on
-it, I encourage you to try to implement such a compiler as an
-exercise.
+اگر به این موضوع علاقه دارید و قصد دارید مقداری زمان صرف آن کنید، پیشنهاد می
+کنم این کامپایلری که ذکر شد را به عنوان یک تمرین پیاده سازی کنید.
 
-## Cheating
+## تقلب
 
 {{index "Egg language"}}
 
-When we defined `if` and `while`, you probably noticed that they were
-more or less trivial wrappers around JavaScript's own `if` and
-`while`. Similarly, the values in Egg are just regular old JavaScript
-values.
+زمانی که `if` و `while` را تعریف کردیم، احتمالا متوجه شدید که این دو پوششی کم و بیش
+ساده برای `if` و `while` خود جاواسکریپت بودند. به طور مشابه، مقدارها در Egg همان
+مقدارهای معمولی جاوااسکریپت هستند.
 
-If you compare the implementation of Egg, built on top of JavaScript,
-with the amount of work and complexity required to build a programming
-language directly on the raw functionality provided by a machine, the
-difference is huge. Regardless, this example ideally gave you an
-impression of the way ((programming language))s work.
+اگر پیاده‌سازی Egg را که بر اساس جاوااسکریپت ساخته شده است با میزان کار و پیچیدگی
+ای که لازم است تا بتوان یک زبان برنامه‌نویسی را مستقیما بر اساس قابلیت‌های خامی
+که ماشین می تواند انجام دهد ساخت، مقایسه کنید، تفاوت خیلی قابل توجه است. صرف نظر
+از آن، امیدوارم این مثال درکی از روش کارکرد زبان‌های برنامه‌نویسی را به
+شما منتقل کرده باشد.
 
-And when it comes to getting something done, cheating is more
-effective than doing everything yourself. Though the toy language in
-this chapter doesn't do anything that couldn't be done better in
-JavaScript, there _are_ situations where writing small languages helps
-get real work done.
+و زمانی‌که لازم است کاری انجام شود، تقلب کردن موثرتر از این است که همه چیز را
+خودتان انجام دهید. البته زبانی که برای آموزش در این فصل ایجاد شد کاری را انجام
+نمی دهد که از معادلش در جاوااسکریپت بهتر عمل کند￼ اما موقعیت‌هایی وجود دارد که
+نوشتن زبان‌های کوچک برای انجام کارهای واقعی کاربرد دارد.
 
-Such a language does not have to resemble a typical programming
-language. If JavaScript didn't come equipped with regular expressions,
-for example, you could write your own parser and evaluator for regular
-expressions.
+این گونه زبان‌ها نیازی نیست که شبیه به یک زبان برنامه‌نویسی متداول باشند. مثلا اگر
+جاوااسکریپت از عبارت‌های باقاعده به صورت درونی پشتیبانی نمی کرد، می توانستید مفسر
+و ارزیاب خودتان را برای عبارات باقاعده بنویسید.
 
 {{index "artificial intelligence"}}
 
-Or imagine you are building a giant robotic ((dinosaur)) and need to
-program its ((behavior)). JavaScript might not be the most effective
-way to do this. You might instead opt for a language that looks like
-this:
+یا تصور کنید که در حال ساخت یک دایناسور روباتیک غول پیکر هستید و لازم است تا
+رفتار آن را برنامه‌نویسی کنید. جاوااسکریپت ممکن است موثر ترین روش این کار
+نباشد، ممکن است در عوض به دنبال زبانی شبیه به زیر باشید.
 
 ```{lang: null}
 behavior walk
@@ -671,23 +649,22 @@ behavior attack
 
 {{index expressivity}}
 
-This is what is usually called a _((domain-specific language))_, a
-language tailored to express a narrow domain of knowledge. Such a
-language can be more expressive than a general-purpose language
-because it is designed to describe exactly the things that need to be
-described in its domain, and nothing else.
+به این گونه زبانها، معمولا _((زبانی با دامنه‌ی خاص))_ نامیده می شوند، زبانی که برای
+بیان دامنه‌ی کوچکی از اطلاعات تدارک دیده می شود. این گونه زبان‌ها می توانند نسبت به
+یک زبان متداول عام رساتر باشند زیرا طراحی آن‌ها دقیقا برای توصیف چیزهایی
+بوده است که در دامنه‌شان وجود دارد نه چیز دیگر.
 
-## Exercises
+## تمرین‌ها
 
-### Arrays
+### آرایه‌ها
 
 {{index "Egg language", "arrays in egg (exercise)", [array, "in Egg"]}}
 
-Add support for arrays to Egg by adding the following three
-functions to the top scope: `array(...values)` to construct an array
-containing the argument values, `length(array)` to get an array's
-length, and `element(array, n)` to fetch the n^th^ element from an
-array.
+پشتیبانی از آرایه‌ها را به Egg اضافه کنید و این کار را با افزودن سه تابع پیش رو
+به قلمروی بالایی انجام دهید: تابع <bdo>`array(...values)`</bdo> برای ساختن
+آرایه‌ای که حاوی مقدارهای آرگومان است، <bdo>`length(array)`</bdo> برای گرفتن
+طول یک آرایه و <bdo>`element(array, n)`</bdo> برای به دست آوردن n^th^ عنصر
+آرایه.
 
 {{if interactive
 
@@ -719,30 +696,28 @@ if}}
 
 {{index "arrays in egg (exercise)"}}
 
-The easiest way to do this is to represent Egg arrays with JavaScript
-arrays.
+ساده‌ترین روش انجام آن این است که از آرایه‌های خود جاوااسکریپت برای نمایش آرایه‌های Egg بهره ببرید.
 
 {{index "slice method"}}
 
-The values added to the top scope must be functions. By using a rest
-argument (with triple-dot notation), the definition of `array` can be
-_very_ simple.
+مقادیری که به قلمروی بالایی اضافه می ‌شوند باید تابع باشند. با استفاده از یک
+آرگومان rest (که با سه نقطه نوشته می شود)، تعریف `array` بسیار ساده خواهد شد.
 
 hint}}
 
-### Closure
+### بستار (Closure)
 
 {{index closure, [function, scope], "closure in egg (exercise)"}}
 
-The way we have defined `fun` allows functions in Egg to reference
-the surrounding scope, allowing the function's body to use local
-values that were visible at the time the function was defined, just
-like JavaScript functions do.
+روشی که برای تعریف `fun` استفاده کردیم به توابع در Egg این امکان را می دهد که به
+قلمروی پیرامونشان بتوانند ارجاع دهند، به این صورت که به بدنه‌ی تابع این امکان را می دهد تا از
+مقدارهای محلی که در زمان تعریف تابع قابل مشاهده بوده اند استفاده کند درست شبیه
+کاری که توابع در جاوااسکریپت انجام می دهند.
 
-The following program illustrates this: function `f` returns a
-function that adds its argument to `f`'s argument, meaning that it
-needs access to the local ((scope)) inside `f` to be able to use
-binding `a`.
+برنامه‌ی پیش رو این مفهوم را نشان می‌دهد: تابع `f` یک یک تابع دیگر برمی‌گرداند؛
+تابعی که آرگومان‌هایش را با آرگومان‌های `f` جمع می نماید، به این معنا که برای
+انجام این کار باید بتواند به قلمروی محلی درون `f` دسترسی داشته باشد تا از مقدار
+متغیر `a` استفاده کند.
 
 ```
 run(`
@@ -752,27 +727,18 @@ do(define(f, fun(a, fun(b, +(a, b)))),
 // → 9
 ```
 
-Go back to the definition of the `fun` form and explain which
-mechanism causes this to work.
+به قسمت تعریف `fun` برگردید و توضیح دهید چه مکانیزمی باعث این رفتار شده است.
 
 {{hint
 
 {{index closure, "closure in egg (exercise)"}}
 
-Again, we are riding along on a JavaScript mechanism to get the
-equivalent feature in Egg. Special forms are passed the local scope in
-which they are evaluated so that they can evaluate their subforms in
-that scope. The function returned by `fun` has access to the `scope`
-argument given to its enclosing function and uses that to create the
-function's local ((scope)) when it is called.
+می‌دانیم که ما از مکانیزم جاوااسکریپت برای ساخت یک قابلیت مشابه در Egg بهره می‌بریم. قلمروی محلی
+به صورتی که ارزیابی می‌شوند به شکل‌های خاص داده می‌شوند در نتیجه شکل‌های خاص می توانند زیر‌شکل‌های خودشان را در همان قلمرو ارزیابی کنند. تابعی که توسط `fun` برگردانده می شود به آرگومان `scope`ای که به تابع محصورش داده می‌شود دسترسی دارد و از آن برای ایجاد قلمروی محلی‌اش در هنگام فراخوانی استفاده می کند.
 
 {{index compilation}}
 
-This means that the ((prototype)) of the local scope will be the scope
-in which the function was created, which makes it possible to access
-bindings in that scope from the function. This is all there is to
-implementing closure (though to compile it in a way that is actually
-efficient, you'd need to do some more work).
+معنای آن این است که خمیرمایه‌ی قلمروی محلی برابر با قلمرویی خواهد بود که در آن تابع ایجاد شده است، که موجب می شود بتوان به متغیرهای آن از درون تابع دسترسی داشت. این تمام چیزی است که در پیاده‌سازی بستار وجود دارد (اگرچه برای کامپایل آن به صورتی که بهینه عمل کند لازم است تا کارهای بیشتری انجام شود).
 
 hint}}
 
