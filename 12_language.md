@@ -13,25 +13,25 @@ quote}}
 
 {{figure {url: "img/chapter_picture_12.jpg", alt: "Picture of an egg with smaller eggs inside", chapter: "framed"}}}
 
-نوشتن زبان برنامه‌نویسی خودتان به طرز شگفت‌آوری آسان و آموزنده است (تا زمانی
+نوشتن زبان برنامه‌نویسی خودتان به طرز شگفت‌آوری آسان و آموزنده است (البته تا زمانی
 که سطح انتظاراتتان زیاد￼ بالا نباشد).
 
 
-هدف اصلی من در این فصل این است که به شما نشان دهم نوشتن زبان برنامه‌نویسی خودتان
-چیزی ماوارایی و جادویی نیست. خیلی وقت‌ها احساس می کردم بعضی از اختراعات انسان ها به شدت
+هدف اصلی من در این فصل این است که به شما نشان دهم نوشتن یک زبان برنامه‌نویسی،
+چیزی ماوارایی و جادویی نیست. خیلی وقت‌ها احساس می کردم که بعضی از اختراعات انسان‌ها بسیار
 هوشمندانه و پیچیده است و من هرگز نمی توانم آن ها را درک کنم. اما با کمی مطالعه
-و آزمایش، اغلب متوجه می شدم که اتفاقا معمولی و شدنی هستند.
+و آزمایش، اغلب متوجه می شدم که اتفاقا قابل درک و ساده هستند.
 
 {{index "Egg language", [abstraction, "in Egg"]}}
 
-در این فصل یک زبان برنامه‌نویسی خواهیم ساخت که نام آن Egg می‌باشد. این زبان
-بسیار ساده و کوچک خواهد بود – اما به اندازه‌ی کافی قدرتمند خواهد بود تا بتواند
+در این فصل یک زبان برنامه‌نویسی به نام Egg خواهیم ساخت. این زبان
+بسیار ساده و کوچک خواهد بود – اما به اندازه‌ی کافی قدرتمند است تا بتواند
 هر محاسبه‌ای که تصور می‌کنید را انجام دهد. در این زبان می توان با استفاده از
 توابع، تجرید‌های ساده را به وجود آورد.
 
 {{id parsing}}
 
-## تجزیه
+## تجزیه (Parsing)
 
 {{index parsing, validation, [syntax, "of Egg"]}}
 
@@ -45,20 +45,19 @@ quote}}
 زبان برنامه‌نویسی ما گرامری ساده و یکپارچه خواهد داشت. همه چیز در زبان Egg از جنس
 عبارت خواهند بود. یک عبارت می تواند نام یک متغیر، یک عدد، یک رشته، یا یک
 کاربرد (application) باشد. کاربردها برای فراخوانی توابع استفاده می شوند؛ همچنین
-برای ساختارهایی مثل `if` و `while` نیز استفاده می شوند.
+برای ساختارهایی مثل `if` و `while` نیز از آن‌ها بهره ‌می‌بریم.
 
 {{index "double-quote character", parsing, [escaping, "in strings"], [whitespace, syntax]}}
 
 برای این که تجزیه‌گر را ساده نگه داریم، رشته‌ها در زبان Egg چیزهایی مثل گریز با
-بک‌اسلش را پشتیبانی نمی کنند. یک رشته به طور ساده دنباله‌ای از کاراکترها است که
-شامل نقل‌قول جفتی نمی‌باشد و توسط نقل قول جفتی محصور می‌شود. یک عدد برابر با دنباله‌ای از
-ارقام است. در نام متغیرها می می‌توان از هر کاراکتری به جز فضای خالی و کاراکترهایی که
+بک‌اسلش را پشتیبانی نمی کنند. یک رشته دنباله‌ای از کاراکترها به جز نقل قول جفتی می‌باشد که خود توسط نقل قول جفتی محصور می‌شود. یک عدد برابر با دنباله‌ای از
+ارقام است. در نام متغیرها می‌توان از هر کاراکتری به جز فضای خالی و کاراکترهایی که
 معنای خاصی در گرامر زبان دارند استفاده نمود.
 
 {{index "comma character", [parentheses, arguments]}}
 
 کاربردها به همان سبکی که در جاوااسکریپت هستند نوشته می شوند: بعد از یک عبارت
-پرانتز قرار می‌گیرد که درون آن هر تعداد آرگومان مجاز می‌باشد که به وسیله‌ی
+پرانتز قرار می‌گیرد که درون آن هر تعداد آرگومان مجاز می‌باشد و به وسیله‌ی
 ویرگول از هم جدا می‌شوند.
 
 ```{lang: null}
@@ -70,26 +69,26 @@ do(define(x, 10),
 
 {{index block, [syntax, "of Egg"]}}
 
-یکریختی مورد نظر در زبان Egg به این معنا است که چیزهایی که در جاوااسکریپت به
-عنوان عملگر محسوب می شدند (مثل `>`)، در این زبان متغیرهایی معمولی می‌باشند که
+یکپارچگی موجود در زبان Egg به این معنا است که چیزهایی که در جاوااسکریپت به
+عنوان عملگر محسوب می شدند (مثل <bdo>`>`</bdo>)، در این زبان متغیرهایی معمولی می‌باشند که
 مثل دیگر قابلیت‌ها به کار گرفته می شوند. و به دلیل اینکه در گرامر این زبان
-مفهومی به نام بلاک وجود ندارد، به ساختاری به نام `do` نیاز داریم بتوانیم انجام
+مفهومی به نام بلاک وجود ندارد، به ساختاری به نام `do` نیاز داریم تا بتوانیم انجام
 متوالی چند عمل را نمایش دهیم.
 
 {{index "type property", parsing, ["data structure", tree]}}
 
 ساختار داده‌ای که تجزیه‌گر از آن برای توصیف یک برنامه استفاده خواهد کرد از اشیاء
 ((عبارت)) تشکیل شده است که هر کدام از آن ها یک خاصیت `type` دارد که نمایانگر نوع آن
-عبارت و خاصیت‌های دیگری برای توصیف محتوای آن دارد.
+عبارت است و نیز خاصیت‌های دیگری برای توصیف محتوای آن دارد.
 
 {{index identifier}}
 
 عبارت‌های نوع `"value"` نمایانگر رشته‌ها و اعداد خام می‌باشند. خاصیت `value` آن ها حاوی
-مقدار رشته یا عددی است که نماینده آن هستند. عبارت‌های نوع `"word"` برای شناسه‌ها
+مقدار رشته یا عددی است که نماینده آن می‌باشند. عبارت‌های نوع `"word"` برای شناسه‌ها
 (نام‌ها) استفاده می شوند. این گونه اشیاء دارای خاصیتی به نام `name` می باشند که نام
 شناسه‌ را به عنوان یک رشته نگه‌داری می کند. در آخر، عبارت `"apply"` نمایانگر یک
 کاربرد است. این عبارت‌ها دارای یک خاصیت به نام `operator` می باشند که به عبارتی
-اشاره می کند مورد استعمال قرار گرفته است و خاصیتی به نام `args` دارند که آرایه‌ای از
+اشاره می کند که مورد استعمال قرار گرفته است و خاصیتی به نام `args` دارند که آرایه‌ای از
 عبارت‌های آرگومان را نگه‌داری می کند.
 
 بخش <bdo>`>(x, 5)`</bdo> از برنامه‌ی قبلی به شکل زیر نمایش داده می شود:
@@ -123,7 +122,7 @@ do(define(x, 10),
 
 {{index recursion, [nesting, "of expressions"]}}
 
-در اینجا باید راه حلی دیگری پیدا کنیم. عبارت‌ها توسط خطوط جدا نمی شوند و ساختاری
+در اینجا باید راه حل دیگری پیدا کنیم. عبارت‌ها توسط خطوط جدا نمی شوند و ساختاری
 بازگشتی دارند. عبارت‌های کاربردی (application) حاوی عبارت‌های دیگر می‌باشند.
 
 {{index elegance}}
@@ -141,8 +140,6 @@ do(define(x, 10),
 تولید کند. ممکن است که این متن، حاوی آرگومان‌های بیشتر یا پرانتز‌ آخر لیست ورودی‌ها باشد.
 
 اولین بخش تجزیه‌گر به این صورت خواهد بود:
-
-This is the first part of the parser:
 
 ```{includeCode: true}
 function parseExpression(program) {
@@ -177,20 +174,20 @@ function skipSpace(string) {
 {{index "literal expression", "SyntaxError type"}}
 
 بعد از چشم‌پوشی از فضاهای خالی ابتدایی، تابع `parseExpression` از سه عبارت باقاعده
-برای شناسایی سه عنصر اساسی که زبان Egg از آن‌ها پشتیبانی می کند شامل: رشته‌ها،
-اعداد و کلمه‌ها، استفاده می کند. تجزیه‌گر با توجه به اینکه کدام یک از آن عناصر
+برای شناسایی سه عنصر اساسی که زبان Egg از آن‌ها پشتیبانی می کند، استفاده می‌کند؛ شامل: رشته‌ها،
+اعداد و کلمه‌ها. تجزیه‌گر با توجه به اینکه کدام یک از آن عناصر
 تطبیق بخورد ساختار‌داده‌ی متفاوتی را تولید می کند. اگر ورودی با هیچ کدام از آن سه
 شکل تطبیق نخورد، آن عبارت معتبر نخواهد بود و تجزیه‌گر یک خطا تولید می کند. ما از
 `SyntaxError` به جای `Error` به عنوان تابع سازنده استثنا استفاده می کنیم که یک نوع
 خطای استاندارد دیگر است، به این دلیل که این نوع کمی اختصاصی تر است – همچنین این
 نوع خطا زمانی تولید می شود که تلاشی برای اجرای یک برنامه نامعتبر جاوااسکریپت
-صورت می گرفته باشد.
+صورت گرفته باشد.
 
 {{index "parseApply function"}}
 
 سپس آن قسمت که تطبیق خورده است را از رشته‌ی برنامه حذف می کنیم و رشته را به
-همراه شیء متعلق به عبارت، به `parseApply` ارسال می کنیم که بررسی کند آیا عبارت از نوع
-کاربرد (application) است. اگر بود، تابع قسمت داخل پرانتز را – لیست آرگومان‌ها –
+همراه شیء متعلق به عبارت، به `parseApply` ارسال می کنیم که بررسی کند عبارت از نوع
+کاربرد (application) باشد. اگر بود، تابع قسمت داخل پرانتز را – لیست آرگومان‌ها –
 تجزیه می کند.
 
 ```{includeCode: true}
@@ -237,8 +234,8 @@ function parseApply(expr, program) {
 {{index "syntax tree", "Egg language", "parse function"}}
 
 این تمام چیزی است که برای قسمت تجزیه‌ی Egg نیاز داریم. آن را در تابعی سرراست به
-نام `parse` قرار می دهیم که بررسی می کند آیا بعد از تجزیه‌ی عبارت (یک برنامه‌ی Egg
-یک عبارت واحد است) به انتهای رشته‌ی ورودی رسیده باشد و به ما ساختار دادهی برنامه
+نام `parse` قرار می دهیم که بررسی می کند که بعد از تجزیه‌ی عبارت (یک برنامه‌ی Egg
+یک عبارت واحد است) به انتهای رشته‌ی ورودی رسیده باشد و به ما ساختار داده‌ی برنامه
 را تحویل دهد.
 
 ```{includeCode: strip_log, test: join}
@@ -742,20 +739,20 @@ do(define(f, fun(a, fun(b, +(a, b)))),
 
 hint}}
 
-### Comments
+### توضیحات
 
 {{index "hash character", "Egg language", "comments in egg (exercise)"}}
 
-It would be nice if we could write ((comment))s in Egg. For example,
-whenever we find a hash sign (`#`), we could treat the rest of the
-line as a comment and ignore it, similar to `//` in JavaScript.
+خوب می شد اگر می توانستیم در Egg توضیحات بنویسیم. مثلا، هر بار که به
+علامت (`#`) برسیم، بقیه‌ی خط را به عنوان یک توضیح در نظر بگیریم شبیه
+به `//` در جاوااسکریپت.
 
 {{index "skipSpace function"}}
 
-We do not have to make any big changes to the parser to support this.
-We can simply change `skipSpace` to skip comments as if they are
-((whitespace)) so that all the points where `skipSpace` is called will
-now also skip comments. Make this change.
+نیازی به ایجاد تغییرات بزرگی در تجزیه‌گر برای پشتیبانی از توضیحات نیست. می
+توانیم `skipSpace` را تغییر داده تا توضیحات را همان طور که از فضاهای خالی صرف
+نظر می شود، پردازش نکند؛ بنابراین در تمامی نقاطی که تابع `skipSpace` فراخوانی می
+شود اکنون توضیحات نیز شناسایی و صرف نظر می شوند. این تغییر را اعمال کنید.
 
 {{if interactive
 
@@ -781,47 +778,43 @@ if}}
 
 {{index "comments in egg (exercise)", [whitespace, syntax]}}
 
-Make sure your solution handles multiple comments in a row, with
-potentially whitespace between or after them.
+اطمینان حاصل کنید که راه حل شما چند توضیح در یک خط را مدیریت می کند و در صورت
+وجود فضای خالی قبل و بعد هر توضیح با مشکل روبرو نمی‌شود.
 
-A ((regular expression)) is probably the easiest way to solve this.
-Write something that matches "whitespace or a comment, zero or more
-times". Use the `exec` or `match` method and look at the length of the
-first element in the returned array (the whole match) to find out how
-many characters to slice off.
+احتمالا ساده‌ترین روش حل این مسئله استفاده از عبارات باقاعده است. چیزی بنویسید که "فضای خالی یا توضیح، با صفر یا بیشتر تکرار" را تطبیق بزند. از متد `exec` یا `match` استفاده کنید و به طول عنصر اول آرایه‌ی برگشتی (تطبیق کامل) توجه کنید تا متوجه شوید چه تعداد کاراکتر نیاز است تا جدا شود.
 
 hint}}
 
-### Fixing scope
+### رفع مشکل قلمرو
 
 {{index [binding, definition], assignment, "fixing scope (exercise)"}}
 
-Currently, the only way to assign a binding a value is `define`.
-This construct acts as a way both to define new bindings and to give
-existing ones a new value.
+در حال حاضر، تنها راهی که می توان یک متغیر و مقدار را به هم منتسب کرد استفاده از
+`define` است. این ساختار برای هر دو کار تعریف متغیر جدید و تغییر مقدار یک متغیر
+موجود استفاده می شود.
 
 {{index "local binding"}}
 
-This ((ambiguity)) causes a problem. When you try to give a nonlocal
-binding a new value, you will end up defining a local one with the
-same name instead. Some languages work like this by design, but I've
-always found it an awkward way to handle ((scope)).
+این ابهام مشکلی را ایجاد می کند. زمانی که به یک متغیر غیرمحلی یک مقدار جدید را
+منتسب می کنید، باعث می‌شود که به جای آن، متغیری محلی با همان نام را
+تعریف کنید. برخی زبان‌ها به همین صورت طراحی شده اند، اما من همیشه این
+روش مدیریت قلمرو را نامناسب دیده‌ام.
 
 {{index "ReferenceError type"}}
 
-Add a special form `set`, similar to `define`, which gives a binding a
-new value, updating the binding in an outer scope if it doesn't
-already exist in the inner scope. If the binding is not defined at
-all, throw a `ReferenceError` (another standard error type).
+یک شکل خاصی به نام `set` را ،شبیه به `define`، اضافه کنید که به یک متغیر یک مقدار جدید
+منتسب می کند، و متغیر را در صورت عدم وجود در قلمروی درونی، در قلمروی بالاتر
+(بیرونی‌تر) به روز رسانی می کند. اگر آن متغیر درکل تعریف نشده بود، یک خطای
+`ReferenceError` (یک یک نوع خطای استاندارد است) را تولید کند.
 
 {{index "hasOwnProperty method", prototype, "getPrototypeOf function"}}
 
-The technique of representing scopes as simple objects, which has made
-things convenient so far, will get in your way a little at this point.
-You might want to use the `Object.getPrototypeOf` function, which
-returns the prototype of an object. Also remember that scopes do not
-derive from `Object.prototype`, so if you want to call
-`hasOwnProperty` on them, you have to use this clumsy expression:
+تکنیکی که برای نمایش قلمروها از اشیاء ساده استفاده می کرد که تا الان کارها را
+خیلی راحت کرده است، در این جا کمی مانع ایجاد خواهد کرد. ممکن است بخواهید از
+<bdo>`Object.getPrototypeOf`</bdo> استفاده کنید، که پروتوتایپ یک شیء را بر می گرداند. همچنین
+به خاطر داشته باشید که قلمروها از <bdo>`Object.prototype`</bdo> مشتق نمی شوند،بنابراین اگر می
+خواهید تا `hasOwnProperty` را روی آن ها فراخوانی کنید، باید از این عبارت بدترکیب
+استفاده کنید.
 
 ```{test: no}
 Object.prototype.hasOwnProperty.call(scope, name);
@@ -850,17 +843,16 @@ if}}
 
 {{index [binding, "compilation of"], assignment, "getPrototypeOf function", "hasOwnProperty method", "fixing scope (exercise)"}}
 
-You will have to loop through one ((scope)) at a time, using
-`Object.getPrototypeOf` to go to the next outer scope. For each scope,
-use `hasOwnProperty` to find out whether the binding, indicated by the
-`name` property of the first argument to `set`, exists in that scope.
-If it does, set it to the result of evaluating the second argument to
-`set` and then return that value.
+باید هر بار با استفاده از <bdo>`Object.getPrototypeOf`</bdo> یک قلمرو را پیمایش
+نمایید تا به قلمروی بیرونی‌تر برسید. برای هر قلمرو، از متد `hasOwnProperty` برای
+بررسی وجود متغیر، که با خاصیت `name` در اولین آرگومان ‍`set` مشخص شده است، در
+قلمرو استفاده کنید. اگر وجود داشت، آن را برابر نتیجه‌ی ارزیابی آرگومان دوم `set`
+قرار دهید و آن مقدار را بر‌گردانید.
 
 {{index "global scope", "run-time error"}}
 
-If the outermost scope is reached (`Object.getPrototypeOf` returns
-null) and we haven't found the binding yet, it doesn't exist, and an
-error should be thrown.
+اگر به بیرونی‌ترین قلمرو برسید ( که در این صورت
+<bdo>`Object.getPrototypeOf`</bdo> مقدار null را برمی‌گرداند) و متغیر هنوز پیدا
+نشده باشد، آن متغیر وجود ندارد و باید یک خطا تولید شود.
 
 hint}}
