@@ -1,4 +1,4 @@
-# JavaScript and the Browser
+# جاوااسکریپت و مرورگر
 
 {{quote {author: "Tim Berners-Lee", title: "The World Wide Web: A very short personal history", chapter: true}
 
@@ -13,131 +13,115 @@ quote}}
 
 {{figure {url: "img/chapter_picture_13.jpg", alt: "Picture of a telephone switchboard", chapter: "framed"}}}
 
-The next chapters of this book will talk about web browsers. Without
-web ((browser))s, there would be no JavaScript. Or even if there were,
-no one would ever have paid any attention to it.
+فصل‌های آینده‌ی این کتاب به مرورگرهای وب خواهد پرداخت. بدون مرورگرهای وب،
+جاوااسکریپتی هم￼ وجود نخواهد داشت. یا حتی اگر هم می بود، هیچ کسی توجهی به آن
+نمی‌کرد.
 
 {{index decentralization, compatibility}}
 
-Web technology has been decentralized from the start, not just
-technically but also in the way it evolved. Various browser vendors
-have added new functionality in ad hoc and sometimes poorly thought-out
-ways, which then, sometimes, ended up being adopted by others—and
-finally set down as in ((standards)).
+از همان ابتدا فناوری وب غیر متمرکز بوده است، نه فقط از لحاظ فنی بلکه روش رشد آن هم
+این گونه بوده است. ارائه‌دهندگان مختلف مرورگر، قابلیت‌های اختصاصی و موردی جدیدی را
+که گهگاه به روش‌های نسنجیده صورت گرفته است، اضافه کرده اند، که بعضا مورد استفاده دیگران قرار گرفته – و در نهایت به عنوان یک استاندارد در
+آمده است.
 
-This is both a blessing and a curse. On the one hand, it is empowering
-to not have a central party control a system but have it be improved
-by various parties working in loose ((collaboration)) (or occasionally
-open hostility). On the other hand, the haphazard way in which the Web
-was developed means that the resulting system is not exactly a shining
-example of internal ((consistency)). Some parts of it are downright
-confusing and poorly conceived.
+این اتفاق هم خوش یمن و هم مشکل ساز بوده است. از یک سو، این که یک فقط گروه مرکزی
+کنترل یک سیستم را نداشته باشند باعث رشد و ارتقای آن می شود اما بهبود سیستم توسط
+گروه‌های مختلف که همکاری خوبی باهم ندارند (یا گاهی اوقات به روشنی خصومت هم
+دارند) هم بدی‌های خودش را دارد. از سویی دیگر، نمی‌توان انتظار یک سیستم مستحکم را
+با روش بی حساب و کتابی که وب در آن توسعه یافت داشت. بعضی از قسمت‌های آن کاملا
+گیج‌کننده است و به‌خوبی درک نمی‌شوند.
 
-## Networks and the Internet
+## شبکه ها و اینترنت
 
-Computer ((network))s have been around since the 1950s. If you put
-cables between two or more computers and allow them to send data back
-and forth through these cables, you can do all kinds of wonderful
-things.
+شبکه‌های کامپیوتری از دهه‌ی پنجاه میلادی (1950s) به وجود آمده اند. اگر دو یا چند
+کامپیوتر را با کابل به هم متصل کنید و اجازه بدهید که داده‌ها بین این کابل‌ها ارسال
+و دریافت شوند، می توانید کارهای شگفت‌انگیزی انجام دهید.
 
-And if connecting two machines in the same building allows us to do
-wonderful things, connecting machines all over the planet should be
-even better. The technology to start implementing this vision was
-developed in the 1980s, and the resulting network is called the
-_((Internet))_. It has lived up to its promise.
+و اگر اتصال دو کامپیوتر در یک ساختمان به ما امکان انجام کارهای شگفتانگیز را می دهد،
+اتصال کامپیوترها در وسعت سیاره باید خیلی بهتر بشود. فناوری‌ای که برای شروع
+پیاده‌سازی این هدف توسعه داده شد در دهه‌ی هشتاد میلادی (1980) و شبکه‌ی نتیجه‌ی آن
+_((اینترنت))_ نامیده‌ شد. این فناوری به به آنچه وعده داده بود رسیده است.
 
-A computer can use this network to shoot bits at another computer. For
-any effective ((communication)) to arise out of this bit-shooting, the
-computers on both ends must know what the bits are supposed to
-represent. The meaning of any given sequence of bits depends entirely
-on the kind of thing that it is trying to express and on the
-((encoding)) mechanism used.
+یک کامپیوتر می تواند از این شبکه برای انتقال بیت‌ها به یک کامپیوتر دیگر استفاده کند.
+برای اینکه این انتقال بیت‌ها باعث تعاملی موثر شود، باید کامپیوتر‌های دو سمت از معنای بیت‌هایی که منتقل
+می‌شوند آگاه باشند. معنای یک دنباله‌ از بیت‌ها به طور کلی به نوع و مکانیزم رمزگذاری چیزی بستگی دارد که
+این دنباله قرار است بیان کند.
 
 {{index [network, protocol]}}
 
-A _network ((protocol))_ describes a style of communication over a
-((network)). There are protocols for sending email, for fetching email,
-for sharing files, and even for controlling computers that happen to be
-infected by malicious software.
+یک _((پروتکول)) شبکه_ یک سبک تعامل در یک شبکه را توصیف می کند. پروتکول‌هایی برای ارسال
+ایمیل، دریافت ایمیل، به اشتراک گذاری فایل‌ها یا حتی برای کنترل کامپیوترهایی که
+ممکن است توسط نرم‌افزارهای مخرب آلوده شده باشند وجود دارد.
 
 {{indexsee "Hypertext Transfer Protocol", HTTP}}
 
-For example, the _Hypertext Transfer Protocol_ (((HTTP))) is
-a protocol for retrieving named ((resource))s (chunks of information,
-such as web pages or pictures). It specifies that the side making the
-request should start with a line like this, naming the resource and
-the version of the protocol that it is trying to use:
+به عنوان مثال، _پروتکول انتقال ابرمتن_ (((HTTP)))، برای بازیابی منابع مشخص (شامل اطلاعاتی مثل صفحات وب یا تصاویر) استفاده می‌شود. طبق این پروتکل، طرف ارسال‌کننده‌ی درخواست باید درخواستش را با یک خط مانند مثال زیر شروع کند، که شامل نام آن منبع مورد نظر و نسخه‌ای از پروتکل که قرار است استفاده شود می‌باشد:
 
 ```{lang: "text/plain"}
 GET /index.html HTTP/1.1
 ```
-
-There are a lot more rules about the way the requester can include more
-information in the ((request)) and the way the other side, which
-returns the resource, packages up its content. We'll look at HTTP in a
-little more detail in [Chapter ?](http).
+قوانین بسیار زیادی وجود دارد که درخواست‌دهنده می تواند برای مشخص نمودن جزئیات بیشتر در متن درخواست قرار دهد و نیز طرف دوم، که منبع خواسته شده را بر‌می‌گرداند، می تواند در محتوایش جای‌ دهد.
+در [فصل ?](http) بیشتر به HTTP خواهیم پرداخت.
 
 {{index layering, stream, ordering}}
 
-Most protocols are built on top of other protocols. HTTP treats the
-network as a streamlike device into which you can put bits and have
-them arrive at the correct destination in the correct order. As we saw
-in [Chapter ?](async), ensuring those things is already a rather
-difficult problem.
+بیشتر پروتکل‌ها بر پایه‌ی دیگر پروتکل‌ها ساخته می شوند. HTTP با شبکه به عنوان
+وسیله‌ای جریان‌دار برخورد می‌کند که در آن می توانید بیت ها را قرار داده و با
+ترتیبی صحیح به مقصدی صحیح برسانید. همانطور که در [فصل ?](async) دیدیم، کسب
+اطمینان از این صحت عملکرد، یکی از مسائل نسبتا مشکل است.
 
 {{index TCP}}
 
 {{indexsee "Transmission Control Protocol", TCP}}
 
-The _Transmission Control Protocol_ (TCP) is a ((protocol)) that
-addresses this problem. All Internet-connected devices "speak" it, and
-most communication on the ((Internet)) is built on top of it.
+_پروتکل کنترل مخابره_ (TCP) ، پروتکلی است که این مشکل را برطرف می کند. تمامی
+وسایلی که از طریق اینترنت به هم متصل هستند به زبان TCP صحبت می کنند و بیشتر تعاملات
+روی اینترنت بر پایه‌ی آن ساخته شده است.
 
 {{index "listening (TCP)"}}
 
-A TCP ((connection)) works as follows: one computer must be waiting,
-or _listening_, for other computers to start talking to it. To be able
-to listen for different kinds of communication at the same time on a
-single machine, each listener has a number (called a _((port))_)
-associated with it. Most ((protocol))s specify which port should be
-used by default. For example, when we want to send an email using the
-((SMTP)) protocol, the machine through which we send it is expected to
-be listening on port 25.
+یک ارتباط TCP به این شکل عمل می کند: یک کامپیوتر باید منتظر بماند یا به گوش باشد
+(_listening_)، تا دیگر کامپیوترها شروع به صحبت با آن کنند. برای آنکه بتوان به
+انواع مختلف ارتباطات در آن واحد روی یک دستگاه واحد گوش کرد هر شنونده یک عدد
+دارد (که _پورت_ نامیده می شود) که به آن اختصاص داده شده است. بیشتر پروتکل‌ها مشخص می
+کنند که کدام پورت به صورت پیشفرض باید استفاده شود. به عنوان مثال، زمانی که قصد
+داریم تا یک ایمیل را با استفاده از پروتکل SMTP ارسال کنیم ماشینی که از طریق آن
+ایمیل را ارسال می کنیم انتظار می رود که به پورت 25 گوش کند.
 
-Another computer can then establish a ((connection)) by connecting to
-the target machine using the correct port number. If the target
-machine can be reached and is listening on that port, the connection
-is successfully created. The listening computer is called the
-_((server))_, and the connecting computer is called the _((client))_.
+یک کامپیوتر دیگر می تواند با استفاده از شماره‌ی پورت صحیح، به ماشین هدفش ارتباط گرفته و یک اتصال برقرار نماید. اگر ماشین هدف در دسترس باشد و به آن پورت گوش دهد، این اتصال با
+موفقیت ایجاد می شود. کامپیوتر شنونده را سرویس دهنده (_server_) می نامند و
+کامپیوتری که به آن متصل می شود را یک سرویس گیرنده (_client_) می نامند.
+
 
 {{index [abtraction, "of the network"]}}
 
-Such a connection acts as a two-way ((pipe)) through which bits can
-flow—the machines on both ends can put data into it. Once the bits are
-successfully transmitted, they can be read out again by the machine on
-the other side. This is a convenient model. You could say that ((TCP))
-provides an abstraction of the network.
+این گونه ارتباطات مانند یک لوله‌ی دوطرفه عمل می کنند که بیت‌ها می توانند در آن
+جریان داشته باشند – ماشین‌هایی که در هر دو سمت قرار دارند می توانند داده‌ها را
+درون آن قرار دهند. به محض اینکه بیت‌ها با موفقیت منتقل شدند، می توان آن ها را
+توسط ماشینی که در دیگر سمت قرار داد دوباره خواند. این مدل مدلی مناسب است. می
+توانید فرض کنید که TCP یک تجرید از شبکه فراهم می کند.
 
 {{id web}}
 
-## The Web
+## وب
 
-The _((World Wide Web))_ (not to be confused with the ((Internet)) as
-a whole) is a set of ((protocol))s and formats that allow us to visit
-web pages in a browser. The "Web" part in the name refers to the fact
-that such pages can easily link to each other, thus connecting into a
-huge ((mesh)) that users can move through.
+وب جهان‌گستر یا _World Wide Web_ (نباید با اینترنت معادل گرفته شود) مجموعه‌ای از
+پروتکل‌ها و فرمت‌ها است که به ما این امکان را می دهد تا صفحات وب را توسط یک
+مرورگر مشاهده کنیم. بخش "وب" آن اشاره به این حقیقت دارد که این گونه صفحات می
+توانند به آسانی با یکدیگر پیوند برقرار سازند و این ارتباطات شبکه‌ای بزرگ را می
+سازد که کاربران می توانند درون آن حرکت کنند.
 
-To become part of the Web, all you need to do is connect a machine to
-the ((Internet)) and have it listen on port 80 with the ((HTTP))
-protocol so that other computers can ask it for documents.
+برای اینکه بخشی از وب باشید، تمام چیزی که لازم دارید این است که یک ماشین را به
+اینترنت متصل نمایید و آن ماشین را تنظیم کنید که روی پورت 80 به پروتکل HTTP
+گوش کند، بنابراین دیگر کامپیوترها می توانند از این ماشین برای گرفتن اسناد
+درخواست دهند.
 
 {{index URL}}
 
 {{indexsee "Uniform Resource Locator", URL}}
 
-Each ((document)) on the Web is named by a _Uniform Resource Locator_
-(URL), which looks something like this:
+هر ((سند)) روی وب به وسیله‌ی یک نشانی وب (URL) نام گذاری می شود که چیزی
+شبیه این خواهد شد:
 
 ```{lang: null}
   http://eloquentjavascript.net/13_browser.html
@@ -147,11 +131,10 @@ Each ((document)) on the Web is named by a _Uniform Resource Locator_
 
 {{index HTTPS}}
 
-The first part tells us that this URL uses the HTTP ((protocol)) (as
-opposed to, for example, encrypted HTTP, which would be _https://_).
-Then comes the part that identifies which ((server)) we are requesting
-the document from. Last is a path string that identifies the specific
-document (or _((resource))_) we are interested in.
+قسمت اول نشان می دهد که این URL از پروتکل HTTP استفاده می کند (برخلاف مثلا
+HTTP رمزگذاری شده که به شکل <bdo>https://</bdo> نوشته می شود.). سپس بخشی می آید که
+سرویس‌دهنده‌ای که سند را از آن درخواست می کنیم در آن مشخص شده است. در آخر یک مسیر
+رشته‌ای که سند مورد نظر (یا منبع) را مشخص می کند.
 
 Machines connected to the Internet get an _((IP address))_, which is a
 number that can be used to send messages to that machine, and looks
