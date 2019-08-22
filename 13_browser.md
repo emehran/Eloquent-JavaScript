@@ -136,24 +136,24 @@ HTTP رمزگذاری شده که به شکل <bdo>https://</bdo> نوشته م�
 سرویس‌دهنده‌ای که سند را از آن درخواست می کنیم در آن مشخص شده است. در آخر یک مسیر
 رشته‌ای که سند مورد نظر (یا منبع) را مشخص می کند.
 
-Machines connected to the Internet get an _((IP address))_, which is a
-number that can be used to send messages to that machine, and looks
-something like `149.210.142.219` or `2001:4860:4860::8888`. But lists
-of more or less random numbers are hard to remember and awkward to
-type, so you can instead register a _((domain)) name_ for a specific
-address or set of addresses. I registered _eloquentjavascript.net_ to
-point at the IP address of a machine I control and can thus use that
-domain name to serve web pages.
+دستگاه‌هایی که به اینترنت متصل می شوند یک _((آدرس IP))_ دریافت می کنند که عددی است که
+می توان از آن برای ارسال پیام به آن دستگاه استفاده نمود و ظاهری شبیه به
+<bdo>`149.210.142.219`</bdo> یا <bdo>`2001:4860:4860::8888`</bdo> دارد. اما یک لیست عددی کم و بیش تصادفی
+را به سختی می توان به خاطر سپرد و تایپ آن هم دشوار است؛ پس در عوض می توان یک
+نام دامنه برای یک آدرس خاص یا مجموعه‌ای از آدرس‌ها ثبت کرد. من دامنه‌ی
+<bdo>_eloquentjavascript.net_</bdo> را برای اشاره به آدرس IP یک ماشین که توسط خودم مدیریت می
+شود ثبت کرده ام بنابراین  می‌توانم از آن دامنه برای انتشار صفحات وب
+استفاده کنم.
 
 {{index browser}}
 
-If you type this URL into your browser's ((address bar)), the browser
-will try to retrieve and display the ((document)) at that URL. First,
-your browser has to find out what address _eloquentjavascript.net_
-refers to. Then, using the ((HTTP)) protocol, it will make a
-connection to the server at that address and ask for the resource
-_/13_browser.html_. If all goes well, the server sends back a
-document, which your browser then displays on your screen.
+اگر URLای که دیدیم را در نوار آدرس مرورگرتان تایپ کنید، مرورگر تلاش می کند که
+آن سندی که در URL مشخص شده است را بازیابی و نمایش دهد. ابتدا، مرورگر شما باید
+آدرسی که <bdo>_eloquentjavascript.net_</bdo> به آن اشاره می کند را به‌دست بیاورد. سپس با
+استفاده از پروتوکول ((HTTP)) اتصالی با سرویس دهنده در آن آدرس برقرار کرده و آن
+منبع <bdo>_/13_browser.html_</bdo> را درخواست می کند. اگر همه چیز به خوبی پیش رفت، سرویس
+دهنده یک سند را برمی گرداند که مرورگر شما آن را روی صفحه‌ی مانیتور شما نمایش می
+دهد.
 
 ## HTML
 
@@ -161,12 +161,16 @@ document, which your browser then displays on your screen.
 
 {{indexsee "Hypertext Markup Language", HTML}}
 
+HTML که مخفف _زبان نشانه‌گذاری ابرمتن_ است، یک فرمت سند برای صفحات وب می باشد. یک
+سند HTML حاوی متن و _((برچسب‌هایی))_ (tags) است که به آن متن ساختار می بخشند و چیزهایی مثل
+مثل پاراگراف‌ها، پیوند‌ها و عنوان‌ها را توصیف می کنند می، باشد.
+
 HTML, which stands for _Hypertext Markup Language_, is the document
 format used for web pages. An HTML document contains ((text)), as well
 as _((tag))s_ that give structure to the text, describing things such
 as links, paragraphs, and headings.
 
-A short HTML document might look like this:
+یک سند کوچک HTML ممکن است شبیه به زیر باشد:
 
 ```{lang: "text/html"}
 <!doctype html>
@@ -186,7 +190,7 @@ A short HTML document might look like this:
 
 {{if book
 
-This is what such a document would look like in the browser:
+سندی با کد بالا در مرورگر به این شکل خواهد بود:
 
 {{figure {url: "img/home-page.png", alt: "My home page",width: "6.3cm"}}}
 
@@ -194,69 +198,67 @@ if}}
 
 {{index [HTML, notation]}}
 
-The tags, wrapped in ((angle brackets)) (`<` and `>`, the symbols for
-_less than_ and _greater than_), provide information about the
-((structure)) of the document. The other ((text)) is just plain text.
+برچسب ها که توسط علامت‌های بزرگتر و کوچکتر محصور شده اند (<bdo>`<`</bdo> و
+<bdo>`>`</bdo>) اطلاعاتی درباره‌ی ساختار سند فراهم می سازند. دیگر متن‌ها فقط متن
+ساده محسوب می شوند.
 
 {{index doctype, version}}
 
-The document starts with `<!doctype html>`, which tells the browser to
-interpret the page as _modern_ HTML, as opposed to various dialects
-that were in use in the past.
+سند HTML با <bdo>`<!doctype html>`</bdo> آغاز می گردد که به مرورگر می گوید این صفحه را به
+عنوان یک صفحه‌ی _مدرن_ HTML تفسیر کند؛ برخلاف دیگر حالتهایی که پیش‌تر استفاده می
+شد.
+
 
 {{index "head (HTML tag)", "body (HTML tag)", "title (HTML tag)", "h1 (HTML tag)", "p (HTML tag)"}}
 
-HTML documents have a head and a body. The head contains information
-_about_ the document, and the body contains the document itself. In
-this case, the head declares that the title of this document is "My
-home page" and that it uses the UTF-8 encoding, which is a way to
-encode Unicode text as binary data. The document's body contains a
-heading (`<h1>`, meaning "heading 1"—`<h2>` to `<h6>` produce
-subheadings) and two ((paragraph))s (`<p>`).
+سندهای HTML دارای بخشی به نام head و بخشی به نام body است. قسمت head حاوی
+اطلاعاتی درباره خود سند است و body حاوی خود سند. در این مثال، قسمت head اعلان می
+کند که عنوان این سند <bdo>“My home page”</bdo> است و این سند از رمزگذاری
+<bdo>UTF-8</bdo> استفاده می کند که روشی برای رمزگذاری متن‌های یونیکد به عنوان
+داده‌های دودویی است. قسمت body سند دارای یک عنوان ( <bdo>`<h1>`</bdo> به معنای
+"عنوان 1" – <bdo>`<h2>`</bdo> تا <bdo>`<h6>`</bdo> زیرعنوان کوچکتری را تولید می
+کنند) و دو پاراگراف می‌باشد (<bdo>`<p>`</bdo>).
 
 {{index "href attribute", "a (HTML tag)"}}
 
-Tags come in several forms. An ((element)), such as the body, a
-paragraph, or a link, is started by an _((opening tag))_ like `<p>`
-and ended by a _((closing tag))_ like `</p>`. Some opening tags, such
-as the one for the ((link)) (`<a>`), contain extra information in the
-form of `name="value"` pairs. These are called _((attribute))s_. In
-this case, the destination of the link is indicated with
-`href="http://eloquentjavascript.net"`, where `href` stands for
-"hypertext reference".
+برچسب‌ها به شکل‌های متعددی می آیند. یک عنصر، مثل body ، یک پاراگراف، یا یک پیوند،
+به وسیله‌ی یک _برچسب آغازین_ مثل <bdo>`<p>`</bdo> شروع شده و با یک _برچسب پایانی_
+مثل <bdo>`</p>`</bdo> اتمام می یابد. بعضی از برچسب‌های آغازین مثل برچسب مربوط به
+پیوند <bdo>`<a>`</bdo> حاوی اطلاعات بیشتری به شکل جفت‌های نام و مقدار
+<bdo>`name="value"`</bdo> می باشند که _خصوصیت_ (attribute) نامیده می شوند. در این مثال، مقصد
+پیوند توسط <bdo>`href="http://eloquentjavascript.net"`</bdo> مشخص شده است که
+`href` مخفف <bdo>hypertext reference</bdo> (مرجع منبع) می باشد.
 
 {{index "src attribute", "self-closing tag", "img (HTML tag)"}}
 
-Some kinds of ((tag))s do not enclose anything and thus do not need to
-be closed. The metadata tag `<meta charset="utf-8">` is an example of
-this.
+بعضی از انواع برچسب‌ها چیزی را محصور نمی کنند بنابراین به برچسب پایانی نیازی
+ندارند. برچسب فراداده <bdo>`<meta charset="utf-8">`</bdo> مثالی از اینگونه برچسب ها است.
 
 {{index [escaping, "in HTML"]}}
 
-To be able to include ((angle brackets)) in the text of a document,
-even though they have a special meaning in HTML, yet another form of
-special notation has to be introduced. A plain opening angle bracket
-is written as `&lt;` ("less than"), and a closing bracket is written
-as `&gt;` ("greater than"). In HTML, an ampersand (`&`) character
-followed by a name or character code and a semicolon (`;`) is called an _((entity))_
-and will be replaced by the character it encodes.
+برای این که بتوان از علامت‌های بزرگتر و کوچکتر در متن یک سند استفاده کرد، با وجود
+اینکه این علامت ها در￼ HTML معنای به خصوصی دارند، یک شکل از نشانه‌گذاری ویژه وجود
+دارد که باید معرفی شود. یک علامت کوچکتر را به وسیله‌ی <bdo>`&lt;`</bdo>  و علامت
+بزرگتر را با <bdo>`&gt;`</bdo>  می نویسند. در HTML کاراکتر `&` اگر با
+یک کلمه و یک نقطه‌ویرگول (`;`) دنبال شود یک _موجودیت_ (entity) نامیده می شود و توسط کاراکتری
+معادلش که به رمز درآمده است جایگزین می گردد.
 
 {{index ["backslash character", "in strings"], "ampersand character", "double-quote character"}}
 
-This is analogous to the way backslashes are used in JavaScript
-strings. Since this mechanism gives ampersand characters a special
-meaning, too, they need to be escaped as `&amp;`. Inside attribute
-values, which are wrapped in double quotes, `&quot;` can be used to
-insert an actual quote character.
+این کار مشابه کاری است که بک‌اسلش در رشته‌های جاوااسکریپت انجام می داد. به دلیل
+اینکه این مکانیزم، به کاراکترهای `&` معنای خاصی می دهد، برای نوشتن خود
+امپرسند می توان از <bdo>`&amp;`</bdo> استفاده کرد. در قسمت مقدار خصوصیت‌ها که توسط نقل‌قول
+جفتی محصور شده اند، <bdo>`&quot;`</bdo> را می توان برای وارد کردن کاراکتر واقعی نقل قول
+استفاده کرد.
 
 {{index "error tolerance", parsing}}
 
-HTML is parsed in a remarkably error-tolerant way. When tags that
-should be there are missing, the browser reconstructs them. The way in
-which this is done has been standardized, and you can rely on all
-modern browsers to do it in the same way.
+HTML به شکلی تفسیر می شود که تحمل خطای بالایی دارد. زمانی که برچسب‌هایی که
+باید جایی موجود بودند نوشته نشده باشند، مرورگر آن ها را بازسازی می کند. روش
+این بازسازی به صورت استاندارد درآمده است. می توانید به مرورگرهای مدرن اعتماد
+کنید که همه به طور یکسان این کار را انجام دهند.
 
-The following document will be treated just like the one shown previously:
+سندی که در ادامه می آید شبیه به سندی تفسیر می شود که پیش تر آمد.
 
 ```{lang: "text/html"}
 <!doctype html>
@@ -272,35 +274,36 @@ The following document will be treated just like the one shown previously:
 
 {{index "title (HTML tag)", "head (HTML tag)", "body (HTML tag)", "html (HTML tag)"}}
 
-The `<html>`, `<head>`, and `<body>` tags are gone completely. The
-browser knows that `<meta>` and `<title>` belong in the head and that
-`<h1>` means the body has started. Furthermore, I am no longer
-explicitly closing the paragraphs since opening a new paragraph or
-ending the document will close them implicitly. The quotes around the
-attribute values are also gone.
+برچسب های <bdo>`<html>`</bdo>، <bdo>`<head>`</bdo> و <bdo>`<body>`</bdo> کلا
+نوشته نشده اند. مرورگر می می‌داند که برچسب‌های <bdo>`<meta>`</bdo> و
+<bdo>`<title>`</bdo> متعلق به قسمت head می باشند و <bdo>`<h1>`</bdo> به معنای
+شروع قسمت body است. علاوه بر آن، در مثال بالا پاراگراف‌ها را با برچسب‌های پایانی
+نبسته‌ام به این دلیل که یک پاراگراف جدید یا پایان سند این کار را خود به خود به
+صورت ضمنی انجام می دهد. علامت‌های نقل‌قولی که پیرامون مقادیر خصوصیت‌ها بود نیز
+نیامده است.
 
-This book will usually omit the `<html>`, `<head>`, and `<body>` tags
-from examples to keep them short and free of clutter. But I _will_
-close tags and include quotes around attributes.
+
+در این کتاب معمولا برچسب‌های <bdo>`<html>`</bdo>، <bdo>`<head>`</bdo> و
+<bdo>`<body>`</bdo> از مثال‌ها حذف می شود تا فضای کمتری اشغال شود اما برچسب‌های
+پایانی را خواهم آورد و همچنین نقل‌قول‌ها را پیرامون خصوصیتها قرار خواهم داد.
 
 {{index browser}}
 
-I will also usually omit the ((doctype)) and `charset` declaration.
-This is not to be taken as an encouragement to drop these from HTML
-documents. Browsers will often do ridiculous things when you forget
-them. You should consider the doctype and the `charset` metadata
-to be implicitly present in examples, even when they are not actually shown
-in the text.
+همچنین قسمت اعلان سند (doctype) و `charset` را معمولا قلم می گیرم. این کار را
+برای تشویق شما برای حذف این قسمت‌ها انجام نمی دهم. مرورگرها معمولا زمانی که
+فراموش می کنید تا این قسمت‌ها را بنویسید، واکنش عجیب غریبی از خود نشان می دهند.
+شما می توانید فرض کنید که قسمت doctype و `charset` به صورت پیشفرض و ضمنی در مثال‌ها
+وجود دارند حتی زمانی که در متن مثال دیده نمی شوند.
+
 
 {{id script_tag}}
 
-## HTML and JavaScript
+## اچ‌تی‌ام‌ال و جاوااسکریپت
 
 {{index [JavaScript, "in HTML"], "script (HTML tag)"}}
 
-In the context of this book, the most important HTML tag is
-`<script>`. This tag allows us to include a piece of JavaScript in a
-document.
+در این کتاب، مهمترین برچسب HTML برچسب <bdo>`<script>`</bdo> است. این برچسب به ما امکان
+افزودن جاوااسکریپت به یک سند را فراهم می می‌سازد.
 
 ```{lang: "text/html"}
 <h1>Testing alert</h1>
@@ -309,46 +312,44 @@ document.
 
 {{index "alert function", timeline}}
 
-Such a script will run as soon as its `<script>` tag is encountered
-while the browser reads the HTML. This page will pop up a dialog when
-opened—the `alert` function resembles `prompt`, in that it pops up a
-little window, but only shows a message without asking for input.
+این اسکریپت به محض اینکه مرورگر به برچسب <bdo>`<script>`</bdo> در سند HTML برسد
+اجرا خواهد شد. وقتی این صفحه باز شود یک پنجره‌ی گفتگو را نشان خواهد داد – تابع
+`alert` شبیه به `prompt` عمل می کند با
+این تفاوت که فقط یک پیام نمایش می دهد و امکان دریافت ورودی از کاربر را فراهم نمی کند.
 
 {{index "src attribute"}}
 
-Including large programs directly in HTML documents is often
-impractical. The `<script>` tag can be given an `src` attribute  to fetch a script file (a text file containing a JavaScript
-program) from a URL.
+قراردادن برنامه‌های بزرگ به طور مستقیم در سندهای HTML اغلب کاربردی نیست. برچسب
+<bdo>`<script>`</bdo> می تواند خصوصیتی به نام `src` داشته باشد که به وسیله‌ی آن یک فایل اسکریپت
+(یک فایل متنی که حاوی یک برنامه جاوااسکریپت است) را از یک URL بارگیری کند.
 
 ```{lang: "text/html"}
 <h1>Testing alert</h1>
 <script src="code/hello.js"></script>
 ```
 
-The _code/hello.js_ file included here contains the same
-program—`alert("hello!")`. When an HTML page references other URLs as
-part of itself—for example, an image file or a script—web browsers
-will retrieve them immediately and include them in the page.
+فایل  <bdo>_code/hello.js_</bdo> که در اینجا قرار گرفته است حاوی برنامه‌ی مشابهی
+است – <bdo>`alert("hello!")`</bdo>. زمانی که یک صفحه‌ی HTML به دیگر URLها به عنوان بخشی از خود
+ارجاع می دهد، به عنوان مثال یک تصویر یا یک اسکریپت – مرورگرهای وب آن منابع را
+گرفته و در صفحه قرار می دهند.
 
 {{index "script (HTML tag)", "closing tag"}}
 
-A script tag must always be closed with `</script>`, even if it refers
-to a script file and doesn't contain any code. If you forget this, the
-rest of the page will be interpreted as part of the script.
+یک برچسب script همیشه باید توسط یک <bdo>`</script>`</bdo> بسته شود، حتی زمانی که به فایلی
+که در آن کدی وجود ندارد ارجاع می دهد. اگر فراموش کنید آن را ببندید، بخش‌های
+دیگر صفحه که زیر آن قرار گرفته به عنوان بخشی از اسکریپت در نظر گرفته می شود.
 
 {{index "relative path", dependency}}
 
-You can load ((ES modules)) (see [Chapter ?](modules#es)) in the
-browser by giving your script tag a `type="module"` attribute. Such
-modules can depend on other modules by using ((URL))s relative to
-themselves as module names in `import` declarations.
+می توانید ماژول‌های ES را در مرورگرها بارگیری کنید ( [فصل ?](modules#es)) و این کار با استفاده
+از خصوصیت <bdo>`type="module"`</bdo> صورت می گیرد. این ماژول ها می توانند با استفاده از URLها
+نسبت به خودشان به عنوان نام ماژول در اعلان `import` وابسته به دیگر ماژول‌ها باشند.
 
 {{index "button (HTML tag)", "onclick attribute"}}
 
-Some attributes can also contain a JavaScript program. The `<button>`
-tag shown next (which shows up as a button) has an `onclick`
-attribute. The attribute's value will be run whenever the button is
-clicked.
+بعضی خصوصیت‌ها همچنین می توانند حاوی یک برنامه‌ی جاوااسکریپت باشند. برچسب <bdo>`<button>`</bdo>
+که در ادامه می آید (که یک دکمه نمایش می دهد) خصوصیتی به نام `onclick` دارد.
+مقدار این خصوصیت وقتی که این دکمه کلیک می شود اجرا می شود.
 
 ```{lang: "text/html"}
 <button onclick="alert('Boom!');">DO NOT PRESS</button>
@@ -356,9 +357,9 @@ clicked.
 
 {{index "single-quote character", [escaping, "in HTML"]}}
 
-Note that I had to use single quotes for the string in the `onclick`
-attribute because double quotes are already used to quote the whole
-attribute. I could also have used `&quot;`.
+توجه داشته باشید که من از علامت‌های نقل قول تکی برای رشته‌ی مربوط به خصوصیت
+`onclick` استفاده کرده ام￼ به دلیل اینکه نقل قول جفتی برای خود خصوصیت استفاده شده
+است. می توانستم همچنین از <bdo>`&quot;`</bdo> استفاده کنم.
 
 ## In the sandbox
 
