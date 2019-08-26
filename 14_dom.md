@@ -1,4 +1,4 @@
-# The Document Object Model
+# DOM یا مدل شیء سند
 
 {{quote {author: "Friedrich Nietzsche", title: "Beyond Good and Evil", chapter: true}
 
@@ -12,28 +12,25 @@ quote}}
 
 {{index drawing, parsing}}
 
-When you open a web page in your browser, the browser retrieves the
-page's ((HTML)) text and parses it, much like the way our parser from
-[Chapter ?](language#parsing) parsed programs. The browser builds up a
-model of the document's ((structure)) and uses this model to draw the
-page on the screen.
+وقتی یک صفحه وب را در مرورگرتان باز می کنید، مرورگر متن HTML صفحه را گرفته و
+آن را تفسیر می کند،￼ بسیار شبیه به آنچه تجزیه‌گر ما برای تجزیه‌ی برنامه‌ها در [فصل ?](language#parsing) انجام می داد. مرورگر یک مدل از ساختار سند می سازد و از آن برای نمایش سند روی
+صفحه‌ی نمایش استفاده می کند.
 
 {{index "live data structure"}}
 
-This representation of the ((document)) is one of the toys that a
-JavaScript program has available in its ((sandbox)). It is a ((data
-structure)) that you can read or modify. It acts as a _live_ data
-structure: when it's modified, the page on the screen is updated to
-reflect the changes.
+این نمایش از سند، یکی از ابزارهایی است که یک برنامه‌ی جاوااسکریپت در جعبه‌ی شنی (sandbox) خود به
+آن دسترسی دارد. یک ساختار داده که می‌تواند خوانده شود یا تغییر یابد. ساختار
+داده‌ای _زنده_: زمانی که تغییری در آن رخ می‌دهد، صفحه‌ای که در مانیتور نمایش داده می
+شود نیز به‌روز می شود تا تغییرات را منعکس کند.
 
-## Document structure
+## ساختار سند
 
 {{index [HTML, structure]}}
 
-You can imagine an HTML document as a nested set of ((box))es.
-Tags such as `<body>` and `</body>` enclose other ((tag))s, which in
-turn contain other tags or ((text)). Here's the example document from
-the [previous chapter](browser):
+می توانید یک سند HTML را به عنوان مجموعه‌ای از مستطیل‌های تودرتو در نظر بگیرید.
+برچسب‌هایی مثل <bdo>`<body>`</bdo> و <bdo>`</body>`</bdo>، دیگر برچسب‌ها را در
+بر می گیرند، که خود نیز حاوی برچسب‌های دیگر یا متن می‌باشند. به عنوان مثال، سندی
+از [فصل قبل](browser) را مشاهده ‌می کنید:
 
 ```{lang: "text/html", sandbox: "homepage"}
 <!doctype html>
@@ -50,171 +47,154 @@ the [previous chapter](browser):
 </html>
 ```
 
-This page has the following structure:
+این صفحه دارای ساختار پیش رو می‌باشد:
 
 {{figure {url: "img/html-boxes.svg", alt: "HTML document as nested boxes", width: "7cm"}}}
 
 {{indexsee "Document Object Model", DOM}}
 
-The data structure the browser uses to represent the document follows
-this shape. For each box, there is an object, which we can
-interact with to find out things such as what HTML tag it represents
-and which boxes and text it contains. This representation is called
-the _Document Object Model_, or ((DOM)) for short.
+ساختار داده‌ای که مرورگر برای نمایش این سند استفاده می کند از این شکل پیروی می
+کند. برای هر مستطیل، یک شیء وجود دارد، که می توانیم با آن ارتباط برقرار کرده
+تا چیزهایی مثل برچسب HTML آن یا برچسب‌ها و متونی که دربر دارد را بدست بیاوریم.
+این طرز نمایش را _مدل شیء سند_ یا به اختصار DOM می گویند.
 
 {{index "documentElement property", "head property", "body property", "html (HTML tag)", "body (HTML tag)", "head (HTML tag)"}}
 
-The global binding `document` gives us access to these objects. Its
-`documentElement` property refers to the object representing the
-`<html>` tag. Since every HTML document has a head and a body, it also
-has `head` and `body` properties, pointing at those elements.
+متغیر سراسری `document` امکان دسترسی به این اشیاء را فراهم می سازد. خاصیت
+`documentElement` آن به شیئی ارجاع می دهد که نمایانگر برچسب <bdo>`<html>`</bdo>
+است. چون هر سند HTML دارای یک سرصفحه و یک بدنه می باشد ، در نتیجه دارای
+خاصیت‌های `head` و `body` نیز می باشد که به آن عناصر اشاره می می‌کنند.
 
-## Trees
+## درخت‌ها
 
 {{index [nesting, "of objects"]}}
 
-Think back to the ((syntax tree))s from [Chapter ?](language#parsing)
-for a moment. Their structures are strikingly similar to the structure
-of a browser's document. Each _((node))_ may refer to other nodes,
-_children_, which in turn may have their own children. This shape is
-typical of nested structures where elements can contain subelements
-that are similar to themselves.
+کمی به درخت‌های گرامر که در [فصل ?](language#parsing) معرفی شدند فکر کنید. ساختار آن‌ها بسیار شبیه
+به ساختار یک سند مرورگر است. هر _((گره))_ ممکن است به دیگر گره‌ها ارجاع دهد، _فرزندان_،
+که خود می توانند فرزندان خود را داشته باشند. این شکل یک ساختار تودرتوی معمول است
+که عناصر در آن می توانند حاوی زیرعنصرهایی مشابه باشند.
 
 {{index "documentElement property", [DOM, tree]}}
 
-We call a data structure a _((tree))_ when it has a branching
-structure, has no ((cycle))s (a node may not contain itself, directly
-or indirectly), and has a single, well-defined _((root))_. In the case
-of the DOM, `document.documentElement` serves as the root.
+یک ساختار داده را درخت می نامیم زمانی که دارای شاخه‌هایی بدون دور است ( یک گره
+ممکن نیست به شکل￼ مستقیم یا غیر مستقیم حاوی خودش باشد) و دارای یک _((ریشه))_ مشخص
+باشد. در رابطه با DOM، ریشه‌ی درخت <bdo>`document.documentElement`</bdo> است.
 
 {{index sorting, ["data structure", "tree"], "syntax tree"}}
 
-Trees come up a lot in computer science. In addition to representing
-recursive structures such as HTML documents or programs, they are
-often used to maintain sorted ((set))s of data because elements can
-usually be found or inserted more efficiently in a tree than in a flat
-array.
+درخت‌ها در علم کامپیوتر کاربرد زیادی دارند. علاوه بر نمایش ساختارهای درختی مانند
+اسناد HTML یا برنامه‌ها، اغلب از آن‌ها برای نگهداری مجموعه‌های مرتب شده‌ی داده
+استفاده می شود چراکه معمولا ورود یا جستجوی عناصر در یک درخت با کارایی بیشتری
+نسبت به یک‌ آرایه‌ی تخت انجام می شود.
 
 {{index "leaf node", "Egg language"}}
 
-A typical tree has different kinds of ((node))s. The syntax tree for
-[the Egg language](language) had identifiers, values, and application
-nodes. Application nodes may have children, whereas identifiers and
-values are _leaves_, or nodes without children.
+یک درخت معمول دارای انواع مختلفی از گره‌ها می‌باشد. درخت گرامر [زبان Egg](language) دارای
+شناسه‌ها، مقادیر، و گره‌های کاربرد (Application) بود. گره‌های کاربرد می توانستند دارای فرزند
+باشند، درحالیکه شناسه‌ها و مقادیر از جنس _برگ_ بودند؛ منظور گره‌هایی است که فرزندی ندارند.
 
 {{index "body property", [HTML, structure]}}
 
-The same goes for the DOM. Nodes for _((element))s_, which represent
-HTML tags, determine the structure of the document. These can have
-((child node))s. An example of such a node is `document.body`. Some of
-these children can be ((leaf node))s, such as pieces of ((text)) or
-((comment)) nodes.
+همین روال برای DOM هم برقرار است. گره‌ها به عنوان عناصر، که برچسب‌های HTML را
+نمایش می دهند، ساختار سند را تعیین می کنند. این گره‌ها می توانند گره‌های فرزند
+داشته باشند. یک نمونه از این نوع گره‌ها <bdo>`document.body`</bdo> است. بعضی از این فرزندان می
+توانند گره‌هایی از نوع برگ باشند، مثل متن‌ها یا گره‌های توضیحات.
 
 {{index "text node", element, "ELEMENT_NODE code", "COMMENT_NODE code", "TEXT_NODE code", "nodeType property"}}
 
-Each DOM node object has a `nodeType` property, which contains a code
-(number) that identifies the type of node. Elements have code 1, which
-is also defined as the constant property `Node.ELEMENT_NODE`. Text
-nodes, representing a section of text in the document, get code 3
-(`Node.TEXT_NODE`). Comments have code 8
-(`Node.COMMENT_NODE`).
+هر شیء گره‌ی DOM دارای خاصیتی به نام `nodeType` است که حاوی کدی (عددی) است که نوع
+آن گره را مشخص می کند. عناصر دارای کد 1 می‌باشند که همچنین به عنوان یک خاصیت ثابت
+ <bdo>`Node.ELEMENT_NODE`</bdo> نیز تعریف شده است. گره‌های متنی ، که نمایانگر یک قسمت از متن
+در سند می باشند دارای کد 3 می‌باشند (<bdo>`Node.TEXT_NODE`</bdo>). کد 8 نیز به توضیحات اختصاص دارد (<bdo>`Node.COMMENT_NODE`</bdo>).
 
-Another way to visualize our document ((tree)) is as follows:
+یک روش دیگر برای به تصویر کشیدن درخت مربوط به سندمان، شکل زیر است.
 
 {{figure {url: "img/html-tree.svg", alt: "HTML document as a tree",width: "8cm"}}}
 
-The leaves are text nodes, and the arrows indicate parent-child
-relationships between nodes.
+برگ‌ها، گره‌های متنی هستند و پیکان‌ها نمایانگر روابط والد-فرزندی بین گره‌ها می باشند.
 
 {{id standard}}
 
-## The standard
+## استاندارد
 
 {{index "programming language", [interface, design], [DOM, interface]}}
 
-Using cryptic numeric codes to represent node types is not a very
-JavaScript-like thing to do. Later in this chapter, we'll see that
-other parts of the DOM interface also feel cumbersome and alien.
-The reason for this is that the DOM wasn't designed for just
-JavaScript. Rather, it tries to be a language-neutral interface
-that can be used in other systems as well—not just for HTML but also
-for ((XML)), which is a generic ((data format)) with an HTML-like
-syntax.
+استفاده از کدهای عددی رمزگونه برای نمایش نوع گره‌ها چیزی نیست که در جاوااسکریپت
+معمول باشد. در ادامه فصل می بینیم که دیگر بخش‌های رابط DOM نیز حسی نامانوس ایجاد
+می کنند. دلیل آن این است که DOM فقط برای جاوااسکریپت طراحی نشده است. بلکه تلاش
+شده که رابط آن نسبت به زبان‌ها بی طرف باشد که بتوان از آن در دیگر سیستم‌ها به
+خوبی استفاده شود – نه فقط در HTML بلکه همچنین برای XML که فرمتی عمومی برای داده‌ها است
+و گرامری شبیه به HTML دارد.
 
 {{index consistency, integration}}
 
-This is unfortunate. Standards are often useful. But in this case, the
-advantage (cross-language consistency) isn't all that compelling.
-Having an interface that is properly integrated with the language you
-are using will save you more time than having a familiar interface
-across languages.
+خوب این زیاد مطلوب نیست. استانداردها اغلب مفید هستند. اما در این مورد خاص، مزیت آن
+(سازگاری فرا زبانی) آن قدرها قانع کننده نیست. داشتن رابطی که به خوبی با زبانی
+که استفاده می کنید یکپارچه شود، زمان زیادی برای شما صرفه جویی می کند تا اینکه یک
+رابط عمومی برای همه‌ی زبان‌ها داشته باشیم.
 
 {{index "array-like object", "NodeList type"}}
 
-As an example of this poor integration, consider the `childNodes`
-property that element nodes in the DOM have. This property holds an
-array-like object, with a `length` property and properties labeled by
-numbers to access the child nodes. But it is an instance of the
-`NodeList` type, not a real array, so it does not have methods such as
-`slice` and `map`.
+یک نمونه از این یکپارچگی ضعیف، خاصیت `childNodes` است که گره‌های عنصر در DOM،
+حاوی آن می‌باشند. این خاصیت یک شیء آرایه‌طور را نگهداری می کند که خاصیتی به نام
+`length` دارد و همچنین خاصیت‌هایی دارد که توسط اعداد برچسب‌گذاری شده اند تا بتوان به
+گره‌های فرزند دسترسی داشت. اما این یک نمونه از نوع `NodeList` است نه یک آرایه‌ی
+واقعی بنابراین متدهای آرایه مثل `slice` و `map` را ندارد.
 
 {{index [interface, design], [DOM, construction], "side effect"}}
 
-Then there are issues that are simply poor design. For example, there
-is no way to create a new node and immediately add children or
-((attribute))s to it. Instead, you have to first create it and then add
-the children and attributes one by one, using side effects. Code that
-interacts heavily with the DOM tends to get long, repetitive, and
-ugly.
+همچنین مشکلاتی وجود دارد که ناشی از طراحی ضعیف است. به عنوان مثال، راهی برای
+ایجاد یک گره جدید به همراه گره‌های فرزند و خصوصیت‌ها در یک گام وجود ندارد. بلکه
+باید ابتدا گره را ایجاد کنید، بعد فرزندان و خصوصیت‌ها را یکی پس از دیگری به
+وسیله اثرات جانبی بسازید. کدهایی که با DOM تعامل زیادی برقرار می‌کنند، معمولا
+طولانی، تکراری و بدریخت هستند.
 
 {{index library}}
 
-But these flaws aren't fatal. Since JavaScript allows us to create our
-own ((abstraction))s, it is possible to design improved ways to
-express the operations you are performing. Many libraries intended for
-browser programming come with such tools.
+اما این ایرادات، مشکلاتی مهلک محسوب نمی شوند. چون جاوااسکریپت این امکان را به
+ما می دهد که تجریدهای خودمان را بنویسیم، می توان راه‌های بهتری را برای انجام
+عملیات برنامه‌تان طراحی کنید. خیلی از کتاب‌خانه‌هایی که برای برنامه‌نویسی مرتبط با
+مرورگر ایجاد شده اند، این ابزار را فراهم می کنند.
 
-## Moving through the tree
+
+## حرکت در درخت
 
 {{index pointer}}
 
-DOM nodes contain a wealth of ((link))s to other nearby nodes. The
-following diagram illustrates these:
+گره‌های DOM حاوی پیوندهای زیادی به دیگر گره‌های نزدیک می‌باشند. نمودار زیر این موضوع را به تصویر
+می کشد:
 
 {{figure {url: "img/html-links.svg", alt: "Links between DOM nodes",width: "6cm"}}}
 
 {{index "child node", "parentNode property", "childNodes property"}}
 
-Although the diagram shows only one link of each type, every node has
-a `parentNode` property that points to the node it is part of, if any.
-Likewise, every element node (node type 1) has a `childNodes` property
-that points to an ((array-like object)) holding its children.
+اگرچه این نمودار فقط یک پیوند برای هر نوع نشان می دهد، اما هر گره دارای یک خاصیت به
+نام `parentNode` است که به گره‌هایی که بخشی از آن است اشاره می کند. به همین صورت، هر
+گره‌ی عنصر (گره نوع ‍‍1) دارای یک خاصیت `childNodes` است که به یک شیء آرایه‌طور
+اشاره می کند که حاوی فرزندان آن گره می باشد.
 
 {{index "firstChild property", "lastChild property", "previousSibling property", "nextSibling property"}}
 
-In theory, you could move anywhere in the tree using just these parent
-and child links. But JavaScript also gives you access to a number of
-additional convenience links. The `firstChild` and `lastChild`
-properties point to the first and last child elements or have the
-value `null` for nodes without children. Similarly, `previousSibling`
-and `nextSibling` point to adjacent nodes, which are nodes with the
-same parent that appear immediately before or after the node itself.
-For a first child, `previousSibling` will be null, and for a last
-child, `nextSibling` will be null.
+در تئوری، می توانید با استفاده از پیوندهای والد و فرزند، به هر جای درخت حرکت کنید.
+اما جاوااسکریپت پیوندهای مناسب دیگری را در اختیار شما قرار می دهد. خاصیت‌های
+`firstChild` و `lastChild` به اولین و آخرین عنصرهای فرزند اشاره می کنند یا مقدار
+`null` را در صورتی که فرزندی نداشته باشد خواهند داشت. به طور مشابه،
+`previousSibling` و `nextSibling` به گره‌های همجوار اشاره می کنند که گره‌هایی هستند
+که تحت والد مشترکی قرار دارند و درست قبل یا بعد از گره‌ی مورد نظر قرار گرفته اند.
+برای اولین فرزند، `previousSibling` برابر با￼ `null` خواهد بود و برای فرزند آخر،
+`nextSibling` برابر `null` خواهد بود.
 
 {{index "children property", "text node", element}}
 
-There's also the `children` property, which is like `childNodes` but
-contains only element (type 1) children, not other types of
-child nodes. This can be useful when you aren't interested in text
-nodes.
+همچنین خاصیتی به نام `children` وجود دارد که شبیه به `childeNodes` است با این
+تفاوت که فقط فرزندان نوع عنصر (نوع 1) را شامل می شود نه دیگر انواع گره فرزند.
+این خاصیت می تواند در زمانی که به گره های متنی نیازی ندارید استفاده شود.
 
 {{index "talksAbout function", recursion, [nesting, "of objects"]}}
 
-When dealing with a nested data structure like this one, recursive
-functions are often useful. The following function scans a document
-for ((text node))s containing a given string and returns `true` when
-it has found one:
+وقتی با یک ساختار داده‌ی تودرتو مثل این ساختار کار می کنید، توابع بازگشتی اغلب
+مفید هستند. تابع مثال زیر یک سند را برای یافتن گره‌های متنی جستجو می کند که دارای
+یک رشته‌ی خاص باشند و در صورت پیدا کردن آن مقدار `true` را برمی گرداند.
 
 {{id talksAbout}}
 
@@ -238,36 +218,33 @@ console.log(talksAbout(document.body, "book"));
 
 {{index "childNodes property", "array-like object", "Array.from function"}}
 
-Because `childNodes` is not a real array, we cannot loop over it with
-`for`/`of` and have to run over the index range using a regular `for`
-loop or use `Array.from`.
+چون `childNodes` یک آرایه‌ی واقعی نیست نمی توان برای پیمایش آن از
+<bdo>`for`/`of`</bdo> استفاده کرد بلکه باید یا از یک حلقه‌ی معولی `for` بهره برد یا از <bdo>`Array.from`</bdo> استفاده نمود.
 
 {{index "nodeValue property"}}
 
-The `nodeValue` property of a text node holds the string of text that
-it represents.
+خاصیت `nodeValue` یک گره‌ی متنی، حاوی رشته‌ی متنی است که گره نشان می دهد.
 
-## Finding elements
+## پیدا کردن عناصر
 
 {{index [DOM, querying], "body property", "hard-coding", [whitespace, "in HTML"]}}
 
-Navigating these ((link))s among parents, children, and siblings is
-often useful. But if we want to find a specific node in the document,
-reaching it by starting at `document.body` and following a fixed path
-of properties is a bad idea. Doing so bakes assumptions into our
-program about the precise structure of the document—a structure you
-might want to change later. Another complicating factor is that text
-nodes are created even for the whitespace between nodes. The
-example document's `<body>` tag does not have just three children (`<h1>`
-and two `<p>` elements) but actually has seven: those three, plus the
-spaces before, after, and between them.
+حرکت در طول پیوندها به گره‌های والد، فرزندان و گره‌های همجوار اغلب مفید است. اما
+اگر بخواهیم یک گره‌ی خاص را در یک سند پیدا کنیم، شروع از
+<bdo>`document.body`</bdo> و پیمایش یک مسیر ثابت از خاصیت‌ها برای یافتن گره،
+ایده‌ی خوبی نیست. برای این کار نیاز است تا فرض‌هایی درباره‌ی یک ساختار دقیق از
+سند داشته باشیم – ساختاری که احتمالا قرار است آن را تغییر دهید. یکی دیگر از
+فاکتورهایی که کار را پیچیده می کند این است که گره‌های متنی برای فضاهای خالی بین
+گره‌ها هم ایجاد می شوند. مثلا در برچسب <bdo>`<body>`</bdo> سند، فقط سه فرزند
+ندارد (<bdo>`<h1>`</bdo> و دو <bdo>`<p>`</bdo> ) بلکه در واقع دارای هفت فرزند
+می‌باشد. آن سه عنصر به همراه فضاهای خالی قبل، بعد و بین‌شان.
 
 {{index "search problem", "href attribute", "getElementsByTagName method"}}
 
-So if we want to get the `href` attribute of the link in that
-document, we don't want to say something like "Get the second child of
-the sixth child of the document body". It'd be better if we could say
-"Get the first link in the document". And we can.
+بنابراین اگر بخواهیم خصوصیت `href` پیوند موجود در سند را به دست بیاوریم، نمی
+خواهیم دستوری شبیه به ” فرزند دوم ششمین فرزند body سند را به دست بیاور” داشته
+باشیم. بهتر می بود اگر می توانستیم دستوری شبیه به “اولین لینکی که در سند آمده است
+را بگیر” داشته باشیم. و می توانیم این کار را بکنیم.
 
 ```{sandbox: "homepage"}
 let link = document.body.getElementsByTagName("a")[0];
@@ -276,15 +253,14 @@ console.log(link.href);
 
 {{index "child node"}}
 
-All element nodes have a `getElementsByTagName` method, which collects
-all elements with the given tag name that are descendants (direct or
-indirect children) of that node and returns them as an ((array-like
-object)).
+تمامی گره‌های عنصر، دارای متدی به نام `getElementsByTagName` هستند که تمامی عناصری
+که برچسب داده شده را دارند و زیرمجموعه‌ی آن گره محسوب می شوند (فرزند مستقیم و
+غیر مستقیم) را جمع آوری می کند و￼ به صورت یک شیء آرایه‌طور برمی گرداند.
 
 {{index "id attribute", "getElementById method"}}
 
-To find a specific _single_ node, you can give it an `id` attribute
-and use `document.getElementById` instead.
+برای یافتن یک گره‌ی خاص _واحد_، می توانید به آن یک خصوصیت `id` اختصاص دهید و از
+<bdo>`document.getElementById`</bdo> استفاده کنید.
 
 ```{lang: "text/html"}
 <p>My ostrich Gertrude:</p>
@@ -298,10 +274,9 @@ and use `document.getElementById` instead.
 
 {{index "getElementsByClassName method", "class attribute"}}
 
-A third, similar method is `getElementsByClassName`, which, like
-`getElementsByTagName`, searches through the contents of an element
-node and retrieves all elements that have the given string in their
-`class` attribute.
+سومین متد که کاری مشابه انجام می دهد `getElementsByClassName` است که شبیه به
+`getElementsByTagName` عمل می کند و در محتوای یک گره‌ی عنصر به جستجو می پردازد و
+تمامی عناصری که رشته‌ی داده شده را در خصوصیت `class` شان دارند برمی گرداند.
 
 ## Changing the document
 
