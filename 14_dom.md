@@ -278,17 +278,17 @@ console.log(link.href);
 `getElementsByTagName` عمل می کند و در محتوای یک گره‌ی عنصر به جستجو می پردازد و
 تمامی عناصری که رشته‌ی داده شده را در خصوصیت `class` شان دارند برمی گرداند.
 
-## Changing the document
+## ایجاد تغییر در سند
 
 {{index "side effect", "removeChild method", "appendChild method", "insertBefore method", [DOM, construction], [DOM, modification]}}
 
-Almost everything about the DOM data structure can be changed. The
-shape of the document tree can be modified by changing parent-child
-relationships. Nodes have a `remove` method to remove them from their
-current parent node. To add a child node to an element node, we can
-use `appendChild`, which puts it at the end of the list of children,
-or `insertBefore`, which inserts the node given as the first argument
-before the node given as the second argument.
+تقریبا تمامی قسمت‌های ساختار داده‌ی DOM را می‌توان تغییر داد. می توان شکل درخت سند را
+با ایجاد تغییر در روابط والد-فرزندی دستکاری کرد. گره‌ها دارای متدی به نام `remove`
+می‌باشند که می توان از آن برای حذف گره از والد کنونی‌اش استفاده نمود. برای افزودن یک
+گره‌ی فرزند به یک گره‌ی عنصر می‌توانیم از `appendChild` استفاده کنیم که باعث می شود
+آن گره به انتهای لیست فرزندان اضافه شود. یا از `insertBefore` استفاده کنیم که
+گره‌ای که به عنوان آرگومان اول آمده را قبل از گره‌ای که به عنوان آرگومان دوم
+آمده است وارد می کند.
 
 ```{lang: "text/html"}
 <p>One</p>
@@ -301,34 +301,32 @@ before the node given as the second argument.
 </script>
 ```
 
-A node can exist in the document in only one place. Thus, inserting
-paragraph _Three_ in front of paragraph _One_ will first remove it
-from the end of the document and then insert it at the front,
-resulting in _Three_/_One_/_Two_. All operations that insert a node
-somewhere will, as a ((side effect)), cause it to be removed from its
-current position (if it has one).
+یک گره فقط در یک موقعیت از سند می تواند موجودیت داشته باشد. بنابراین، قراردادن
+پاراگراف _3_ جلوی پاراگراف یک _1_ آن را از انتهای سند حذف می کند و بعد جلو
+پاراگراف _1_ قرار می دهد که نتیجه به این صورت می شود: <bdo>_3/2/1_</bdo>. تمامی
+عملیاتی که گره‌ای را در جایی قرار می دهد به عنوان یک اثر جانبی موجب می شوند که
+ابتدا آن گره از جایگاه فعلی‌اش حذف شود (اگر جایی بوده باشد).
 
 {{index "insertBefore method", "replaceChild method"}}
 
-The `replaceChild` method is used to replace a child node with another
-one. It takes as arguments two nodes: a new node and the node to be
-replaced. The replaced node must be a child of the element the method
-is called on. Note that both `replaceChild` and `insertBefore` expect
-the _new_ node as their first argument.
+متد `replaceChild` برای جایگزین کردن یک گره‌ی فرزند با گره‌ی فرزندی دیگر استفاده
+می شود. این متد دو گره به عنوان آرگومان دریافت می کند: گره‌ی جدید و گره‌ای که
+باید جایگزین شود. گره‌ی جایگزین شده باید فرزند عنصری باشد که متد روی آن
+فراخوانی شده است. توجه داشته باشید که هر دوی `replaceChild` و `insertBefore` به
+عنوان آرگومان اول گره‌ای _جدید_ دریافت می کنند.
 
-## Creating nodes
+## ایجاد گره‌ها
 
 {{index "alt attribute", "img (HTML tag)"}}
 
-Say we want to write a script that replaces all ((image))s (`<img>`
-tags) in the document with the text held in their `alt` attributes,
-which specifies an alternative textual representation of the image.
+فرض کنید می خواهیم اسکریپتی بنویسیم که تمامی عکس‌های موجود در سند (برچسب‌های
+<bdo>`<img>`</bdo>) را با نوشته‌ای که در خصوصیت `alt` آن قرار دارد جایگزین کند، نوشته‌ای که
+برای مشخص کردن یک نمایش متنی برای تصویر استفاده می شود.
 
 {{index "createTextNode method"}}
 
-This involves not only removing the images but adding a new text node
-to replace them. Text nodes are created with the
-`document.createTextNode` method.
+این کار هم شامل حذف عکس‌ها می شود و هم ایجاد یک گره‌ی متنی جهت جایگزینی عکس.
+گره‌های متنی توسط <bdo>`document.createTextNode`</bdo> ایجاد می شوند.
 
 ```{lang: "text/html"}
 <p>The <img src="img/cat.png" alt="Cat"> in the
@@ -352,24 +350,22 @@ to replace them. Text nodes are created with the
 
 {{index "text node"}}
 
-Given a string, `createTextNode` gives us a text node that we can
-insert into the document to make it show up on the screen.
+با دادن یک رشته، تابع `createTextNode` به ما یک گره‌ی متنی تحویل می دهد که می
+توانیم آن را در سند قرار داده تا در صفحه نمایش نشان داده شود.
 
 {{index "live data structure", "getElementsByTagName method", "childNodes property"}}
 
-The loop that goes over the images starts at the end of the list. This
-is necessary because the node list returned by a method like
-`getElementsByTagName` (or a property like `childNodes`) is _live_.
-That is, it is updated as the document changes. If we started from the
-front, removing the first image would cause the list to lose its first
-element so that the second time the loop repeats, where `i` is 1, it
-would stop because the length of the collection is now also 1.
+حلقه‌ای که عکس‌ها را پیمایش می کند از پایان لیست کارش را شروع می کند. این کار لازم است چرا
+که لیست گره‌ها که توسط متدی مثل `getElementsByTagName` برگردانده می شود ( یا خاصیتی
+مثل `childNodes`)، لیستی زنده است. به این معنا که با تغییر سند، لیست هم به‌روز می
+شود. اگر از ابتدا شروع می کردیم، حذف اولین عکس ممکن بود باعث شود لیست اولین
+عنصرش را از دست بدهد که در این صورت با تکرار حلقه در بار دوم ، زمانی که `i` برابر
+1 می شود، از کار می ایستاد زیرا طول مجموعه اکنون برابر 1 است.
 
 {{index "slice method"}}
 
-If you want a _solid_ collection of nodes, as opposed to a live one,
-you can convert the collection to a real array by calling
-`Array.from`.
+اگر یک مجموعه‌ی ثابت از گره‌ها را لازم دارید، به‌جای یک مجموعه‌ی زنده از آن ها،
+می توانید مجموعه را با فراخوانی <bdo>`Array.from`</bdo> به یک آرایه‌ی واقعی تبدیل کنید.
 
 ```
 let arrayish = {0: "one", 1: "two", length: 2};
@@ -380,17 +376,15 @@ console.log(array.map(s => s.toUpperCase()));
 
 {{index "createElement method"}}
 
-To create ((element)) nodes, you can use the `document.createElement`
-method. This method takes a tag name and returns a new empty node of
-the given type.
+برای ایجاد گره‌های عنصر، می توانید از متد <bdo>`document.createElement`</bdo> استفاده کنید.
+این متد یک نام برچسب گرفته و یک گره‌ی تهی از نوع داده شده را بر می گرداند.
 
 {{index "Popper, Karl", [DOM, construction], "elt function"}}
 
 {{id elt}}
 
-The following example defines a utility `elt`, which creates an
-element node and treats the rest of its arguments as children to that
-node. This function is then used to add an attribution to a quote.
+در مثال پیش رو یک تابع کاربردی به نام `elt` ایجاد می شود که یک گره‌ی عنصر را ایجاد
+کرده و دیگر آرگومان‌هایش را به عنوان فرزندان آن گره در نظر می گیرد. در ادامه از همین تابع برای افزودن یک خصوصیت به یک برچسب نقل قول استفاده می‌شود.
 
 ```{lang: "text/html"}
 <blockquote id="quote">
@@ -420,28 +414,27 @@ node. This function is then used to add an attribution to a quote.
 
 {{if book
 
-This is what the resulting document looks like:
+نتیجه به شکل زیر خواهد بود:
 
 {{figure {url: "img/blockquote.png", alt: "A blockquote with attribution",width: "8cm"}}}
 
 if}}
 
-## Attributes
+## خصوصیت‌ها
 
 {{index "href attribute", [DOM, attributes]}}
 
-Some element ((attribute))s, such as `href` for links, can be accessed
-through a property of the same name on the element's ((DOM))
-object. This is the case for most commonly used standard attributes.
+بعضی از خصوصیت‌های عناصر مثل `href` برای پیوندها را می توان به عنوان خاصیتی با همین
+نام روی شیء DOM عنصر، مورد دستیابی قرار داد. این برای بیشتر خصوصیت‌های استاندارد
+رایج، برقرار است.
 
 {{index "data attribute", "getAttribute method", "setAttribute method", attribute}}
 
-But HTML allows you to set any attribute you want on nodes. This can
-be useful because it allows you to store extra information in a
-document. If you make up your own attribute names, though, such
-attributes will not be present as properties on the element's node.
-Instead, you have to use the `getAttribute` and `setAttribute` methods
-to work with them.
+اما HTML این امکان را فراهم کرده است که هر خصوصیتی که بخواهید را به گره‌ها اضافه
+کنید. این امکان می‌تواند مفید باشد زیرا به شما اجازه می دهد اطلاعات بیشتری را در یک
+سند ذخیره کنید. با این وجود اگر نام خصوصیت‌های خودتان را بسازید، این خصوصیت‌ها به
+عنوان خاصیت شیء گره در دسترس نخواهند بود. برای کار با آن ها باید از متدهای
+`getAttribute` و `setAttribute` استفاده کنید.
 
 ```{lang: "text/html"}
 <p data-classified="secret">The launch code is 00000000.</p>
@@ -457,47 +450,45 @@ to work with them.
 </script>
 ```
 
-It is recommended to prefix the names of such made-up attributes with
-`data-` to ensure they do not conflict with any other attributes.
+توصیه شده که نام این گونه‌ خصوصیت‌های ساختگی را با پیشوند <bdo>`data-`</bdo> آغاز کنید تا
+مطمئن شوید که تداخلی با دیگر خصوصیت‌ها پیش نخواهد آمد.
 
 {{index "getAttribute method", "setAttribute method", "className property", "class attribute"}}
 
-There is a commonly used attribute, `class`, which is a ((keyword)) in
-the JavaScript language. For historical reasons—some old JavaScript
-implementations could not handle property names that matched
-keywords—the property used to access this attribute is called
-`className`. You can also access it under its real name, `"class"`, by
-using the `getAttribute` and `setAttribute` methods.
+خصوصیت `class` که یکی از خصوصیت‌های رایج است، یک کلیدواژه در جاوااسکریپت محسوب می
+شود. به دلایل تاریخی – بعضی از پیاده‌سازی‌های قدیمی جاوااسکریپت نمی توانستند
+نام‌های خاصیتی که با کلیدواژه‌ها مطابقت داشتند را مدیریت کنند – خاصیتی که برای
+دسترسی به این خصوصیت در نظر گرفته شده است `className` است. همچنین می توانید تحت
+نام واقعی خودش `"class"` نیز به وسیله‌ی متدهای `getAttribute` و `setAttribute` به آن
+دسترسی داشته باشید.
 
-## Layout
+## طرح‌بندی (layout)
 
 {{index layout, "block element", "inline element", "p (HTML tag)", "h1 (HTML tag)", "a (HTML tag)", "strong (HTML tag)"}}
 
-You may have noticed that different types of elements are laid out
-differently. Some, such as paragraphs (`<p>`) or headings (`<h1>`),
-take up the whole width of the document and are rendered on separate
-lines. These are called _block_ elements. Others, such as links
-(`<a>`) or the `<strong>` element, are rendered on the same line with
-their surrounding text. Such elements are called _inline_ elements.
+ممکن است متوجه شده باشید که انواع مختلف عنصرها به صورت متفاوتی طرح بندی می شوند.
+بعضی مانند پاراگراف ها (<bdo>`<p>`</bdo>) یا سرعنوان‌ها (`<h1>`)، تمامی عرض سند را اشغال کرده و
+هر کدام در خط جدیدی به نمایش در می‌آیند. این عناصر، عناصر بلاک نامیده می شوند. دیگر
+عناصر، مثل پیوندها (`<a>`) یا عنصر <bdo>`<strong>`</bdo> در همان خط کنار متن پیرامونشان نمایش
+داده می شوند. این عنصرها را عناصر درون خطی (inline) می نامند.
 
 {{index drawing}}
 
-For any given document, browsers are able to compute a layout, which
-gives each element a size and position based on its type and content.
-This layout is then used to actually draw the document.
+برای هر سند داده شده، مرورگرها می‌توانند با درنظر گرفتن موقعیت و اندازه‌ی هر
+عنصر، یک طرح را محاسبه کنند. این طرح بعد برای به تصویر کشیدن سند استفاده می
+شود.
 
 {{index "border (CSS)", "offsetWidth property", "offsetHeight property", "clientWidth property", "clientHeight property", dimensions}}
 
-The size and position of an element can be accessed from JavaScript.
-The `offsetWidth` and `offsetHeight` properties give you the space the
-element takes up in _((pixel))s_. A pixel is the basic unit of
-measurement in the browser. It traditionally corresponds to the
-smallest dot that the screen can draw, but on modern displays, which
-can draw _very_ small dots, that may no longer be the case, and a
-browser pixel may span multiple display dots.
+اندازه و موقعیت یک عنصر را می توان از طریق جاوااسکریپت به دست آورد. خاصیت‌های
+`offsetWidth` و `offsetHeight` فضایی که یک عنصر اشغال می کند را در واحد _پیکسل_ نشان می
+دهند. یک پیکسل واحد بنیادی اندازه‌گیری در مرورگر است. به طور سنتی این واحد به
+کوچکترین نقطه‌ای که صفحه‌نمایش می تواند به تصویر بکشد مرتبط است اما در مانیتورهای
+مدرن، که قادرند نقطه‌های _خیلی_ کوچک را به تصویر بکشند، دیگر موضوعیت￼ ندارد و یک
+پیکسل مرورگر ممکن است چند نقطه‌ را در صفحه نمایش پوشش دهد.
 
-Similarly, `clientWidth` and `clientHeight` give you the size of the
-space _inside_ the element, ignoring border width.
+به طور مشابه، `clientWidth` و `clientHeight` به شما اندازه‌ی فضای _درون_ یک عنصر
+را نشان می دهد و عرض خط مرزی (border) در نظر گرفته نمی شود.
 
 ```{lang: "text/html"}
 <p style="border: 3px solid red">
@@ -513,7 +504,7 @@ space _inside_ the element, ignoring border width.
 
 {{if book
 
-Giving a paragraph a border causes a rectangle to be drawn around it.
+اگر به یک پاراگراف یک خط مرزی اضافه کنیم باعث می شود که یک مستطیل دور آن کشیده شود.
 
 {{figure {url: "img/boxed-in.png", alt: "A paragraph with a border",width: "8cm"}}}
 
@@ -523,34 +514,30 @@ if}}
 
 {{id boundingRect}}
 
-The most effective way to find the precise position of an element on
-the screen is the `getBoundingClientRect` method. It returns an object
-with `top`, `bottom`, `left`, and `right` properties, indicating the
-pixel positions of the sides of the element relative to the top left
-of the screen. If you want them relative to the whole document, you
-must add the current scroll position, which you can find in the
-`pageXOffset` and `pageYOffset` bindings.
+موثرترین روش برای بدست آوردن موقعیت دقیق یک عنصر روی صفحه‌ی نمایش، استفاده از متد
+`getBoundingClientRect` است. این متد یک شیء بر می گرداند که شامل خاصیت‌های `top`،
+`bottom`، `left` و `right` می باشد که مشخص می کنند موقعیت هر ضلع یک عنصر به نسبت بالا
+و چپ صفحه‌نمایش چند پیکسل است. اگر این اعداد را نسبت به کل سند لازم دارید، بایستی
+موقعیت اسکرول فعلی را به آن اضافه کنید. این موقعیت را می می‌توان در متغیرهای
+`pageXOffset` و `pageYOffset` بدست آورد.
 
 {{index "offsetHeight property", "getBoundingClientRect method", drawing, laziness, performance, efficiency}}
 
-Laying out a document can be quite a lot of work. In the interest of
-speed, browser engines do not immediately re-layout a document every
-time you change it but wait as long as they can. When a JavaScript
-program that changed the document finishes running, the browser will
-have to compute a new layout to draw the changed document to
-the screen. When a program _asks_ for the position or size of
-something by reading properties such as `offsetHeight` or calling
-`getBoundingClientRect`, providing correct information also requires
-computing a ((layout)).
+طرح بندی یک سند می تواند کار زیادی ببرد. برای اعمال سرعت بیشتر، موتور مروگر با
+هر بار تغییر در سند آن را دوباره طرح بندی نمی کند بلکه تا زمانی که بتواند آن
+را به تاخیر می اندازد .زمانی که برنامه‌ی جاوااسکریپت که سند را تغییر داده است به
+پایان اجرایش برسد، مرورگر بایستی یک طرح جدید محاسبه کند تا بتواند سند
+تغییریافته را به تصویر بکشد. زمانی که یک برنامه موقعیت یا اندازه‌ی چیزی را با
+خواندن خاصیت‌هایی مثل `offsetHeight` یا فراخوانی `getBoundingClientRect` درخواست می
+کند، فراهم ساختن اطلاعات صحیح نیز نیاز به محاسبه‌ی طرح دارد.
 
 {{index "side effect", optimization, benchmark}}
 
-A program that repeatedly alternates between reading DOM layout
-information and changing the DOM forces a lot of layout computations
-to happen and will consequently run very slowly. The following code is
-an example of this. It contains two different programs that build up a
-line of _X_ characters 2,000 pixels wide and measures the time each
-one takes.
+برنامه‌ای که زیاد و به تکرار به خواندن اطلاعات طرح DOM و تغییر DOM می پردازد باعث
+می شود که محاسبات طرح‌بندی زیاد اتفاق بیفتد که در نتیجه این برنامه به کندی اجرا
+خواهد شد. کد پیش رو مثالی از این گونه برنامه است. این مثال از دو برنامه تشکیل
+یافته است که خطی از کاراکترهای _X_ با پهنای <bdo>2,000</bdo> پیکسل می سازند و زمانی که هرکدام
+طول می کشد را محاسبه می کنند.
 
 ```{lang: "text/html", test: nonumbers}
 <p><span id="one"></span></p>
