@@ -568,21 +568,21 @@ if}}
 </script>
 ```
 
-## Styling
+## سبک دهی
 
 {{index "block element", "inline element", style, "strong (HTML tag)", "a (HTML tag)", underline}}
 
-We have seen that different HTML elements are drawn differently. Some
-are displayed as blocks, others inline. Some add styling—`<strong>`
-makes its content ((bold)), and `<a>` makes it blue and underlines it.
+تاکنون دیده‌ایم که عناصر مختلف HTML به شکل متفاوتی به تصویر کشیده می‌شوند. بعضی
+به عنوان بلاک و بعضی درون‌خطی (inline) نشان داده می شوند. بعضی سبک بصری اضافه می کنند –
+`<strong>` محتوایش را توپر می کند و `<a>` محتوایش را آبی رنگ و زیر آن خط می
+اندازد.
 
 {{index "img (HTML tag)", "default behavior", "style attribute"}}
 
-The way an `<img>` tag shows an image or an `<a>` tag causes a link to
-be followed when it is clicked is strongly tied to the element type.
-But we can change the styling associated with an element, such
-as the text color or underline. Here is an example that uses
-the `style` property:
+شیوه‌ای که یک برچسب `<img>` تصویر را نمایش می دهد یا یک برچسب `<a>` متنی را به
+یک لینک تبدیل می‌کند، به طور کامل به نوع آن عنصر وابسته است. اما سبک بصری‌ای که به
+صورت پیش‌فرض به یک عنصر اضافه می شود، مثل رنگ متن یا داشتن زیرخط، را می توانیم
+تغییر دهیم. در اینجا مثالی که از خصوصیت `style` استفاده می کند را می بینیم.
 
 ```{lang: "text/html"}
 <p><a href=".">Normal link</a></p>
@@ -591,7 +591,7 @@ the `style` property:
 
 {{if book
 
-The second link will be green instead of the default link color.
+لینک دوم به جای این که با رنگ پیش‌فرض نمایش داده شود سبز خواهد شد.
 
 {{figure {url: "img/colored-links.png", alt: "A normal and a green link",width: "2.2cm"}}}
 
@@ -599,16 +599,15 @@ if}}
 
 {{index "border (CSS)", "color (CSS)", CSS, "colon character"}}
 
-A style attribute may contain one or more _((declaration))s_, which
-are a property (such as `color`) followed by a colon and a value (such
-as `green`). When there is more than one declaration, they must be
-separated by ((semicolon))s, as in `"color: red; border: none"`.
+یک خصوصیت style می تواند حاوی یک یا چند _اعلان_ باشد که شامل یک خاصیت (مثل
+`color`) که به همراه دونقطه و مقدارش می‌آید. زمانی که بیش از یک اعلان وجود دارد،
+باید هر اعلان با یک نقطه‌ویرگول جدا شود مثل <bdo>`"color: red; border: none"`</bdo>.
 
 {{index "display (CSS)", layout}}
 
-A lot of aspects of the document can be influenced by
-styling. For example, the `display` property controls whether an
-element is displayed as a block or an inline element.
+خیلی از جنبه‌های مربوط به سند وجود دارند که می توانند توسط سبک‌دهی تاثیر بپذیرند.
+به عنوان مثال خاصیت `display` برای کنترل نحوه‌ی نمایش یک عنصر به صورت درون‌خطی یا
+بلاک استفاده می شود.
 
 ```{lang: "text/html"}
 This text is displayed <strong>inline</strong>,
@@ -618,12 +617,11 @@ This text is displayed <strong>inline</strong>,
 
 {{index "hidden element"}}
 
-The `block` tag will end up on its own line since ((block element))s
-are not displayed inline with the text around them. The last tag is
-not displayed at all—`display: none` prevents an element from showing
-up on the screen. This is a way to hide elements. It is often
-preferable to removing them from the document entirely because it
-makes it easy to reveal them again later.
+برچسب `block` در خط خودش به پایان می رسد به دلیل اینکه عناصر بلاکی به صورت درون
+خطی کنار متن پیرامونشان نشان داده نمی شوند. برچسب آخر اصلا نمایش
+داده نمی شود – <bdo>`display: none`</bdo> مانع از نمایش یک عنصر در صفحه‌ی نمایش می شود. این روشی
+برای مخفی کردن عناصر است. معمولا ترجیح داده می شود بجای حذف کامل یک عنصر از سند، از این روش استفاده شود
+به دلیل این که بازگرداندن آن در آینده در این روش آسان تر است.
 
 {{if book
 
@@ -633,11 +631,10 @@ if}}
 
 {{index "color (CSS)", "style attribute"}}
 
-JavaScript code can directly manipulate the style of an element
-through the element's `style` property. This property holds an object
-that has properties for all possible style properties. The values of
-these properties are strings, which we can write to in order to change
-a particular aspect of the element's style.
+کدهای جاوااسکریپت می توانند مستقیما سبک‌دهی یک عنصر را با استفاده از خاصیت `style`
+دستکاری کنند. این￼ خاصیت شیءای را نگهداری می کند که خاصیت‌هایی برای همه‌ی ویژگی‌های
+سبک‌دهی دارد. مقدار این خاصیت‌ها از نوع رشته است که می توانیم برای تغییر یک جنبه‌ی
+خاص از سبک بصری عنصر مورد نظر آن را بنویسیم.
 
 ```{lang: "text/html"}
 <p id="para" style="color: purple">
@@ -653,22 +650,22 @@ a particular aspect of the element's style.
 
 {{index "camel case", capitalization, "hyphen character", "font-family (CSS)"}}
 
-Some style property names contain hyphens, such as `font-family`.
-Because such property names are awkward to work with in JavaScript
-(you'd have to say `style["font-family"]`), the property names in the
-`style` object for such properties have their hyphens removed and the
-letters after them capitalized (`style.fontFamily`).
+نام بعضی از خاصیت‌های سبک‌دهی حاوی کاراکتر <bdo>خط پیوند (-)</bdo> است مانند <bdo>`font-family`</bdo>. به دلیل
+این که کار با این نوع نام ها در جاوااسکریپت کمی دشوار است (برای دسترسی باید
+چیزی مثل <bdo>`style["font-family"]`</bdo> داشته باشید)، نام خاصیت‌های این گونه نام‌ها در شیء
+`style` آن خط پیوند را حذف کرده و حرف بعد از آن را با حروف بزرگ می نویسند <bdo>(`style.fontFamily`)</bdo>.
 
-## Cascading styles
+## سبک‌های آبشاری
 
 {{index "rule (CSS)", "style (HTML tag)"}}
 
 {{indexsee "Cascading Style Sheets", CSS}}
 {{indexsee "style sheet", CSS}}
 
-The styling system for HTML is called ((CSS)), for _Cascading Style
-Sheets_. A _style sheet_ is a set of rules for how to style
-elements in a document. It can be given inside a `<style>` tag.
+سیستم سبک‌دهی بصری برای HTML را CSS می نامند که مخفف برگه‌های سبک آبشاری یا سلسله‌مراتبی
+(cascading style sheets) است. یک برگه‌ی سبک به مجموعه‌ای از دستورات گفته می شود که
+برای سبک‌دهی ظاهری به عناصر یک سند استفاده می شوند. می توان آن را درون یک جفت
+برچسب <bdo>`<style>`</bdo> قرار داد.
 
 ```{lang: "text/html"}
 <style>
@@ -682,27 +679,26 @@ elements in a document. It can be given inside a `<style>` tag.
 
 {{index "rule (CSS)", "font-weight (CSS)", overlay}}
 
-The _((cascading))_ in the name refers to the fact that multiple such
-rules are combined to produce the final style for an element. In the
-example, the default styling for `<strong>` tags, which gives them
-`font-weight: bold`, is overlaid by the rule in the `<style>` tag,
-which adds `font-style` and `color`.
+معنای _آبشاری_ این است که قوانینی با سلسله‌مراتب با هم ترکیب می شوند تا سبک نهایی را برای یک
+عنصر تولید کنند. در مثال بالا، سبک پیش‌فرض برای برچسب‌های <bdo>`<strong>`</bdo>، که در آن
+<bdo>`font-weight: bold`</bdo> تعریف شده بود، توسط دستوری دیگر که در برچسب `<style>` آمده است
+تغییر یافته و <bdo>`font-style`</bdo> و `color` به آن اضافه شده است.
 
 {{index "style (HTML tag)", "style attribute"}}
 
-When multiple rules define a value for the same property, the most
-recently read rule gets a higher ((precedence)) and wins. So if the
-rule in the `<style>` tag included `font-weight: normal`,
-contradicting the default `font-weight` rule, the text would be
-normal, _not_ bold. Styles in a `style` attribute applied directly to
-the node have the highest precedence and always win.
+وقتی چندین دستور یک مقدار را برای یک خاصیت واحد تعریف می کنند، آخرین دستوری که
+خوانده شود دارای حق تقدم بالاتری خواهد بود و اعمال می شود. بنابراین اگر دستوری
+که در برچسب <bdo>`<style>`</bdo> آمده است <bdo>`font-weight: normal`</bdo> را داشته باشد، دستور پیش‌فرض
+<bdo>`font-weight`</bdo> در نظر گرفته نمی شود و متن به شکل نرمال نمایش داده می شود نه به صورت
+توپر. دستوراتی که در خصوصیت `style` به صورت مستقیم به یک گره اعمال می شوند دارای
+بالاترین حق تقدم هستند و همیشه در سلسله‌مراتب برنده می شوند.
 
 {{index uniqueness, "class attribute", "id attribute"}}
 
-It is possible to target things other than ((tag)) names in CSS rules.
-A rule for `.abc` applies to all elements with `"abc"` in their `class`
-attribute. A rule for `#xyz` applies to the element with an `id`
-attribute of `"xyz"` (which should be unique within the document).
+می توان چیزهایی بجز نام برچسب‌ها را در دستورات CSS مورد هدف قرار داد. دستوری به
+شکل <bdo>`.abc`</bdo>، به همه‌ی عناصری که خصوصیت classشان دارای مقدار `"abc"` است اعمال می شود.
+دستوری به شکل <bdo>`#xyz`</bdo> به عنصری اعمال می شود که خصوصیت `id` آن برابر `"xyz"` باشد (که
+باید در سند منحصر به فرد باشد).
 
 ```{lang: "text/css"}
 .subtle {
@@ -721,41 +717,40 @@ p#main.a.b {
 
 {{index "rule (CSS)"}}
 
-The ((precedence)) rule favoring the most recently defined rule
-applies only when the rules have the same _((specificity))_. A rule's
-specificity is a measure of how precisely it describes matching
-elements, determined by the number and kind (tag, class, or ID) of
-element aspects it requires. For example, a rule that targets `p.a` is
-more specific than rules that target `p` or just `.a` and would thus
-take precedence over them.
+قاعده‌ی حق تقدمی که موجب می‌شد دستوری که آخر تعریف شده بود اعمال شود، زمانی موثر
+است که دستورات دارای specificity (درجه‌ی صراحت) یکسانی باشند. درجه‌ی صراحت یک
+دستور، معیاری از میزان دقتی است که آن دستور، عناصر هدفش را توصیف می کند که توسط
+عدد و نوع (برچسب، class و ID) عناصر مورد هدف تعیین می شود. به عنوان مثال، دستوری
+که <bdo>`p.a`</bdo> را هدف قرار می دهد دارای صراحت بیشتری از دستوراتی است که `p` یا فقط <bdo>`.a`</bdo> را
+هدف قرار می دهند و بنابراین حق تقدم بیشتری خواهد داشت.
 
 {{index "direct child node"}}
 
-The notation `p > a {…}` applies the given styles to all `<a>` tags
-that are direct children of `<p>` tags. Similarly, `p a {…}` applies
-to all `<a>` tags inside `<p>` tags, whether they are direct or
-indirect children.
+دستوری به شکل <bdo>`p > a {…}`</bdo> سبک‌های تعریف شده را به همه‌ی برچسب‌های `<a>` که فرزند مستقیم
+برچسب‌های `<p>` محسوب می شوند اعمال می کند. به طور مشابه، <bdo>`p a {…}`</bdo> به همه‌ی
+برچسب‌های `<a>` که درون برچسب‌های `<p>` باشند اعمال می شود فارغ از اینکه فرزند مستقیم
+یا غیر مستقیم باشند.
 
-## Query selectors
+## گزینشگرهای پرس و جو
 
 {{index complexity, CSS}}
 
-We won't be using style sheets all that much in this book.
-Understanding them is helpful when programming in the browser, but
-they are complicated enough to warrant a separate book.
+ما در این کتاب زیاد از برگه‌های سبک‌دهی استفاده نخواهیم کرد. درک آن ها برای
+برنامه‌نویسی در مرورگر مفید است اما دامنه‌ی بحث در باره‌ی سبک‌دهی به اندازه‌ای
+گسترده می‌باشد که نیاز به کتاب مجزایی داشته باشند.
 
 {{index "domain-specific language", [DOM, querying]}}
 
-The main reason I introduced _((selector))_ syntax—the notation used
-in style sheets to determine which elements a set of styles apply
-to—is that we can use this same mini-language as an effective way to
-find DOM elements.
+علت اینکه قواعد گزینشگر (selector) – منظور شیوه‌ی نشان‌کذاری
+استفاده شده در برگه‌های سبک‌دهی برای تعیین عناصر هدف برای اعمال سبک‌ها می‌باشد – را معرفی کردم این
+است که می توانیم از این زبان نصف و نیمه به عنوای روشی موثر برای پیدا کردن عناصر
+DOM استفاده کنیم.
 
 {{index "querySelectorAll method", "NodeList type"}}
 
-The `querySelectorAll` method, which is defined both on the `document`
-object and on element nodes, takes a selector string and returns a
-`NodeList` containing all the elements that it matches.
+متد `querySelectorAll` که هم در شیء `document` موجود است و هم روی گره‌های عنصر،
+یک رشته‌ی گزینشگر دریافت می کند و یک `NodeList‍` که حاوی تمامی عناصر تطبیق
+خورده است را برمی گرداند.
 
 ```{lang: "text/html"}
 <p>And if you go chasing
@@ -782,17 +777,17 @@ object and on element nodes, takes a selector string and returns a
 
 {{index "live data structure"}}
 
-Unlike methods such as `getElementsByTagName`, the object returned by
-`querySelectorAll` is _not_ live. It won't change when you change the
-document. It is still not a real array, though, so you still need to
-call `Array.from` if you want to treat it like one.
+برخلاف متدهایی مثل `getElementsByTagName`، شیءای که توسط `querySelectorAll`
+برگردانده می شود زنده یا پویا نیست. با تغییر سند، این شیء به روز نمی شود و هنوز یک
+آرایه‌ی واقعی نیست و اگر لازم دارید تا از ویژگی‌های آرایه‌ها بهره ببرید باید
+<bdo>`Array.from`</bdo> را روی آن‌ها فراخوانی کنید.
 
 {{index "querySelector method"}}
 
-The `querySelector` method (without the `All` part) works in a similar
-way. This one is useful if you want a specific, single element. It
-will return only the first matching element or null when no element
-matches.
+متد `querySelector` (بدون All) به شکل مشابهی عمل می کند. این متد برای زمانی که قصد
+دارید یک عنصر مشخص را هدف قرار دهید مناسب است. این متد فقط اولین عنصری که مطابق
+گزینشگر بود را برمی گرداند و در صورت پیدا نکردن هیچ عنصری مقدار null را تولید می
+کند.
 
 {{id animation}}
 
