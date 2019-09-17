@@ -791,27 +791,25 @@ DOM استفاده کنیم.
 
 {{id animation}}
 
-## Positioning and animating
+## موقعیت دهی و متحرک‌سازی
 
 {{index "position (CSS)", "relative positioning", "top (CSS)", "left (CSS)", "absolute positioning"}}
 
-The `position` style property influences layout in a powerful way. By
-default it has a value of `static`, meaning the element sits in its
-normal place in the document. When it is set to `relative`, the
-element still takes up space in the document, but now the `top` and
-`left` style properties can be used to move it relative to that normal
-place. When `position` is set to `absolute`, the element is removed
-from the normal document flow—that is, it no longer takes up space and
-may overlap with other elements. Also, its `top` and `left` properties
-can be used to absolutely position it relative to the top-left corner
-of the nearest enclosing element whose `position` property isn't
-`static`, or relative to the document if no such enclosing element
-exists.
+خاصیت `position` در سبک‌دهی، تاثیر مهمی در در طرح‌بندی صفحه‌ می‌گذارد. به صورت
+پیش فرض مقدار آن برابر `static` است که یعنی عنصر مورد نظر در موقعیت نرمال خودش در
+سند قرار می گیرد. زمانی که این مقدار به `relative` تغییر می یابد، عنصر همچنان
+فضایی در سند اشغال می کند اما اکنون می توان از خاصیت‌های `top` و `left` برای تغییر
+مکان آن نسبت به جایگاه نرمالش استفاده کرد. زمانی که `position` برابر `absolute`
+قرار گیرد، عنصر مورد نظر از جریان چیدمان صفحه خارج می شود – به این معنا که دیگر
+فضایی را اشغال نمی کند و ممکن است روی دیگر عناصر بیفتد. همچنین در این حالت
+خاصیت‌های `top` و `left` را می توان برای موقعیت دهی مطلق عنصر نسبت به گوشه‌ی بالا و چپ
+نزدیک ترین عنصر والدش (که دارای مقدار `position` غیر از static است) استفاده کرد یا
+در صورت نبود آن، نسبت به کل سند موقعیت دهی می شود.
 
 {{index [animation, "spinning cat"]}}
 
-We can use this to create an animation. The following document
-displays a picture of a cat that moves around in an ((ellipse)):
+می توانیم از این خاصیت برای ایجاد یک پویانمایی استفاده کنیم. صفحه‌ی پیش رو تصویری
+از یک گربه را نشان می دهد که به دور دایره‌ای حرکت می کند.
 
 ```{lang: "text/html", startCode: true}
 <p style="text-align: center">
@@ -834,7 +832,7 @@ displays a picture of a cat that moves around in an ((ellipse)):
 
 {{if book
 
-The gray arrow shows the path along which the image moves.
+پیکان خاکستری رنگ، مسیر حرکت تصویر گربه را نشان می دهد.
 
 {{figure {url: "img/cat-animation.png", alt: "A moving cat head",width: "8cm"}}}
 
@@ -842,117 +840,107 @@ if}}
 
 {{index "top (CSS)", "left (CSS)", centering, "relative positioning"}}
 
-Our picture is centered on the page and given a `position` of
-`relative`. We'll repeatedly update that picture's `top` and `left`
-styles to move it.
+تصویر ما در مرکز صفحه قرار گرفته است و مقدار `position` آن برابر `relative` است. ما پیوسته مقدار `top` و `left`
+تصویر را برای ایجاد حرکت به‌روز رسانی می کنیم.
 
 {{index "requestAnimationFrame function", drawing, animation}}
 
 {{id animationFrame}}
 
-The script uses `requestAnimationFrame` to schedule the `animate`
-function to run whenever the browser is ready to repaint the screen.
-The `animate` function itself again calls `requestAnimationFrame` to
-schedule the next update. When the browser window (or tab) is active,
-this will cause updates to happen at a rate of about 60 per second,
-which tends to produce a good-looking animation.
+این اسکریپت از `requestAnimationFrame` برای زمانبندی اجرای تابع `animate` هنگامی
+که مرورگر آماده است تا تصویر صفحه را دوباره بکشد، استفاده می کنیم. تابع `animate` خود
+دوباره `requestAnimationFrame` را برای زمانبندی به‌روزرسانی بعدی فراخوانی می کند.
+زمانی که پنجره‌ی مرورگر (یا تب مرورگر) فعال است، این باعث می شود که به‌روز‌رسانی‌ها
+با نرخ 60 بار در ثانیه انجام شود که پویانمایی روانی را تولید می کند.
 
 {{index timeline, blocking}}
 
-If we just updated the DOM in a loop, the page would freeze, and
-nothing would show up on the screen. Browsers do not update their
-display while a JavaScript program is running, nor do they allow any
-interaction with the page. This is why we need
-`requestAnimationFrame`—it lets the browser know that we are done for
-now, and it can go ahead and do the things that browsers do, such as
-updating the screen and responding to user actions.
+اگر فقط DOM را در حلقه به‌روزرسانی می کردیم، صفحه ممکن بود قفل شود چیزی در
+تصویر نمایش داده نشود. مرورگرها صفحه‌ی نمایش خود را در هنگام اجرای یک برنامه‌ی
+جاوااسکریپت به‌روزرسانی نمی کنند و اجازه‌ی هیچ تعاملی با صفحه را هم فراهم نمی
+کنند. به همین دلیل است که به `requestAnimationFrame` نیاز داریم – این تابع به
+مرورگر می گوید که کار ما در این لحظه تمام است و می تواند به کارش ادامه دهد، مثل
+به‌روزرسانی صفحه نمایش و پاسخ به درخواست‌های کاربر.
 
 {{index "smooth animation"}}
 
-The animation function is passed the current ((time)) as an
-argument. To ensure that the motion of the cat per millisecond is
-stable, it bases the speed at which the angle changes on the
-difference between the current time and the last time the function
-ran. If it just moved the angle by a fixed amount per step, the motion
-would stutter if, for example, another heavy task running on the same
-computer were to prevent the function from running for a fraction of a
-second.
+تابع پویانمایی، زمان فعلی را به عنوان یک آرگومان دریافت می کند. برای کسب اطمینان
+از اینکه میزان حرکت￼ گربه در هزارم ثانیه مداوم و باثبات است، این تابع سرعت را
+در قسمت‌هایی که زاویه تغییر می کند بر اساس تفاوت بین زمان فعلی و آخرین باری که
+تابع اجرا شد در نظر می گیرد. اگر با هر قدم مقدار ثابتی حرکت در زاویه انجام می‌شد،
+ممکن بود حرکت تصویر لنگ بزند، درصورتی‌ که به عنوان مثال یک برنامه‌ی سنگین دیگر روی همان
+کامپیوتر اجرا می شد که تابع را برای کسری از ثانیه از حرکت می انداخت.
 
 {{index "Math.cos function", "Math.sin function", cosine, sine, trigonometry}}
 
 {{id sin_cos}}
 
-Moving in ((circle))s is done using the trigonometry functions
-`Math.cos` and `Math.sin`. For those who aren't familiar with
-these, I'll briefly introduce them since we will occasionally use them
-in this book.
+برای حرکت دایره‌ای از توابع مثلثات مثل <bdo>`Math.cos`</bdo> و <bdo>`Math.sin`</bdo> استفاده می شود. برای
+افرادی که با این مفاهیم آشنا نیستند، به طور خلاصه آن ها را معرفی خواهم کرد چرا
+که کم و بیش از آن ها در کتاب استفاده خواهیم کرد.
 
 {{index coordinates, pi}}
 
-`Math.cos` and `Math.sin` are useful for finding points that lie on a
-circle around point (0,0) with a radius of one. Both functions
-interpret their argument as the position on this circle, with zero
-denoting the point on the far right of the circle, going clockwise
-until 2π (about 6.28) has taken us around the whole circle. `Math.cos`
-tells you the x-coordinate of the point that corresponds to the given
-position, and `Math.sin` yields the y-coordinate. Positions (or
-angles) greater than 2π or less than 0 are valid—the rotation repeats
-so that _a_+2π refers to the same ((angle)) as _a_.
+متدهای <bdo>`Math.cos`</bdo> و <bdo>`Math.sin`</bdo> برای پیدا کردن نقاطی که روی محیط دایره‌ای با مرکز
+<bdo>(0,0)</bdo> و شعاع یک استفاده می شوند. هر دوی این متدها ورودی‌هایشان را به عنوان
+موقعیت‌هایی روی این دایره تفسیر می کنند، که صفر به معنای نقطه‌ای است که در
+راست‌ترین قسمت دایره قرار گرفته است و حرکت در جهت گردش عقربه‌های ساعت تا <bdo>2π</bdo> می
+باشد (حدود <bdo>6.28</bdo>) که یک دور کامل دایره انجام می شود. <bdo>`Math.cos`</bdo> مختصات x نقطه‌ای که
+مربوط به موقعیت داده شده است را برمی‌گرداند در حالیکه <bdo>`Math.sin`</bdo> مختصات y آن را می
+دهد. موقعیت‌هایی (یا زاویه‌ها) که از <bdo>2π</bdo> بزرگتر باشند یا از 0 کوچکتر باشند معتبر
+محسوب می شوند – چرخش تکرار می شود بنابراین <bdo>_a_+2π</bdo> معادل همان زاویه‌ی _a_ خواهد بود.
 
 {{index "PI constant"}}
 
-This unit for measuring angles is called ((radian))s—a full circle is
-2π radians, similar to how it is 360 degrees when measuring in
-degrees. The constant π is available as `Math.PI` in JavaScript.
+این واحد اندازه‌گیری برای زاویه‌ها را رادیان می نامند- یک دایره‌ی کامل برابر <bdo>2π</bdo>
+رادیان است، مشابه 360 در واحد درجه. ثابت π در جاوااسکریپت توسط <bdo>`Math.PI`</bdo> در دسترس
+است.
 
 {{figure {url: "img/cos_sin.svg", alt: "Using cosine and sine to compute coordinates",width: "6cm"}}}
 
 {{index "counter variable", "Math.sin function", "top (CSS)", "Math.cos function", "left (CSS)", ellipse}}
 
-The cat animation code keeps a counter, `angle`, for the current angle
-of the animation and increments it every time the `animate` function
-is called. It can then use this angle to compute the current position
-of the image element. The `top` style is computed with `Math.sin` and
-multiplied by 20, which is the vertical radius of our ellipse. The
-`left` style is based on `Math.cos` and multiplied by 200 so that the
-ellipse is much wider than it is high.
+کد پویانمایی گربه یک شمارنده هم نگهداری می کند، `angle`، تا زاویه‌ی فعلی حرکت را
+داشته باشد و با هر بار فراخوانی تابع `animate` آن را افزایش می دهد. بعدا می تواند
+از این زاویه برای محاسبه موقعیت فعلی عنصر تصویر استفاده کند. مقدار خاصیت سبکی
+`top` هم به وسیله‌ی <bdo>`Math.sin`</bdo> و ضرب آن در 20 محاسبه می شود که نمایانگر شعاع عمودی
+در بیضی ما است. مقدار `left` نیز بر اساس <bdo>`Math.cos`</bdo> و ضرب آن در 200 است بنابراین
+بیضی ما دارای عرض بسیار بیشتری نسبت به طولش است.
 
 {{index "unit (CSS)"}}
 
-Note that styles usually need _units_. In this case, we have to append
-`"px"` to the number to tell the browser that we are counting in ((pixel))s
-(as opposed to centimeters, "ems", or other units). This is easy to
-forget. Using numbers without units will result in your style being
-ignored—unless the number is 0, which always means the same thing,
-regardless of its unit.
+توجه داشته باشید که مقادیر مربوط به سبک‌ها معمولا به واحد نیاز دارند. در این
+مثال، ما باید `"px"` را به عدد اضافه کنیم تا به مرورگر اعلام کنیم که شمارش در
+واحد پیکسل می باشد (نه سانتیمتر، “em”، یا دیگر واحدها). به راحتی ممکن است این
+نکته فراموش شود. استفاده از اعداد بدون واحدها باعث می شود که سبک‌دهی شما اعمال
+نگردد- مگر اینکه آن عدد 0 باشد که همیشه معنای یکسانی دارد.
 
-## Summary
+## خلاصه
 
-JavaScript programs may inspect and interfere with the document that
-the browser is displaying through a data structure called the DOM.
-This data structure represents the browser's model of the document,
-and a JavaScript program can modify it to change the visible document.
+برنامه‌های جاوااسکریپت می توانند در صفحه‌ای که مرورگر به نمایش می گذارد، با
+استفاده از یک ساختار داده به نام DOM، دخالت و دستکاری کنند. این ساختار داده
+نمایانگر مدل مرورگر از صفحه است و یک برنامه‌ی جاوااسکریپت می تواند آن را
+تغییر دهد و در سندی که به نمایش درمی آید تغییر ایجاد کند.
 
-The DOM is organized like a tree, in which elements are arranged
-hierarchically according to the structure of the document. The objects
-representing elements have properties such as `parentNode` and
-`childNodes`, which can be used to navigate through this tree.
+DOM به شکل یک درخت سازماندهی شده است که در آن عناصر به صورت سلسله‌مراتبی براساس
+ساختار سند مرتب می شوند. اشیائی که نماینده‌ی عناصر هستند دارای خاصیت‌هایی مانند
+`parentNode` و `childNodes` هستند که می توان از آن ها برای حرکت در این درخت استفاده
+کرد.
 
-The way a document is displayed can be influenced by _styling_, both
-by attaching styles to nodes directly and by defining rules that match
-certain nodes. There are many different style properties, such as
-`color` or `display`. JavaScript code can manipulate an element's
-style directly through its `style` property.
+نحوه‌ی نمایش یک سند را می توان با سبک‌دهی تغییر داد و این کار به دو روش چسباندن سبک‌ها به
+عناصر به صورت مستقیم و یا با تعریف دستوراتی که عناصر خاصی را هدف قرار می دهند صورت می‌پذیرد.
+خاصیت‌های سبک‌دهی زیاد و متنوعی وجود دارد مثل `color` یا `display`. کدهای جاوااسکریپت
+می توانند سبک یک عنصر را مستقیما از طریق خصوصیت `style` دستکاری کنند.
 
-## Exercises
+## تمرین‌ها
 
 {{id exercise_table}}
 
-### Build a table
+### ساخت یک جدول
 
 {{index "table (HTML tag)"}}
 
-An HTML table is built with the following tag structure:
+یک جدول HTML به وسیله‌ی ساختار برچسب‌های زیر ساخته می شود:
 
 ```{lang: "text/html"}
 <table>
@@ -971,26 +959,29 @@ An HTML table is built with the following tag structure:
 
 {{index "tr (HTML tag)", "th (HTML tag)", "td (HTML tag)"}}
 
-For each _((row))_, the `<table>` tag contains a `<tr>` tag. Inside of
-these `<tr>` tags, we can put cell elements: either heading cells
-(`<th>`) or regular cells (`<td>`).
+برای هر ردیف، برچسب <bdo>`<table>`</bdo> یک برچسب <bdo>`<tr>`</bdo> خواهد داشت.
+درون این برچسب‌های <bdo>`<tr>`</bdo> می توانیم سلول‌های جدول را قرار دهیم: سلول‌های معمولی
+(<bdo>`<td>`</bdo>) یا سلول‌های عنوان (<bdo>`<th>`</bdo>).
 
-Given a data set of mountains, an array of objects with `name`,
-`height`, and `place` properties, generate the DOM structure for a
-table that enumerates the objects. It should have one column per key
-and one row per object, plus a header row with `<th>` elements at the
-top, listing the column names.
+با در دست داشتن مجموعه اطلاعاتی در باره‌ی کوه‌ها، آرایه‌ای از اشیاء شامل `name`،
+`height` و `place` ، یک ساختار DOM برای جدولی که این اشیاء را می شمارد ایجاد کنید.
+این جدول باید یک ستون برای هر کلید و یک ردیف برای هر شیء داشته باشد، مازاد بر
+آن یک ردیف عنوان به وسیله‌ی عنصرهای <bdo>`<th>`</bdo> در قسمت بالا که نام ستون‌ها را لیست کند.
 
-Write this so that the columns are automatically derived from the
-objects, by taking the property names of the first object in the data.
+این برنامه را به صورتی بنویسید که در آن ستون‌ها به طور خودکار از اشیاء گرفته می می‌شوند و
+این کار با گرفتن نام‌های خاصیت‌های اولین شیء در مجموعه‌ی داده‌ها رخ می دهد.
 
-Add the resulting table to the element with an `id` attribute of
-`"mountains"` so that it becomes visible in the document.
+به این صورت بنویسید که ستون‌ها به صورت خودکار با گرفتن نام‌ خاصیت‌های اولین شیء
+در مجموعه‌ی داده‌ها ایجاد شوند.
+
+جدول نهایی را به عنصری که دارای خصوصیت `id` برابر با `"mountains"` می‌باشد اضافه کنید تا
+در صفحه نمایش داده￼ شود.
 
 {{index "right-aligning", "text-align (CSS)"}}
 
-Once you have this working, right-align cells that contain number
-values by setting their `style.textAlign` property to `"right"`.
+بعد از این که این قسمت را تکمیل کردید سلول‌هایی که حاوی
+مقادیر عددی هستند را راست چین کنید و این کار را با تنظیم <bdo>`style.textAlign`</bdo> برابر با
+`"right"` انجام دهید.
 
 {{if interactive
 
@@ -1020,22 +1011,24 @@ if}}
 
 {{index "createElement method", "table example", "appendChild method"}}
 
-You can use `document.createElement` to create new element nodes,
-`document.createTextNode` to create text nodes, and the `appendChild`
-method to put nodes into other nodes.
+می توانید از <bdo>`document.createElement`</bdo> برای ایجاد گره‌های جدید استفاده
+کنید، همچنین از <bdo>`document.createTextNode`</bdo> برای ایجاد گره‌های متنی و
+از <bdo>`appendChild`</bdo> نیز برای قرار دادن گره‌ها در دیگر گره‌ها.
 
 {{index "Object.keys function"}}
 
-You'll want to loop over the key names once to fill in the top row and
-then again for each object in the array to construct the data rows. To
-get an array of key names from the first object, `Object.keys` will be
-useful.
+لازم خواهد شد تا نام‌ کلید‌های شیء را یک بار پیمایش کرده تا ردیف بالایی را پر کنید و بعد دوباره برای هر شیء
+
+در ادامه لازم دارید تا نام کلید‌ها را پیمایش کنید؛ یک بار برای پر کردن ردیف
+بالایی و بعد دوباره برای هر همه‌ی اشیاء موجود در آرایه تا بتوانید ردیف‌های داده
+را بسازید. برای بدست آوردن یک آرایه از نام کلید‌ها از شیء اول،
+<bdo>`Object.keys`</bdo> به دردتان خواهد خورد.
 
 {{index "getElementById method", "querySelector method"}}
 
-To add the table to the correct parent node, you can use
-`document.getElementById` or `document.querySelector` to find the node
-with the proper `id` attribute.
+برای اضافه کردن جدول به گره‌ی والد فعلی، می توانید از
+<bdo>`document.getElementById`</bdo> یا <bdo>`document.querySelector`</bdo> برای
+پیدا کردن گره‌ای با خاصیت `id` مورد نظر استفاده کنید.
 
 hint}}
 
@@ -1105,7 +1098,7 @@ on it to inspect its own children.
 
 hint}}
 
-### The cat's hat
+### کلاه گربه
 
 {{index "cat's hat (exercise)", [animation, "spinning cat"]}}
 
