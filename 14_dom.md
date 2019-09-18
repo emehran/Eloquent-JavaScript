@@ -1,10 +1,9 @@
 # DOM یا مدل شیء سند
 
-{{quote {author: "Friedrich Nietzsche", title: "Beyond Good and Evil", chapter: true}
+{{quote {author: "فردریش نیچه", title: "فراسوی نیک و بد", chapter: true}
 
-Too bad! Same old story! Once you've finished building your house you
-notice you've accidentally learned something that you really should
-have known—before you started.
+چه بد! داستانی تکراری! وقتی کار ساخت خانه را تمام می‌کنی، متوجه می‌شوی که
+چیزی یاد گرفتی که می‌بایست پیش از شروع کار می‌دانستی.
 
 quote}}
 
@@ -12,14 +11,15 @@ quote}}
 
 {{index drawing, parsing}}
 
-وقتی یک صفحه وب را در مرورگرتان باز می کنید، مرورگر متن HTML صفحه را گرفته و
-آن را تفسیر می کند،￼ بسیار شبیه به آنچه تجزیه‌گر ما برای تجزیه‌ی برنامه‌ها در [فصل ?](language#parsing) انجام می داد. مرورگر یک مدل از ساختار سند می سازد و از آن برای نمایش سند روی
-صفحه‌ی نمایش استفاده می کند.
+وقتی یک صفحه وب را در مرورگرتان باز می کنید، مرورگر متن HTML صفحه را گرفته و آن
+را تفسیر می کند، بسیار شبیه به آنچه تجزیه‌گر ما برای تجزیه‌ی برنامه‌ها در [فصل
+?](language#parsing) انجام می داد. مرورگر یک مدل از ساختار سند می سازد و از آن
+برای نمایش سند روی صفحه‌ی نمایش استفاده می کند.
 
 {{index "live data structure"}}
 
 این نمایش از سند، یکی از ابزارهایی است که یک برنامه‌ی جاوااسکریپت در جعبه‌ی شنی (sandbox) خود به
-آن دسترسی دارد. یک ساختار داده که می‌تواند خوانده شود یا تغییر یابد. ساختار
+آن دسترسی دارد. یک ساختار داده که می‌تواند خوانده شود یا تغییر یابد؛ ساختار
 داده‌ای _زنده_: زمانی که تغییری در آن رخ می‌دهد، صفحه‌ای که در مانیتور نمایش داده می
 شود نیز به‌روز می شود تا تغییرات را منعکس کند.
 
@@ -46,8 +46,7 @@ quote}}
   </body>
 </html>
 ```
-
-این صفحه دارای ساختار پیش رو می‌باشد:
+ساختار این صفحه به شکل زیر است:
 
 {{figure {url: "img/html-boxes.svg", alt: "HTML document as nested boxes", width: "7cm"}}}
 
@@ -1032,21 +1031,20 @@ if}}
 
 hint}}
 
-### Elements by tag name
+### گرفتن عناصر به وسیله‌ی نام برچسب‌ها
 
 {{index "getElementsByTagName method", recursion}}
 
-The `document.getElementsByTagName` method returns all child elements
-with a given tag name. Implement your own version of this as a
-function that takes a node and a string (the tag name) as arguments
-and returns an array containing all descendant element nodes with the
-given tag name.
+متد <bdo>`document.getElementsByTagName`</bdo> تمامی عناصر فرزند را برای نام
+برچسب داده شده برمی گرداند. نسخه‌ی خودتان از این متد را به عنوان یک تابع بنویسید
+که یک گره و یک رشته (نام برچسب) را به عنوان ورودی‌ها بگیرد و آرایه‌ای که حاوی
+تمامی گره‌های فرزند متعلق به آن برچسب را برگرداند.
 
 {{index "nodeName property", capitalization, "toLowerCase method", "toUpperCase method"}}
 
-To find the tag name of an element, use its `nodeName` property. But
-note that this will return the tag name in all uppercase. Use the
-`toLowerCase` or `toUpperCase` string methods to compensate for this.
+برای پیدا کردن نام برچسب یک عنصر، از خاصیت `nodeName` استفاده کنید. اما توجه داشته
+باشید که این خاصیت نام برچسب را با حروف بزرگ برمی گرداند. از متدهای رشته،
+`toLowerCase` یا `toUpperCase` برای درست کردن آن استفاده کنید.
 
 {{if interactive
 
@@ -1075,26 +1073,25 @@ if}}
 
 {{index "getElementsByTagName method", recursion}}
 
-The solution is most easily expressed with a recursive function,
-similar to the [`talksAbout` function](dom#talksAbout) defined earlier
-in this chapter.
+ساده‌ترین روش پیاده‌سازی این راه‌حل استفاده از یک تابع بازگشتی است، شبیه به
+[`talksAbout` تابع](dom#talksAbout) که پیش‌تر در این فصل تعریف گردید.
 
 {{index concatenation, "concat method", closure}}
 
-You could call `byTagname` itself recursively, concatenating the
-resulting arrays to produce the output. Or you could create an inner
-function that calls itself recursively and that has access to an array
-binding defined in the outer function, to which it can add the
-matching elements it finds. Don't forget to call the ((inner
-function)) once from the outer function to start the process.
+می‌توانید عناصر آرایه‌ی تولیدی را به وسیله‌ی فراخوانی تابع `byTagname` به صورت
+بازگشتی به هم بچسبانید تا خروجی را تولید کنید. یا می توانید تابعی درونی تعریف
+کنید که خودش را به صورت بازگشتی فراخوانی کند که این تابع به یک متغیر آرایه که در
+تابع بیرونی‌اش تعریف شده دسترسی دارد و می تواند عناصری که پیدا‌ می‌کند را به آن
+اضافه نماید. فراموش نکنید که باید تابع درونی را یک بار از تابع بیرونی فراخوانی
+کنید تا روند کار شروع شود.
 
 {{index "nodeType property", "ELEMENT_NODE code"}}
 
-The recursive function must check the node type. Here we are
-interested only in node type 1 (`Node.ELEMENT_NODE`). For such
-nodes, we must loop over their children and, for each child, see
-whether the child matches the query while also doing a recursive call
-on it to inspect its own children.
+تابع بازگشتی باید نوع گره را بررسی کیند. در اینجا فقط مایلیم تا گره‌ نوع 1
+(`Node.ELEMENT_NODE`) را در نظر بگیریم. برای این نوع گره‌ها، ما باید فرزندانشان
+را پیمایش کنیم و برای هر فرزند، مشاهده کنیم که آیا با پرس‌وجوی‌ ما مطابقت دارد
+یا خیر و همچنین یک فراخوانی بازگشتی روی آن نیز داشته باشیم تا فرزندان آن را نیز
+پوشش داده باشیم.
 
 hint}}
 
@@ -1102,21 +1099,18 @@ hint}}
 
 {{index "cat's hat (exercise)", [animation, "spinning cat"]}}
 
-Extend the cat animation defined [earlier](dom#animation) so that
-both the cat and his hat (`<img src="img/hat.png">`) orbit at opposite
-sides of the ellipse.
+پویانمایی [ایجاد شده در قبل](dom#animation) را توسعه دهید تا گربه و کلاهش
+(<bdo>`<img src="img/hat.png">`</bdo>) هر کدام در جهت مخالف هم بچرخند.
 
-Or make the hat circle around the cat. Or alter the animation in some
-other interesting way.
+یا کاری کنید که کلاه دور گربه بچرخد. یا پویانمایی را به صورتی که جالب باشد تغییر دهید.
 
 {{index "absolute positioning", "top (CSS)", "left (CSS)", "position (CSS)"}}
 
-To make positioning multiple objects easier, it is probably a good
-idea to switch to absolute positioning. This means that `top` and
-`left` are counted relative to the top left of the document. To avoid
-using negative coordinates, which would cause the image to move
-outside of the visible page, you can add a fixed number of pixels to
-the position values.
+برای ساده سازی روند موقعیت دهی چند شیء، احتمالا ایده‌ی خوبی است که به سراغ موقعیت
+دهی مطلق برویم. به این معنا که `top` و `left` بر اساس گوشه‌ی چپ و بالای سند محاسبه
+بشوند. برای جلوگیری از مختصات منفی، که باعث می شود که تصاویر به بیرون از فضای
+قابل مشاهده صفحه منتقل شوند، می توانید یک عدد مشخص و ثابت را به مقادیر موقعیت
+ها اضافه کنید.
 
 {{if interactive
 
@@ -1149,9 +1143,10 @@ if}}
 
 {{hint
 
-`Math.cos` and `Math.sin` measure angles in radians, where a full
-circle is 2π. For a given angle, you can get the opposite angle by
-adding half of this, which is `Math.PI`. This can be useful for
-putting the hat on the opposite side of the orbit.
+<bdo>`Math.cos`</bdo> و <bdo>`Math.sin`</bdo> زاویه‌ها را در واحد رادیان
+اندازه‌گیری می کنند، جایی‌که یک دایره‌ی کامل برابر با <bdo>2π</bdo> می‌باشد.
+برای یک زاویه‌ی داده شده، می توانید برای به‌دست آوردن زاویه‌ی مخالف، نصف
+<bdo>2π</bdo> که می‌شود <bdo>`Math.PI`</bdo>. این کار برای قرار دادن کلاه در طرف دیگر دایره کاربرد دارد.
+
 
 hint}}
