@@ -1,9 +1,8 @@
-# Handling Events
+# رسیدگی به رخداد‌ها
 
-{{quote {author: "Marcus Aurelius", title: Meditations, chapter: true}
+{{quote {author: "مارکوس اورلیوس", title: "تاملات", chapter: true}
 
-You have power over your mind—not outside events. Realize this, and
-you will find strength.
+آنچه در اختیار شماست، ذهن‌تان است نه رخداد‌های جهان بیرون. درک این موضوع به شما نیرو می‌بخشد.
 
 quote}}
 
@@ -11,39 +10,38 @@ quote}}
 
 {{figure {url: "img/chapter_picture_15.jpg", alt: "Picture a Rube Goldberg machine", chapter: "framed"}}}
 
-Some programs work with direct user input, such as mouse and keyboard
-actions. That kind of input isn't available as a well-organized data
-structure—it comes in piece by piece, in real time, and the program is
-expected to respond to it as it happens.
+بعضی برنامه‌ها با ورودی‌ کاربر سر و کار دارند؛ مانند کارهایی که توسط موس و
+صفحه‌کلید انجام می شود. این نوع ورودی‌ به صورت یک ساختار داده‌ی سازمان‌یافته و
+مرتب در دسترس قرار نمی گیرد –  بلکه به صورت تدریجی و با اجرای برنامه دریافت
+می شود و برنامه می‌بایست همزمان با دریافت آن، واکنش نشان دهد.
 
-## Event handlers
+## گرداننده‌های رخداد
 
 {{index polling, button, "real-time"}}
 
-Imagine an interface where the only way to find out whether a key on
-the ((keyboard)) is being pressed is to read the current state of that
-key. To be able to react to keypresses, you would have to constantly
-read the key's state so that you'd catch it before it's released
-again. It would be dangerous to perform other time-intensive
-computations since you might miss a keypress.
+رابطی‌ را تصور کنید که در آن تنها راه دانستن اینکه کلیدی در صفحه کلید فشرده می‌شود این است که
+حالت فعلی آن کلید را بخوانیم. برای این که بتوانیم به فشردن کلید واکنش نشان دهیم،
+باید به طور مداوم حالت کلید را بخوانیم تا قبل از اینکه دوباره کلید رها شود آن
+را بدست آوریم.  در این حین اگر به انجام محاسبه‌ی زمان‌گیر دیگری بپردازیم، این خطر
+وجود دارد که یک فشردن کلید را از دست بدهیم.
 
-Some primitive machines do handle input like that. A step up from this
-would be for the hardware or operating system to notice the keypress
-and put it in a queue. A program can then periodically check the queue
-for new events and react to what it finds there.
+بعضی کامپیوترهای اولیه، ورودی ها را به همین شکل مدیریت می کردند. یک گام فراتر از این
+روش این است که سخت‌افزار یا سیستم‌عامل متوجه این فشار کلید شوند و آن را در یک صف
+قرار دهند. بعد یک برنامه‌ می تواند به صورت دوره‌ای این صف را برای رخداد‌های جدید
+بررسی کند و به چیزی که می بیند واکنش نشان دهد.
 
 {{index responsiveness, "user experience"}}
 
-Of course, it has to remember to look at the queue, and to do it
-often, because any time between the key being pressed and the program
-noticing the event will cause the software to feel unresponsive. This
-approach is called _((polling))_. Most programmers prefer to avoid it.
+البته برنامه باید به خاطر داشته باشد که به سراغ صف برود و این کار را مدوام انجام
+دهد چرا که وجود فاصله‌ی زمانی بین فشردن کلید و باخبر شدن برنامه از رخداد، باعث می
+شود که نرم‌افزار روان کار نکند و مشکل‌دار به‌نظر برسد.  این رویکرد را _((polling))_
+(سرکشی‌کردن) می نامند. بیشتر برنامه نویسان ترجیح می دهند که از آن اجتناب کنند.
 
 {{index "callback function", "event handling"}}
 
-A better mechanism is for the system to actively notify our code when
-an event occurs. Browsers do this by allowing us to register functions
-as _handlers_ for specific events.
+یک مکانیزم بهتر برای سیستم این است که به طور پویا برنامه‌مان را از وجود یک رخداد
+باخبر کنیم. مرورگرها این کار را با فراهم کردن امکان ثبت توابعی به عنوان _گرداننده_
+برای رخدادهای خاص انجام می دهند.
 
 ```{lang: "text/html"}
 <p>Click this document to activate the handler.</p>
@@ -56,22 +54,21 @@ as _handlers_ for specific events.
 
 {{index "click event", "addEventListener method", "window object", [browser, window]}}
 
-The `window` binding refers to a built-in object provided by the
-browser. It represents the browser window that contains the
-document. Calling its `addEventListener` method registers the second
-argument to be called whenever the event described by its first
-argument occurs.
+متغیر `window` به یک شیء درونی که توسط مرورگر فراهم شده اشاره می کند. این شیء
+نمایانگر پنجره‌ی مرورگر است که حاوی صفحه سند می‌باشد. فراخوانی متد `addEventListener`
+آن، آرگومان دوم را به عنوان تابعی ثبت می کند که در صورت بروز رخدادی که در آرگومان
+اول مشخص می شود، فراخوانی می شود.
 
-## Events and DOM nodes
+## رخداد‌ها و گره‌های DOM
 
 {{index "addEventListener method", "event handling", "window object", browser, [DOM, events]}}
 
-Each browser event handler is registered in a context. In the previous example we called
-`addEventListener` on the `window` object to register a handler
-for the whole window. Such a method can also be found on DOM
-elements and some other types of objects. Event listeners are
-called only when the event happens in the context of the object they are
-registered on.
+هر گرداننده‌ی رخداد مرورگر در یک بستر (context) ثبت می شود. ما `addEventListener`
+را روی شیء `window` پیش‌تر برای ثبت یک گرداننده برای کل پنجره فراخوانی کردیم. این
+متد همچنین روی عناصر DOM و بعضی دیگر از انواع اشیاء موجود است. شنونده‌های رخداد
+فقط زمانی فراخوانی می شوند که رخداد در بستر شیئی که در آن ثبت شده اند رخ داده
+باشد.
+
 
 ```{lang: "text/html"}
 <button>Click me</button>
@@ -86,25 +83,24 @@ registered on.
 
 {{index "click event", "button (HTML tag)"}}
 
-That example attaches a handler to the button node. Clicks on the
-button cause that handler to run, but clicks on the rest of the
-document do not.
+در مثال بالا یک گرداننده به گره‌ی دکمه منتسب می شود. کلیک روی آن دکمه باعث می
+شود که گرداننده‌ی آن اجرا شود، اما کلیک روی دیگر قسمت‌های سند باعث اتفاقی نمی
+شود.
 
 {{index "onclick attribute", encapsulation}}
 
-Giving a node an `onclick` attribute has a similar effect. This works
-for most types of events—you can attach a handler through the
-attribute whose name is the event name with `on` in front of it.
+اضافه کردن خصوصیت `onclick` به یک گره نیز اثر مشابهی ایجاد می کند. این روش برای
+بیشتر رخداد‌ها کار می‌کند - می‌توانید یک گرداننده توسط این خصوصیت ثبت کنید که نام آن برای نام رخداد به همراه `on` در جلوی آن خواهد بود.
 
-But a node can have only one `onclick` attribute, so you can register
-only one handler per node that way. The `addEventListener` method
-allows you to add any number of handlers so that it is safe to add
-handlers even if there is already another handler on the element.
+اما یک گره، تنها می‌تواند یک خصوصیت `onclick` داشته باشد، بنابراین در این روش
+برای هر گره، تنها می‌توانید یک گرداننده ثبت نمایید. متد `addEventListener` به شما
+این امکان را می دهد تا هر تعداد گرداننده که بخواهید اضافه کنید که به این معنا است
+که افزودن گرداننده‌ها حتی زمانی که پیش‌تر گرداننده‌ای روی عنصر اضافه‌ شده است، معتبر است.
 
 {{index "removeEventListener method"}}
 
-The `removeEventListener` method, called with arguments similar to
-`addEventListener`, removes a handler.
+متد `removeEventListener` اگر با آرگومان‌هایی شبیه به `addEventListener` فراخوانی
+شود، باعث حذف یک گرداننده می شود.
 
 ```{lang: "text/html"}
 <button>Act-once button</button>
@@ -120,20 +116,19 @@ The `removeEventListener` method, called with arguments similar to
 
 {{index [function, "as value"]}}
 
-The function given to `removeEventListener` has to be the same
-function value that was given to `addEventListener`. So, to unregister
-a handler, you'll want to give the function a name (`once`, in the
-example) to be able to pass the same function value to both methods.
+تابعی که به `removeEventListener` داده می شود باید دقیقا همان مقدار تابعی باشد که
+به `addEventListener` داده شده است. بنابراین برای حذف یک گرداننده، باید به تابع
+مورد نظر یک نام اختصاص داد (`once` در مثال) تا بتوان همان تابع را در هردو متد‌ها
+استفاده کرد.
 
-## Event objects
+## اشیاء رخداد
 
 {{index "button property", "event handling"}}
 
-Though we have ignored it so far, event handler functions are passed
-an argument: the _((event object))_. This object holds additional
-information about the event. For example, if we want to know _which_
-((mouse button)) was pressed, we can look at the event object's
-`button` property.
+با اینکه تا کنون به آن نپرداخته ایم، توابع گرداننده رخداد، آرگومانی دریافت
+می‌کنند که شیء رخداد نام دارد (event object). این شیء اطلاعات بیشتری درباره‌ی
+رخداد مورد نظر نگه‌داری می کند. به عنوان مثال، اگر بخواهیم بدانیم کدام دکمه‌ی
+موس کلیک شده است،‌ می توانیم به خاصیت `button` شیء رخداد مراجعه کنیم.
 
 ```{lang: "text/html"}
 <button>Click me any way you want</button>
@@ -153,12 +148,13 @@ information about the event. For example, if we want to know _which_
 
 {{index "event type", "type property"}}
 
-The information stored in an event object differs per type of event.
-We'll discuss different types later in the chapter. The object's
-`type` property always holds a string identifying the event (such as
-`"click"` or `"mousedown"`).
+اطلاعاتی که در یک شیء رخداد ذخیره می شود با توجه به نوع رخداد متفاوت خواهد بود.
+در ادامه فصل انواع مختلف آن را بحث خواهیم کرد. خاصیت‌ `type` این شیء همیشه رشته‌ای
+را نگه‌داری می کند که برای شناسایی رخداد استفاده می شود ( مثل `"click"` یا
+`"mousedown"`).
 
-## Propagation
+## پخش (propagation)
+
 
 {{index "event propagation", "parent node"}}
 
@@ -166,36 +162,33 @@ We'll discuss different types later in the chapter. The object's
 
 {{indexsee propagation, "event propagation"}}
 
-For most event types, handlers registered on nodes with children will
-also receive events that happen in the children. If a button inside a
-paragraph is clicked, event handlers on the paragraph will also see
-the click event.
+در بیشتر انواع رخدادها، گرداننده‌هایی که روی گره‌های دارای فرزند، ثبت شده اند،
+رخدادهایی که روی فرزندان آن‌ها رخ می دهد را نیز دریافت می کنند. اگر روی دکمه‌ای که
+درون یک پاراگراف قرار گرفته است کلیک شود، گرداننده‌های رخداد روی پاراگراف نیز
+این رخداد کلیک را می بینند.
 
 {{index "event handling"}}
 
-But if both the paragraph and the button have a handler, the more
-specific handler—the one on the button—gets to go first. The event is
-said to _propagate_ outward, from the node where it happened to that
-node's parent node and on to the root of the document. Finally, after
-all handlers registered on a specific node have had their turn,
-handlers registered on the whole ((window)) get a chance to respond to
-the event.
+اما اگر هر دوی دکمه و پاراگراف دارای گرداننده باشند، گرداننده صریح تر – در اینجا
+دکمه – زودتر اجرا می شود. در این حالت گفته می شود که رخداد به سمت بیرون پخش یا propagate شده
+است، از گره‌ای که در آن رخ داده است تا گره‌ی والدش تا گره‌ی ریشه در سند. در
+نهایت بعد از اینکه همه‌ی گرداننده‌های ثبت شده روی گره‌های مشخص به نوبت فراخوانی
+شدند، گرداننده‌هایی که روی کل پنجره ثبت شده اند فرصت این را خواهند داشت که به
+رخداد پاسخ دهند.
 
 {{index "stopPropagation method", "click event"}}
 
-At any point, an event handler can call the `stopPropagation` method
-on the event object to prevent handlers further up from receiving the
-event. This can be useful when, for example, you have a button inside
-another clickable element and you don't want clicks on the button to
-activate the outer element's click behavior.
+در هر نقطه‌ای ، یک گرداننده‌ی رخداد می تواند متد `stopPropagation` را روی شیء
+رخداد فراخوانی کند تا مانع از دریافت رخداد توسط گره‌های بالاتر شود. این می تواند
+به عنوان مثال در مواقعی که یک دکمه درون یک عنصر قابل کلیک دیگر دارید و نمی خواهید
+که کلیک روی آن دکمه باعث فعال شدن رفتار کلیک عنصر دیگر بشود کاربرد دارد.
 
 {{index "mousedown event", "pointer event"}}
 
-The following example registers `"mousedown"` handlers on both a
-button and the paragraph around it. When clicked with the right mouse
-button, the handler for the button calls `stopPropagation`, which will
-prevent the handler on the paragraph from running. When the button is
-clicked with another ((mouse button)), both handlers will run.
+در مثال پیش رو، گرداننده‌ی `"mousedown"` روی دکمه و پاراگراف پیرامونش ثبت می شود.
+با کلیک دکمه‌ی راست موس ، گرداننده مربوط به دکمه متد `stopPropagation` را فراخوانی
+می کند که باعث می شود که گرداننده‌ی روی پاراگراف متوقف شود. وقتی با دکمه‌ی دیگر
+موس روی دکمه کلیک می شود، هر دوی گرداننده‌ها اجرا می شوند.
 
 ```{lang: "text/html"}
 <p>A paragraph with a <button>button</button>.</p>
@@ -214,17 +207,15 @@ clicked with another ((mouse button)), both handlers will run.
 
 {{index "event propagation", "target property"}}
 
-Most event objects have a `target` property that refers to the node
-where they originated. You can use this property to ensure that you're
-not accidentally handling something that propagated up from a node you
-do not want to handle.
+بیشتر اشیاء رخداد، دارای خاصیتی به نام `target` می‌باشند که به گره‌ای اشاره می
+کند که به آن تعلق دارند. برای اطمینان از اینکه به صورت تصادفی گره‌ی دیگری را
+رسیدگی نکنید، می‌توانید از این خاصیت بهره ببرید.
 
-It is also possible to use the `target` property to cast a wide net
-for a specific type of event. For example, if you have a node
-containing a long list of buttons, it may be more convenient to
-register a single click handler on the outer node and have it use the
-`target` property to figure out whether a button was clicked, rather
-than register individual handlers on all of the buttons.
+همچنین این امکان وجود دارد که از `target` برای پهن کردن یک تور گسترده برای یک
+نوع خاص از رخداد استفاده کنید. به عنوان مثال،  اگر گره‌ای دارید که حاوی لیست
+بلندی از دکمه‌هاست، ممکن است مناسب باشد که یک گرداننده‌ی کلیک روی گره‌ی بیرونی
+ثبت شود و از خاصیت `target` برای بررسی کلیک شدن یک دکمه استفاده شود تا اینکه برای
+تک تک دکمه‌ها گرداننده‌ای مجزا ثبت شود.
 
 ```{lang: "text/html"}
 <button>A</button>
@@ -239,29 +230,28 @@ than register individual handlers on all of the buttons.
 </script>
 ```
 
-## Default actions
+## کارکردهای پیش‌فرض
+
 
 {{index scrolling, "default behavior", "event handling"}}
 
-Many events have a default action associated with them. If you click a
-((link)), you will be taken to the link's target. If you press the
-down arrow, the browser will scroll the page down. If you right-click,
-you'll get a context menu. And so on.
+به خیلی از رخداد‌ها یک کارکرد پیش‌فرض اختصاص داده شده است. اگر روی یک پیوند کلیک
+کنید، به صفحه‌ی هدف پیوند منتقل خواهید شد. اگر کلید پایین را روی صفحه‌ی کلید
+فشار دهید، مرورگر صفحه‌ را به سمت پایین اسکرول می کند. اگر با موس کلیک راست
+کنید، به شما یک منوی زمینه، نمایش داده خواهد شد. و از این قبیل موارد.
 
 {{index "preventDefault method"}}
 
-For most types of events, the JavaScript event handlers are called
-_before_ the default behavior takes place. If the handler doesn't want
-this normal behavior to happen, typically because it has already taken
-care of handling the event, it can call the `preventDefault` method on
-the event object.
+گرداننده‌های رخداد در جاوااسکریپت، در بیشتر انواع رخداد‌ها، _پیش_ از اینکه رفتار
+پیش‌فرض اتفاق بیفتد فراخوانی می می‌شوند. اگر گرداننده‌ی مورد نظر مایل نباشد که رفتار
+پیش‌فرض رخ بدهد، معمولا به این دلیل که کنترل آن رخداد را خود به دست گرفته است،
+می تواند متد `preventDefault` را روی شیء رخداد فراخوانی کند.
 
 {{index expectation}}
 
-This can be used to implement your own ((keyboard)) shortcuts or
-((context menu)). It can also be used to obnoxiously interfere with
-the behavior that users expect. For example, here is a link that
-cannot be followed:
+می توان از این روش برای پیاده‌سازی کلید‌های میانبر خودتان یا منوی زمینه استفاده کرد.
+همچنین می توان رفتاری که کاربر از یک رخداد انتظار دارد را کاملا خنثی نمود. به
+عنوان مثال، اینجا پیوندی وجود دارد که نمی شود آن را دنبال کرد.
 
 ```{lang: "text/html"}
 <a href="https://developer.mozilla.org/">MDN</a>
@@ -276,21 +266,20 @@ cannot be followed:
 
 {{index usability}}
 
-Try not to do such things unless you have a really good reason to.
-It'll be unpleasant for people who use your page when expected
-behavior is broken.
+سعی کنید به سراغ این گونه کارها نروید مگر اینکه دلیل محکمه‌پسندی برای آن داشته
+باشید. کاربرانی که از صفحه‌ی وب شما استفاده می کنند،
+زمانی که رفتار مورد انتظارشان از کار افتاده باشد، احساس خوبی نخواهند داشت.
 
-Depending on the browser, some events can't be intercepted at all. On
-Chrome, for example, the ((keyboard)) shortcut to close the current
-tab ([control]{keyname}-W or [command]{keyname}-W) cannot be handled by JavaScript.
+بسته به مرورگر مورد استفاده، بعضی از رخدادها را نمی توان به هیچ وجه متوقف کرد.
+به عنوان مثال در گوگل کروم، کلید میانبری که برای بستن تب فعلی استفاده می شود
+([control]{keyname}-W یا [command]{keyname}-W) را نمی توان توسط جاوااسکریپت مدیریت کرد.
 
-## Key events
+## رخد‌ادهای مربوط به کلید‌ها
 
 {{index keyboard, "keydown event", "keyup event", "event handling"}}
 
-When a key on the keyboard is pressed, your browser fires a
-`"keydown"` event. When it is released, you get a `"keyup"`
-event.
+زمانی که یک کلید در صفحه‌کلید فشرده می شود، مرورگر شما یک رخداد `"keydown"` را
+ارسال می‌کند. وقتی کلید رها می‌شود، یک رخداد `"keyup"` به وجود می آید.
 
 ```{lang: "text/html", focus: true}
 <p>This page turns violet when you hold the V key.</p>
@@ -310,32 +299,30 @@ event.
 
 {{index "repeating key"}}
 
-Despite its name, `"keydown"` fires not only when the key is
-physically pushed down. When a key is pressed and held, the event
-fires again every time the key _repeats_. Sometimes you have to be
-careful about this. For example, if you add a button to the DOM when a
-key is pressed and remove it again when the key is released, you
-might accidentally add hundreds of buttons when the key is held down
-longer.
+برخلاف نامش، `"keydown"` فقط در زمانی که کلید به پایین فشرده می شود به‌وجود
+نمی‌آید. زمانی که یک کلید فشرده می شود و در همان حالت نگه‌داشته می شود، این
+رخداد با هر بار تکرار آن کلید دوباره ارسال‌ می شود. گاهی اوقات باید حواستان به
+این رفتار باشد. به عنوان مثال اگر بخواهید دکمه‌ای را با فشردن یک کلید به DOM
+اضافه کنید و با رها کردن کلید حذف کنید، ممکن است تصادفی صدها دکمه اضافه شود زیرا
+ممکن است که کلید مورد نظر، زمان بیشتری در حالت فشرده نگه داشته شود.
 
 {{index "key property"}}
 
-The example looked at the `key` property of the event object to see
-which key the event is about. This property holds a string that, for
-most keys, corresponds to the thing that pressing that key would type.
-For special keys such as [enter]{keyname}, it holds a string that names the key
-(`"Enter"`, in this case). If you hold [shift]{keyname} while pressing a key,
-that might also influence the name of the key—`"v"` becomes `"V"`, and
-`"1"` may become `"!"`, if that is what pressing [shift]{keyname}-1 produces on
-your keyboard.
+در مثال، خاصیت `key` از شیء رخداد بررسی شد تا مشخص شود که رخداد به کدام کلید
+مربوط است. این خاصیت یک مقدار رشته ای را نگه می دارد که برای بیشتر کلید‌ها معادل
+چیزی است که با فشردن آن کلید تایپ می شود. برای کلید‌های خاص مثل
+[enter]{keyname}، نام آن به صورت رشته‌ نگه‌‌داری می‌شود (`"Enter"` در این مورد).
+اگر کلید [shift]{keyname} راه هم در زمان فشردن کلیدی نگه‌ دارید، این کار ممکن است که روی
+نام کلید تاثیر بگذارد – `"v"` به `"V"` تبدیل می شود، `"1"` به `"!"` تبدیل می شود، البته
+اگر این چیزی است که در صورت فشردن [shift]{keyname}-1 در صفحه‌کلید شما تولید می شود.
 
 {{index "modifier key", "shift key", "control key", "alt key", "meta key", "command key", "ctrlKey property", "shiftKey property", "altKey property", "metaKey property"}}
 
-Modifier keys such as [shift]{keyname}, [control]{keyname}, [alt]{keyname}, and [meta]{keyname} ([command]{keyname} on Mac)
-generate key events just like normal keys. But when looking for key
-combinations, you can also find out whether these keys are held down
-by looking at the `shiftKey`, `ctrlKey`, `altKey`, and `metaKey`
-properties of keyboard and mouse events.
+کلید‌های اصلاح‌گر مثل [shift]{keyname}، [control]{keyname}، [alt]{keyname} و
+[meta]{keyname} (کلید [command]{keyname} در Mac) شبیه به کلید‌های معمولی رخدادی
+را ایجاد می کنند. اما وقتی که ترکیب کلید‌ها را بررسی می کنید، می توانید ببینید
+که این کلید‌ها هم پایین نگه‌داشته شده اند یا خیر. این کار با نگاه کردن به خاصیت‌های
+`shiftKey`، `ctrlKey`، `altKey` و `metaKey` مربوط به رخدادهای موس و صفحه کلید قابل انجام است.
 
 ```{lang: "text/html", focus: true}
 <p>Press Control-Space to continue.</p>
@@ -350,75 +337,71 @@ properties of keyboard and mouse events.
 
 {{index "button (HTML tag)", "tabindex attribute", [DOM, events]}}
 
-The DOM node where a key event originates depends on the element
-that has ((focus)) when the key is pressed. Most nodes cannot have
-focus unless you give them a `tabindex` attribute, but things like
-((link))s, buttons, and form fields can. We'll come back to form
-((field))s in [Chapter ?](http#forms). When nothing in particular has
-focus, `document.body` acts as the target node of key events.
+گره‌ای در DOM، که در آن یک رخداد کلید آغاز می شود، به عنصری که در زمان
+فشردن کلید فعال (حالت focus) بوده است بستگی دارد. بیشتر گره‌ها نمی توانند درحالت focus
+قرار گیرند مگر اینکه به آن‌ها خصوصیت `tabindex` را اختصاص دهید، اما چیزهایی مثل
+پیوند‌ها، دکمه‌ها، و فیلد‌های فرم این امکان را به صورت پیش‌فرض دارند. در [فصل ?](http#forms) به بحث فیلد‌های
+فرم خواهیم پرداخت. وقتی عنصر خاصی در صفحه مورد تمرکز یا توجه نیست، <bdo>`document.body`</bdo>
+به عنوان گره‌ی هدف رخداد‌های کلید، در نظر گرفته می شود.
 
-When the user is typing text, using key events to figure out what is
-being typed is problematic. Some platforms, most notably the ((virtual
-keyboard)) on ((Android)) ((phone))s, don't fire key events. But even
-when you have an old-fashioned keyboard, some types of text input
-don't match key presses in a straightforward way, such as _input method editor_ (((IME)))
-software used by people whose scripts don't
-fit on a keyboard, where multiple key strokes are combined to create
-characters.
+زمانی که کاربر در حال تایپ یک متن است، استفاده از رخداد‌های کلید برای تشخیص چیزی
+که در حال تایپ شدن است با مشکلاتی روبرو می‌باشد. بعضی پلتفرم‌ها، مخصوصا صفحه‌کلید
+مجازی موجود در گوشی‌های اندروید، هیچ رخداد کلیدی را ارسال نمی کنند. حتی زمانی
+که از یک صفحه‌کلید قدیمی و از مد افتاده استفاده می کنید ، بعضی از انواع ورودی
+متن با کلیدی که فشرده می شود تطابق ندارند، مثل یک نرم افزار IME (“ویرایشگر روش
+ورود”) که توسط افرادی استفاده می‌شود که الفبای زبانشان در صفحه‌کلید معمولی قابل پیاده‌سازی
+نیست، جایی که ترکیب فشردن چند کلید برای ایجاد کاراکترها استفاده می شود.
 
-To notice when something was typed, elements that you can type into,
-such as the `<input>` and `<textarea>` tags, fire `"input"` events
-whenever the user changes their content. To get the actual content
-that was typed, it is best to directly read it from the focused field.
-[Chapter ?](http#forms) will show how.
+برای اینکه متوجه شویم که چیزی تایپ شده است، عناصری که می توان در آن‌ها چیزی را
+تایپ‌ کرد مثل <bdo>`<input>`</bdo>  و <bdo>`<textarea>`</bdo>، با هر بار تغییر محتوایشان توسط کاربر، رخداد
+“`"input"` را ایجاد می کنند. برای گرفتن محتوایی که تایپ شده است، بهترین کار این است
+که آن را مستقیما از فیلدی که مورد تمرکز است بخوانیم. [فصل ?](http#forms) چگونی آن را نشان می
+دهد.
 
-## Pointer events
+## رخداد‌های مربوط به مکان‌نما
 
-There are currently two widely used ways to point at things on a
-screen: mice (including devices that act like mice, such as touchpads
-and trackballs) and touchscreens. These produce different kinds of
-events.
+در حال حاضر، دو روش به طور گسترده برای اشاره به قسمت‌های روی یک صفحه‌ نمایش
+استفاده می شود :‌ استفاده از موس ( شامل دیگر ابزار که شبیه به موس عمل می کنند
+مثل پدلمسی (touchpad) و گوی کنترلی (trackball) )  و صفحات لمسی. این دو روش
+رخدادهای متنوعی ایجاد می کنند.
 
-### Mouse clicks
+### کلیک‌های موس
 
 {{index "mousedown event", "mouseup event", "mouse cursor"}}
 
-Pressing a ((mouse button)) causes a number of events to fire. The
-`"mousedown"` and `"mouseup"` events are similar to `"keydown"` and
-`"keyup"` and fire when the button is pressed and released. These
-happen on the DOM nodes that are immediately below the mouse pointer
-when the event occurs.
+فشردن یک دکمه‌ی موس موجب ایجاد چندین رخداد می گردد.  رخدادهای `"mousedown"` و
+`"mouseup"` مشابه `"keydown"` و `"keyup"` هستند و وقتی که دکمه‌ی موس فشرده و رها می
+شود، ایجاد می گردند. این اتفاق روی گره‌هایی از DOM می افتد که در هنگام فشردن
+کلید زیر مکان‌نمای موس قرار دارند.
 
 {{index "click event"}}
 
-After the `"mouseup"` event, a `"click"` event fires on the most
-specific node that contained both the press and the release of the
-button. For example, if I press down the mouse button on one paragraph
-and then move the pointer to another paragraph and release the button,
-the `"click"` event will happen on the element that contains both
-those paragraphs.
+بعد از رخداد `"mouseup"`، یک رخداد `"click"` روی صریح ترین گره‌ای که هر دوی
+فشردن و رهاشدن کلید را در بر بگیرد، به وجود می‌آید. به عنوان مثال، اگر
+دکمه‌ی موس را روی یک پاراگراف به پایین فشار دهیم و مکان‌نما را روی یک پاراگراف
+دیگر ببریم و دکمه‌ را رها کنیم، رخداد `"click"` روی عنصری رخ می دهد که هر دوی
+پاراگراف‌ها را در بر داشته باشد.
 
 {{index "dblclick event", "double click"}}
 
-If two clicks happen close together, a `"dblclick"` (double-click)
-event also fires, after the second click event.
+اگر دو کلیک نزدیک هم اتفاق بیفتد، همچنین یک رخداد `"dblclick"`  (جفت کلیک) بعد
+از رخداد کلیک دوم، ایجاد می شود.
 
 {{index pixel, "clientX property", "clientY property", "pageX property", "pageY property", "event object"}}
 
-To get precise information about the place where a mouse event
-happened, you can look at its `clientX` and `clientY` properties,
-which contain the event's ((coordinates)) (in pixels) relative to the
-top-left corner of the window, or `pageX` and `pageY`, which are
-relative to the top-left corner of the whole document (which may be
-different when the window has been scrolled).
+برای بدست آوردن اطلاعات دقیق جایی که رخداد موس در آنجا اتفاق افتاده است، می
+توانید به خاصیت‌های `clientX` و `clientY` رجوع کنید، که مختصات رخداد را (به پیکسل)
+نسبت به گوشه‌ی بالا و چپ پنجره، نگه‌داری می کنند یا `pageX` و `pageY` که نسبت به
+گوشه‌ی بالا و چپ کل سند این کار را انجام می‌دهند (که ممکن است در صورت اسکرول صفحه
+متفاوت باشد).
 
 {{index "border-radius (CSS)", "absolute positioning", "drawing program example"}}
 
 {{id mouse_drawing}}
 
-The following implements a primitive drawing program. Every time you
-click the document, it adds a dot under your mouse pointer. See
-[Chapter ?](paint) for a less primitive drawing program.
+در مثال پیش رو یک برنامه‌ی طراحی ابتدایی ایجاد می کنیم. هر بار که روی سند کلیک می
+کنید، برنامه یک نقطه زیر مکان کلیک شما اضافه می کند. برای دیدن مثالی کمتر
+ابتدایی از یک برنامه‌ی طراحی، به [فصل ?](paint) مراجعه کنید.
 
 ```{lang: "text/html"}
 <style>
@@ -444,20 +427,20 @@ click the document, it adds a dot under your mouse pointer. See
 </script>
 ```
 
-### Mouse motion
+### حرکت موس
 
 {{index "mousemove event"}}
 
-Every time the mouse pointer moves, a `"mousemove"` event is fired.
-This event can be used to track the position of the mouse. A common
-situation in which this is useful is when implementing some form of
-mouse-((dragging)) functionality.
+هر بار که مکان‌نمای موس حرکت می کند، یک رخداد `"mousemove"` ایجاد می شود. این
+رخداد را می توان برای رصد موقعیت موس استفاده نمود. یک موقعیت رایج که این رخداد
+مفید خواهد بود زمانی است که شکلی از قابلیت کشیدن عناصر با موس را پیاده‌سازی می
+کنیم.
 
 {{index "draggable bar example"}}
 
-As an example, the following program displays a bar and sets up event
-handlers so that dragging to the left or right on this bar makes it
-narrower or wider:
+به عنوان یک مثال، برنامه‌ی پیش رو یک میله را نمایش می دهد و گرداننده‌های رخدادی
+را تنظیم می کند که باعث می شوند که کشیدن به سمت چپ یا راست میله، موجب باریکتر یا
+ضخیم تر شدن آن بشود.
 
 ```{lang: "text/html", startCode: true}
 <p>Drag the bar to change its width:</p>
@@ -489,7 +472,7 @@ narrower or wider:
 
 {{if book
 
-The resulting page looks like this:
+نتیجه به شکل زیر خواهد شد:
 
 {{figure {url: "img/drag-bar.png", alt: "A draggable bar",width: "5.3cm"}}}
 
@@ -497,65 +480,63 @@ if}}
 
 {{index "mouseup event", "mousemove event"}}
 
-Note that the `"mousemove"` handler is registered on the whole
-((window)). Even if the mouse goes outside of the bar during resizing,
-as long as the button is held we still want to update its size.
+توجه داشته باشید که گرداننده‌ی `"mousemove"` برای کل پنجره ثبت شده است. حتی اگر
+موس از محیط میله در حین تغییر اندازه، بیرون برود، تا زمانی که دکمه‌ی موس پایین
+نگه‌داشته شود، هنوز قصد داریم تا اندازه‌ی آن را تغییر دهیم.
 
 {{index "buttons property", "button property", "bitfield"}}
 
-We must stop resizing the bar when the mouse button is released. For
-that, we can use the `buttons` property (note the plural), which tells
-us about the buttons that are currently held down. When this is zero,
-no buttons are down. When buttons are held, its value is the sum of
-the codes for those buttons—the left button has code 1, the right
-button 2, and the middle one 4. That way, you can check whether a given
-button is pressed by taking the remainder of the value of `buttons`
-and its code.
+با رها شدن دکمه‌ی موس باید تغییر اندازه را متوقف کنیم. برای این کار، می توانیم
+از خاصیت `buttons` ( به s انتهای آن توجه داشته باشید)، که اطلاعاتی درباره‌ی
+دکمه‌هایی که در حال حاضر فشرده نگه‌داشته شده اند می دهد، استفاده کنیم. زمانی که این خاصیت صفر
+است، هیچ دکمه‌ای در حالت فشرده نمانده است. زمانی که دکمه‌هایی فشرده مانده باشند،
+مقدار این خاصیت برابر با جمع کدهای هریک از دکمه ها خواهد بود – دکمه‌ی چپ موس
+دارای کد ‍‍1، دکمه‌ی راست 2  و دکمه‌ی وسط دارای کد 4 است. با این کار می توانید
+بررسی کنید که آیا دکمه‌ی داده شده در حالت فشرده قرار دارد یا خیر. این کار با
+گرفتن باقیمانده‌ی مقدار `buttons` و کد آن بدست می آید.
 
-Note that the order of these codes is different from the one used by
-`button`, where the middle button came before the right one. As
-mentioned, consistency isn't really a strong point of the browser's
-programming interface.
+توجه داشته باشید که ترتیب این کدها با ترتیبی که توسط `button` استفاده می شد متفاوت
+است، دکمه‌ی وسط قبل از دکمه‌ی راست می آید. همانطور که ذکر شد، ثبات چیزی نیست که
+واقعا به عنوان یک نقطه‌ی قوت برای رابط برنامه‌نویسی در مرورگرها بتوان در نظر
+گرفت.
 
-### Touch events
+### رخداد‌های لمسی
 
 {{index touch, "mousedown event", "mouseup event", "click event"}}
 
-The style of graphical browser that we use was designed with mouse
-interfaces in mind, at a time where touchscreens were rare. To
-make the Web "work" on early touchscreen phones, browsers for those
-devices pretended, to a certain extent, that touch events were mouse
-events. If you tap your screen, you'll get `"mousedown"`, `"mouseup"`,
-and `"click"` events.
+سبک مرورگرهای گرافیکی‌ای که ما استفاده می کنیم برای کار با موس‌ طراحی شده اند،
+در زمانی که صفحات لمسی بسیار نادر بودند. برای اینکه وب روی گوشی‌های اولیه‌ی لمسی
+“کار” بکند، در مرورگرهایی که برای آن گوشی‌ها ساخته می شد، تا حدی رخدادهای لمسی همان
+رخداد‌های موس بودند.  اگر روی صفحه ضربه بزنید، رخدادهای `"mousedown"` ، `"mouseup"`
+و `"click"` ایجاد خواهند شد.
 
-But this illusion isn't very robust. A touchscreen works differently
-from a mouse: it doesn't have multiple buttons, you can't track the
-finger when it isn't on the screen (to simulate `"mousemove"`), and it
-allows multiple fingers to be on the screen at the same time.
+اما این ترفند زیاد قدرتمند نیست. روش کار یک صفحه‌ی لمسی کاملا با موس متفاوت است:
+یک صفحه‌ی لمسی کلید‌های متعدد ندارد، نمی توان انگشت را زمانی که روی صفحه قرار
+ندارد، رصد کرد ( تا `"mousemove"` را شبیه سازی کنید) و می توان در آن چندین انگشت را
+همزمان روی صفحه نمایش داشت.
 
-Mouse events cover touch interaction only in straightforward cases—if
-you add a `"click"` handler to a button, touch users will still be
-able to use it. But something like the resizeable bar in the previous
-example does not work on a touchscreen.
+رخدادهای موس فقط مواردی از تعاملات لمسی با صفحه را پوشش می دهند که ساده و سرراست
+هستند – اگر به یک دکمه یک گرداننده‌ی `"click"` اضافه کنید، کاربران صفحات لمسی نیز
+می توانند از آن استفاده کنند. اما چیزی مثل یک میله‌ با اندازه‌ی قابل تغییر که در
+مثال قبل آمد روی صفحات لمسی کار نمی کند.
 
 {{index "touchstart event", "touchmove event", "touchend event"}}
 
-There are specific event types fired by touch interaction. When a
-finger starts touching the screen, you get a `"touchstart"` event.
-When it is moved while touching, `"touchmove"` events fire. 
-Finally, when it stops touching the screen, you'll see a `"touchend"`
-event.
+رخداد‌های به خصوصی برای کارهای لمسی وجود دارد. زمانی که انگشت شروع به لمس صفحه
+می کند، شما یک رخداد `"touchstart"` دریافت می کنید. زمانی که انگشت خود را مماس با
+صفحه حرکت می دهید، رخداد `"touchmove"` ایجاد می شود. و در نهایت زمانی که لمس صفحه‌
+پایان می یابد شما یک رخداد `"touchend"` دریافت می کنید.
 
 {{index "touches property", "clientX property", "clientY property", "pageX property", "pageY property"}}
 
-Because many touchscreens can detect multiple fingers at the same
-time, these events don't have a single set of coordinates associated
-with them. Rather, their ((event object))s have a `touches` property,
-which holds an ((array-like object)) of points, each of which has its
-own `clientX`, `clientY`, `pageX`, and `pageY` properties.
+به دلیل اینکه خیلی از صفحات لمسی می توانند چند انگشت را همزمان شناسایی کنند، این
+رخداد‌ها یک مجموعه‌ی واحدی از مختصات مربوط به نقاط را ندارند. به جای آن، اشیاء
+این رخداد‌ها دارای خاصیتی به نام `touches` می باشند که شیءای آرایه‌گونه از نقاط را
+نگه‌داری می کند که هر کدامشان دارای خاصیت‌های `clientX`، `clientY`، `pageX` و `pageY`
+مربوط به خود می باشند.
 
-You could do something like this to show red circles around every
-touching finger:
+می توانید با استفاده از کدی شبیه زیر دور قسمت‌هایی که با انگشت لمس شده اند
+دایره‌ای قرمز رنگ بکشید.
 
 ```{lang: "text/html"}
 <style>
@@ -585,24 +566,23 @@ touching finger:
 
 {{index "preventDefault method"}}
 
-You'll often want to call `preventDefault` in touch event handlers to
-override the browser's default behavior (which may include scrolling
-the page on swiping) and to prevent the mouse events from being fired,
-for which you may _also_ have a handler.
+گاهی لازم می شود که `preventDefault` را در گرداننده‌های رخداد لمسی فراخوانی کنید
+تا رفتار پیش‌فرض مرورگر را تغییر دهید ( که ممکن است شامل اسکرول‌شدن صفحه
+در صورت کشیدن انگشت به اطراف باشد) و از به‌وجود آمدن رخدادهای موس جلوگیری کنید، که
+ممکن است برای آن رخداد‌ها، گرداننده‌ی مجزایی در نظر گرفته‌ باشید.
 
-## Scroll events
+## رخداد‌های scroll
 
 {{index scrolling, "scroll event", "event handling"}}
 
-Whenever an element is scrolled, a `"scroll"` event is fired on it.
-This has various uses, such as knowing what the user is currently
-looking at (for disabling off-screen ((animation))s or sending ((spy))
-reports to your evil headquarters) or showing some indication of
-progress (by highlighting part of a table of contents or showing a
-page number).
+هر بار که عنصری اسکرول می شود، یک رخداد `"scroll"` روی آن اجرا می شود. این موضوع
+کاربردهای متنوعی دارد؛ مثلا برای دانستن چیزی که کاربر در حال مشاهده است ( برای
+غیرفعال‌سازی جلوه‌های متحرکی که خارج از قسمت قابل مشاهده قرار می گیرند یا ارسال
+گزارشاتی شیطانی برای دفتر مرکزی شرکتتان) یا نمایش نمادهایی از میزان پیشرفت کاربر
+( با برجسته‌ سازی بخش‌های فهرست محتوا یا شماره صفحات).
 
-The following example draws a ((progress bar)) above the document and
-updates it to fill up as you scroll down:
+مثال پیش رو یک نوار پیشرفت را در قسمت بالای صفحه ایجاد می کند  و با میزان اسکرول
+صفحه این نوار تکمیل می شود.
 
 ```{lang: "text/html"}
 <style>
@@ -629,45 +609,43 @@ updates it to fill up as you scroll down:
 
 {{index "unit (CSS)", scrolling, "position (CSS)", "fixed positioning", "absolute positioning", percentage, "repeat method"}}
 
-Giving an element a `position` of `fixed` acts much like an `absolute`
-position but also prevents it from scrolling along with the rest of
-the document. The effect is to make our progress bar stay at the top.
-Its width is changed to indicate the current progress. We use `%`,
-rather than `px`, as a unit when setting the width so that the element
-is sized relative to the page width.
+اگر `position` یک عنصر را `fixed` قرار بدهیم نتیجه شبیه به استفاده از موقعیت دهی
+`absolute` می شود اما در این حالت عنصر دیگر همراه با صفحه اسکرول نمی شود. این کار
+برای این است که نوار پیشرفت ما در بالای صفحه باقی بماند. تغییر عرض این نوار
+نمایانگر میزان پیشرفت خواهد بود. ما از `%` به جای `px` به عنوان واحد برای تنظیم عرض
+نوار استفاده می کنیم تا عنصر با توجه و نسبت به طول صفحه تغییر اندازه دهد.
 
 {{index "innerHeight property", "innerWidth property", "pageYOffset property"}}
 
-The global `innerHeight` binding gives us the height of the window,
-which we have to subtract from the total scrollable height—you can't
-keep scrolling when you hit the bottom of the document. There's also
-an `innerWidth` for the window width. By dividing `pageYOffset`, the
-current scroll position, by the maximum scroll position and
-multiplying by 100, we get the percentage for the progress bar.
+متغیر سراسری `innerHieght` به ما ارتفاع صفحه را می دهد که باید آن را از کل
+ارتفاع قابل اسکرول کم کنید – زمانی که به انتهای سند می‌رسید، نمی توانید به
+اسکرول ادامه دهید. همچنین `innerWidth` برای عرض صفحه‌ وجود دارد. با تقسیم
+`pageYOffset`، موقعیت اسکرول فعلی، بر موقعیت بیشینه‌ی اسکرول و ضرب آن در 100،
+درصد پیشرفت را برای نوار پیشرفت بدست می آوریم.
 
 {{index "preventDefault method"}}
 
-Calling `preventDefault` on a scroll event does not prevent the
-scrolling from happening. In fact, the event handler is called only
-_after_ the scrolling takes place.
+فراخوانی `preventDefault` روی یک رخداد scroll  مانع از انجام اسکرول صفحه نمی شود.
+در واقع، گرداننده‌ی رخداد فقط _بعد_ از اینکه اسکرول صفحه‌ اتفاق می افتد فراخوانی
+می شود.
 
-## Focus events
+## رخداد‌های Focus
 
 {{index "event handling", "focus event", "blur event"}}
 
-When an element gains ((focus)), the browser fires a `"focus"` event
-on it. When it loses focus, the element gets a `"blur"` event.
+زمانی که یک عنصر در صفحه فعال می شود، مرورگر یک رخداد `"focus"` را روی آن ایجاد می
+کند. زمانی که عنصر، دیگر فعال نیست، یک رخداد `"blur"` دریافت می کند.
 
 {{index "event propagation"}}
 
-Unlike the events discussed earlier, these two events do not
-propagate. A handler on a parent element is not notified when a child
-element gains or loses focus.
+برخلاف رخداد‌هایی که پیش‌تر بحث شد، این دو رخداد پخش نمی شوند (propagate).
+گرداننده‌ای که در عنصر والد قرار دارد متوجه فعال شدن یا از دست دادن توجه کاربر
+از عنصر فرزندش نمی شود.
 
 {{index "input (HTML tag)", "help text example"}}
 
-The following example displays help text for the ((text field)) that
-currently has focus:
+در مثال پیش رو یک متن راهنما برای فیلد متنی که در حال حاضر فعال است نشان داده می
+شود:
 
 ```{lang: "text/html"}
 <p>Name: <input type="text" data-help="Your full name"></p>
@@ -691,7 +669,7 @@ currently has focus:
 
 {{if book
 
-This screenshot shows the help text for the age field.
+در این تصویر، متن راهنما برای فیلد سن نمایش داده شده است.
 
 {{figure {url: "img/help-field.png", alt: "Providing help when a field is focused",width: "4.4cm"}}}
 
@@ -699,69 +677,67 @@ if}}
 
 {{index "focus event", "blur event"}}
 
-The ((window)) object will receive `"focus"` and `"blur"` events when
-the user moves from or to the browser tab or window in which the
-document is shown.
+شیء window  دو رخداد `"focus"`  و `"blur"` را زمانی دریافت می‌کند که کاربر از/یا به تب مرورگر
+یا پنجره‌ای که سند در آن نمایش داده می شود برود.
 
-## Load event
+## رخداد بارگیری  - load
 
 {{index "script (HTML tag)", "load event"}}
 
-When a page finishes loading, the `"load"` event fires on the window
-and the document body objects. This is often used to schedule
-((initialization)) actions that require the whole ((document)) to have
-been built. Remember that the content of `<script>` tags is run
-immediately when the tag is encountered. This may be too soon, for
-example when the script needs to do something with parts of the
-document that appear after the `<script>` tag.
+زمانی که بارگیری یک صفحه تمام می شود، رخداد `"load"` روی شیء window و body سند
+ایجاد می شود. این رخداد معمولا برای زمانبندی کارهای آغازینی که برای کارکرد نیاز
+دارند که کل سند بارگیری شده باشد استفاده می شود. به خاطر داشته باشید که محتوای
+برچسب `<script>` بلافاصله بعد از اینکه این برچسب مشاهده می شود اجرا می شود. ممکن
+است این اتفاق خیلی زودتر از موعد رخ بدهد، برای مثال، زمانی که اسکریپت لازم است با
+با بخش‌هایی از سند که بعد از برچسب `<script>`‌ می آیند کار کند.
 
 {{index "event propagation", "img (HTML tag)"}}
 
-Elements such as ((image))s and script tags that load an external file
-also have a `"load"` event that indicates the files they reference
-were loaded. Like the focus-related events, loading events do not
-propagate.
+عناصری مثل تصاویر و برچسب‌های script که یک فایل بیرونی را بارگیری می کنند نیز
+یک رخداد `"load"` دارند که نشان می دهد که فایلی که به آن ارجاع داده اند بارگیری
+شده است. شبیه رخداد‌های مربوط به `focus`، رخدادهای مربوط به بارگیری نیز “پخش” نمی
+شوند.
 
 {{index "beforeunload event", "page reload", "preventDefault method"}}
 
-When a page is closed or navigated away from (for example, by following
-a link), a `"beforeunload"` event fires. The main use of this event is
-to prevent the user from accidentally losing work by closing a
-document. Preventing the page from unloading is not, as you might
-expect, done with the `preventDefault` method. Instead, it is done by
-returning a non-null value from the handler. When you do that, the
-browser will show the user a dialog asking if they are sure they want to
-leave the page. This mechanism ensures that a user is always able to
-leave, even on malicious pages that would prefer to keep them there
-forever and force them to look at dodgy weight-loss ads.
+زمانی که یک صفحه بسته شود یا کاربر از آن خارج گردد (مثلا با رفتن به یک صفحه‌ی
+دیگر)، یک رخداد `"beforeunload"` اجرا می شود. کاربرد اصلی این رخداد برای جلوگیری
+از خروج تصادفی کاربر از صفحه و از دست دادن کارهایی است که در صورت خروج از صفحه، رخ می
+دهد. جلوگیری از خروج از صفحه همان طور که ممکن است حدس زده باشید، نمی تواند با متد
+`preventDefault` انجام شود. در عوض، می توان این کار را با برگرداندن یک مقدار غیر
+null از گرداننده میسر ساخت. زمانی که این کار را انجام می دهید، مرورگر یک پنجره‌ی
+تعاملی به کاربر نشان می دهد که از او بپرسد آیا مطمئن است که قصد خروج از صفحه را
+دارد. این مکانیزم اطمینان حاصل می کند که کاربر همیشه قادر باشد که صفحه را
+ترک کند حتی در صفحات مخربی که ترجیح می دهند کاربران را برای همیشه در صفحه حبس
+کرده و مجبورشان کنند که تبلیغات مسخره کاهش وزن را نگاه کنند.
 
 {{id timeline}}
 
-## Events and the event loop
+## رخداد‌ها و حلقه‌ی رخداد
 
 {{index "requestAnimationFrame function", "event handling", timeline, "script (HTML tag)"}}
 
-In the context of the event loop, as discussed in [Chapter ?](async),
-browser event handlers behave like other asynchronous notifications.
-They are scheduled when the event occurs but must wait for other
-scripts that are running to finish before they get a chance to run.
+در بستر حلقه‌ی رخداد، که در [فصل ?](async) بحث شد، گرداننده‌های رخداد مرورگر
+شبیه به دیگر اعلان‌های ناهمگام عمل می کنند. این گرداننده‌ها در زمان اتفاق
+رخدادها زمان‌بندی می شوند، اما قبل از اینکه شانس اجرا داشته باشند، باید برای
+دیگر اسکریپت‌ها منتظر بماند که اجرایشان پایان یابد .
 
-The fact that events can be processed only when nothing else is
-running means that, if the event loop is tied up with other work, any
-interaction with the page (which happens through events) will be
-delayed until there's time to process it. So if you schedule too much
-work, either with long-running event handlers or with lots of
-short-running ones, the page will become slow and cumbersome to use.
+این حقیقت که آن رخدادها فقط می توانند زمانی پردازش شوند که چیز دیگری در حال اجرا
+نباشد به این معنا است که اگر حلقه‌ی رخداد با دیگر کارها گره بخورد، هر تعامل با
+صفحه (که توسط رخدادها انجام می شود) تا زمانی که زمان برای پردازش آن وجود دارد به
+تاخیر خواهد افتاد. بنابراین اگر کار زیادی را زمانبندی کنید، چه با گرداننده‌های
+رخداد زمان‌گیر یا تعداد زیاد گرداننده کوچک، صفحه کند می شود و استفاده از آن سخت
+خواهد شد.
 
-For cases where you _really_ do want to do some time-consuming thing
-in the background without freezing the page, browsers provide
-something called _((web worker))s_. A worker is a JavaScript process
-that runs alongside the main script, on its own timeline.
+برای مواردی که واقعا لازم است تا بعضی کارهای زمان-گیر را در پیش‌زمینه انجام دهید
+و صفحه از کار نیفتد ، مرورگرها چیزی به نام _((web worker))s_ (کارگزاران وب) را فراهم
+ساخته اند. یک کارگزار یک پردازش جاوااسکریپت است که در کنار اسکریپت اصلی اجرا می
+شود و خط‌ زمانی خودش را دارد.
 
-Imagine that squaring a number is a heavy, long-running computation
-that we want to perform in a separate ((thread)). We could write a
-file called `code/squareworker.js` that responds to messages by
-computing a square and sending a message back.
+فرض کنید که محاسبه‌ی مربع یک عدد کاری سنگین باشد، یک محاسبه‌ زمان‌گیر که قصد
+داریم آن را در thread یا نخ دیگری انجام دهیم. می توانیم فایلی به نام
+<bdo>`code/squareworker.js`</bdo> ایجاد کنیم که به پیام‌ها با محاسبه‌ی یک مربع پاسخ داده و
+پیامی را به عنوان پاسخ برگرداند.
 
 ```
 addEventListener("message", event => {
@@ -769,13 +745,13 @@ addEventListener("message", event => {
 });
 ```
 
-To avoid the problems of having multiple ((thread))s touching the same
-data, workers do not share their ((global scope)) or any other data
-with the main script's environment. Instead, you have to communicate
-with them by sending messages back and forth.
+برای پیشگیری از بروز مشکلات داشتن چند thread که روی یک داده کار می کنند،
+کارگزاران، قلمروی سراسری‌شان یا هر داده‌ی دیگری را با محیط اصلی اسکریپت به
+اشتراک نمی گذارند. در عوض، ایجاد ارتباط با آن‌ها باید از طریق ارسال و دریافت
+پیام انجام شود.
 
-This code spawns a worker running that script, sends it a few
-messages, and outputs the responses.
+کد زیر یک کارگزار که اسکریپتی را اجرا می کند، تعریف می کند؛ چندین پیام به آن
+ارسال کرده و پاسخ‌ها را به خروجی می فرستد.
 
 ```{test: no}
 let squareWorker = new Worker("code/squareworker.js");
@@ -788,27 +764,25 @@ squareWorker.postMessage(24);
 
 {{index "postMessage method", "message event"}}
 
-The `postMessage` function sends a message, which will cause a
-`"message"` event to fire in the receiver. The script that created the
-worker sends and receives messages through the `Worker` object,
-whereas the worker talks to the script that created it by sending and
-listening directly on its ((global scope)). Only values that can be
-represented as JSON can be sent as messages—the other side will
-receive a _copy_ of them, rather than the value itself.
+تابع `postMessage` یک پیام ارسال می کند، که باعث می شود که یک رخداد `"message"` در
+دریافت‌کننده ایجاد گردد. اسکریپتی که کارگزار (worker) را ایجاد کرده است پیام ها را از طریق
+شیء `Worker` ارسال و دریافت می کند، جاییکه کارگزار با اسکریپتی که آن را ایجاد کرده
+است به وسیله‌ی ارسال و شنود مستقیم روی قلمروی سراسری‌اش، ارتباط برقرار می کند. فقط
+مقادیری که می توان آن‌ها را به صورت JSON نمایش داد می توانند به عنوان پیام‌ها
+ارسال شوند – سمت دیگر یک _کپی_ از آن‌ها را دریافت می کند نه خودشان را.
 
-## Timers
+## زمان‌سنج
 
 {{index timeout, "setTimeout function"}}
 
-We saw the `setTimeout` function in [Chapter ?](async). It schedules
-another function to be called later, after a given number of
-milliseconds.
+در [فصل ?](async) با تابع `setTimeout` آشنا شدیم. این تابع، تابع دیگری را برای
+فراخوانی بعد از گذشت زمان داده شده به هزارم ثانیه زمان‌بندی می کند.
 
 {{index "clearTimeout function"}}
 
-Sometimes you need to cancel a function you have scheduled. This is
-done by storing the value returned by `setTimeout` and calling
-`clearTimeout` on it.
+گاهی لازم است که اجرای تابعی را که زمان‌بندی کرده‌اید، لغو کنید. این کار
+با ذخیره‌ی مقداری که از تابع `setTimeout` برگردانده می شود و فراخوانی `clearTimeout`
+روی آن صورت می‌گیرد.
 
 ```
 let bombTimer = setTimeout(() => {
@@ -823,15 +797,14 @@ if (Math.random() < 0.5) { // 50% chance
 
 {{index "cancelAnimationFrame function", "requestAnimationFrame function"}}
 
-The `cancelAnimationFrame` function works in the same way as
-`clearTimeout`—calling it on a value returned by
-`requestAnimationFrame` will cancel that frame (assuming it hasn't
-already been called).
+تابع `cancelAnimationFrame` به همان صورت که تابع `clearTimeout` عمل می کرد، کار
+می کند – فراخوانی آن روی مقدار برگشتی توسط `requestAnimationFrame` باعث می شود
+که آن فریم لغو شود (‌با فرض این که پیش از آن فراخوانی نشده باشد).
 
 {{index "setInterval function", "clearInterval function", repetition}}
 
-A similar set of functions, `setInterval` and `clearInterval`, are used
-to set timers that should _repeat_ every _X_ milliseconds.
+یک مجموعه مشابه از توابع، `setInterval` و `clearInterval` برای تنظیم زمان سنج‌هایی که
+باید هر _X_  هزارم ثانیه _تکرار_ شوند، استفاده می شود.
 
 ```
 let ticks = 0;
@@ -844,32 +817,30 @@ let clock = setInterval(() => {
 }, 200);
 ```
 
-## Debouncing
+## Debouncing (کاهش دفعات رسیدگی)
 
 {{index optimization, "mousemove event", "scroll event", blocking}}
 
-Some types of events have the potential to fire rapidly, many times in
-a row (the `"mousemove"` and `"scroll"` events, for example). When
-handling such events, you must be careful not to do anything too
-time-consuming or your handler will take up so much time that
-interaction with the document starts to feel slow.
+بعضی انواع رخداد‌ها این قابلیت را دارند که به سرعت، و به دفعات در یک ردیف اجرا
+شوند ( برای مثال `"mousemove"` و `"scroll"`). در هنگام رسیدگی به این رخداد‌ها، باید
+مواظب باشید که کاری که خیلی زمان‌گیر است را انجام ندهید که در این صورت
+گرداننده‌ی شما زمان زیادی می گیرد و تعامل با صفحه با مشکل کندی روبرو می شود.
 
 {{index "setTimeout function"}}
 
-If you do need to do something nontrivial in such a handler, you can
-use `setTimeout` to make sure you are not doing it too often. This is
-usually called _((debouncing))_ the event. There are several slightly
-different approaches to this.
+اگر لازم است که کاری جدی در این گونه گرداننده‌ها انجام دهید، می توانید با استفاده
+از `setTimeout` اطمینان حاصل کنید که این کار را به دفعات کمتری انجام می دهید. این
+کار معمولا _debounce_ رخداد نامیده می شود. برای این کار روش‌های نسبتا متفاوتی وجود
+دارد.
 
 {{index "textarea (HTML tag)", "clearTimeout function", "keydown event"}}
 
-In the first example, we want to react when the user has typed
-something, but we don't want to do it immediately for every input
-event. When they are ((typing)) quickly, we just want to wait until a
-pause occurs. Instead of immediately performing an action in the event
-handler, we set a timeout. We also clear the previous timeout (if any)
-so that when events occur close together (closer than our timeout
-delay), the timeout from the previous event will be canceled.
+در مثلا اول، قصد داریم با تایپ چیزی توسط کاربر واکنش نشان دهیم اما نمی خواهیم
+این کار را برای هر رخداد ورودی انجام دهیم. در لحظاتی که کاربر به سرعت تایپ می
+کند، کمی صبر می کنیم تا یک وقفه در تایپ به وجود بیاید. به جای اینکه بلافاصله
+کاری در گرداننده رخداد انجام دهیم، یک زمان‌سنج تنظیم می کنیم. همچنین timeout
+قبلی را هم متوقف می کنیم (در صورت وجود) در نتیجه هنگامی که رخدادها نزدیک به هم
+رخ می دهند (نزدیک تر از وقفه‌ی زمان‌سنج ما) timeout متعلق به رخداد قبلی لغو می شود.
 
 ```{lang: "text/html"}
 <textarea>Type something here...</textarea>
@@ -885,17 +856,17 @@ delay), the timeout from the previous event will be canceled.
 
 {{index "sloppy programming"}}
 
-Giving an undefined value to `clearTimeout` or calling it on a timeout
-that has already fired has no effect. Thus, we don't have to be
-careful about when to call it, and we simply do so for every event.
+اگر به تابع `clearTimeout` مقداری undefined بدهیم یا اینکه آن را روی یک timeout که
+پیش‌تر اجرا شده فراخوانی کنیم هیچ اثری تولید نخواهد کرد. بنابراین نیازی نیست که به
+زمان فراخوانی آن دقت کنیم و می توانیم برای همه‌ی رخداد‌ها این کار را انجام دهیم.
 
 {{index "mousemove event"}}
 
-We can use a slightly different pattern if we want to space responses
-so that they're separated by at least a certain length of ((time)) but
-want to fire them _during_ a series of events, not just afterward. For
-example, we might want to respond to `"mousemove"` events by showing
-the current coordinates of the mouse but only every 250 milliseconds.
+می توانیم از الگویی کمی متفاوت استفاده کنیم اگر بخواهیم بین پاسخ ها فاصله
+بیاندازیم و بین آن‌ها یک حداقل زمان مشخص فاصله باشد اما باید آن‌ها را در طول یک
+مجموعه از رخدادها اجرا کنیم نه بعد از آن ها. به عنوان مثال، ممکن است بخواهیم
+به رخدادهای `"mousemove"` با نشان‌دادن مختصات فعلی موس پاسخ بدهیم اما بعد از هر
+250 هزارم ثانیه.
 
 ```{lang: "text/html"}
 <script>
@@ -913,56 +884,54 @@ the current coordinates of the mouse but only every 250 milliseconds.
 </script>
 ```
 
-## Summary
+## خلاصه
 
-Event handlers make it possible to detect and react to events
-happening in our web page. The `addEventListener` method is used to
-register such a handler.
+گرداننده‌های رخداد این امکان را فراهم می کنند که  رخدادهایی که در صفحه‌ی وب ما
+اتفاق می افتند را شناسایی و به آن ها واکنش نشان دهیم. متد `addEventListener` برای
+ثبت گرداننده‌ها استفاده می شود.
 
-Each event has a type (`"keydown"`, `"focus"`, and so on) that
-identifies it. Most events are called on a specific DOM element and
-then _propagate_ to that element's ancestors, allowing handlers
-associated with those elements to handle them.
+هر رخداد دارای یک نوع است (`"keydown"` ، `"focus"` و از این قبیل) که برای شناسایی آن
+استفاده می شود. بیشتر رخدادها روی عناصر به خصوصی از DOM فراخوانی می شوند و بعد
+از آن به سمت عناصر والد (اجداد) آن پخش (propagate) می شوند که به گرداننده‌های ثبت شده برای
+آن عنصرها نیز امکان واکنش به رخداد را فراهم می کنند.
 
-When an event handler is called, it is passed an event object with
-additional information about the event. This object also has methods
-that allow us to stop further propagation (`stopPropagation`) and
-prevent the browser's default handling of the event
-(`preventDefault`).
+زمانی که یک گرداننده‌ی رخداد فراخوانی می شود، یک شیء رخداد که حاوی اطلاعات
+بیشتری در باره‌ی رخداد است به آن ارسال می شود. این شیء دارای متدهایی است که می
+توان با آن‌ها از پخش رخداد جلوگیری کرد (`stopPropagation`) و مانع از اجرای واکنش
+پیش‌فرض مرورگر به رخداد شد (`preventDefault`).
 
-Pressing a key fires `"keydown"` and `"keyup"` events. Pressing a
-mouse button fires `"mousedown"`, `"mouseup"`, and `"click"` events.
-Moving the mouse fires `"mousemove"` events. Touchscreen interaction
-will result in `"touchstart"`, `"touchmove"`, and `"touchend"` events.
+با فشردن یک کلید دو رخداد `"keydown"` و `"keyup"` اجرا می شوند. فشردن یک کلید موس
+نیز سه رخداد `"mousedown"` ، `"mouseup"` و `"click"` را اجرا می کند. حرکت دادن موس
+باعث ایجاد رخداد‌های `"mousemove"`  می شود. تعامل با صفحه‌ی لمسی باعث ایجاد
+رخداد‌های `"touchstart"`، `"touchmove"`  و `"touchend"` می شود.
 
-Scrolling can be detected with the `"scroll"` event, and focus changes
-can be detected with the `"focus"` and `"blur"` events. When the
-document finishes loading, a `"load"` event fires on the window.
+اسکرول صفحه را می‌توان با رخداد `"scroll"` شناسایی کرد و فعال شدن عناصر صفحه را
+می توان با `"focus"` و `"blur"` تشخیص داد. زمانی که بارگیری یک سند پایان می یابد،
+یک رخداد `"load"` روی window اجرا می شود.
 
-## Exercises
+## تمرین‌ها
 
-### Balloon
+### بالون
 
 {{index "balloon (exercise)", "arrow key"}}
 
-Write a page that displays a ((balloon)) (using the balloon ((emoji)),
-🎈). When you press the up arrow, it should inflate (grow) 10 percent,
-and when you press the down arrow, it should deflate (shrink) 10 percent.
+صفحه‌ای ایجاد کنید که یک بالون را نمایش دهد ( با استفاده از ایموجی بالون 🎈).
+زمانی که کلید بالا را در صفحه‌کلید فشار می دهید، بالون باید ده درصد باد شود (بزرگ
+شود) و زمانی که کلید پایین را فشار می دهید بالون باید ده درصد کوچک شود.
 
 {{index "font-size (CSS)"}}
 
-You can control the size of text (emoji are text) by setting the
-`font-size` CSS property (`style.fontSize`) on its parent element.
-Remember to include a unit in the value—for example, pixels (`10px`).
+می توانید اندازه‌ی متن (ایموجی‌ها متن محسوب می شوند) را با تنظیم خاصیت <bdo>`font-size`</bdo>
+در CSS یا (<bdo>`style.fontSize`</bdo>)) برای عنصر والدش کنترل کنید. به خاطر داشته باشید که
+یک واحد اندازه گیری در مقدار قرار دهید، برای مثال (`10px`).
 
-The key names of the arrow keys are `"ArrowUp"` and `"ArrowDown"`.
-Make sure the keys change only the balloon, without scrolling the
-page.
+نام کلید‌های جهت‌دار در صفحه‌کلید `"ArrowUp"` و `"ArrowDown"` است. مطمئن شوید که این
+کلید‌ها اندازه‌ی بالون را فقط تغییر می دهند و باعث اسکرول شدن صفحه نمی شوند.
 
-When that works, add a feature where, if you blow up the balloon past
-a certain size, it explodes. In this case, exploding means that it is
-replaced with an 💥 emoji, and the event handler is removed (so that
-you can't inflate or deflate the explosion).
+وقتی تا اینجای کار به درستی کار کرد، امکانی اضافه کنید که در آن با بزرگتر شدن
+بالون از یک حد مشخص، بالون بترکد. در این جا ترکیدن را می توان با جایگزینی ایموجی
+بالون با یک ایموجی 💥 انجام داد و گرداننده‌ی رخداد نیز حذف شود ( تا دیگر انفجار
+را بزرگ یا کوچک نکند).
 
 {{if interactive
 
@@ -980,51 +949,46 @@ if}}
 
 {{index "keydown event", "key property", "balloon (exercise)"}}
 
-You'll want to register a handler for the `"keydown"` event and look
-at `event.key` to figure out whether the up or down arrow key was
-pressed.
+لازم خواهید داشت تا یک گرداننده برای رخداد `"keydown"` ثبت کنید و به سراغ
+<bdo>`event.key`</bdo> بروید تا متوجه شوید کلید بالا فشرده شده است یا کلید پایین.
 
-The current size can be kept in a binding so that you can base the
-new size on it. It'll be helpful to define a function that updates the
-size—both the binding and the style of the balloon in the DOM—so that
-you can call it from your event handler, and possibly also once when
-starting, to set the initial size.
+می توان اندازه‌ی کنونی را در یک متغیر نگه‌داری نمود که در این صورت می‌توانید
+اندازه‌ی جدید را بر مبنان آن تعریف کنید. اگر یک تابع برای تغییر اندازه - متغیر و
+سبک بالون در DOM - در نظر بگیرید، کار خوبی‌ است و می توانید از آن گرداننده‌ی رخدادتان استفاده کنید، و احتمالا در شروع برای تنظیم اندازه‌ی ابتدایی.
 
 {{index "replaceChild method", "textContent property"}}
 
-You can change the balloon to an explosion by replacing the text node
-with another one (using `replaceChild`) or by setting the
-`textContent` property of its parent node to a new string.
+برای تغییر بالون به حالت منفجر شده می‌توانید گره‌ی متن را با ایموجی جدید (با
+استفاده از `replaceChild`) تغییر دهید یا خاصیت `textContent` متعلق به والدش را
+با یک رشته‌ی جدید مقداردهی کنید.
 
 hint}}
 
-### Mouse trail
+### دنباله‌ی موس
 
 {{index animation, "mouse trail (exercise)"}}
 
-In JavaScript's early days, which was the high time of ((gaudy home
-pages)) with lots of animated images, people came up with some truly
-inspiring ways to use the language.
+در روزهای اولیه‌ی استفاده از جاوااسکریپت، که بورس صفحات وب جلف و پر زرق و برق و
+پر از عکس‌های متحرک بود، بعضی افراد روش‌های الهام‌بخشی برای استفاده از
+جاوااسکریپت در آن فضا پیدا کرده بودند.
 
-One of these was the _mouse trail_—a series of elements that would
-follow the mouse pointer as you moved it across the page.
+یکی از آن روش‌ها جلوه‌ی دنباله‌ی موس بود – مجموعه‌ای از عناصر که با حرکت موس در
+صفحه به دنبال مکان‌نمای آن حرکت می کردند.
 
 {{index "absolute positioning", "background (CSS)"}}
 
-In this exercise, I want you to implement a mouse trail. Use
-absolutely positioned `<div>` elements with a fixed size and
-background color (refer to the [code](event#mouse_drawing) in the
-"Mouse Clicks" section for an example). Create a bunch of such
-elements and, when the mouse moves, display them in the wake of the
-mouse pointer.
+در این تمرین، از شما می خواهم که یک دنباله‌ی موس درست کنید. از عناصر `<div>` که به
+صورت مطلق (absolute) مقداردهی شده اند با اندازه‌ی ثابت و رنگ پیش‌زمینه (برای
+مثال به [کدی](event#mouse_drawing) که در قسمت کلیک‌های موس وجود دارد مراجعه کنید) استفاده کنید.  به
+تعداد کافی از این عناصر ایجاد کنید و زمانی که موس حرکت می کند آن ها را مثل ردپای
+مکان‌نمای موس به نمایش بگذارید.
 
 {{index "mousemove event"}}
 
-There are various possible approaches here. You can make your solution
-as simple or as complex as you want. A simple solution to start with
-is to keep a fixed number of trail elements and cycle through them,
-moving the next one to the mouse's current position every time a
-`"mousemove"` event occurs.
+روش‌های متنوعی برای پیاده‌سازی این کار وجود دارد. می توانید راه حلی پیچیده یا
+ساده را برگزینید. یک راه‌حل ساده برای شروع این است که تعداد ثابتی از عناصری
+دنباله‌رو داشته باشیم و بین آن‌ها بچرخیم و با هر بار ایجاد یک رخداد `"mousemove"`
+عنصر بعدی را به موقعیت فعلی موس منتقل کنیم.
 
 {{if interactive
 
@@ -1052,51 +1016,47 @@ if}}
 
 {{index "mouse trail (exercise)"}}
 
-Creating the elements is best done with a loop. Append them to the
-document to make them show up. To be able to access them later to change their position, you'll want to store the elements in
-an array.
+بهترین روش ایجاد عنصرها در اینجا استفاده از یک حلقه است. عناصر را به سند الحاق
+کنید تا نمایش داده شوند. برای اینکه بتوان در ادامه به آن‌ها دسترسی داشت و
+موقعیت‌شان را تغییر داد، لازم است تا آن‌‌ها را درون یک آرایه‌ ذخیره کنید.
 
 {{index "mousemove event", [array, indexing], "remainder operator", "% operator"}}
 
-Cycling through them can be done by keeping a ((counter variable)) and
-adding 1 to it every time the `"mousemove"` event fires. The remainder
-operator (`% elements.length`) can then be used to get a valid array
-index to pick the element you want to position during a given event.
+پیمایش آن‌ها را می‌توان با استفاده از یک متغیر شمارنده و افزودن 1 به آن با هر بار ارسال `"mousemove"`
+صورت داد. عملگر باقی‌مانده <bdo>(`% elements.length`)</bdo> را می‌توان در ادامه برای دریافت یک خانه‌ی معتبر آرایه برای گرفتن عنصر مورد نظر و موقعیت دهی آن در آن رخداد استفاده نمود.
 
 {{index simulation, "requestAnimationFrame function"}}
 
-Another interesting effect can be achieved by modeling a simple
-((physics)) system. Use the `"mousemove"` event only to update a pair
-of bindings that track the mouse position. Then use
-`requestAnimationFrame` to simulate the trailing elements being
-attracted to the position of the mouse pointer. At every animation
-step, update their position based on their position relative to the
-pointer (and, optionally, a speed that is stored for each element).
-Figuring out a good way to do this is up to you.
+یک جلوه‌ی جالب دیگر را نیز می‌توان با مدل‌سازی یک سیستم فیزیکی ساده پیاده‌سازی
+کرد. از رخداد `"mousemove"` فقط برای به‌روز‌رسانی یک جفت متغیر که موقعیت موس را
+رصد ‌می‌کنند استفاده کنید. سپس به سراغ `requestAnimationFrame` برای شبیه‌سازی
+حالتی بروید که عناصر دنباله‌رو جذب مکان موس می‌شوند. در هر گام انیمیشن،
+موقعیت‌های آن‌ها را بر اساس موقعیت آن‌ها نسبت به مکان‌نما (و یک سرعت اختیاری که
+برای هر عنصر ذخیره شده است) به‌روز کنید.
 
 hint}}
 
-### Tabs
+### برگه‌ها
+
 
 {{index "tabbed interface (exercise)"}}
 
-Tabbed panels are widely used in user interfaces. They allow you to
-select an interface panel by choosing from a number of tabs "sticking
-out" above an element.
+پنل‌های برگه‌دار (tabbed panels) به صورت گسترده‌ای در رابط‌های کاربر استفاده می
+شوند. این پنل‌ها به شما امکان انتخاب پنل‌ خاصی از بین  تعدادی برگه‌ی موجود فراهم
+می کنند که پنل منتخب به شکلی برجسته نمایش داده می شود.
 
 {{index "button (HTML tag)", "display (CSS)", "hidden element", "data attribute"}}
 
-In this exercise you must implement a simple tabbed interface. Write a
-function, `asTabs`, that takes a DOM node and creates a tabbed
-interface showing the child elements of that node. It should insert a
-list of `<button>` elements at the top of the node, one for each child
-element, containing text retrieved from the `data-tabname` attribute
-of the child. All but one of the original children should be hidden
-(given a `display` style of `none`). The currently visible node can be
-selected by clicking the buttons.
+در این تمرین شما باید یک پنل برگه‌دار ساده را پیاده سازی کنید. تابعی به نام
+`asTabs` بنویسید که یک گره‌ی DOM را گرفته و یک رابط برگه‌دار را ایجاد می کند که
+عناصر فرزند آن گره‌ را نشان می دهد. این تابع باید لیستی از عناصر `<button>` را در
+بالای گره برای هر یک از عناصر فرزند نمایش دهد که هر دکمه عنوانش را از خصوصیت
+<bdo>`data-tabname`</bdo> عنصر فرزند دریافت می کند. همه‌ی عناصر فرزند به جز یک عنصر باید مخفی
+شوند ( با تنظیم خاصیت `display` با مقدار `none`). گره‌ای که در حالت فعلی قابل مشاهده
+است با کلیک‌ کردن روی دکمه‌ها مشخص می شود.
 
-When that works, extend it to style the button for the currently
-selected tab differently so that it is obvious which tab is selected.
+بعد از انجام آن، دکمه‌ای که فعال است را سبک‌دهی متفاوتی کنید که مشخص باشد کدام
+برگه‌ انتخاب شده است.
 
 {{if interactive
 
@@ -1120,26 +1080,23 @@ if}}
 
 {{index "text node", "childNodes property", "live data structure", "tabbed interface (exercise)", [whitespace, "in HTML"]}}
 
-One pitfall you might run into is that you can't directly use the
-node's `childNodes` property as a collection of tab nodes. For one
-thing, when you add the buttons, they will also become child nodes and
-end up in this object because it is a live data structure. For
-another, the text nodes created for the whitespace between the
-nodes are also in `childNodes` but should not get their own tabs. You
-can use `children` instead of `childNodes` to ignore text nodes.
+یک دام که ممکن است در آن بیفتید این است که شما نمی‌توانید مستقیما  به سراغ خاصیت
+`childNodes` به عنوان یک مجموعه‌ از گره‌های برگه‌ بروید. اولا, وقتی دکمه‌ها
+(buttons) را اضافه می‌کنید ، آن‌ها نیز تبدیل به گره‌های فرزند می‌شوند و در این
+شیء قرار می‌گیرند زیرا این شیء یک ساختار داده‌ی زنده است. دوما, گره‌های متنی که
+برای فضاهای خالی بین گره‌ها ایجاد شده اند نیز در `childNodes` موجود هستند اما
+نباید برای آن‌ها برگه‌ در نظر گرفته شود. می توانید از `children` بجای
+`childNodes` برای این منظور استفاده کنید.
 
 {{index "TEXT_NODE code", "nodeType property"}}
 
-You could start by building up an array of tabs so that you have easy
-access to them. To implement the styling of the buttons, you could
-store objects that contain both the tab panel and its button.
+می‌توانید با ساختن یک آرایه‌ از برگه‌ها کار را شروع کنید که در این‌ صورت به
+آسانی در دسترس شما خواهند بود. برای پیاده‌سازی سبک‌های دکمه‌ها، می‌توانید
+شیءهایی را ذخیره کنید که حاوی هم پنل برگه و هم دکمه‌ی آن باشد.
 
-I recommend writing a separate function for changing tabs. You can
-either store the previously selected tab and change only the styles
-needed to hide that and show the new one, or you can just update the
-style of all tabs every time a new tab is selected.
+توصیه‌ی من این است که یک تابع مجزا برای تغییر برگه‌ها بنویسید. می‌توانید یا برگه‌ی انتخاب شده‌ی قبلی
+را ذخیره کنید و سبک‌هایی که برای پنهان‌سازی آن و نمایش برگه‌ی جدید لازم است تغییر دهید یا فقط سبک همه‌ی برگه‌ها را با هر بار انتخاب یک برگه‌ی جدید تغییر دهید.
 
-You might want to call this function immediately to make the
-interface start with the first tab visible.
+ممکن است بخواهید که این تابع را بلافاصله فراخوانی کنید تا رابط کاربری شما در ابتدا با یک برگه‌ی مشخص نمایش داده شود.
 
 hint}}
