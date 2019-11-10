@@ -1,6 +1,6 @@
 {{meta {load_files: ["code/chapter/16_game.js", "code/levels.js"], zip: "html include=[\"css/game.css\"]"}}}
 
-# Project: A Platform Game
+# Project: یک بازی پرشی
 
 {{quote {author: "Iain Banks", title: "The Player of Games", chapter: true}
 
@@ -12,111 +12,101 @@ quote}}
 
 {{figure {url: "img/chapter_picture_16.jpg", alt: "Picture of a game character jumping over lava", chapter: "framed"}}}
 
-Much of my initial fascination with computers, like that of many nerdy
-kids, had to do with computer ((game))s. I was drawn into the tiny
-simulated ((world))s that I could manipulate and in which stories
-(sort of) unfolded—more, I suppose, because of the way I projected my
-((imagination)) into them than because of the possibilities they
-actually offered.
+بیشتر شیفتگی اولیه من نسبت به کامپیوترها، مثل خیلی از بچه‌های دیگر، از بازی‌های
+کامپیوتری شروع شد. من￼ جذب دنیاهای شبیه‌سازی شده‌ی کوچکی شدم که می توانستم آن‌ها
+را اداره کنم و در آن‌ها داستان‌هایی گشوده می‌شد – گمان می کنم بیشتر به خاطر گسترش
+تخیلاتم به درون بازی‌ها بود تا امکانات و قابلیت‌های خود بازی ها.
 
-I don't wish a ((career)) in game programming on anyone. Much like the
-((music)) industry, the discrepancy between the number of eager young
-people wanting to work in it and the actual demand for such people
-creates a rather unhealthy environment. But writing games for fun is
-amusing.
+من برای هیچ کس حرفه‌ی برنامه نویسی بازی‌های کامپیوتر را آرزو نمی کنم. بسیار شبیه
+به صنعت موسیقی، اختلاف زیاد بین تعداد زیاد افرادی که دوست دارند در آن کار کنند و
+تقاضای واقعی برای آن‌ها، باعث ایجاد محیط نسبتا نامناسبی می شود. اما نوشتن بازی‌ها
+برای تفریح کاری دلچسب است.
 
 {{index "jump-and-run game", dimensions}}
 
-This chapter will walk through the implementation of a small
-((platform game)). Platform games (or "jump and run" games) are games
-that expect the ((player)) to move a figure through a ((world)), which
-is usually two-dimensional and viewed from the side, while jumping over and
-onto things.
+در این فصل به سراغ پیاده‌سازی یک بازی پرشی (سکوبازی) کوچک می رویم. سکوبازی‌ها (یا بازی‌های
+حرکت و پرش)، بازی‌هایی هستند که بازیکن باید یک شخصیت را در جهان بازی حرکت دهد که
+معمولا این جهان دو بعدی است و از کنار نمایش داده می شود و شخصیت از روی (و درون)
+چیزها می تواند بپرد.
 
-## The game
+## بازی
 
 {{index minimalism, "Palef, Thomas", "Dark Blue (game)"}}
 
-Our ((game)) will be roughly based on [Dark
+بازی ما به طور کلی بر پایه‌ی بازی [Dark
 Blue](http://www.lessmilk.com/games/10)[
-(_www.lessmilk.com/games/10_)]{if book} by Thomas Palef. I chose that
-game because it is both entertaining and minimalist and because it
-can be built without too much ((code)). It looks like this:
+(_www.lessmilk.com/games/10_)]{if book}
+که توسط توماس پالف ساخته شده خواهد بود. من این بازی را انتخاب کردم به دلیل اینکه
+هم سرگرم‌کننده و هم ساده است، و نیازی نیست برای نوشتن آن کدنویسی خیلی زیادی انجام
+شود. بازی به شکل زیر خواهد بود.
 
 {{figure {url: "img/darkblue.png", alt: "The game Dark Blue"}}}
 
 {{index coin, lava}}
 
-The dark ((box)) represents the ((player)), whose task is to collect
-the yellow boxes (coins) while avoiding the red stuff (lava). A
-((level)) is completed when all coins have been collected.
+مستطیل تیره رنگ نمایانگر شخصیت بازی است که وظیفه‌اش جمع آوری مستطیل های زرد
+(سکه‌ها) بدون برخورد با چیزهای قرمز رنگ (گدازه‌ها) است. یک مرحله بازی زمانی کامل
+می شود که تمامی سکه‌ها جمع آوری شده باشند.
 
 {{index keyboard, jumping}}
 
-The player can walk around with the left and right arrow keys and can
-jump with the up arrow. Jumping is a specialty of this game character.
-It can reach several times its own height and can change
-direction in midair. This may not be entirely realistic, but it helps
-give the player the feeling of being in direct control of the on-screen
-((avatar)).
+بازیکن می تواند به وسیله‌ی کلیدهای چپ و راست صفحه‌کلید جابجا شود و با فشردن کلید بالا،
+بپرد. پریدن توانایی خاص این کاراکتر است. می تواند چندین برابر قد خودش بپرد و در
+هوا جهتش را عوض کند. بازی به طور کامل واقع‌گرایانه نیست اما به بازیکن این حس را
+القا می کند که کاملا شخصیت بازی تحت کنترلش حرکت می کند.
 
 {{index "fractional number", discretization, "artificial life", "electronic life"}}
 
-The ((game)) consists of a static ((background)), laid out like a
-((grid)), with the moving elements overlaid on that background. Each
-field on the grid is either empty, solid, or ((lava)). The moving
-elements are the player, coins, and certain pieces of lava. The
-positions of these elements are not constrained to the grid—their
-coordinates may be fractional, allowing smooth ((motion)).
+این بازی از یک پیش زمینه‌ی ثابت تشکیل شده است که مثل یک grid طرح بندی شده است
+همراه با عناصر متحرکی که روی پیش‌زمینه قرار گرفته اند. هر فیلد از grid یا خالی، یا
+رنگ‌شده یا یک گدازه است. عناصر متحرک شامل بازیکنان، سکه‌ها و بعضی از گدازه‌ها می
+شوند. موقعیت این عناصر محدود به grid نیست. – ممکن است مختصاتشان اعشاری باشد که
+باعث حرکت نرم‌تر آن‌ها خواهد شد.
 
-## The technology
+## تکنولوژی مورد استفاده
 
 {{index "event handling", keyboard, [DOM, graphics]}}
 
-We will use the ((browser)) DOM to display the game, and we'll
-read user input by handling key events.
+ما از DOM مرورگر برای نمایش بازی استفاده می کنیم و ورودی کاربر را مدیریت
+رخدادهای کلیدها خواهیم خواند.
 
 {{index rectangle, "background (CSS)", "position (CSS)", graphics}}
 
-The screen- and keyboard-related code is only a small part of the work
-we need to do to build this ((game)). Since everything looks like
-colored ((box))es, drawing is uncomplicated: we create DOM elements
-and use styling to give them a background color, size, and position.
+کدهای مربوط به صفحه‌ی نمایش و صفحه‌کلید فقط بخشی کوچکی از کاری که برای ساخت این
+بازی لازم است را شامل می شوند. به دلیل این که همه چیز شبیه به مستطیل‌های رنگی
+است، مشکل طراحی نداریم: عناصر DOM را ایجاد کرده و با استفاده از سبک‌دهی به آن‌ها
+رنگ پیش‌زمینه ،اندازه و موقعیت می دهیم.
 
 {{index "table (HTML tag)"}}
 
-We can represent the background as a table since it is an unchanging
-((grid)) of squares. The free-moving elements can be overlaid using
-absolutely positioned elements.
+می توانیم پیش‌زمینه را به شکل یک جدول نمایش دهیم چرا که این gridای ثابت از
+چهارگوش‌ها است. عناصری که آزادانه حرکت می کنند را می توان با موقعیت‌دهی مطلق روی طرح
+قرار داد.
 
 {{index performance, [DOM, graphics]}}
 
-In games and other programs that should animate ((graphics)) and
-respond to user ((input)) without noticeable delay, ((efficiency)) is
-important. Although the DOM was not originally designed for
-high-performance graphics, it is actually better at this than you
-would expect. You saw some ((animation))s in [Chapter
-?](dom#animation). On a modern machine, a simple game like this
-performs well, even if we don't worry about ((optimization)) very
-much.
+در بازی‌ها و دیگر برنامه‌هایی که در آن‌ها باید تصاویر به حرکت درآیند و به ورودی کاربر بدون
+تاخیر پاسخ دهند، کارایی خیلی مهم است. اگرچه DOM اساسا برای انجام کارهای گرافیکی
+سطح بالا طراحی نشده است، اما در عمل از چیزی که انتظارش را داشتید بهتر کار می
+کند. در [فصل
+?](dom#animation) چند متحرک‌سازی مشاهده نمودید. در یک کامپیوتر مدرن، یک بازی ساده مثل
+این بازی به خوبی اجرا می شود، حتی اگر به بهینه‌سازی آن زیاد فکر نکنیم.
 
 {{index canvas, [DOM, graphics]}}
 
-In the [next chapter](canvas), we will explore another ((browser))
-technology, the `<canvas>` tag, which provides a more traditional way
-to draw graphics, working in terms of shapes and ((pixel))s rather
-than DOM elements.
+در [فصل بعدی](canvas) به سراغ تکنولوژی دیگری در مرورگر خواهیم رفت، برچسب <bdo>`<canvas>`</bdo> که روش
+ریشه‌دارتری برای کشیدن تصاویر فراهم می سازد؛ کار با اشکال و پیکسل‌ها به جای استفاده از عناصر DOM.
 
-## Levels
+## مراحل بازی
 
 {{index dimensions}}
 
-We'll want a human-readable, human-editable way to specify levels.
-Since it is okay for everything to start out on a grid, we could use
-big strings in which each character represents an element—either a
-part of the background grid or a moving element.
+ما به روشی خوانا و قابل ویرایش برای انسان نیاز داریم تا به وسیله‌های آن مراحل
+بازی را مشخص کنیم. چون می توان همه چیز را روی grid شروع کرد، می‌توانیم از رشته‌های
+بلند که در آن هر کاراکتر نماینده‌ی یک عنصر است استفاده کنیم –چه بخشی از grid
+پیش‌زمینه یا یک عنصر در حال حرکت.
 
-The plan for a small level might look like this:
+طرح مورد نظر برای یک مرحله‌ی کوچک ممکن است شبیه زیر باشد:
 
 ```{includeCode: true}
 let simpleLevelPlan = `
@@ -133,32 +123,30 @@ let simpleLevelPlan = `
 
 {{index level}}
 
-Periods are empty space, hash (`#`) characters are walls, and plus
-signs are lava. The ((player))'s starting position is the ((at sign))
-(`@`). Every O character is a coin, and the equal sign (`=`) at the
-top is a block of lava that moves back and forth horizontally.
+نقطه‌ها نماینده‌ی فضاهای خالی، کاراکترهای هش (`#`) معرف دیوارها و علامتهای مثبت
+نماینده‌ی گدازه‌ها می باشند. نقطه شروع بازیکن با علامت `@` مشخص شده است. هر کاراکتر
+O نماینده‌ی یک سکه است و علامت مساوی (`=`) در بالا یک بلاک از گدازه است که به صورت
+افقی جلوعقب می رود.
 
 {{index bouncing}}
 
-We'll support two additional kinds of moving ((lava)): the pipe
-character (`|`) creates vertically moving blobs, and `v` indicates
-_dripping_ lava—vertically moving lava that doesn't bounce back and
-forth but only moves down, jumping back to its start position when it
-hits the floor.
+دو نوع دیگر از گدازه‌های متحرک را پشتیبانی خواهیم کرد: یک کاراکتر پایپ (`|`)
+گلوله‌های متحرک عمودی ایجاد می کند و `v` نشان‌دهنده گدازه‌هایی است که چکیده می شوند
+– گدازه‌های متحرک عمودی که بالا پایین نمی روند بلکه فقط به￼ سمت پایین حرکت می کنند و
+وقتی به زمین رسیدن به نقطه‌ی اولشان بر می گردند.
 
-A whole ((game)) consists of multiple ((level))s that the ((player))
-must complete. A level is completed when all ((coin))s have been
-collected. If the player touches ((lava)), the current level is
-restored to its starting position, and the player may try again.
+کل بازی شامل چندین مرحله می شود که بازیکن باید به اتمام برساند. وقتی همه‌ی سکه‌ها
+جمع‌آوری شد یک مرحله به اتمام می رسد. اگر بازیکن با گدازه برخورد کند ، مرحله‌ی
+کنونی به ابتدا برخواهد گشت و بازیکن می تواند دوباره تلاش کند.
 
 {{id level}}
 
-## Reading a level
+## خواندن یک مرحله
 
 {{index "Level class"}}
 
-The following ((class)) stores a ((level)) object. Its argument should
-be the string that defines the level.
+کلاس پیشرو یک شیء مرحله را ذخیره می کند. آرگومان آن باید رشته‌ای باشد که مرحله را
+تعریف می کند.
 
 ```{includeCode: true}
 class Level {
@@ -183,50 +171,47 @@ class Level {
 
 {{index "trim method", "split method", [whitespace, trimming]}}
 
-The `trim` method is used to remove whitespace at the start and
-end of the plan string. This allows our example plan to start with a
-newline so that all the lines are directly below each other. The
-remaining string is split on ((newline character))s, and each line is
-spread into an array, producing arrays of characters.
+متد `trim` در اینجا برای حذف فضاهای خالی شروع و پایان رشته‌ی طرح استفاده می شود.
+این به طرح مثال ما این امکان را می دهد که در یک خط جدید شروع شود تا همه‌ی خطوط
+مستقیما زیر یکدیگر قرار بگیرند. رشته‌ی باقیمانده براساس کاراکترهای خط جدید تقسیم
+می شود و هر خط درون یک آرایه پخشی می شود و آرایه‌ای از کاراکترها تولید می شود.
 
 {{index [array, "as matrix"]}}
 
-So `rows` holds an array of arrays of characters, the rows of the
-plan. We can derive the level's width and height from these. But we
-must still separate the moving elements from the background grid.
-We'll call moving elements _actors_. They'll be stored in an array of
-objects. The background will be an array of arrays of strings, holding
-field types such as `"empty"`, `"wall"`, or `"lava"`.
+بنابراین `rows` آرایه‌ای از آرایه‌های کاراکترها را نگهداری می کند، همان ردیف‌های
+طرح. می توانیم طول و عرض هر مرحله را از این ها بدست بیاوریم. اما هنوز لازم است
+که عناصر متحرک را از grid پیش‌زمینه جدا کنیم. عناصر متحرک را بازیگران می نامیم.
+آن را در آرایه‌ای از اشیاء ذخیره می کنیم. پیش‌زمینه آرایه‌ای از آرایه‌های رشته‌ها
+خواهد بود که نوع فیلدهایی مثل `"empty"`، `"wall"`، یا `"lava"` را نگهداری می کند.
 
 {{index "map method"}}
 
-To create these arrays, we map over the rows and then over their
-content. Remember that `map` passes the array index as a second
-argument to the mapping function, which tells us the x- and
-y-coordinates of a given character. Positions in the game will be
-stored as pairs of coordinates, with the top left being 0,0 and each
-background square being 1 unit high and wide.
+برای ایجاد این آرایه‌ها به سراغ تک تک ردیف ها و بعد محتوای آن‌ها می رویم. به
+خاطر داشته باشید که متد `map` اندیس آرایه را به عنوان آرگومان دوم به تابع
+ارسال می کند که به ما مختصات x و y کاراکتر داده‌شده را می دهد. موقعیت ها در این
+بازی به صورت جفت‌هایی از مختصات با مبدا بالا و چپ <bdo>0,0</bdo> ذخیره می شوند و هر مربع
+پیش زمینه دارای 1 واحد طول و عرض می باشد.
 
 {{index "static method"}}
 
-To interpret the characters in the plan, the `Level` constructor uses
-the `levelChars` object, which maps background elements to strings and
-actor characters to classes. When `type` is an actor class, its static
-`create` method is used to create an object, which is added to
-`startActors`, and the mapping function returns `"empty"` for this
-background square.
+برای تفسیر کاراکترهای موجود در طرح، تابع سازنده‌ی `Level` از شیء `levelChars` استفاده می
+کند که عناصر پیش‌زمینه را به رشته‌ها و بازیگران را به کلاس‌ها نگاشت می کند. زمانی
+که `type` یک کلاس بازیگر است، متد استاتیک `create` آن برای ایجاد یک شیء استفاده می
+شود که به `startActors` افزوده می شود و تابع map مقدار `"empty"` را برای این مربع
+پیش‌زمینه برمی گرداند.
+
 
 {{index "Vec class"}}
 
-The position of the actor is stored as a `Vec` object. This is a
-two-dimensional vector, an object with `x` and `y` properties, as seen
-in the exercises of [Chapter ?](object#exercise_vector).
+موقعیت بازیگر به عنوان یک شیء `Vec` ذخیره می شود که یک بردار دوبعدی است،
+شیءای با خاصیت‌های `x` و `y`، همانطور که در قسمت تمرین‌ها [فصل ?](object#exercise_vector) مشاهده شد.
+
 
 {{index [state, in objects]}}
 
-As the game runs, actors will end up in different places or even
-disappear entirely (as coins do when collected). We'll use a `State`
-class to track the state of a running game.
+با اجرای بازی، بازیگران در مکان‌های متفاوتی قرار می گیرند یا حتی به طور کامل
+ناپدید می شوند (همانطور که سکه‌ها در صورت جمع‌آوری ناپدید می شوند). ما از یک کلاس
+`State` برای رصد وضعیت بازی در حال اجرا استفاده می کنیم.
 
 ```{includeCode: true}
 class State {
@@ -246,42 +231,38 @@ class State {
 }
 ```
 
-The `status` property will switch to `"lost"` or `"won"` when the game
-has ended.
+زمانی که بازی به اتمام می رسد، خاصیت `status` به `"lost"` یا `"won"` تغییر می
+کند .
 
-This is again a persistent data structure—updating the game state
-creates a new state and leaves the old one intact.
+این دوباره یک ساختار داده‌ی مانا محسوب می شود – به روز رسانی وضعیت بازی باعث
+ایجاد وضعیت جدیدی می شود و وضعیت قبلی را دست‌نخورده باقی می گذارد.
 
-## Actors
+## بازیگران
 
 {{index actor, "Vec class", [interface, object]}}
 
-Actor objects represent the current position and state of a given
-moving element in our game. All actor objects conform to the same
-interface. Their `pos` property holds the coordinates of the
-element's top-left corner, and their `size` property holds its size.
+اشیاء بازیگر نمایانگر موقعیت و وضعیت یک عنصر متحرک در بازی ما می‌باشند. تمامی اشیاء
+بازیگر از رابط یکسانی پیروی می کنند. خاصیت `pos` آن‌ها، مختصات گوشه‌ی بالا-چپ عنصر
+را نگهداری کرده و خاصیت `size` آن‌ها اندازه‌شان را نگه‌داری می کند.
 
-Then they have an `update` method, which is used to compute their
-new state and position after a given time step. It simulates the thing
-the actor does—moving in response to the arrow keys for the player and
-bouncing back and forth for the lava—and returns a new, updated actor
-object.
+آن‌ها نیز دارای یک متد `update` می باشند که برای محاسبه‌ی وضعیت و موقعیت جدیدشان
+بعد از یک گام زمانی داده شده است. این متد کاری که یک بازیگر انجام می دهد را
+شبیه‌سازی می کند- حرکت در پاسخ به کلیدهای جهت دار برای بازیکن، حرکت جلو و عقب
+برای گدازه‌ها – و یک شیء بازیگر جدید و به‌روز بر می گرداند.
 
-A `type` property contains a string that identifies the type of the
-actor—`"player"`, `"coin"`, or `"lava"`. This is useful when drawing
-the game—the look of the rectangle drawn for an actor is based on its
-type.
 
-Actor classes have a static `create` method that is used by the
-`Level` constructor to create an actor from a character in the level
-plan. It is given the coordinates of the character and the character
-itself, which is needed because the `Lava` class handles several
-different characters.
+یک خاصیت `type` حاوی رشته‌ای است که نوع بازیگر را مشخص می کند – `“player”،` `“coin”` یا
+`“lava”`. در هنگام کشیدن طرح بازی این خاصیت مفید خواهد بود. – شکل مستطیلی که برای
+یک بازیگر کشیده می شود بر اساس نوعش می باشد.
+
+کلاس‌های بازیگر دارای یک متد استاتیک به نام `create` هستند که به وسیله‌ی سازنده‌ی
+`Level` برای ایجاد یک بازیگر از یک کاراکتر موجود در طرح مرحله استفاده می شود. به
+آن مختصات کاراکتر و خود کاراکتر داده می شود، که ضروری است زیرا کلاس `Lava`
+کاراکترهای متعددی را رسیدگی می کند.
 
 {{id vector}}
 
-This is the `Vec` class that we'll use for our two-dimensional values,
-such as the position and size of actors.
+برای مقادیر دوبعدی از کلاس `Vec` استفاده می کنیم مثل موقعیت و اندازه‌ی بازیگران.
 
 ```{includeCode: true}
 class Vec {
@@ -299,18 +280,18 @@ class Vec {
 
 {{index "times method", multiplication}}
 
-The `times` method scales a vector by a given number. It will be
-useful when we need to multiply a speed vector by a time interval to
-get the distance traveled during that time.
+متد `times` با توجه به عدد دریافتی اندازه‌ی یک بردار (vector) را تغییر می دهد. زمانی که
+لازم است تا یک بردار سرعت￼ را در یک وقفه‌ی زمان ضرب کنیم تا فاصله‌ی پیموده شده را در
+طول آن زمان به دست بیاوریم، مفید خواهد بود.
 
-The different types of actors get their own classes since their
-behavior is very different. Let's define these classes. We'll get to
-their `update` methods later.
+انواع مختلف بازیگران دارای کلاس‌های خودشان می باشند، به دلیل اینکه رفتارهایشان
+خیلی متفاوت است. اجازه بدهید این کلاس ها را تعریف کنیم. بعدا به متدهای `update`
+شان خواهیم پرداخت.
 
 {{index simulation, "Player class"}}
 
-The player class has a property `speed` that stores its current speed
-to simulate momentum and gravity.
+کلاس `Player` دارای خاصیتی به نام `speed` است که سرعت فعلی اش را ذخیره می کند تا
+جاذبه و تکانه (momentum) را شبیه‌سازی کند.
 
 ```{includeCode: true}
 class Player {
@@ -329,30 +310,27 @@ class Player {
 
 Player.prototype.size = new Vec(0.8, 1.5);
 ```
+چون یک بازیکن یک و نیم برابر یک مربع ارتفاع دارد، موقعیت اولیه‌ی آن برابر با نصف
+مربع بالای موقعیتی که کاراکتر `@` ظاهر می شود تنظیم می شود. با این کار، قسمت پایین
+آن با قسمت پایین مربعی که در آن ظاهر می شود تراز خواهد شد.
 
-Because a player is one-and-a-half squares high, its initial position
-is set to be half a square above the position where the `@` character
-appeared. This way, its bottom aligns with the bottom of the square it
-appeared in.
 
-The `size` property is the same for all instances of `Player`, so we
-store it on the prototype rather than on the instances themselves. We
-could have used a ((getter)) like `type`, but that would create and
-return a new `Vec` object every time the property is read, which would
-be wasteful. (Strings, being ((immutable)), don't have to be re-created
-every time they are evaluated.)
+خاصیت `size` برای همه‌ی نمونه‌های گرفته شده از `Player` یکسان است پس می توان آن را به
+جای ذخیره در نمونه‌ها در prototype ذخیره کرد. می توانستیم از یک getter
+مثل `type` استفاده کنیم اما در این صورت یک شیء `Vec` جدید هر بار که خاصیت خوانده می
+شد ایجاد و برگردانده می شد که کاری بیهوده است. (رشته‌ها با توجه به غیرقابل
+تغییر بودن، نیازی ندارند با هر بار ارزیابی از نو ایجاد شوند).
 
 {{index "Lava class", bouncing}}
 
-When constructing a `Lava` actor, we need to initialize the object
-differently depending on the character it is based on. Dynamic lava
-moves along at its current speed until it hits an obstacle. At that
-point, if it has a `reset` property, it will jump back to its start
-position (dripping). If it does not, it will invert its speed and
-continue in the other direction (bouncing).
+زمانی که یک بازیگر `Lava` را می سازیم، لازم است که شیء با توجه با کاراکتری که بر
+پایه‌ی آن است مقداردهی متفاوتی شود. گدازه‌ی پویا با سرعت فعلی‌اش حرکت می کند تا
+زمانی که به یک مانع بخورد. در این نقطه، اگر دارای خاصیت `reset` باشد، به موقعیت
+اولیه‌اش برمی‌گردد (dripping). اگر نداشت، سرعتش معکوس شده و درجهت مخالف به حرکت
+ادامه می دهد (bouncing).
 
-The `create` method looks at the character that the `Level`
-constructor passes and creates the appropriate lava actor.
+متد `create` به کاراکترهایی که سازنده‌ی `Level` ارسال می کند نگاه کرده و بازیگران
+گدازه‌ی مناسب ایجاد می کند.
 
 ```{includeCode: true}
 class Lava {
@@ -380,12 +358,11 @@ Lava.prototype.size = new Vec(1, 1);
 
 {{index "Coin class", animation}}
 
-`Coin` actors are relatively simple. They mostly just sit in their
-place. But to liven up the game a little, they are given a "wobble", a
-slight vertical back-and-forth motion. To track this, a coin object
-stores a base position as well as a `wobble` property that tracks the
-((phase)) of the bouncing motion. Together, these determine the coin's
-actual position (stored in the `pos` property).
+بازیگران `Coin` نسبتا ساده هستند. بیشترشان فقط در جای خود ثابت هستند. اما برای
+اینکه کمی به بازی پویایی اضافه کنیم، آن‌ها را در جا حرکت می دهیم. برای انجام این
+کار، یک شیء سکه موقعیت پایه‌ای را به همراه یک خاصیت `wobble` که حرکت درجا را رصد می
+کند ذخیره می کند. این دو با هم موقعیت واقعی سکه را مشخص می کنند (که در خاصیت
+`pos` حفظ می شوند).
 
 ```{includeCode: true}
 class Coin {
@@ -409,23 +386,22 @@ Coin.prototype.size = new Vec(0.6, 0.6);
 
 {{index "Math.random function", "random number", "Math.sin function", sine, wave}}
 
-In [Chapter ?](dom#sin_cos), we saw that `Math.sin` gives us the
-y-coordinate of a point on a circle. That coordinate goes back and
-forth in a smooth waveform as we move along the circle, which makes
-the sine function useful for modeling a wavy motion.
+در [فصل ?](dom#sin_cos)، دیدیم که متد <bdo>`Math.sin`</bdo> مختصات عرضی نقطه‌ای
+روی دایره را به ما می دهد. مقدار این مختصات با حرکت در محیط دایره به صورت موجی
+در یک بازه بالا و پایین می رود که موجب می شود تابع سینوس گزینه‌ی خوبی برای
+مدلسازی حرکت موجی برای ما باشد.
 
 {{index pi}}
 
-To avoid a situation where all coins move up and down synchronously,
-the starting phase of each coin is randomized. The _((phase))_ of
-`Math.sin`'s wave, the width of a wave it produces, is 2π. We multiply
-the value returned by `Math.random` by that number to give the coin a
-random starting position on the wave.
+برای جلوگیری از حالتی که همه‌ی سکه‌ها همزمان بالا و پایین بروند، فاز شروع هر سکه
+به صورت تصادفی تعیین می شود. فاز موج <bdo>`Math.sin`</bdo> همان عرض موجی است که تولید می کند
+و برابر با 2π می باشد. مقدار بازگشتی از <bdo>`Math.random`</bdo> را در آن عدد ضرب کرده تا
+موقعیت شروع تصادفی ای به سکه روی موج بدهیم.
 
 {{index map, [object, "as map"]}}
 
-We can now define the `levelChars` object that maps plan characters to
-either background grid types or actor classes.
+اکنون می توانیم شیء `levelChars` را تعریف کنیم که کاراکترهای طرح را روی انواع grid
+پیش‌زمینه یا کلاس‌های بازیگر نگاشت کند.
 
 ```{includeCode: true}
 const levelChars = {
@@ -435,7 +411,7 @@ const levelChars = {
 };
 ```
 
-That gives us all the parts needed to create a `Level` instance.
+این به ما تمامی بخش‌های لازم برای ایجاد نمونه‌ی `Level` را می دهد.
 
 ```{includeCode: strip_log}
 let simpleLevel = new Level(simpleLevelPlan);
@@ -443,70 +419,66 @@ console.log(`${simpleLevel.width} by ${simpleLevel.height}`);
 // → 22 by 9
 ```
 
-The task ahead is to display such levels on the screen and to model
-time and motion inside them.
+کار باقی مانده این است که این مرحله‌ها را روی صفحه‌ی نمایش نشان دهیم و زمان و حرکت
+را درون آن مدلسازی کنیم.
 
-## Encapsulation as a burden
+## کپسوله‌سازی به عنوان یک بار
 
 {{index "programming style", "program size", complexity}}
 
-Most of the code in this chapter does not worry about
-((encapsulation)) very much for two reasons. First, encapsulation
-takes extra effort. It makes programs bigger and requires additional
-concepts and interfaces to be introduced. Since there is only so much
-code you can throw at a reader before their eyes glaze over, I've made
-an effort to keep the program small.
+بیشتر کدهای این فصل بدون در نظر گرفته کپسوله سازی نوشته شده اند و این کار دو
+دلیل دارد. اول اینکه کپسولهسازی کار بیشتری از ما می گیرد. باعث بزرگتر شدن برنامه
+می شود و نیاز به طرح مفایهم و رابط های بیشتری دارد. به دلیل این که نمی توان در
+اینجا کد زیادی به نمایش گذاشت و برای خواننده کسل کننده خواهد شد، من تلاش کردم که
+که برنامه را کوچک نگه دارم.
 
 {{index [interface, design]}}
 
-Second, the various elements in this game are so closely tied together
-that if the behavior of one of them changed, it is unlikely that any
-of the others would be able to stay the same. Interfaces between the
-elements would end up encoding a lot of assumptions about the way the
-game works. This makes them a lot less effective—whenever you change
-one part of the system, you still have to worry about the way it
-impacts the other parts because their interfaces wouldn't cover the
-new situation.
+دوما، عناصر متنوع درون این بازی با هم ارتباط تنگاتنگی دارند و اگر رفتار یکی از
+آن ها تغییر کند، بعید است که دیگر عناصر بتوانند به همان صورت قبلی بمانند.
+رابط‌های بین این عناصر ممکن است به اینجا ختم شود که فرض‌های زیادی درباره‌ی نحوه‌ی
+عملکرد بازی در نظر بگیرند. این باعث می شود که اثرگذاری این رابط‌ها بسیار کاهش
+یابد- هربار که بخشی از سیستم را تغییر می دهید، همچنان بایستی نگران نحوه‌ی اثر آن
+روی دیگر قسمت‌ها باشید چراکه رابط‌های آن ها شرایط جدید را پوشش نداده اند.
 
-Some _((cutting point))s_ in a system lend themselves well to
-separation through rigorous interfaces, but others don't. Trying to
-encapsulate something that isn't a suitable boundary is a sure way to
-waste a lot of energy. When you are making this mistake, you'll
-usually notice that your interfaces are getting awkwardly large and
-detailed and that they need to be changed often, as the program
-evolves.
+
+بعضی نقاط قابل برش در سیستم _((cutting point))s_ خودشان مناسب قرارگرفته به عنوان
+قسمت‌های مجزا￼ توسط رابط‌های دقیق هستند، اما دیگر قسمت‌ها این طور نیستند. تلاش در
+جهت کپسوله‌سازی چیزی که کرانه‌ی مناسبی محسوب نمی شود، روش مطمئنی برای تلف کردن
+انرژی زیادی است. زمانی که مرتکب این اشتباه می شوید معمولا متوجه می شوید که رابط
+شما به شکل نامناسبی بزرگ و دارای جزئیات می شود و اغلب با تکامل برنامه، لازم است
+تغییر کند.
+
 
 {{index graphics, encapsulation, graphics}}
 
-There is one thing that we _will_ encapsulate, and that is the
-((drawing)) subsystem. The reason for this is that we'll ((display))
-the same game in a different way in the [next
-chapter](canvas#canvasdisplay). By putting the drawing behind an
-interface, we can load the same game program there and plug in a new
-display ((module)).
+یک چیز هست که قصد داریم تا کپسوله‌سازی کنیم و آن طراحی زیرسیستم است. دلیل این کار
+این است که ما بازی را به روش متفاوتی در فصل آینده قرار است نمایش دهیم. با قرار
+دادن عمل طراحی پشت یک رابط، می توانیم همین برنامه‌ی بازی را آنجا بارگیری کرده و
+ماژول نمایش جدیدی را به خدمت بگیریم.
+
 
 {{id domdisplay}}
 
-## Drawing
+## رسم
 
 {{index "DOMDisplay class", [DOM, graphics]}}
 
-The encapsulation of the ((drawing)) code is done by defining a
-_((display))_ object, which displays a given ((level)) and state. The
-display type we define in this chapter is called `DOMDisplay` because
-it uses DOM elements to show the level.
+عمل کپسوله کردن کد ((رسم اشکال)) با تعریف یک شیء _((display))_ انجام می شود که وضعیت و مرحله‌ی
+داده شده را نمایش می دهد. نوع displayای که در این فصل تعریف می کنیم
+`DOMDisplay` خوانده می شود به دلیل این که از عناصر DOM برای نمایش مرحله استفاده می
+شود.
 
 {{index "style attribute", CSS}}
 
-We'll be using a style sheet to set the actual colors and other
-fixed properties of the elements that make up the game. It would also
-be possible to directly assign to the elements' `style` property when
-we create them, but that would produce more verbose programs.
+ما از یک برگه‌ی سبک‌دهی (css) برای تنظیم رنگ‌های واقعی و دیگر خاصیت‌های ثابت عناصر سازنده‌ی
+بازی استفاده می کنیم. همچنین می توان مستقیما خاصیت `style` عناصر را بعد از
+ایجادشان مقداردهی کرد اما این کار برنامه‌ها را بی‌نظم و شلوغ می‌کند.
 
 {{index "class attribute"}}
 
-The following helper function provides a succinct way to create an
-element and give it some attributes and child nodes:
+تابع کمکی زیر روشی مختصر برای ایجاد یک عنصر و اختصاص چند خصیصه و گره‌ی فرزند
+فراهم می کند.
 
 ```{includeCode: true}
 function elt(name, attrs, ...children) {
@@ -520,9 +492,8 @@ function elt(name, attrs, ...children) {
   return dom;
 }
 ```
-
-A display is created by giving it a parent element to which it should
-append itself and a ((level)) object.
+یک display به این صورت ایجاد می‌شود که به آن عنصر والدی اختصاص داده می‌شود که
+باید خودش و یک شیء مرحله را به آن اضافه کند.
 
 ```{includeCode: true}
 class DOMDisplay {
@@ -538,19 +509,18 @@ class DOMDisplay {
 
 {{index level}}
 
-The level's ((background)) grid, which never changes, is drawn once.
-Actors are redrawn every time the display is updated with a given
-state. The `actorLayer` property will be used to track the element
-that holds the actors so that they can be easily removed and replaced.
+grid پیش‌زمینه‌ی مرحله، که همیشه ثابت است، فقط یک بار رسم می شود. بازیگران اما
+با هر بار تغییر صفحه نمایش توسط یک وضعیت جدید از نو رسم می شوند. خاصیت
+`actorLayer` برای رصد عنصری که بازیگران را نگهداری می کند استفاده می شود تا آن ها
+بتوانند به آسانی تغییر و حذف شوند.
 
 {{index scaling, "DOMDisplay class"}}
 
-Our ((coordinates)) and sizes are tracked in ((grid)) units, where a
-size or distance of 1 means one grid block. When setting ((pixel))
-sizes, we will have to scale these coordinates up—everything in the
-game would be ridiculously small at a single pixel per square. The
-`scale` constant gives the number of pixels that a single unit takes
-up on the screen.
+مختصات و اندازه‌ها ما در واحدهای grid اندازه‌گیری می شوند، برای اندازه یا فاصله 1
+به معنای یک بلاک grid است. زمانی که اندازه‌ها پیکسلی را تنظیم می کنیم، می بایست
+مقیاس این مختصات را افزایش دهیم – اگر برای هر مربع یک پیکسل در نظر بگیریم همه‌ی
+عناصر بازی به شدت کوچک می شوند. ثابت `scale` تعداد پیکسل معادل یک واحد در صفحه‌ی
+نمایش را تعیین می کند.
 
 ```{includeCode: true}
 const scale = 20;
@@ -568,17 +538,17 @@ function drawGrid(level) {
 
 {{index "table (HTML tag)", "tr (HTML tag)", "td (HTML tag)", "spread operator"}}
 
-As mentioned, the background is drawn as a `<table>` element.
-This nicely corresponds to the structure of the `rows` property of the
-level—each row of the grid is turned into a table row (`<tr>`
-element). The strings in the grid are used as class names for the
-table cell (`<td>`) elements. The spread (triple dot) operator is used
-to pass arrays of child nodes to `elt` as separate arguments.
+همانطور که قبلا ذکر شد، پیش‌زمینه به عنوان یک عنصر <bdo>`<table>`</bdo> رسم می شود. این عنصر
+به ساختار خاصیت￼ `rows` مربوط به مرحله به خوبی هماهنگی دارد – هر ردیف از grid به
+یک ردیف جدول (<bdo>`<tr>`</bdo>) تبدیل می شود. رشته‌های موجود در گرید به عنوان نام‌های کلاس
+برای سلول‌های جدول (<bdo>`<td>`</bdo>) استفاده می شوند. عملگر توزیع (سه‌نقطه) برای ارسال
+آرایه‌ی گره‌های فرزند به `elt` به عنوان آرگومان‌های مجزا استفاده می شود.
 
 {{id game_css}}
 
-The following ((CSS)) makes the table look like the background we
-want:
+کد CSS زیر موجب می شود که جدول شبیه پیش‌زمینه‌ای که دوست داریم بشود:
+
+
 
 ```{lang: "text/css"}
 .background    { background: rgb(52, 166, 251);
@@ -591,28 +561,25 @@ want:
 
 {{index "padding (CSS)"}}
 
-Some of these (`table-layout`, `border-spacing`, and `padding`) are
-used to suppress unwanted default behavior. We don't want the layout
-of the ((table)) to depend upon the contents of its cells, and we
-don't want space between the ((table)) cells or padding inside them.
+بعضی از این خاصیت‌ها (<bdo>`table-layout`</bdo>،<bdo>`border-spacing`</bdo> و
+`padding`) برای تغییر رفتارهای پیشفرض ناخواسته است. ما نمی خواهیم که قالب جدول
+وابسته به محتوای خانه‌هایش باشد و دوست نداریم بین خانه‌های جدول فاصله باشد یا
+درونشان padding داشته باشند.
 
 {{index "background (CSS)", "rgb (CSS)", CSS}}
 
-The `background` rule sets the background color. CSS allows colors to
-be specified both as words (`white`) or with a format such as
-`rgb(R, G, B)`, where the red, green, and blue components of the color
-are separated into three numbers from 0 to 255. So, in `rgb(52, 166,
-251)`, the red component is 52, green is 166, and blue is 251. Since
-the blue component is the largest, the resulting color will be bluish.
-You can see that in the `.lava` rule, the first number (red) is the
-largest.
+دستور `background` رنگ پیش‌زمینه را تنظیم می کند. در CSS می توان رنگ را هم با
+نامشان (white) و هم با فرمت‌های مثل <bdo>`rgb(R, G, B)`</bdo> که سه رنگ اصلی قرمز، سبز و آبی
+که تشکیل دهنده رنگ هستند با اعدادی بین 0 تا 255 مشخص می شوند. براین اساس، در <bdo>`rgb(52, 166,
+251)`</bdo> قرمز برابر 52، سبز 166 و آبی 251 می باشد. چون قسمت آبی بیشترین عدد
+را دارد نتیجه رنگی متمایل به آبی خواهد بود. می توانید آن را در دستور <bdo>`.lava`</bdo>
+مشاهده کنید، که در آنجا اولین عدد (قرمز) بزرگترین عدد است.
 
 {{index [DOM, graphics]}}
 
-We draw each ((actor)) by creating a DOM element for it and
-setting that element's position and size based on the actor's
-properties. The values have to be multiplied by `scale` to go from
-game units to pixels.
+ما هر بازیگر را با ایجاد یک عنصر DOM برای آن رسم کردیم و موقعیت و اندازه‌ی آن
+عنصر را بر اساس خاصیت‌های بازیگر مورد نظر تنظیم کردیم. مقادیر باید در `scale` ضرب
+شوند تا از واحدهای بازی به پیکسل تبدیل شوند.
 
 ```{includeCode: true}
 function drawActors(actors) {
@@ -629,12 +596,12 @@ function drawActors(actors) {
 
 {{index "position (CSS)", "class attribute"}}
 
-To give an element more than one class, we separate the class names by
-spaces. In the ((CSS)) code shown next, the `actor` class gives the
-actors their absolute position. Their type name is used as an extra
-class to give them a color. We don't have to define the `lava` class
-again because we're reusing the class for the lava grid squares we
-defined earlier.
+برای اینکه به یک عنصر بیش از یک کلاس اختصاص بدهیم، نام کلاس‌ها را با فضای خالی از
+هم جدا می کنیم. در کد CSSای که در ادامه نمایش داده می شود، کلاس `actor` به همه‌ی
+عناصر بازیگر موقعیتی مطلقشان را تخصیص می دهد. نام نوع بازیگران به عنوان کلاسی
+اضافی استفاده می شود تا به هر کدام یک رنگ اختصاص یابد. نیازی نیست که کلاس `lava`
+را دوباره تعریف کنیم چون از همان کلاس `lava` که برای مربع‌های grid تعریف کرده بودیم
+در قبل استفاده خواهیم کرد.
 
 ```{lang: "text/css"}
 .actor  { position: absolute;            }
@@ -644,14 +611,13 @@ defined earlier.
 
 {{index graphics, optimization, efficiency, [state, "of application"], [DOM, graphics]}}
 
-The `syncState` method is used to make the display show a given state.
-It first removes the old actor graphics, if any, and then redraws the
-actors in their new positions. It may be tempting to try to reuse the
-DOM elements for actors, but to make that work, we would need a
-lot of additional bookkeeping to associate actors with DOM elements
-and to make sure we remove elements when their actors vanish. Since
-there will typically be only a handful of actors in the game,
-redrawing all of them is not expensive.
+متد `syncState` برای نمایش دادن یک وضعیت داده شده استفاده می شود. ابتدا تصاویر
+گرافیکی قدیمی بازیگران را حذف می کند، در صورت وجود، و سپس بازیگران را در موقعیت
+جدیدشان از نو ترسیم می کند. ممکن￼ وسوسه‌انگیز باشد که از عناصر DOM برای بازیگران
+دوباره استفاده کنیم، اما برای این کار، لازم است تا کلی حساب و کتاب اضافی برای
+انتساب بازیگران به عناصر DOM انجام دهیم و باز مطمئن شویم با ناپدید شدن هر بازیگر
+آن عناصر مرتبط را نیز حذف کنیم. به دلیل اینکه تعداد انگشت‌شماری بازیگر در این
+بازی وجود دارد، از نو ترسیم کردن همه‌ی آنها کار هزینه‌بردازی محسوب نمی شود.
 
 ```{includeCode: true}
 DOMDisplay.prototype.syncState = function(state) {
@@ -665,10 +631,9 @@ DOMDisplay.prototype.syncState = function(state) {
 
 {{index level, "class attribute"}}
 
-By adding the level's current status as a class name to the wrapper,
-we can style the player actor slightly differently when the game is
-won or lost by adding a ((CSS)) rule that takes effect only when the
-player has an ((ancestor element)) with a given class.
+با افزودن وضعیت فعلی مرحله به عنوان یک نام کلاس به wrapper، می توانیم شخصیت بازی
+را در زمان برنده شدن یا باختن بازی سبک‌دهی متفاوتی بکنیم و این کار با افزودن یک
+دستور CSS که زمانی اعمال می شود که بازیکن عنصر والدش دارای کلاس داده شده باشد.
 
 ```{lang: "text/css"}
 .lost .player {
@@ -681,24 +646,24 @@ player has an ((ancestor element)) with a given class.
 
 {{index player, "box shadow (CSS)"}}
 
-After touching ((lava)), the player's color turns dark red, suggesting
-scorching. When the last coin has been collected, we add two blurred
-white shadows—one to the top left and one to the top right—to create a
-white halo effect.
+بعد از برخورد با گدازه، رنگ بازیکن به قرمز تیره تغییر می کند که سوختن را نمایش
+دهد. زمانی که آخرین سکه هم جمع شد دو سایه‌ی سفید تار- یکی به بالا-چپ و دیگری به
+بالا-راست اضافه می کنیم- تا جلوه‌ی هاله‌ی روشن را ایجاد کنیم.
+
 
 {{id viewport}}
 
 {{index "position (CSS)", "max-width (CSS)", "overflow (CSS)", "max-height (CSS)", viewport, scrolling, [DOM, graphics]}}
 
-We can't assume that the level always fits in the _viewport_—the
-element into which we draw the game. That is why the
-`scrollPlayerIntoView` call is needed. It ensures that if the level is
-protruding outside the viewport, we scroll that viewport to make sure
-the player is near its center. The following ((CSS)) gives the game's
-wrapping DOM element a maximum size and ensures that anything that
-sticks out of the element's box is not visible. We also give it
-a relative position so that the actors inside it are
-positioned relative to the level's top-left corner.
+نمی توانیم فرض بگیریم که مرحله‌ی بازی همیشه در میدان دید (viewport) باشد – منظور عنصری است که
+در آن بازی را ترسیم می کنیم. به همین دلیل است که فراخوانی `scrollPlayerIntoView`
+لازم است – این تابع باعث می شود تا در صورتی که مرحله‌ی بازی از اندازه‌ی میدان دید
+فراتر رفت، آن عنصر میدان دید اسکرول شود و شخصیت بازی نزدیک وسط تصویر آن قرار
+گیرد. دستورات ‌CSS پیش رو به عنصر wrapper بازی بیشینه‌ی اندازه را اختصاص داده و
+اطمینان حاصل می کند که هر چیزی که بیرون از محدوده‌ی این عنصر قرار بگیرد قابل
+مشاهده نخواهد بود. همچنین به عنصر بیرونی یک موقعیت نسبی تخصیص دادیم که باعث می
+شود بازیگران درون آن نسبت به گوشه‌ی چپ-بالای مرحله موقعیت دهی شوند.
+
 
 ```{lang: "text/css"}
 .game {
@@ -711,10 +676,9 @@ positioned relative to the level's top-left corner.
 
 {{index scrolling}}
 
-In the `scrollPlayerIntoView` method, we find the player's position
-and update the wrapping element's scroll position. We change the
-scroll position by manipulating that element's `scrollLeft` and
-`scrollTop` properties when the player is too close to the edge.
+در متد `scrollPlayerIntoView` ما موقعیت بازیکن را پیدا می کنیم و موقعیت اسکرول
+عنصر پوشاننده‌ی آن را به‌روز می کنیم. موقعیت اسکرول را با دستکاری خاصیت‌های
+`scollLeft` و `scrollTop` وقتی که بازیکن خیلی به کناره‌ها نزیک می شود تغییر می دهیم.
 
 ```{includeCode: true}
 DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
@@ -745,30 +709,28 @@ DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
 
 {{index center, coordinates, readability}}
 
-The way the player's center is found shows how the methods on our
-`Vec` type allow computations with objects to be written in a
-relatively readable way. To find the actor's center, we add its
-position (its top-left corner) and half its size. That is the center
-in level coordinates, but we need it in pixel coordinates, so we then
-multiply the resulting vector by our display scale.
+روشی که در آن مرکز بازیکن را پیدا کردیم نشان می دهد چگونه متدهای موجود در نوع
+`Vec` امکان محاسبات روی اشیاء را به شکلی نسبتا خوانا فراهم می کنند. برای پیدا کردن
+مرکز بازیگر، موقعیت آن را (گوشه‌ی بالا-چپ) به نیمی از اندازه‌اش اضافه می کنیم. در
+مختصات مرحله آن مرکز محسوب می شود اما ما نیاز به مختصات در واحد پیکس داریم که
+بتوانیم بردار نتیجه را در مقیاس نمایش مان ضرب کنیم.
 
 {{index validation}}
 
-Next, a series of checks verifies that the player position isn't outside
-of the allowed range. Note that sometimes this will set nonsense
-scroll coordinates that are below zero or beyond the element's scrollable
-area. This is okay—the DOM will constrain them to acceptable values.
-Setting `scrollLeft` to -10 will cause it to become 0.
+در ادامه مجموعه‌ای از بررسی‌ها را داریم که اطمینان حاصل شود که موقعیت بازیکن بیرون
+از بازه‌ی مجاز قرار نگیرد. توجه داشته باشید که گاهی اوقات مختصات اسکرول تولیدی
+نادرست می شود، عددی منفی یا بیشتر از محدوده‌ی قابل اسکرول. این مشکلی پیش نخواهد
+آورد – DOM آن ها را به مقدارهای قابل قبول محدود می کند. اگر مقدار `scrollLeft` را
+برابر <bdo>-10</bdo> تنظیم کنید به صورت خودکار 0 خواهد شد.
 
-It would have been slightly simpler to always try to scroll the player
-to the center of the ((viewport)). But this creates a rather jarring
-effect. As you are jumping, the view will constantly shift up and
-down. It is more pleasant to have a "neutral" area in the middle of
-the screen where you can move around without causing any scrolling.
+کمی کار راحت تر می شد اگر همیشه بازیکن در مرکز میدان دید scroll می شد. اما این
+باعث نسبتا حالت لرزش ایجاد می کرد. در هنگام پرش، تصویر مداوم به سمت بالا و پایین
+حرکت می کند. بهتر است که یک ناحیه بیطرف در مرکز صفحه‌ی نمایش داشته باشیم که بتوان
+در آن بدون ایجاد اسکرول به حرکت پرداخت.
 
 {{index [game, screenshot]}}
 
-We are now able to display our tiny level.
+اکنون می توانیم مرحله را به نشان دهیم.
 
 ```{lang: "text/html"}
 <link rel="stylesheet" href="css/game.css">
@@ -788,9 +750,9 @@ if}}
 
 {{index "link (HTML tag)", CSS}}
 
-The `<link>` tag, when used with `rel="stylesheet"`, is a way to load
-a CSS file into a page. The file `game.css` contains the styles
-necessary for our game.
+برچسب <bdo>`<link>`</bdo> زمانی که با <bdo>`rel="stylesheet"`</bdo> استفاده می
+شود ، باعث بارگیری یک فایل CSS درون صفحه می شود. فایل <bdo>`game.css`</bdo> سبک‌های مورد نیاز
+بازی را در بر دارد.
 
 ## Motion and collision
 
