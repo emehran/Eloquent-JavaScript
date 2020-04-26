@@ -1,13 +1,10 @@
 {{meta {load_files: ["code/chapter/18_http.js"]}}}
 
-# HTTP and Forms
+# HTTP و فرم‌ها
 
-{{quote {author: "Roy Fielding", title: "Architectural Styles and the Design of Network-based Software Architectures", chapter: true}
+{{quote {author: "روی فیلدینگ", title: "سبک‌های معماری و طراحی معمار‌ی‌های نرم‌افزار مبتنی بر شبکه", chapter: true}
 
-Communication must be stateless in nature [...] such that each request
-from client to server must contain all of the information necessary to
-understand the request, and cannot take advantage of any stored
-context on the server.
+ارتباط باید مستقل از وضعیت باشد [...] این‌گونه که هر درخواست از سمت سرویس‌گیرنده به سرویس‌دهنده باید شامل تمامی اطلاعات مورد نیاز برای درک درخواست باشد، و نبایست بتوان از زمینه‌ای در ارتباط که روی سرویس‌دهنده از پیش ذخیره شده است، استفاده نمود.
 
 quote}}
 
@@ -17,22 +14,21 @@ quote}}
 
 {{index [browser, environment]}}
 
-The _Hypertext Transfer Protocol_, already mentioned in [Chapter
-?](browser#web), is the mechanism through which data is requested and
-provided on the ((World Wide Web)). This chapter describes the
-((protocol)) in more detail and explains the way browser
-JavaScript has access to it.
 
-## The protocol
+پروتوکل انتقال ابرمتن (http) که پیش از این در [فصل ?](browser#web) آمد، مکانیزمی است
+که از طریق آن داده‌ها در شبکه‌ی گسترده‌ی وب، درخواست و فراهم می شوند. این فصل به
+توصیف این پروتوکل با جزئیات بیشتری می پردازد و  چگونگی دسترسی جاوااسکریپت در مرورگر را به آن شرح می‌دهد.
+
+
+## پروتوکل
 
 {{index "IP address"}}
 
-If you type _eloquentjavascript.net/18_http.html_ into your browser's
-((address bar)), the ((browser)) first looks up the ((address)) of the
-server associated with _eloquentjavascript.net_ and tries to open a
-((TCP)) ((connection)) to it on ((port)) 80, the default port for
-((HTTP)) traffic. If the ((server)) exists and accepts the connection,
-the browser might send something like this:
+اگر آدرس <bdo>_eloquentjavascript.net/18_http.html_</bdo> را در نوار آدرس مرورگرتان تایپ
+کنید، مرورگر ابتدا به دنبال آدرس سرویس‌دهنده‌ی (server) مرتبط با دامنه‌ی
+_eloquentjavascript.net_ می‌گردد و تلاش می کند تا یک ارتباط TCP روی پورت 80 ، پورت
+پیش‌فرض برای ترافیک HTTP، به آن بگشاید. اگر سرویس دهنده وجود داشته ‌باشد و این ارتباط را
+پذیرش کند، مرورگر ممکن است اطلاعاتی شبیه به زیر را به آن ارسال نماید:
 
 ```{lang: http}
 GET /18_http.html HTTP/1.1
@@ -40,7 +36,7 @@ Host: eloquentjavascript.net
 User-Agent: Your browser's name
 ```
 
-Then the server responds, through that same connection.
+سپس سرویس‌دهنده از طریق همان اتصال پاسخ می دهد.
 
 ```{lang: http}
 HTTP/1.1 200 OK
@@ -51,15 +47,13 @@ Last-Modified: Mon, 08 Jan 2018 10:29:45 GMT
 <!doctype html>
 ... the rest of the document
 ```
+مرورگر بخشی از پاسخ را که بعد از خط خالی می آید را می‌گیرد، بخش بدنه یا body (نباید با برچسب <bdo>`<body>`</bdo> در HTML اشتباه گرفته شود)، و آن را به عنوان یک سند HTML نشان می‌دهد.
 
-The browser takes the part of the ((response)) after the blank line,
-its _body_ (not to be confused with the HTML `<body>` tag), and
-displays it as an ((HTML)) document.
 
 {{index HTTP}}
 
-The information sent by the client is called the _((request))_. It
-starts with this line:
+اطلاعاتی که توسط کاربر ارسال می شود را درخواست (request) می نامند. یک درخواست با
+این خط شروع می شود:
 
 ```{lang: http}
 GET /18_http.html HTTP/1.1
@@ -67,42 +61,36 @@ GET /18_http.html HTTP/1.1
 
 {{index "DELETE method", "PUT method", "GET method", [method, HTTP]}}
 
-The first word is the _method_ of the ((request)). `GET` means
-that we want to _get_ the specified resource. Other common methods are
-`DELETE` to delete a resource, `PUT` to create or replace it, and `POST` to send
-information to it. Note that the ((server)) is not obliged to carry
-out every request it gets. If you walk up to a random website and tell
-it to `DELETE` its main page, it'll probably refuse.
+اولین کلمه معرف روش یا متد (method) درخواست است. GET به این معناست که ما قصد گرفتن منبع
+مشخص شده را داریم. دیگر متدهای رایج شامل DELETE برای حذف یک منبع، PUT برای
+جایگزین کردن آن، و POST برای ارسال اطلاعات به آن می شوند. توجه داشته باشید که
+سرویس دهنده مجبور نیست هر درخواستی را که دریافت می کند اجرا کند. اگر به یک وب
+سایت تصادفی درخواستی از نوع DELETE برای حذف صفحه‌ی اصلی آن ارسال نمایید، احتمالا رد خواهد شد.
 
 {{index [path, URL], GitHub, [file, resource]}}
 
-The part after the method name is the path of the _((resource))_ the
-request applies to. In the simplest case, a resource is simply a
-file on the ((server)), but the protocol doesn't require it to be.
-A resource may be anything that can be transferred _as if_ it is a
-file. Many servers generate the responses they produce on the fly. For
-example, if you open
-[_https://github.com/marijnh_](https://github.com/marijnh), the server looks
-in its database for a user named "marijnh", and if it finds one, it
-will generate a profile page for that user.
+قسمت بعد از نام متد، معرف مسیر منبعی است که درخواست برای آن ارسال می شود. در
+ساده ترین شکل، یک منبع، فایلی روی سرویس‌دهنده می‌باشد اما اجباری برای آن در
+پروتوکل وجود ندارد. یک منبع می تواند هرچیزی که بتوان آن را انتقال داد باشد همان
+طور که یک فایل اینگونه می‌باشد. خیلی از سرویس‌دهنده‌ها پاسخ‌های تولیدی را به صورت پویا
+و درحین اجرا ایجاد می کنند. به عنوان مثال، اگر آدرس [_https://github.com/marijnh_](https://github.com/marijnh) را باز
+کنید، سرویس دهنده در بانک اطلاعاتیش به دنبال کاربری با نام “marijnh” می گردد و
+اگر پیدا کرد، یک صفحه‌ی پروفایل برای این کاربر ایجاد و برمی گرداند.
 
-After the resource path, the first line of the request mentions
-`HTTP/1.1` to indicate the ((version)) of the ((HTTP)) ((protocol)) it
-is using.
 
-In practice, many sites use HTTP version 2, which supports the same
-concepts as version 1.1 but is a lot more complicated so that it can
-be faster. Browsers will automatically switch to the appropriate
-protocol version when talking to a given server, and the outcome of a
-request is the same regardless of which version is used. Because version
-1.1 is more straightforward and easier to play around with, we'll
-focus on that.
+بعد از مسیر منبع، اولین خط از درخواست شامل 1.1/HTTP می‌باشد که بیانگر نسخه‌ی
+پروتوکل HTTP در حال استفاده می‌باشد.
+
+در عمل، خیلی از سایت‌ها از HTTP نسخه 2 استفاده می کنند که از همان مفاهیم نسخه 1.1
+پشتبانی می کند اما بسیار پیش‌رفته‌تر است که در نتیجه سریع تر عمل می کند. مرورگرها در
+هنگام ارتباط با سرویس‌دهنده‌ی داده شده، به صورت خودکار به نسخه‌ی پروتوکل مناسب
+رجوع می کنند و نتیجه‌ی درخواست فارغ از نسخه‌ی پروتوکل یکسان است. به دلیل اینکه
+نسخه‌ی 1.1 سرراست تر و آسان تر است، ما به همان می پردازیم.
 
 {{index "status code"}}
 
-The server's ((response)) will start with a version as well, followed
-by the status of the response, first as a three-digit status code and
-then as a human-readable string.
+پاسخ سرویس‌دهنده با یک شماره‌ی نسخه شروع می شود که بعد از آن وضعیت پاسخ درج می
+شود. ابتدا یک عدد سه رقمی وضعیت و سپس یک رشته‌ی متنی قابل خواندن برای انسان برگردانده می‌شود.
 
 ```{lang: http}
 HTTP/1.1 200 OK
@@ -110,20 +98,20 @@ HTTP/1.1 200 OK
 
 {{index "200 (HTTP status code)", "error response", "404 (HTTP status code)"}}
 
-Status codes starting with a 2 indicate that the request succeeded.
-Codes starting with 4 mean there was something wrong with the
-((request)). 404 is probably the most famous HTTP status code—it means
-that the resource could not be found. Codes that start with 5 mean an
-error happened on the ((server)) and the request is not to blame.
+کدهای وضعیتی که با عدد 2 شروع می شوند بیانگر موفقیت درخواست ارسال شده می باشند.
+کدهایی که با 4 شروع می شوند به این معنا هستند که در درخواست مشکلی وجود داشته
+است. 404 احتمالا معروف ترین کد وضعیت HTTP می‌باشد – به معنای این که منبع
+درخواستی پیدا نشد. کدهایی که با 5 شروع می شوند به معنای وجود خطا در سرویس دهنده
+می باشند و اشکال در درخواست نیست.
 
 {{index HTTP}}
 
 {{id headers}}
 
-The first line of a request or response may be followed by any number
-of _((header))s_. These are lines in the form `name: value` that
-specify extra information about the request or response. These headers
-were part of the example ((response)):
+اولین خط درخواست یا پاسخ ممکن است شامل تعدادی header یا سرپیام باشد. این خطوط به شکل name:
+value هستند و اطلاعات بیشتری درباره‌ی درخواست یا پاسخ فراهم می نمایند. سرپیام‌های
+زیر بخشی از پاسخ مثال بودند:
+
 
 ```{lang: null}
 Content-Length: 65585
@@ -133,46 +121,46 @@ Last-Modified: Thu, 04 Jan 2018 14:05:30 GMT
 
 {{index "Content-Length header", "Content-Type header", "Last-Modified header"}}
 
-This tells us the size and type of the response document. In this
-case, it is an HTML document of 65,585 bytes. It also tells us when
-that document was last modified.
+این پیام اندازه و نوع سند پاسخ را مشخص می کند. در این مثال، این پاسخ، سندی HTML
+به اندازه‌ی 65585 بایت می‌باشد. همچنین زمان آخرین تغییر ایجاد شده در سند نیز
+آمده است.
 
 {{index "Host header", domain}}
 
-For most ((header))s, the client and server are free to decide whether
-to include them in a ((request)) or ((response)). But a few are
-required. For example, the `Host` header, which specifies the
-hostname, should be included in a request because a ((server)) might
-be serving multiple hostnames on a single ((IP address)), and without
-that header, the server won't know which hostname the client is trying
-to talk to.
+استفاده از بیشتر این سرپیام‌ها برای سرویس‌دهنده و سرویس‌گیرنده اختیاری است. اما
+تعداد کمی از آن ها اجباری می باشند. به عنوان مثال، سرپیام Host که بیانگر نام
+میزبان (hostname) است باید در درخواست وجود داشته باشد چرا که یک سرویس دهنده ممکن
+است به چندین نام میزبان رو یک آدرس IP سرویس‌دهی کند، که در صورت مشخص نبودن آن
+سرپیام، سرویس‌دهنده نمی تواند تشخیص دهد که درخواست سرویس‌گیرنده مربوط به کدام
+نام میزبان می‌باشد.
+
+بعد از قسمت سرپیام‌ها، در هر دوی درخواست و پاسخ، یک خط خالی قرار می گیرد که بعد
+از آن بدنه خواهد آمد که حاوی داده‌هایی است که ارسال می شوند. در درخواست‌های GET و
+DELETE هیچ دادهای ارسال نمی شود اما در PUT و POST این گونه نیست. به طور مشابه،
+بعضی از انواع پاسخ، مثل پاسخ‌های خطا، دارای قسمت بدنه نمی باشند.
 
 {{index "GET method", "DELETE method", "PUT method", "POST method", "body (HTTP)"}}
 
-After the headers, both requests and responses may include a blank
-line followed by a body, which contains the data being sent. `GET` and
-`DELETE` requests don't send along any data, but `PUT` and `POST`
-requests do. Similarly, some response types, such as error responses,
-do not require a body.
-
-## Browsers and HTTP
+## مرورگرها و HTTP
 
 {{index HTTP, [file, resource]}}
 
-As we saw in the example, a ((browser)) will make a request when we
-enter a ((URL)) in its ((address bar)). When the resulting HTML page
-references other files, such as ((image))s and JavaScript files,
-those are also retrieved.
+همانطور که در مثال دیدیم، یک مرورگر وقتی که ما یک URL را در نوار آدرسش وارد می
+کنیم، یک درخواست می سازد. زمانی که صفحه‌ی HTML دریافتی، به فایل‌های دیگری ارجاع
+دارد مثل تصاویر و فایل‌های جاوااسکریپت ، آن فایل‌ها نیز بازیابی می شوند.
+
 
 {{index parallelism, "GET method"}}
 
-A moderately complicated ((website)) can easily include anywhere from
-10 to 200 ((resource))s. To be able to fetch those quickly, browsers
-will make several `GET` requests simultaneously, rather than waiting
-for the responses one at a time.
+یک وب‌سایت نسبتا بزرگ به آسانی می تواند دارای چیزی بین 10 تا 200 منبع باشد. برای
+اینکه بتوان این منابع را به سرعت بارگیری کرد، مرورگر چندین درخواست GET را همزمان
+ارسال می کند به جای اینکه برای تک تک پاسخ‌ها منتظر بماند.
 
-HTML pages may include _((form))s_, which allow the user to fill out
-information and send it to the server. This is an example of a form:
+
+صفحات HTML ممکن است حاوی فرم‌ها باشند که این امکان را به کاربر می دهند تا
+اطلاعاتی را در آن ها نوشته و به سرویس‌دهنده ارسال کنند. اینجا مثالی از یک فرم را
+مشاهده می کنید:
+
 
 ```{lang: "text/html"}
 <form method="GET" action="example/message.html">
@@ -184,16 +172,15 @@ information and send it to the server. This is an example of a form:
 
 {{index form, "method attribute", "GET method"}}
 
-This code describes a form with two ((field))s: a small one asking for
-a name and a larger one to write a message in. When you click the Send
-((button)), the form is _submitted_, meaning that the content of its
-field is packed into an HTTP request and the browser navigates to the
-result of that request.
+این کد فرمی با دو فیلد را تولید می کند: یک فیلد کوچک که نام را درخواست می کند و
+فیلدی بزرگتر که امکان نوشتن پیام را فراهم می‌سازد. زمانی که روی دکمه‌ی Send کلیک
+می کنید، فرم ثبت می شود (submit) به این معنا که محتوای فیلدهای آن به صورت یک
+درخواست HTTP در آمده و ارسال می شود و مرورگر به محل نتیجه‌ی درخواست منتقل می شود.
 
-When the `<form>` element's `method` attribute is `GET` (or is
-omitted), the information in the form is added to the end of the
-`action` URL as a _((query string))_. The browser might make a request
-to this URL:
+
+زمانی که خاصیت `method` مربوط به عنصر `<form>` برابر با `GET` باشد ( یا اینکه اصلا ذکر
+نشود)، اطلاعات فرم به انتهای URL مشخص شده در خاصیت `action` به عنوان یک رشته‌ی
+پرس‌جو (query string) اضافه می شود. مرورگر ممکن است درخواستی به این URL به شکل زیر ایجاد کند:
 
 ```{lang: null}
 GET /example/message.html?name=Jean&message=Yes%3F HTTP/1.1
@@ -201,24 +188,22 @@ GET /example/message.html?name=Jean&message=Yes%3F HTTP/1.1
 
 {{index "ampersand character"}}
 
-The ((question mark)) indicates the end of the path part of the URL
-and the start of the query. It is followed by pairs of names and
-values, corresponding to the `name` attribute on the form field
-elements and the content of those elements, respectively. An ampersand
-character (`&`) is used to separate the pairs.
+علامت سوال بیانگر انتهای قسمت مسیر مربوط به URL و شروع رشته‌ی پرس و جو می‌باشد.
+بعد از آن جفت‌های نام و مقدار که متناظر با خاصیت name در فیلدهای فرم و محتوای آن
+عناصر می‌باشند به ترتیب می آیند. کاراکتر آمپرسند(`&`) برای جداسازی جفت‌ها استفاده
+می شود.
 
 {{index [escaping, "in URLs"], "hexadecimal number", "encodeURIComponent function", "decodeURIComponent function"}}
 
-The actual message encoded in the URL is "Yes?", but the question mark
-is replaced by a strange code. Some characters in query strings must
-be escaped. The question mark, represented as `%3F`, is one of those.
-There seems to be an unwritten rule that every format needs its own
-way of escaping characters. This one, called _((URL encoding))_, uses
-a ((percent sign)) followed by two hexadecimal (base 16) digits that
-encode the character code. In this case, 3F, which is 63 in decimal
-notation, is the code of a question mark character. JavaScript
-provides the `encodeURIComponent` and `decodeURIComponent` functions
-to encode and decode this format.
+پیام اصلی که در URL منتقل می شود “?Yes” است اما علامت سوال با یک کد رمزی جایگزین
+شده است. بعضی از کاراکترهای موجود در رشته‌های پرس و جو باید گریز داده شوند.
+علامت سوال که به صورت <bdo>`%3F`</bdo> در آمده است یکی از آن ها است. به نظر یک قانون نانوشته
+وجود دارد که هر فرمتی روش گریزدهی کاراکتر مخصوص به خود را لازم دارد. در این
+مورد، که کدگذاری URL نامیده می شود (URL Encoding) از یک علامت درصد و دو رقم
+هگزادسیمال (مبنای 16) برای کدگذاری کد کاراکتر استفاده می شود. در این مورد، 3F که
+در سیستم دهدهی معادل 63 می‌باشد، کد کاراکتر علامت سوال است. جاوااسکریپت دو تابع
+`encodeURIComponent` و `decodeURIComponent` را برای کدگذاری و کدگشایی از این فرمت
+فراهم نموده است.
 
 ```
 console.log(encodeURIComponent("Yes?"));
@@ -229,10 +214,9 @@ console.log(decodeURIComponent("Yes%3F"));
 
 {{index "body (HTTP)", "POST method"}}
 
-If we change the `method` attribute of the HTML form in the example we
-saw earlier to `POST`, the ((HTTP)) request made to submit the
-((form)) will use the `POST` method and put the ((query string)) in
-the body of the request, rather than adding it to the URL.
+اگر خاصیت `method` را در فرم HTML مثالی که دیدیم به `POST` تغییر دهیم، درخواست HTTP
+ساخته شده از روش `POST` استفاده می کند و رشته‌ی پرس‌وجو را در قسمت بدنه‌ی درخواست
+قرار می دهد تا اینکه در URL اضافه کند.
 
 ```{lang: http}
 POST /example/message.html HTTP/1.1
@@ -241,17 +225,16 @@ Content-type: application/x-www-form-urlencoded
 
 name=Jean&message=Yes%3F
 ```
+درخواست‌های GET بهتر است برای درخواست‌هایی استفاده شوند که اثرات جانبی ندارند و
+فقط برای درخواست اطلاعات استفاده می شوند. درخواست‌هایی که قرار است چیزی را روی
+سرویس دهنده تغییر دهند ، مثلا حساب کاربری جدیدی ایجاد کنند یا پیامی را ارسال
+کنند، باید با دیگر روش ها مثل `POST` ارسال شوند. یک نرم افزار سمت کاربر
+(client-side) مثل مرورگر می داند که نباید به صورت کورکورانه درخواست‌های `POST`
+ ارسال می کند اما به صورت ضمنی درخواست‌های `GET` ایجاد کند – به عنوان مثال برای
+پیش‌واکشی یک منبع که کاربر به زودی به آن نیاز خواهد داشت.
 
-`GET` requests should be used for requests that do not have ((side
-effect))s but simply ask for information. Requests that change
-something on the server, for example creating a new account or posting
-a message, should be expressed with other methods, such as `POST`.
-Client-side software such as a browser knows that it shouldn't blindly
-make `POST` requests but will often implicitly make `GET` requests—for
-example to prefetch a resource it believes the user will soon need.
 
-We'll come back to forms and how to interact with them from JavaScript
-[later in the chapter](http#forms).
+به فرم‌ها و نحوه‌ی تعامل با آن ها به وسیله‌ی جاوااسکریپت [در همین فصل](http#forms) باز خواهیم گشت.
 
 {{id fetch}}
 
@@ -259,9 +242,9 @@ We'll come back to forms and how to interact with them from JavaScript
 
 {{index "fetch function", "Promise class", [interface, module]}}
 
-The interface through which browser JavaScript can make HTTP
-requests is called `fetch`. Since it is relatively new, it
-conveniently uses promises (which is rare for browser interfaces).
+رابطی‌ را که از طریق آن، جاوااسکریپت مرورگر می تواند درخواست‌های HTTP  بسازد،  `fetch`
+می نامند. به دلیل اینکه این رابط نسبتا جدید است، به خوبی از promise ها
+استفاده می کند ( که در رابط های مرورگر چیز نادری است).
 
 ```{test: no}
 fetch("example/data.txt").then(response => {
@@ -274,35 +257,31 @@ fetch("example/data.txt").then(response => {
 
 {{index "Response class", "status property", "headers property"}}
 
-Calling `fetch` returns a promise that resolves to a `Response` object
-holding information about the server's response, such as its status
-code and its headers. The headers are wrapped in a `Map`-like object
-that treats its keys (the header names) as case insensitive because
-header names are not supposed to be case sensitive. This means 
-`headers.get("Content-Type")` and `headers.get("content-TYPE")` will
-return the same value.
+فراخوانی `fetch` یک promise را برمی گرداند که به یک شیء `Response` منجر می شود که
+حاوی اطلاعاتی درباره‌ی پاسخ سرویس‌دهنده است، مثل کد وضعیت آن و سرپیام‌هایش.
+سرپیام‌ها درون یک شیء شبیه `Map` قرار می گیرند که نسبت به بزرگی و کوچکی حروف
+کلیدهایش (نام سرپیام‌ها) حساس نیست چرا که نام سرپیام ها لزومی ندارد به حروف حساس
+باشد. به این معنا که <bdo>`headers.get("Content-Type")`</bdo> و <bdo>`headers.get("content-TYPE")`</bdo>
+مقدار مشابهی را برمی گردانند.
 
-Note that the promise returned by `fetch` resolves successfully even
-if the server responded with an error code. It _might_ also be
-rejected if there is a network error or if the ((server)) that the
-request is addressed to can't be found.
+توجه داشته باشید که promise برگشتی از `fetch` به صورت موفقیت‌آمیز حل‌وفصل می‌شود
+حتی اگر سرویس دهنده با کد خطا پاسخ داده باشد. همچنین ممکن است لغو شود، اگر خطایی
+در شبکه رخ بدهد یا سرویس‌دهنده‌ای که درخواست به آن ارسال می شود پیدا نشود.
 
 {{index [path, URL], "relative URL"}}
 
-The first argument to `fetch` is the URL that should be requested.
-When that ((URL)) doesn't start with a protocol name (such as _http:_),
-it is treated as _relative_, which means it is interpreted relative
-to the current document. When it starts with a slash (/), it replaces
-the current path, which is the part after the server name. When it
-does not, the part of the current path up to and including its last
-((slash character)) is put in front of the relative URL.
+اولین آرگومانی که fetch دریافت می کند URLای است که مورد درخواست است. زمانی که
+این URL با نام یک پروتوکل شروع نمی شود (مثل <bdo>_http:_</bdo>)، به صورت نسبی در نظر گرفته می
+شود، به این معنا که آدرس نسبت به موقعیت سند فعلی تفسیر می شود. اگر این URL با یک کاراکتر
+اسلش (/) شروع شود، جایگزین مسیر فعلی خواهد شد منظور بخشی است که پس از نام سرویس‌دهنده در URL می‌آید.
+در صورت نبود اسلش در ابتدا، مسیر فعلی تا آخرین کاراکتر اسلش، پیش از URL نسبی داده شده قرار خواهد گرفت.
 
 {{index "text method", "body (HTTP)", "Promise class"}}
 
-To get at the actual content of a response, you can use its `text`
-method. Because the initial promise is resolved as soon as the
-response's headers have been received and because reading the response body
-might take a while longer, this again returns a promise.
+برای دریافت محتوای اصلی یک پاسخ، می توانید از متد `text` آن استفاده کنید. به دلیل
+اینکه promise اولیه، به محض اینکه سرپیام‌های پاسخ دریافت شوند، حل و فصل می شود، و
+خواندن بدنه‌ی پاسخ ممکن است زمان بیشتری بطلبد، دوباره به شکل یک promise برگردانده
+می شود.
 
 ```{test: no}
 fetch("example/data.txt")
@@ -313,16 +292,15 @@ fetch("example/data.txt")
 
 {{index "json method"}}
 
-A similar method, called `json`, returns a promise that
-resolves to the value you get when parsing the body as ((JSON)) or
-rejects if it's not valid JSON.
+متد مشابهی به نام `json` وجود دارد که promiseای برمی گرداند که زمانی موفق به تولید
+مقدار می شود که بدنه را بتوان به عنوان JSON تفسیر کرد، و اگر محتوای بدنه یک JSON معتبر نباشد، promise لغو می شود.
 
 {{index "GET method", "body (HTTP)", "DELETE method", "method property"}}
 
-By default, `fetch` uses the `GET` method to make its request and
-does not include a request body. You can configure it differently by
-passing an object with extra options as a second argument. For
-example, this request tries to delete `example/data.txt`:
+به صورت پیش‌فرض، `fetch` از روش `GET` برای ساختن درخواست‌هایش استفاده می کند و بدنه‌ای
+برای درخواست درنظر نمی گیرد. می توانید به صورت دیگری آن را تنظیم کنید؛ به وسیله‌ی
+ارسال آرگومان دوم که حاوی شیء گزینه‌های بیشتر می‌باشد. به عنوان مثال، این
+درخواست تلاش می کند تا `example/data.txt` را حذف کند.
 
 ```{test: no}
 fetch("example/data.txt", {method: "DELETE"}).then(resp => {
@@ -333,15 +311,15 @@ fetch("example/data.txt", {method: "DELETE"}).then(resp => {
 
 {{index "405 (HTTP status code)"}}
 
-The 405 status code means "method not allowed", an HTTP server's way
-of saying "I can't do that".
+کد وضعیت 405 به این معنا است که “این متد مجاز نیست”. روش یک سرویس‌دهنده‌ی HTTP برای
+گفتن “من نمی توانم این کار رو بکنم” است.
 
 {{index "Range header", "body property", "headers property"}}
 
-To add a request body, you can include a `body` option. To set
-headers, there's the `headers` option. For example, this request
-includes a `Range` header, which instructs the server to return only
-part of a response.
+برای افزودن یک بدنه‌ی درخواست، می توانید گزینه‌ی `body` را بیفزایید. برای تنظیم
+سرپیام‌ها، گزینه‌ای به نام `headers` وجود دارد. به عنوان مثال، این درخواست یک سرپیام
+`Range` را اضافه می‌کند که به سرویس‌دهنده دستور می دهد که فقط بخشی از پاسخ را
+برگرداند.
 
 ```{test: no}
 fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
@@ -350,168 +328,149 @@ fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
 // → the content
 ```
 
-The browser will automatically add some request ((header))s, such as
-"Host" and those needed for the server to figure out the size of the
-body. But adding your own headers is often useful to include things
-such as authentication information or to tell the server which file
-format you'd like to receive.
+مرورگر به صورت خودکار چند سرپیام به درخواست اضافه می کند مثل "Host" و آن دسته از سرپیام‌ها که
+برای سرویس‌دهنده لازم هستند تا بتواند اندازه‌ی بدنه را بداند. اما اضافه کردن
+سرپیام‌های خودتان معمولا برای افزودن چیزهایی مثل اطلاعات هویت‌سنجی یا اعلام
+نوع فرمت فایل درخواستی به سرویس‌دهنده، استفاده می شود.
 
 {{id http_sandbox}}
 
-## HTTP sandboxing
+## سازوکار حفاظتی - HTTP sandboxing
 
 {{index sandbox, [browser, security]}}
 
-Making ((HTTP)) requests in web page scripts once again raises
-concerns about ((security)). The person who controls the script might
-not have the same interests as the person on whose computer it is
-running. More specifically, if I visit _themafia.org_, I do not want
-its scripts to be able to make a request to _mybank.com_, using
-identifying information from my browser, with instructions to
-transfer all my money to some random account.
+ساختن درخواست‌های HTTP درون اسکریپت‌های صفحه‌ی وب، نگرانی‌هایی در مورد امنیت  به وجود می‌آورد. فردی که اسکریپت را کنترل می کند ممکن است نیتی مشابه کسی که اسکریپت در
+کامپیوترش اجرا می شود، نداشته باشد. به صورت واضح‌تر، اگر من از سایت themafia.org
+بازدید کنم دوست ندارم که اسکریپت‌های این سایت بتوانند درخواستی به سایت بانک من
+(mybank.com) ارسال کنند و از اطلاعات شناسایی من در مرورگرم استفاده کنند و
+دستوراتی برای انتقال پول‌های من به حساب‌های ناشناس اجرا کنند.
 
-For this reason, browsers protect us by disallowing scripts to make
-HTTP requests to other ((domain))s (names such as _themafia.org_ and
-_mybank.com_).
+به همین دلیل، مرورگرها با غیرفعال کردن اجازه‌ی ارسال درخواست HTTP از درون
+اسکریپت‌ها به دیگر دامنه‌ها( نام هایی مثل themefia.org یا mybank.com) از ما
+محافظت می کنند.
 
 {{index "Access-Control-Allow-Origin header", "cross-domain request"}}
 
-This can be an annoying problem when building systems that want to
-access several domains for legitimate reasons. Fortunately,
-((server))s can include a ((header)) like this in their ((response))
-to explicitly indicate to the browser that it is okay for the request
-to come from another domain:
+ممکن است این محدودیت در زمان ساختن سیستم‌هایی که لازم است برای اهداف قانونی به
+چند دامنه دسترسی داشته باشد آزار دهنده باشد. خوشبختانه، سرویس‌دهنده‌ها می توانند
+یک سرپیام شبیه مثال زیر را در پاسخ خودشان قرار دهند تا صراحتا به مرورگر اعلام
+کنند که مشکلی نیست که درخواست از دامنه‌ی دیگری بیاید.
 
 ```{lang: null}
 Access-Control-Allow-Origin: *
 ```
 
-## Appreciating HTTP
+## بهره‌مندی از HTTP
 
 {{index client, HTTP, [interface, HTTP]}}
 
-When building a system that requires ((communication)) between a
-JavaScript program running in the ((browser)) (client-side) and a
-program on a ((server)) (server-side), there are several different
-ways to model this communication.
+در زمان ساخت سیستمی که لازم است در آن بین یک برنامه‌ی جاوااسکریپت که در مرورگر
+اجرا می شود (سمت کاربر) و برنامه‌ای که روی سرویس‌دهنده است (سمت سرور) ارتباط
+برقرار شود، می توان از روش‌های متفاوتی برای مدلسازی این ارتباط استفاده کرد.
 
 {{index [network, abstraction], abstraction}}
 
-A commonly used model is that of _((remote procedure call))s_. In this
-model, communication follows the patterns of normal function calls,
-except that the function is actually running on another machine.
-Calling it involves making a request to the server that includes the
-function's name and arguments. The response to that request contains
-the returned value.
+یکی از مدل‌های رایج، استفاده از فراخوانی‌های رویه از راه دور (_((remote procedure call))s_) است. دراین مدل، ارتباط از الگوی فراخوانی نرمال توابع پیروی می کند با
+این استثناء که تابع در واقع روی کامپیوتر دیگر اجرا می شود. فراخوانی آن شامل ساخت
+یک درخواست به سرویس‌دهنده و مشخص کردن نام تابع و آرگومان‌های آن می‌باشد. پاسخ به
+آن درخواست حاوی مقدار بازگشتی است.
 
-When thinking in terms of remote procedure calls, HTTP is just a
-vehicle for communication, and you will most likely write an
-abstraction layer that hides it entirely.
+در مدل فراخوانی از راه دور، HTTP فقط نقش یک وسیله ارتباطی را بازی می کند و شما به احتمال زیاد آن را با یک لایه‌ی تجرید مخفی می کنید.
 
 {{index "media type", "document format", [method, HTTP]}}
 
-Another approach is to build your communication around the concept of
-((resource))s and ((HTTP)) methods. Instead of a remote procedure
-called `addUser`, you use a `PUT` request to `/users/larry`. Instead
-of encoding that user's properties in function arguments, you define a
-JSON document format (or use an existing format) that represents a
-user. The body of the `PUT` request to create a new resource is then
-such a document. A resource is fetched by making a `GET` request to
-the resource's URL (for example, `/user/larry`), which again returns
-the document representing the resource.
+روشی دیگر ساختن سیستم ارتباط برپایه مفهوم منابع و متد‌های HTTP است. به جای اینکه
+یک رویه‌ی از راه دور به نام `addUser` فراخوانی شود، از درخواست `PUT` به <bdo>`/users/larry`</bdo>
+استفاده می کنید. به جای قرار دادن مشخصات آن کاربر در آرگومان‌های تابع، یک فرمت
+سند JSON تعریف می کنید ( یا از فرمتی موجود استفاده می کنید) که نمایانگر یک کاربر
+باشد. بدنه‌ی درخواست `PUT` برای ایجاد یک منبع جدید، سندی به این شکل خواهد بود. یک
+منبع را می توان با ساختن یک درخواست `GET` به URL منبع (به عنوان مثال <bdo>`/users/larry`</bdo>)
+واکشی کرد که دوباره سندی که نمایانگر منبع مورد نظر است را بر‌می‌گرداند.
 
-This second approach makes it easier to use some of the features that
-HTTP provides, such as support for caching resources (keeping a copy
-on the client for fast access). The concepts used in HTTP, which are
-well designed, can provide a helpful set of principles to design your
-server interface around.
+استفاده از روش دوم باعث می شود بتوان از بعضی امکاناتی که HTTP فراهم می کند  آسان
+تر استفاده کرد مثل پشتیبانی از کش کردن منابع (نگه داری یک کپی روی سیستم کاربر
+برای دسترسی سریع). مفاهیم استفاده شده در HTTP که  خوبی طراحی شده اند،
+می توانند مجموعه‌ی مفیدی از قواعد را برای طراحی رابط سرویس‌دهنده فراهم نمایند.
 
-## Security and HTTPS
+
+## امنیت و HTTPS
 
 {{index "man-in-the-middle", security, HTTPS, [network, security]}}
 
-Data traveling over the Internet tends to follow a long, dangerous
-road. To get to its destination, it must hop through anything from
-coffee shop Wi-Fi hotspots to networks controlled by various companies and
-states. At any point along its route it may be inspected or even
-modified.
+سفر داده‌ها در اینترنت معمولا در مسیری بلند و پرمخاطره رخ می دهد. برای اینکه
+داده‌ها به مقصدشان برسند، باید از چیزهای مختلفی مثل Wifi یک کافی شاپ تا
+شبکه‌هایی که توسط شرکت‌های متنوع و دولت‌ها کنترل می شوند عبور کنند. در هر نقطه‌ای در
+طول مسیرش می توانند مورد بازرسی یا حتی دستکاری قرار بگیرند.
 
 {{index tampering}}
 
-If it is important that something remain secret, such as the
-((password)) to your ((email)) account, or that it arrive at its
-destination unmodified, such as the account number you transfer money
-to via your bank's website, plain HTTP is not good enough.
+بعضی اطلاعات باید مخفی بمانند مانند رمز عبور حساب ایمیلتان، یا اطلاعاتی هستند که باید هنگامی که به مقصد می‌رسند دستکاری نشده باشند مانند شماره‌ی حسابی که در سایت بانکتان به آن پول واریز می کنید. HTTP ساده زیاد مناسب این این موارد نیست.
 
 {{index cryptography, encryption}}
 
 {{indexsee "Secure HTTP", HTTPS, [browser, security]}}
 
-The secure ((HTTP)) protocol, used for ((URL))s starting with _https://_,
-wraps HTTP traffic in a way that makes it harder to read and tamper
-with. Before exchanging data, the client verifies that the server is
-who it claims to be by asking it to prove that it has a cryptographic
-((certificate)) issued by a certificate authority that the browser
-recognizes. Next, all data going over the ((connection)) is encrypted
-in a way that should prevent eavesdropping and tampering.
+پروتوکل امن HTTP که URLها در آن با <bdo>_https://_</bdo> شروع می شوند، ترافیک HTTP را به شکلی
+محافظت می کند که ساختن و دستکاری آن خیلی سخت بشود. قبل از تبادل داده‌ها ، سرویس‌گیرنده
+تحقیق می کند که سرویس‌دهنده همانی باشد که ادعا می کند و این کار با درخواست از
+سرور برای فراهم ساختن گواهینامه‌ی رمزی که توسط یک مرجع معتبر صدور گواهینامه صادر
+شده است و مورد شناسایی مرورگر می‌باشد، انجام می شود. بعد تمامی
+داده‌هایی که از طریق این ارتباط جابجا می شوند به رمز در می آیند به شکلی که از استراق سمع و مداخله ایمن بمانند.
 
-Thus, when it works right, ((HTTPS)) prevents other people from
-impersonating the website you are trying to talk to and from
-snooping on your communication. It is not perfect, and there have been
-various incidents where HTTPS failed because of forged or stolen
-certificates and broken software, but it is a _lot_ safer than plain
-HTTP.
+بنابراین، وقتی این پروتوکل به درستی کار می کند، HTTPS از جعل وب سایت مورد
+ارتباط توسط شخص ثالث و جاسوسی در ارتباطات شما جلوگیری می‌کند. این پروتوکل کامل و بی نقص
+نیست، و موارد متنوعی وجود داشته که HTTPS موفقیت آمیز نبوده‌است؛ به دلیل لو رفتن
+گواهینامه یا دزدیده شدن آن یا نرم‌افزار معیوب، اما به هر حال این پروتوکل
+بسیار از HTTP ساده امن تر می‌باشد.
 
 {{id forms}}
 
-## Form fields
+## فیلدهای فرم
 
-Forms were originally designed for the pre-JavaScript Web to allow
-web sites to send user-submitted information in an HTTP request. This
-design assumes that interaction with the server always happens by
-navigating to a new page.
+فرم ها اساسا برای وب قبل از جاوااسکریپت طراحی شده بوند، تا به وب‌سایت‌ها امکان ارسال
+اطلاعات ثبت شده توسط کاربر را به صورت یک درخواست HTTP بدهند. این طراحی فرض را بر
+این می گذارد که تعامل با سرویس‌دهنده همیشه با انتقال به یک صفحه‌ی دیگر رخ می دهد.
 
 {{index [DOM, fields]}}
 
-But their elements are part of the DOM like the rest of the page,
-and the DOM elements that represent form ((field))s support a number
-of properties and events that are not present on other elements. These
-make it possible to inspect and control such input fields with
-JavaScript programs and do things such as adding new functionality to
-a form or using forms and fields as building blocks in a JavaScript
-application.
+اما عناصر فرم هم شبیه به دیگر قسمت‌های صفحه، بخشی از DOM محسوب می شوند و عناصر DOM
+که فیلدهای فرم را نشان می دهند دارای تعدادی خاصیت و رخداد هستند که در دیگر عناصر
+موجود نیست. این باعث می شود که بتوان با برنامه‌های جاوااسکریپت این گونه فیلدها را
+کنترل و رسیدگی کرد و بتوان کارهایی مثل اضافه کردن کارکرد‌های جدید به یک فرم یا
+استفاده از فرم‌ها و فیلدها به عنوان بلاک‌های سازنده در اپلیکیشن‌های جاوااسکریپت
+استفاده کرد.
 
 {{index "form (HTML tag)"}}
 
-A web form consists of any number of input ((field))s grouped in a
-`<form>` tag. HTML allows several different styles of fields, ranging
-from simple on/off checkboxes to drop-down menus and fields for text
-input. This book won't try to comprehensively discuss all field types,
-but we'll start with a rough overview.
+یک فرم وب شامل هر تعداد از فیلدهای ورودی که توسط برچسب `<form>` محصور می شوند است.
+HTML امکان داشتن سبک‌های متفاوت و متعددی از فیلدها را فراهم می سازد، از چک‌باکس‌های
+on/off تا منوهای بازشدنی و فیلدهایی برای ورودی متنی. این کتاب به صورت جامع در
+مورد همه‌ی انواع فیلدها صحبت نمی کند، اما به صورت کلی نگاهی به آن ها می اندازیم.
 
 {{index "input (HTML tag)", "type attribute"}}
 
-A lot of field types use the
-`<input>` tag. This tag's `type` attribute is used to select the
-field's style. These are some commonly used `<input>` types:
+خیلی از انواع فیلدها از برچسب `<input>` استفاده می کنند. خصوصیت `type` این برچسب
+برای انتخاب سبک فیلد استفاده می شود. اینجا بعضی از انواع `<input>` رایج آورده شده
+است:
 
 {{index "password field", checkbox, "radio button", "file field"}}
 
 {{table {cols: [1,5]}}}
 
-| `text`     | A single-line ((text field))
-| `password` | Same as `text` but hides the text that is typed
-| `checkbox` | An on/off switch
-| `radio`    | (Part of) a ((multiple-choice)) field
-| `file`     | Allows the user to choose a file from their computer
+| `text`     | یک فیلد یک خطی برای دریافت متن
+| `password` | فیلدی شبیه به text با این تفاوت که متن تایپ‌شده قابل شناسایی نیست
+| `checkbox` |  فیلدی دارای دو حالت فعال و غیرفعال
+| `radio`    | بخشی از یک فیلد چند گزینه‌ای
+| `file`     | این فیلد به کاربر اجازه‌ی انتخاب یک فایل از کامپیوترش را می دهد
 
 {{index "value attribute", "checked attribute", "form (HTML tag)"}}
 
-Form fields do not necessarily have to appear in a `<form>` tag. You
-can put them anywhere in a page. Such form-less fields cannot be
-((submit))ted (only a form as a whole can), but when responding to
-input with JavaScript, we often don't want to submit our fields
-normally anyway.
+فیلدهای فرم نیازی نیست حتما درون یک برچسب `<form>` قرار گیرند. می توانید آن ها در
+هر جای صفحه استفاده کنید. استفاده بدون برچسب form از فیلدها باعث می شود که نتوان
+آن ها را به صورت نرمال ثبت کرد ( فقط یک فرم به شکل کامل قابلیت ثبت را دارد)، اما
+در مواقع کار با فیلدهای ورودی در جاوااسکریپت ، اغلب قصد ثبت فیلدهایمان به صورت
+نرمال نداریم.
+
 
 ```{lang: "text/html"}
 <p><input type="text" value="abc"> (text)</p>
@@ -525,22 +484,19 @@ normally anyway.
 
 {{if book
 
-The fields created with this HTML code look like this:
+کدهای بالا به شکل زیر نمایش داده می شوند
 
 {{figure {url: "img/form_fields.png", alt: "Various types of input tags",width: "4cm"}}}
 
 if}}
 
-The JavaScript interface for such elements differs with the type of
-the element.
+رابط جاوااسکریپت برای این گونه عناصر بسته به نوع عنصر متفاوت است.
+
 
 {{index "textarea (HTML tag)", "text field"}}
 
-Multiline text fields have their own tag, `<textarea>`, mostly because
-using an attribute to specify a multiline starting value would be
-awkward. The `<textarea>` tag requires a matching `</textarea>`
-closing tag and uses the text between those two, instead of the
-`value` attribute, as starting text.
+فیلدهای متنی چند خطی برچسب مخصوص خودشان را دارند، `<textarea>`، بیشتر به دلیل اینکه قرار دادن یک مقدار چند خطی در قسمت خصوصیت‌ها (attribute) مناسب نیست. برچسب `<textarea>` نیاز به برچسب پایانی <bdo>`</textarea>`</bdo> دارد و از متن بین این دو
+برچسب به جای خاصیت `value` استفاده می کند.
 
 ```{lang: "text/html"}
 <textarea>
@@ -552,9 +508,9 @@ three
 
 {{index "select (HTML tag)", "option (HTML tag)", "multiple choice", "drop-down menu"}}
 
-Finally, the `<select>` tag is used to
-create a field that allows the user to select from a number of
-predefined options.
+و در نهایت، برچسب `<select>` برای ایجاد فیلدی که امکان انتخاب از بین تعدادی گزینه‌ی از
+پیش تعریف شده را به کاربر می دهد استفاده می شود.
+
 
 ```{lang: "text/html"}
 <select>
@@ -566,7 +522,8 @@ predefined options.
 
 {{if book
 
-Such a field looks like this:
+این فیلد شبیه زیر به نمایش می آید:
+
 
 {{figure {url: "img/form_select.png", alt: "A select field", width: "4cm"}}}
 
@@ -574,8 +531,7 @@ if}}
 
 {{index "change event"}}
 
-Whenever the value of a form field changes, it will fire a `"change"`
-event.
+هر زمان که مقدار یک فیلد فرم تغییر کند، یک رخداد `"change"` ایجاد می شود.
 
 ## Focus
 
@@ -583,24 +539,24 @@ event.
 
 {{indexsee "keyboard focus", focus}}
 
-Unlike most elements in HTML documents, form fields can get _keyboard
-((focus))_. When clicked or activated in some other way, they become
-the currently active element and the recipient of keyboard ((input)).
+برخلاف بیشتر عناصر موجود در اسناد HTML، فیلدهای فرم را می توان با _صفحه‌ی کلید_
+_فعال_ (focus) کرد. زمانی که با کلیک موس یا روشی دیگر این عناصر فعال می شوند در دسترس
+ورودی صفحه‌ی کلید قرار می گیرند.
 
 {{index "option (HTML tag)", "select (HTML tag)"}}
 
-Thus, you can type into a ((text field)) only when it is focused. Other
-fields respond differently to keyboard events. For example, a
-`<select>` menu tries to move to the option that contains the text the
-user typed and responds to the arrow keys by moving its selection up
-and down.
+بنابراین زمانی می توانید درون یک فیلد متنی چیزی تایپ کنید که در مرورگر فعال
+(مورد تمرکز) باشد. دیگر فیلدها به رخدادهای صفحه‌کلید به شکلی متفاوت پاسخ می دهند.
+به عنوان مثال در `<select>` با تایپ متن توسط کاربر این فیلد تلاش می کند تا گزینه‌ای
+که محتوای تایپ شده را دارد انتخاب شود و با کلیدهای جهت دار می توان گزینه‌ی
+انتخابی را تغییر داد.
 
 {{index "focus method", "blur method", "activeElement property"}}
 
-We can control ((focus)) from JavaScript with the `focus` and `blur`
-methods. The first moves focus to the DOM element it is called on, and
-the second removes focus. The value in `document.activeElement`
-corresponds to the currently focused element.
+می توانیم فعال بودن یک فیلد را با جاوااسکریپت به وسیله‌ی متدهای `focus` و `blur`
+کنترل کنیم. اولین متد عنصری که روی آن فراخوانی شده را فعال می کند و دومی از حالت
+فعال آن را خارج می کند. مقداری که در <bdo>`document.activeElement`</bdo> قرار دارد متناظر با
+عنصری است که در حال حاضر فعال می‌باشد.
 
 ```{lang: "text/html"}
 <input type="text">
@@ -616,21 +572,19 @@ corresponds to the currently focused element.
 
 {{index "autofocus attribute"}}
 
-For some pages, the user is expected to want to interact with a form
-field immediately. JavaScript can be used to ((focus)) this field when
-the document is loaded, but HTML also provides the `autofocus`
-attribute, which produces the same effect while letting the browser
-know what we are trying to achieve. This gives the browser the option
-to disable the behavior when it is not appropriate, such as when the
-user has put the focus on something else.
+برای بعضی صفحات، انتظار می رود که کاربر بلافاصله به سراغ یک فیلد فرم برود.
+جاوااسکریپت می تواند برای فعال سازی این فیلد بعد از بارگیری سند
+استفاده شود، HTML نیز خاصیتی به نام `autofocus` فراهم می کند که همین اثر را دارد و
+به مرورگر اعلام می کند که قصد داریم کدام فیلد فعال باشد. این گزینه این امکان را
+برای مرورگر فراهم می سازد که این رفتار را در مواقعی که مناسب نیست غیرفعال کند،
+مثل زمانی که کاربر به سراغ فیلد دیگری رفته است.
 
 {{index "tab key", keyboard, "tabindex attribute", "a (HTML tag)"}}
 
-Browsers traditionally also allow the user to move the focus
-through the document by pressing the [tab]{keyname} key. We can influence the
-order in which elements receive focus with the `tabindex` attribute.
-The following example document will let the focus jump from the text input to
-the OK button, rather than going through the help link first:
+مرورگرها به شکلی سنتی به کاربر اجازه می دهند تا فیلدهای دیگر را با استفاده از
+کلید [tab]{keyname} فعال کند. می توانیم با استفاده از
+خاصیت `tabindex`، به ترتیب این فعال‌سازی اثر بگذاریم . در مثال پیش رو، در سند مشخص می شود که حالت فعال فیلد بعد از فیلد
+متنی به جای لینک help، به دکمه‌ی OK منتقل شود.
 
 ```{lang: "text/html", focus: true}
 <input type="text" tabindex=1> <a href=".">(help)</a>
@@ -639,26 +593,26 @@ the OK button, rather than going through the help link first:
 
 {{index "tabindex attribute"}}
 
-By default, most types of HTML elements cannot be focused. But you can
-add a `tabindex` attribute to any element that will make it
-focusable. A `tabindex` of -1 makes tabbing skip over an element, even
-if it is normally focusable.
+به صورت پیش‌فرض، بیشتر انواع عناصر HTML نمی توانند فعال شوند (focus). اما می
+توانید از `tabindex` در همه‌ی عناصر استفاده کنید که باعث می شود بتوان به آن ها
+قابلیت فعال بودن داد.  قرار دادن <bdo>-1</bdo> برای `tabindex` باعث می شود که از آن عنصر
+صرف نظر شود حتی اگر به صورت نرمال امکان فعال بودن داشته باشد.
 
-## Disabled fields
+## فیلد‌های خاموش (disabled)
 
 {{index "disabled attribute"}}
 
-All ((form)) ((field))s can be _disabled_ through their `disabled`
-attribute. It is an ((attribute)) that can be specified without
-value—the fact that it is present at all disables the element.
+می توان تمامی فیلدهای فرم را به وسیله‌ی خاصیت `disabled` خاموش کرد. این خاصیت را می
+توان بدون مشخص کردن مقدار به کار برد- همین که وجود داشته باشد باعث خاموش شدن
+فیلد می شود.
 
 ```{lang: "text/html"}
 <button>I'm all right</button>
 <button disabled>I'm out</button>
 ```
 
-Disabled fields cannot be ((focus))ed or changed, and browsers make
-them look gray and faded.
+فیلدهای خاموش را نمی توان تغییر داد یا مورد تمرکز (focus) قرار داد. همچنین مرورگرها
+ظاهر آن ها خاکستری و کم رنگ می کنند.
 
 {{if book
 
@@ -668,30 +622,24 @@ if}}
 
 {{index "user experience"}}
 
-When a program is
-in the process of handling an action caused by some ((button)) or other control
-that might require communication with the server and thus take a
-while, it can be a good idea to
-disable the control until the action finishes. That way, when the user
-gets impatient and clicks it again, they don't accidentally repeat
-their action.
+زمانی که یک برنامه در حال رسیدگی به کاری است که از فشردن یک دکمه یا یک فیلد کنترلی دیگر ایجاد شده، و این‌کار نیازمند ارتباط با سرویس‌دهنده است که در نتیجه نیاز به کمی زمان دارد، بهتر است تا پایان انجام آن کار، فیلد مورد نظر را خاموش کنیم. با این کار ، اگر کاربر صبر نکند و دوباره روی دکمه کلیک کند، به
+صورت ناخواسته آن کار تکرار نمی شود.
 
-## The form as a whole
+## فرم به عنوان یک کل
 
 {{index "array-like object", "form (HTML tag)", "form property", "elements property"}}
 
-When a ((field)) is contained in a `<form>` element, its DOM element
-will have a `form` property linking back to the form's DOM element.
-The `<form>` element, in turn, has a property called `elements` that
-contains an array-like collection of the fields inside it.
+زمانی که یک فیلد درون عنصر `<form>` قرار می گیرد، عنصر DOM آن خاصیتی به نام `form`
+ خواهد داشت که به عنصر DOM فرم اشاره می کند. عنصر `<form>` در عوض، خاصیتی به نام
+`elements` دارد که حاوی یک مجموعه‌ی آرایه‌شکل از فیلدهای قرار گرفته در آن می‌باشد.
 
 {{index "elements property", "name attribute"}}
 
-The `name` attribute of a form field determines the way its value will
-be identified when the form is ((submit))ted. It can also be used as a
-property name when accessing the form's `elements` property, which
-acts both as an array-like object (accessible by number) and a ((map))
-(accessible by name).
+خاصیت `name` یک فیلد در فرم، راه شناسایی مقدار آن در زمان ثبت فرم می‌باشد. این
+خاصیت را همچنین می توان به عنوان نام  در زمان دسترسی به خاصیت `elements`
+مربوط به فرم استفاده کرد که هم به صورت شیء آرایه‌شکل ( قابل دسترسی با عدد) و هم به صورت یک map
+(دسترسی با نام).
+
 
 ```{lang: "text/html"}
 <form action="example/submit.html">
@@ -712,17 +660,17 @@ acts both as an array-like object (accessible by number) and a ((map))
 
 {{index "button (HTML tag)", "type attribute", submit, "enter key"}}
 
-A button with a `type` attribute of `submit` will, when pressed,
-cause the form to be submitted. Pressing [enter]{keyname} when a form field is
-focused has the same effect.
+یک دکمه که خاصیت `type` آن  که برابر با `submit` تنظیم شده، در هنگام فشرده شدن، باعث می
+شود که فرم ثبت شود. فشردن کلید [enter]{keyname} روی صفحه کلید وقتی که یک فیلد فرم فعال است
+نیز همین اثر را به دنبال خواهد داشت.
 
 {{index "submit event", "event handling", "preventDefault method", "page reload", "GET method", "POST method"}}
 
-Submitting a ((form)) normally means that the ((browser)) navigates to
-the page indicated by the form's `action` attribute, using either a
-`GET` or a `POST` ((request)). But before that happens, a `"submit"`
-event is fired. You can handle this event with JavaScript and prevent
-this default behavior by calling `preventDefault` on the event object.
+ثبت یک فرم به صورت نرمال به این صورت است که مرورگر کاربر را به صفحه‌ای که در خاصیت `action`
+فرم مشخص شده است، منتقل می‌کند چه درخواست به روش `GET` باشد چه `POST`. اما قبل از
+این اتفاق، یک رخداد `"submit"` ایجاد می شود. این رخداد را می توان با جاوااسکریپت
+مدیریت کرد و گرداننده می تواند با فراخوانی `preventDefault` روی شی رخداد مانع از
+این رفتار پیش‌فرض شود.
 
 ```{lang: "text/html"}
 <form action="example/submit.html">
@@ -740,41 +688,39 @@ this default behavior by calling `preventDefault` on the event object.
 
 {{index "submit event", validation}}
 
-Intercepting `"submit"` events in JavaScript has various uses. We can
-write code to verify that the values the user entered make sense and
-immediately show an error message instead of submitting the form. Or
-we can disable the regular way of submitting the form entirely, as in
-the example, and have our program handle the input, possibly using
-`fetch` to send it to a server without reloading the page.
+متوقف کردن رخدادهای `"submit"` در جاوااسکریپت کاربردهای متنوعی دارد. می توانیم کدی
+بنویسیم که صحت مقادیری که کاربر وارد می کند را بررسی کند و در صورت وجود اشتباه
+به جای ثبت فرم بلافاصله خطایی نشان دهد. یا می توانیم روش معمول ثبت کردن فرم را
+غیرفعال کنیم ، به عنوان مثال، و بدون نیاز به بارگیری مجدد صفحه، اطلاعات ورودی
+را با استفاده از `fetch` به سرویس‌دهنده ارسال کنیم.
 
-## Text fields
+## فیلدهای متنی
 
 {{index "value attribute", "input (HTML tag)", "text field", "textarea (HTML tag)", [DOM, fields], [interface, object]}}
 
-Fields created by `<textarea>` tags, or `<input>` tags with a type of
-`text` or `password`, share a common interface. Their DOM
-elements have a `value` property that holds their current content as a
-string value. Setting this property to another string changes the
-field's content.
+فیلدهایی که به وسیله‌ی برچسب‌های `<input>` ایجاد می شوند و نوع `text` یا `password` را
+دارند به همراه برچسب‌های `<textarea>`، از رابط یکسانی استفاده می کنند. عناصر
+متناظرشان در DOM دارای خاصیتی به نام `value` می‌باشد که محتوای کنونی آن ها را به
+شکل رشته‌ای نگهداری می کند. تغییر این خاصیت و استفاده از رشته‌ای دیگر برای آن
+محتوای فیلد را تغییر می دهد.
 
 {{index "selectionStart property", "selectionEnd property"}}
 
-The
-`selectionStart` and `selectionEnd` properties of ((text field))s give
-us information about the ((cursor)) and ((selection)) in the ((text)).
-When nothing is selected, these two properties hold the same number,
-indicating the position of the cursor. For example, 0 indicates the
-start of the text, and 10 indicates the cursor is after the 10^th^ ((character)).
-When part of the field is selected, the two properties will differ, giving us the
-start and end of the selected text. Like `value`, these properties may
-also be written to.
+دو خاصیت `selectionStart` و `selectionEnd` مربوط به فیلدهای متنی اطلاعاتی در رابطه
+با مکان‌نما و ناحیه‌ی انتخاب شده در متن فراهم می سازند. زمانی که چیزی انتخاب نشده
+است، این دو خاصیت مقدار عددی یکسانی را نگهداری می کنند که موقعیت مکان نما می
+باشد. به عنوان مثال، 0 به معنای شروع متن و 10 بیانگر این است که مکان‌نما بعد از
+کاراکتر دهم همین کاراکتر قرار دارد. زمانی که بخشی از فیلد انتخاب شده باشد، این دو خاصیت
+مقدار متفاوتی خواهند داشت و بیانگر شروع و پایان متن انتخاب شده می باشند. مثل
+`value` این خاصیت‌ها را نیز می توان تغییر داد.
+
 
 {{index Khasekhemwy, "textarea (HTML tag)", keyboard, "event handling"}}
 
-Imagine you are writing an article about Khasekhemwy but have some
-trouble spelling his name. The following code wires up a `<textarea>`
-tag with an event handler that, when you press F2, inserts the string
-"Khasekhemwy" for you.
+فرض کنید که در حال نوشتن مقاله‌ای در مورد Khasekhemwy  (پادشاهی در مصر
+باستان) می باشید و در نوشتن نام او دچار مشکل هستید. در کد پیش رو یک
+برچسب `<textarea>` و یک گرداننده‌ی رخداد با هم ترکیب می شوند و با فشردن کلید F2
+کلمه‌ی "Khasekhemwy" برای شما در فیلد وارد می شود.
 
 ```{lang: "text/html"}
 <textarea></textarea>
@@ -800,23 +746,20 @@ tag with an event handler that, when you press F2, inserts the string
 
 {{index "replaceSelection function", "text field"}}
 
-The `replaceSelection`
-function replaces the currently selected part of a text field's
-content with the given word and then moves the ((cursor)) after that
-word so that the user can continue typing.
+تابع `replaceSelection` بخش انتخاب شده در فیلد متنی را با کلمه‌ی داده شده جایگزین
+می نماید و بعد مکان‌نما را به بعد از آن کلمه منتقل می کند تا کاربر بتواند به تایپ
+خود ادامه دهد.
 
 {{index "change event", "input event"}}
 
-The `"change"` event for a ((text
-field)) does not fire every time something is typed. Rather, it
-fires when the field loses ((focus)) after its content was changed.
-To respond immediately to changes in a text field, you should register
-a handler for the `"input"` event instead, which fires for every
-time the user types a character, deletes text, or otherwise manipulates
-the field's content.
+رخداد `"change"` برای یک فیلد متنی با هر بار نوشتن چیزی ایجاد نمی شود. بلکه زمانی
+ایجاد می شود که فیلد مذکور بعد از اینکه محتوایش تغییر کرد از حالت focus خارج
+می شود. برای اینکه بتوان به سرعت به تغییرات در یک فیلد متنی پاسخ داد، باید یک
+گرداننده برای رخداد `"input"` ثبت کنید که با تایپ هر کاراکتر توسط کاربر یا حذف آن
+یا ایجاد هر تغییری در محتوای فیلد ایجاد می شود.
 
-The following example shows a text field and a counter displaying the
-current length of the text in the field:
+در مثال پیش رو یک فیلد متنی نشان داده می شود و یک شمارنده که طول متن موجود
+در فیلد را نشان می دهد.
 
 ```{lang: "text/html"}
 <input type="text"> length: <span id="length">0</span>
@@ -829,12 +772,12 @@ current length of the text in the field:
 </script>
 ```
 
-## Checkboxes and radio buttons
+## فیلد بررسی (checkbox) و دکمه‌های رادیویی
 
 {{index "input (HTML tag)", "checked attribute"}}
 
-A ((checkbox)) field is a binary toggle. Its value can be extracted or
-changed through its `checked` property, which holds a Boolean value.
+یک فیلد چک‌باکس، یک فیلد دو حالته است. مقدار آن را می توان به وسیله‌ی خاصیت
+`checked` آن تغییر داد یا به‌دست آورد که مقداری بولی می‌باشد.
 
 ```{lang: "text/html"}
 <label>
@@ -851,16 +794,15 @@ changed through its `checked` property, which holds a Boolean value.
 
 {{index "for attribute", "id attribute", focus, "label (HTML tag)", labeling}}
 
-The `<label>` tag associates a piece of document with an input
-((field)). Clicking anywhere on the label will activate the field,
-which focuses it and toggles its value when it is a checkbox or radio
-button.
+برچسب `<label>` یک بخش از سند را به یک فیلد ورودی مرتبط می‌سازد. با کلیک روی
+  label، فیلد مرتبط با آن فعال می شود که باعث می شود مورد تمرکز مرورگر قرار بگیرد
+یا در مواقعی که یک چک‌باکس یا دکمه‌ی رادیویی باشد مقدارش را تغییر دهد (انتخاب یا از حالت انتخاب خارج می کند)
 
 {{index "input (HTML tag)", "multiple-choice"}}
 
-A ((radio button)) is similar to a checkbox, but it's implicitly
-linked to other radio buttons with the same `name` attribute so that
-only one of them can be active at any time.
+یک دکمه‌ی رادیویی شبیه به یک چک‌باکس است با این تفاوت که به صورت ضمنی و به وسیله‌ی
+خاصیت `name` مشترک به دیگر دکمه‌های رادیویی پیوند می خورد در نتیجه فقط یکی از این
+دکمه‌ها را می توان در آن واحد فعال داشت.
 
 ```{lang: "text/html"}
 Color:
@@ -885,51 +827,45 @@ Color:
 
 {{index "name attribute", "querySelectorAll method"}}
 
-The ((square brackets)) in the CSS query given to `querySelectorAll`
-are used to match attributes. It selects elements whose `name`
-attribute is `"color"`.
+در مثال بالا،
+استفاده از براکت‌ها در پرس و جوی CSS که به متد `querySelectorAll` ارسال می شوند برای
+انتخاب و نشانه‌گرفتن خصوصیت‌های عناصر (attributes)،  استفاده می شوند. این پرس و جو عناصری را نتخاب می کند که مقدار
+خاصیت `name` شان برابر با `“color”` باشد.
 
-## Select fields
+## فیلدهای select (انتخاب گزینه)
 
 {{index "select (HTML tag)", "multiple-choice", "option (HTML tag)"}}
 
-Select fields are conceptually similar to radio buttons—they
-also allow the user to choose from a set of options. But where a radio
-button puts the layout of the options under our control, the
-appearance of a `<select>` tag is determined by the browser.
+فیلدهای select به طور مفهومی مشابه دکمه‌های رادیویی هستند- این فیلدها هم به کاربر،
+امکان انتخاب از یک مجموعه گزینه‌ها را می دهند. در حالیکه در یک دکمه‌ی رادیویی چیدمان
+گزینه‌ها تحت کنترل ما می‌باشد، ظاهر یک برچسب `<select>` توسط مرورگر تعیین می شود.
 
 {{index "multiple attribute", "drop-down menu"}}
 
-Select fields also have a variant that is more akin to a list of
-checkboxes, rather than radio boxes. When given the `multiple`
-attribute, a `<select>` tag will allow the user to select any number
-of options, rather than just a single option. This will, in most
-browsers, show up differently than a normal select field, which is
-typically drawn as a _drop-down_ control that shows the options only
-when you open it.
+فیلدهای select همچنین در یک حالت خاص، بیشتر شبیه لیستی از checkboxها می‌باشد تا
+دکمه‌های رادیویی. اگر خاصیت `multiple` را به یک برچسب `<select>` اضافه کنیم، کاربر این امکان را خواهد داشت که به جای یک گزینه بتواند چندین گزینه انتخاب نماید. این شکل از فیلد در بیشتر مرورگرها به صورت متفاوتی نسبت به حالت نرمال یک
+گزینه‌ای نشان داده می شود. در حالت عادی، این فیلد به صورت یک منوی کشویی (بازشونده) نمایش داده می شود که
+گزینه‌هایش زمانی دیده می‌شوند که آن را باز نمایید.
 
 {{index "option (HTML tag)", "value attribute"}}
 
-Each `<option>` tag has a value. This value can be defined with a
-`value` attribute. When that is not given, the ((text)) inside the
-option will count as its value. The `value` property of a `<select>`
-element reflects the currently selected option. For a `multiple`
-field, though, this property doesn't mean much since it will give the
-value of only _one_ of the currently selected options.
+هر برچسب `<option>` دارای یک مقدار می‌باشد. این مقدار را می توان با خاصیت `value`
+تعریف کرد. اگر این خاصیت را مشخص نکنید، متن درون گزینه به عنوان مقدار در نظر گرفته می‌شود. خاصیت `value` متعلق به عنصر `<select>` نشان‌دهنده‌ی گزینه‌ی انتخاب شده می‌باشد. برای
+یک فیلد چند‌گزینه‌ای (multiple) این خاصیت معنای خاصی نخواهد داشت چرا که فقط به _یک_
+مقدار از مقادیر انتخاب شده اشاره می کند.
 
 {{index "select (HTML tag)", "options property", "selected attribute"}}
 
-The `<option>` tags for a `<select>` field can be accessed as an
-array-like object through the field's `options` property. Each option
-has a property called `selected`, which indicates whether that option
-is currently selected. The property can also be written to select or
-deselect an option.
+برچسب‌های `<option>` متعلق به فیلد `<select>` را می توان از طریق یک شیء آرایه‌گونه و
+به وسیله‌ی خاصیت `options` فیلد مورد دسترسی قرار داد. هر گزینه دارای یک خاصیت به نام
+`selected` می‌باشد که بیانگر این است که آیا انتخاب شده است یا خیر. این خاصیت را
+همچنین می توان برای انتخاب کردن یا از انتخاب خارج نمودن یک گزینه‌ نیز استفاده کرد.
 
 {{index "multiple attribute", "binary number"}}
 
-This example extracts the selected values from a `multiple` select
-field and uses them to compose a binary number from individual bits.
-Hold [control]{keyname} (or [command]{keyname} on a Mac) to select multiple options.
+این مثال مقادیر انتخاب شده را از یک فیلد انتخاب چند‌گزینه‌ای (`multiple`) استخراج می
+کند و از آن ها برای نوشتن یک عدد دودویی از بیت‌های جداگانه استفاده می کند. برای
+انتخاب چندین گزینه کلید [control]{keyname} (یا [command]{keyname} در مک) را نگه دارید.
 
 ```{lang: "text/html"}
 <select multiple>
@@ -953,21 +889,18 @@ Hold [control]{keyname} (or [command]{keyname} on a Mac) to select multiple opti
 </script>
 ```
 
-## File fields
+## فیلدهای انتخاب فایل
 
 {{index file, "hard drive", "file system", security, "file field", "input (HTML tag)"}}
 
-File fields were originally designed as
-a way to ((upload)) files from the user's machine through a form.
-In modern browsers, they also provide a way to read such files from
-JavaScript programs. The field acts as a kind of gatekeeper. The
-script cannot simply start reading private files from the user's
-computer, but if the user selects a file in such a field, the browser
-interprets that action to mean that the script may read the file.
+فیلدهای فایل در ابتدا به عنوان راهی برای بارگذاری فایل‌ها از کامپیوتر کاربر به وسیله‌ی
+یک فرم طراحی شدند. در مرورگرهای مدرن، همچنین این فیلدها راهی برای خواندن این
+فایل‌ها به وسیله‌ی برنامه‌های جاوااسکریپت فراهم می‌کنند. فیلد انتخاب فایل به عنوان نوعی دربان عمل می کند؛ اسکریپت نمی تواند فایل‌های خصوصی را از کامپیوتر
+کاربر بخواند، اما اگر کاربر فایلی را به وسیله‌ی این فیلد انتخاب کند، تفسیر مرورگر این خواهد بود که اسکریپت ممکن است فایل انتخاب شده را بخواند.
 
-A file field usually looks like a button labeled with something like
-"choose file" or "browse", with information about the chosen file next
-to it.
+ظاهر یک فیلد فایل معمولا شبیه به یک دکمه که عنوانی شبیه به “choose a file” یا
+"browse" را دارد می‌باشد و معمولا اطلاعاتی در باره‌ی فایل انتخاب شده در کنار آن نمایش داده می شود.
+
 
 ```{lang: "text/html"}
 <input type="file">
@@ -985,28 +918,24 @@ to it.
 
 {{index "multiple attribute", "files property"}}
 
-The `files` property of a
-((file field)) element is an ((array-like object)) (again, not a real
-array) containing the files chosen in the field. It is initially
-empty. The reason there isn't simply a `file` property is that file
-fields also support a `multiple` attribute, which makes it possible to
-select multiple files at the same time.
+خاصیت `files` مربوط به عنصر فیلد فایل، یک شیء آرایه‌گونه است ( نه یک آرایه‌ی واقعی)
+که حاوی فایل‌هایی است که در فیلد انتخاب شده اند. در ابتدا این خاصیت خالی است. علت اینکه نام آن `file`  نیست این است که خصوصیتی(attribute) در فیلد فایل وجود دارد به نام
+`multiple` که باعث می شود بتوان چندین فایل را به صورت همزمان انتخاب کرد.
+
 
 {{index "File type"}}
 
-Objects in the `files` object have properties such as `name` (the
-filename), `size` (the file's size in bytes, which are chunks of 8
-bits), and `type` (the media type of the file, such as `text/plain` or
-`image/jpeg`).
+اشیائی که در شیء `files` قرار دارند دارای خاصیت‌هایی مثل `name` (نام فایل)، `size`
+(اندازه فایل به بایت که معادل 8 بیت است) و `type` (نوع فایل مثل `text/plain` یا
+`image/jpeg`) می باشند.
 
 {{index ["asynchronous programming", "reading files"], "file reading", "FileReader class"}}
 
 {{id filereader}}
 
-What it does not have is a property that contains the content of the
-file. Getting at that is a little more involved. Since reading a file
-from disk can take time, the interface must be asynchronous to avoid
-freezing the document.
+چیزی که در آن وجود ندارد خاصیتی است که محتوای فایل را نگهداری کند. بدست آوردن
+محتوای فایل کمی پیچیده تر است. به دلیل اینکه خواندن فایل از روی دیسک سخت ممکن
+است طول بکشد، رابط آن باید به صورت ناهمگام (asynchronous) باشد تا موجب قفل شدن شدن صفحه نشود.
 
 ```{lang: "text/html"}
 <input type="file" multiple>
@@ -1027,17 +956,18 @@ freezing the document.
 
 {{index "FileReader class", "load event", "readAsText method", "result property"}}
 
-Reading a file is done by creating a `FileReader` object, registering
-a `"load"` event handler for it, and calling its `readAsText` method,
-giving it the file we want to read. Once loading finishes, the
-reader's `result` property contains the file's content.
+خواندن یک فایل به وسیله‌ی ایجاد شیئی به نام `FileReader` انجام می شود، که
+گرداننده‌ی رخداد `load` برای آن ثبت می شود و متد `readAsText` آن فراخوانی می شود و
+فایلی که قصد خواندن آن را داریم به آن داده شود. به محض اینکه بارگیری فایل به
+اتمام برسد، خاصیت `result` شیء reader فایل، حاوی محتوای فایل خواهد بود.
 
 {{index "error event", "FileReader class", "Promise class"}}
 
-`FileReader`s also fire an `"error"` event when reading the file fails
-for any reason. The error object itself will end up in the reader's
-`error` property. This interface was designed before promises became
-part of the language. You could wrap it in a promise like this:
+اشیاء `FileReader` زمانی که به هر دلیل خواندن
+فایل با مشکل روبرو شود، یک رخداد `“error”` ایجاد می کنند . شیء خطا در نهایت در خاصیت `error` شیء reader قرار می
+گیرد. این رابط قبل از اضافه شدن promiseها به زبان جاوااسکریپت طراحی شده است .می
+توانید این کار را در قالب promise به صورت زیر انجام دهید.
+
 
 ```
 function readFileText(file) {
@@ -1052,31 +982,29 @@ function readFileText(file) {
 }
 ```
 
-## Storing data client-side
+## ذخیره‌ی داده‌ها در سمت کاربر (سرویس‌گیرنده)
 
 {{index "web application"}}
 
-Simple ((HTML)) pages with a bit of JavaScript can be a great format
-for "((mini application))s"—small helper programs that automate basic
-tasks. By connecting a few form ((field))s with event handlers, you
-can do anything from converting between centimeters and inches to
-computing passwords from a master password and a website name.
+صفحات ساده‌ی HTML با کمی جاوااسکریپت می توانند فرمت خوبی برای اپلیکیشن‌های کوچک
+باشند – برنامه‌های کمکی کوچکی که بعضی کارها را خودکار می کنند. با ترکیب چند فیلد
+فرم با گرداننده‌های رخداد، می توانید هر کاری از تبدیل سانتی متر به اینچ گرفته تا
+محاسبه‌ی رمز‌های عبور از روی یک رمزعبور مادر و نام یک وب‌سایت را انجام دهید.
 
 {{index persistence, [binding, "as state"], [browser, storage]}}
 
-When such an application needs to remember something between sessions,
-you cannot use JavaScript bindings—those are thrown away every
-time the page is closed. You could set up a server, connect it to the
-Internet, and have your application store something there. We will see
-how to do that in [Chapter ?](node). But that's a lot of extra work
-and complexity. Sometimes it is enough to just keep the data in the
-((browser)).
+زمانی که این گونه اپلیکیشن‌ها نیاز به ذخیره و به خاطرسپاری چیزی  به صورت پایدار دارند، نمی توانید از متغیرهای جاوااسکریپت استفاده کنید- متغیرها با بسته شدن
+صفحه‌ی مرورگر از بین می روند. می توانید یک سرویس‌دهنده راه اندازی کنید، آن‌را به اینترنت
+متصل کنید و اطلاعات اپلیکیشن تان را در آنجا ذخیره کنید. در [فصل ?](node) به چگونگی
+این کار می پردازیم. اما این روش، کار و پیچیدگی زیادتری می طلبد. گاهی اوقات
+نگه‌داشتن داده‌ها در خود مرورگر برای کار ما کافی است.
+
 
 {{index "localStorage object", "setItem method", "getItem method", "removeItem method"}}
 
-The `localStorage` object can be used to store data in a way that
-survives ((page reload))s. This object allows you to file string
-values under names.
+شیء `localStorage` را می توان برای ذخیره‌ی داده‌ها به صورتی که با بارگیری مجدد صفحه
+حفظ شوند استفاده کرد. این شیء به شما این امکان را می دهد که مقادیر رشته‌ای را تحت
+نام‌هایی دسته بندی و ذخیره کنید.
 
 ```
 localStorage.setItem("username", "marijn");
@@ -1087,28 +1015,29 @@ localStorage.removeItem("username");
 
 {{index "localStorage object"}}
 
-A value in `localStorage` sticks around until it is overwritten, it is
-removed with `removeItem`, or the user clears their local data.
+یک مقدار در `localStorage` تا زمانی که دوباره بازنویسی شود باقی می ماند، می توان
+آن را با `removeItem` حذف کرد ؛ همچنین کاربر می‌تواند داده‌های محلی مرورگر خود را به صورت دستی حذف کند.
 
 {{index security}}
 
-Sites from different ((domain))s get different storage
-compartments. That means data stored in `localStorage` by a given
-website can, in principle, be read (and overwritten) only by scripts on
-that same site.
+سایت‌هایی که از دامنه‌های متفاوتی هستند ناحیه‌های ذخیره‌ی مجزایی دریافت می کنند. این
+یعنی داده‌هایی که در `localStorage` توسط یک وب‌سایت داده شده ذخیره می شوند، علی
+القاعده، فقط توسط اسکریپت‌هایی که روی همان سایت قرار دارند قابل خواندن و بازنویسی
+می باشند.
 
 {{index "localStorage object"}}
 
-Browsers do enforce a limit on the size of the data a site can store
-in `localStorage`. That restriction, along with the fact that filling
-up people's ((hard drive))s with junk is not really profitable,
-prevents the feature from eating up too much space.
+مرورگرها محدودیتی در رابطه با اندازه‌ی داده‌هایی که یک وب سایت می تواند در
+`localStorage` ذخیره کند اعمال می کنند. این محدودیت، در کنار این واقعیت که پر کردن
+دیسک سخت کاربر با اطلاعات به‌درد‌نخور فایده‌ای ندارد، باعث می شود که این ویژگی موجب
+گرفته شدن فضای زیادی نشود.
 
 {{index "localStorage object", "note-taking example", "select (HTML tag)", "button (HTML tag)", "textarea (HTML tag)"}}
 
-The following code implements a crude note-taking application. It
-keeps a set of named notes and allows the user to edit notes and
-create new ones.
+در کد پیش رو یک اپلیکیشن ابتدایی برای یادداشت برداری پیاده سازی شده است. این
+برنامه مجموعه‌ای از یادداشت ها دارای نام را نگهداری می کند و به کاربر این امکان را
+می دهد که این یادداشت‌ها را ویرایش کرده و موارد جدید را نیز بتواند اضافه کند.
+
 
 ```{lang: "text/html", startCode: true}
 Notes: <select></select> <button>Add</button><br>
@@ -1160,46 +1089,45 @@ Notes: <select></select> <button>Add</button><br>
 
 {{index "getItem method", JSON, "|| operator", "default value"}}
 
-The script gets its starting state from the `"Notes"` value stored in
-`localStorage` or, if that is missing, creates an example state
-that has only a shopping list in it. Reading a field that does not
-exist from `localStorage` will yield `null`. Passing `null` to
-`JSON.parse` will make it parse the string `"null"` and return `null`.
-Thus, the `||` operator can be used to provide a default value in a
-situation like this.
+اسکریپت بالا وضعیت ابتدایی خودش را از مقدار `"Notes"` که در `localStorage` ذخیره شده
+است می‌گیرد یا در صورت نبود آن، یک وضعیت نمونه که یک لیست خرید فرضی در آن قرار
+دارد را ایجاد می کند. خواندن یک فیلد که وجود خارجی ندارد از `localStorage` موجب می شود
+تا مقدار `null` برگردانده شود. ارسال `null` به <bdo>`JSON.parse`</bdo> موجب می شود که رشته‌ی
+`"null"` به وجود بیاید و درنتیجه خروجی `null` تولید شود. بنابراین، عملگر `||` را می
+توان برای در نظر گرفتن مقدار پیش‌فرض در شرایطی مثل این استفاده کرد.
 
-The `setState` method makes sure the DOM is showing a given state and
-stores the new state to `localStorage`. Event handlers call this
-function to move to a new state.
+
+متد `setState` موجب می شود اطمینان حاصل کنیم که DOM وضعیت مشخصی را نمایش می دهد و
+وضعیت جدید را در `localStorage` ذخیره می کند. گرداننده‌های رخداد این تابع را برای
+انتقال به یک وضعیت جدید فراخوانی می کنند.
 
 {{index "Object.assign function", [object, creation], property, "computed property"}}
 
-The use of `Object.assign` in the example is intended to create a new
-object that is a clone of the old `state.notes`, but with one property
-added or overwritten. `Object.assign` takes its first argument and
-adds all properties from any further arguments to it. Thus, giving it
-an empty object will cause it to fill a fresh object. The ((square
-brackets)) notation in the third argument is used to create a property
-whose name is based on some dynamic value.
+استفاده از <bdo>`Object.assign`</bdo> در مثال بالا به این خاطر بود که یک کپی از شیء
+<bdo>`state.notes`</bdo> قدیمی ایجاد شود که حاوی خاصیتی باشد که اضافه یا بازنویسی شده است.
+ <bdo>`Object.assign`</bdo> اولین آرگومانش را گرفته و تمامی خاصیت‌هایی که در آرگومان‌های
+بعدی می آید را به آن اضافه می کند. بنابراین، روش استفاده از براکت‌ها در آرگومان
+سوم برای ایجاد یک خاصیت که نام آن بر اساس یک مقدار پویا مشخص می شود استفاده شده
+است.
+
 
 {{index "sessionStorage object", [browser, storage]}}
 
-There is another object, similar to `localStorage`, called
-`sessionStorage`. The difference between the two is that the content
-of `sessionStorage` is forgotten at the end of each _((session))_,
-which for most browsers means whenever the browser is closed.
+شیء دیگری وجود دارد شبیه به `localStorage` به نام `sessionStorage`. تفاوت بین این
+دو این است که محتوای `sessionStorage` با به پایان رسیدن هر جلسه (session) فراموش می شود که
+در بیشتر مرورگرها با بستن مرورگر این اتفاق می افتد.
 
-## Summary
 
-In this chapter, we discussed how the HTTP protocol works. A _client_
-sends a request, which contains a method (usually `GET`) and a path
-that identifies a resource. The _server_ then decides what to do with
-the request and responds with a status code and a response body. Both
-requests and responses may contain headers that provide additional
-information.
+## خلاصه
 
-The interface through which browser JavaScript can make HTTP requests
-is called `fetch`. Making a request looks like this:
+در این فصل به نحوه‌ی عملکرد پروتوکل HTTP پرداختیم. یک کلاینت درخواستی را ارسال
+می کند که حاوی یک متد (معمولا `GET`) و یک مسیر که معرف یک منبع است می‌باشد. سرویس
+دهنده سپس تصمیم می گیرد که با این درخواست چه کند و با یک کد وضعیت و یک بدنه‌ی
+پاسخ، به درخواست جواب می دهد. هر دوی درخواست و پاسخ می توانند حاوی سرپیام‌ها (headers)
+باشند که اطلاعات بیشتری را فراهم می کنند.
+
+رابطی که از طریق آن جاوااسکریپت مرورگر می تواند درخواست‌های HTTP را بسازد `fetch`
+نامیده می شود. ساخت یک درخواست به شکل زیر می ماند:
 
 ```
 fetch("/18_http.html").then(r => r.text()).then(text => {
@@ -1207,64 +1135,60 @@ fetch("/18_http.html").then(r => r.text()).then(text => {
 });
 ```
 
-Browsers make `GET` requests to fetch the resources needed to display
-a web page. A page may also contain forms, which allow information
-entered by the user to be sent as a request for a new page when the
-form is submitted.
+مرورگرها از درخواست‌های نوع `GET` برای بازیابی منابع مورد نیاز جهت نمایش یک صفحه‌ی
+وب استفاده می کنند. یک صفحه وب ممکن است حاوی فرم‌ها نیز باشد که این امکان را
+فراهم می کنند که با ثبت فرم، اطلاعات ورودی کاربر برای ارسال درخواست برای یک صفحه‌ی
+جدید ارسال شود.
 
-HTML can represent various types of form fields, such as text fields,
-checkboxes, multiple-choice fields, and file pickers.
+HTML اشکال متنوعی از فیلدهای فرم را پشتیبانی می کند مانند فیلدهای متنی،
+چک‌باکس‌ها یا، فیلد‌های چند‌گزینه‌ای و فیلدهای انتخاب فایل.
 
-Such fields can be inspected and manipulated with JavaScript. They
-fire the `"change"` event when changed, fire the `"input"` event when text
-is typed, and receive keyboard events when they have keyboard focus.
-Properties like `value` (for text and select fields) or `checked` (for
-checkboxes and radio buttons) are used to read or set the field's
-content.
+این فیلدها را می تواند توسط جاوااسکریپت کنترل و تغییر داد. رخداد `"change"` با
+ایجاد تغییر در یک فیلد تولید می شود، رخداد `"input"` زمانی ایجاد می شود که متنی در
+فیلد تایپ شود و رخدادهای مربوط به صفحه‌کلید هنگامی که فیلد توسط صفحه‌کلید در دسترس
+و فعال است دریافت می شوند. خاصیت‌هایی مثل `value` (در فیلدهای text و select) یا
+`checked` (در چک‌باکس‌ها و دکمه‌های رادیویی) برای خواندن یا تنظیم محتوای فیلد
+استفاده می شوند.
 
-When a form is submitted, a `"submit"` event is fired on it. A
-JavaScript handler can call `preventDefault` on that event to disable
-the browser's default behavior. Form field elements may also occur
-outside of a form tag.
+زمانی که یک فرم ثبت می شود، یک رخداد `"submit"` روی آن ایجاد می شود. یک گرداننده‌ی
+جاوااسکریپت می تواند با فراخوانی `preventDefault` مانع از ثبت فرم شود. فیلدهای
+فرم را نیز می تواند بیرون از برچسب form استفاده کرد.
 
-When the user has selected a file from their local file system in a
-file picker field, the `FileReader` interface can be used to access
-the content of this file from a JavaScript program.
+زمانی که کاربر فایلی را از سیستم محلی فایل خود به وسیله‌ی فیلد انتخاب فایل گزینش
+می کند، رابط `FileReader` را می تواند برای دسترسی به محتوای آن فایل از درون یک
+برنامه جاوااسکریپت استفاده کرد.
 
-The `localStorage` and `sessionStorage` objects can be used to save
-information in a way that survives page reloads. The first object saves the
-data forever (or until the user decides to clear it), and the second
-saves it until the browser is closed.
+اشیاء `localStorage` و `sessionStorage` را می توان برای ذخیره اطلاعات به صورت مانا که
+علی رغم بارگیری مجدد صفحه باقی می‌مانند استفاده کرد. اولین شیء، داده‌ها را به صورت
+همیشگی ذخیره می کند( یا تا هنگامی که کاربر تصمیم به حذف آنها بگیرد) و دومی تا
+زمانی که مرورگر بسته نشده داده ها را نگه می دارد.
 
-## Exercises
+## تمرین‌ها
 
-### Content negotiation
+### مذاکره محتوا
 
 {{index "Accept header", "media type", "document format", "content negotiation (exercise)"}}
 
-One of the things HTTP can do is called _content negotiation_.
-The `Accept` request header is used to tell the server what type of
-document the client would like to get. Many servers ignore this
-header, but when a server knows of various ways to encode a resource,
-it can look at this header and send the one that the client prefers.
+یکی از کارهایی که HTTP می تواند انجام دهد اصطلاحا مذاکره‌ی محتوا – content
+negotiation خوانده می شود. از سرپیام درخواست `Accept` برای اعلام نوع سندی که سرویس‌گیرنده
+درخواست دارد به سرویس‌دهنده استفاده می شود.خیلی از سرویس‌دهنده‌ها این سرپیام را نادیده می گیرند،
+اما زمانی که یک سرویس‌دهنده از راه‌های متنوع کدگذاری  یک منبع آگاه است، می تواند به
+این سرپیام نگاه کرده و چیزی که سرویس‌گیرنده ترجیح می دهد را برایش ارسال کند.
 
 {{index "MIME type"}}
 
-The URL
-[_https://eloquentjavascript.net/author_](https://eloquentjavascript.net/author)
-is configured to respond with either plaintext, HTML, or JSON,
-depending on what the client asks for. These formats are identified by
-the standardized _((media type))s_ `text/plain`, `text/html`, and
-`application/json`.
+آدرس [_https://eloquentjavascript.net/author_](https://eloquentjavascript.net/author) تنظیم شده است که بسته به درخواست سرویس‌گیرنده با متن عادی، HTML یا JSON پاسخ می‌دهد. این فرمت‌ها توسط انواع استاندارد شده‌ی رسانه، `application/json` و `text/plain`، `text/html` شناسایی می‌شود.
+
 
 {{index "headers property", "fetch function"}}
 
-Send requests to fetch all three formats of this resource. Use the
-`headers` property in the options object passed to `fetch` to set the
-header named `Accept` to the desired media type.
+درخواست‌هایی برای بازیابی هر سه نوع فرمت گفته شده را به منبع ارسال کنید. از خاصیت
+`headers` در شیء مربوط به گزینه‌های که به `fetch` داده می شود برای تنظیم سرپیام `Accept`
+به نوع رسانه‌ی مورد نظر استفاده کنید.
 
-Finally, try asking for the media type `application/rainbows+unicorns`
-and see which status code that produces.
+درآخر، تلاش کنید که نوع رسانه‌ی `application/rainbows+unicorns` را درخواست کنید و
+ببینید چه اتفاقی خواهد افتاد.
+
 
 {{if interactive
 
@@ -1278,31 +1202,27 @@ if}}
 
 {{index "content negotiation (exercise)"}}
 
-Base your code on the `fetch` examples [earlier in the
-chapter](http#fetch).
+کد خود را بر اساس مثال‌های مربوط به `fetch` بنویسید [ که پیش‌تر در این فصل آمد](http#fetch).
 
 {{index "406 (HTTP status code)", "Accept header"}}
 
-Asking for a bogus media type will return a response with code 406,
-"Not acceptable", which is the code a server should return when it
-can't fulfill the `Accept` header.
+درخواست برای یک نوع رسانه‌ی نامعتبر موجب می‌شود که پاسخی با کد 406 برگردانده شود، "Not acceptable"، که کدی است که سرویس‌دهنده باید در زمانی که قادر نیست به سرپیام `Accept` پاسخ معتبری بدهد، ارسال کند.
 
 hint}}
 
-### A JavaScript workbench
+### یک میز کار جاوااسکریپت
 
 {{index "JavaScript console", "workbench (exercise)"}}
 
-Build an interface that allows people to type and run pieces of
-JavaScript code.
+رابطی بسازید که به کاربران این امکان را بدهد که بتوانند کدهای جاوااسکریپت
+بنویسند و آن‌ها را اجرا کنند.
 
 {{index "textarea (HTML tag)", "button (HTML tag)", "Function constructor", "error message"}}
 
-Put a button next to a `<textarea>` field that, when pressed, uses
-the `Function` constructor we saw in [Chapter ?](modules#eval) to wrap
-the text in a function and call it. Convert the return value of the
-function, or any error it raises, to a string and display it below the
-text field.
+یک دکمه‌ی کنار فیلد `<textarea>` قرار دهید که در صورت فشرده شدن ، از سازنده‌ی
+`Function` که در [فصل ?](modules#eval) دیدیم استفاده کند تا محتوای فیلد را درون یک تابع قرار
+داده و فراخوانی کند. مقدار بازگشتی از تابع را ، یا هر خطایی که به وجود می آید،
+به یک رشته تبدیل کنید و آن را پایین فیلد متنی نمایش دهید.
 
 {{if interactive
 
@@ -1322,63 +1242,52 @@ if}}
 
 {{index "click event", "mousedown event", "Function constructor", "workbench (exercise)"}}
 
-Use `document.querySelector` or `document.getElementById` to get
-access to the elements defined in your HTML. An event handler for
-`"click"` or `"mousedown"` events on the button can get the `value`
-property of the text field and call `Function` on it.
+از `document.querySelector` یا `document.getElementById` برای دسترسی به عناصر موجود در صفحه‌ی HTMLتان استفاده کنید. یک گرداننده‌ی رخداد برای `"click"` یا `"mousedown"` روی دکمه می می تواند خاصیت `value` مربوط به فیلد متنی را گرفته و `Function` را روی آن فراخوانی کند.
 
 {{index "try keyword", "exception handling"}}
 
-Make sure you wrap both the call to `Function` and the call to its
-result in a `try` block so you can catch the exceptions it
-produces. In this case, we really don't know what type of exception we
-are looking for, so catch everything.
+اطمینان حاصل کنید که هم فراخوانی به `Function` و هم فراخوانی نتیجه‌ی آن را در یک بلاک `try` محصور کنید تا بتوانید استثناء‌هایی که تولید می شود را پوشش دهید. در این مورد، واقعا نمی‌دانیم که چه نوع استثنائی را باید انتظار داشته باشیم، پس همه را پوشش می دهیم.
 
 {{index "textContent property", output, text, "createTextNode method", "newline character"}}
 
-The `textContent` property of the output element can be used to fill
-it with a string message. Or, if you want to keep the old content
-around, create a new text node using `document.createTextNode` and
-append it to the element. Remember to add a newline character to the
-end so that not all output appears on a single line.
+خاصیت `textContent` مربوط به عنصر محل نمایش را می توان برای قرار دادن متن رشته‌ای در آن استفاده کرد. یا، اگر قصد دارید که محتوای قبلی آن را نگه‌دارید، یک گره‌ی متنی جدید با استفاده از `document.createTextNode` بسازید و آن را به عنصر مورد نظر الحاق کنید. به خاطر داشته باشید که به پایان آن یک کاراکتر خط جدید اضافه کنید تا از ظاهر شدن تمام خروجی در یک خط جلوگیری کنید.
+
 
 hint}}
 
-### Conway's Game of Life
+###  بازی زندگی کانوی  ( Conway's Game of Life)
 
 {{index "game of life (exercise)", "artificial life", "Conway's Game of Life"}}
 
-Conway's Game of Life is a simple ((simulation)) that creates
-artificial "life" on a ((grid)), each cell of which is either alive or
-not. Each ((generation)) (turn), the following rules are applied:
+بازی زندگی کانوی یک تشبیه ساده است که یک “زندگی” مصنوعی را روی یک جدول ایجاد می
+کند. هر خانه جدول می تواند زنده یا مرده باشد. در هر نسل(دوره) قوانین زیر اعمال
+می شوند:
 
-* Any live ((cell)) with fewer than two or more than three live
-  ((neighbor))s dies.
+* هر خانه(سلول) زنده ای که کمتر از دو یا بیشتر از سه همسایه‌ی زنده داشته باشد
+می‌میرد.
 
-* Any live cell with two or three live neighbors lives on to the next
-  generation.
+* هر سلول زنده که دو یا سه همسایه‌ی زنده داشته باشد به زندگی تا دوره‌ی بعد
+ادامه خواهد داد.
 
-* Any dead cell with exactly three live neighbors becomes a live cell.
+*  هر سلول مرده که دقیقا سه همسایه‌ی زنده داشته باشد به یک سلول
+زنده تبدیل می شود.
 
-A _neighbor_ is defined as any adjacent cell, including diagonally
-adjacent ones.
+هر خانه‌ای که مجاور محسوب شود به عنوان همسایه در نظر گرفته می شود حتی خانه‌هایی که به صورت قطری مجاور هستند.
 
 {{index "pure function"}}
 
-Note that these rules are applied to the whole grid at once, not one
-square at a time. That means the counting of neighbors is based on the
-situation at the start of the generation, and changes happening to
-neighbor cells during this generation should not influence the new
-state of a given cell.
+توجه داشته باشید که این قوانین به کل جدول (grid) اعمال می شوند نه به یک چهار ضلعی
+محدود. به این معنا که شمارش همسایه‌ها بر اساس وضعیتی خواهد بود که ابتدای هر نسل
+وجود دارد و تغییرات اعمالی به همسایه‌ها در طول این نسل نباید به وضعیت جدید یک
+سلول مشخص اثر بگذارد.
 
 {{index "Math.random function"}}
 
-Implement this game using whichever ((data structure)) you find
-appropriate. Use `Math.random` to populate the grid with a random
-pattern initially. Display it as a grid of ((checkbox)) ((field))s,
-with a ((button)) next to it to advance to the next ((generation)).
-When the user checks or unchecks the checkboxes, their changes should
-be included when computing the next generation.
+این بازی را به وسیله‌ی جاوااسکریپت و با استفاده هر ساختار داده‌ای که مناسب می
+دانید پیاده سازی کنید. از `Math.random` برای پر کردن جدول با الگوی تصادفی برای
+شروع استفاده کنید. از فیلدهای checkbox به همراه دکمه‌ای در کنارشان برای انتقال به
+نسل بعد در جدول استفاده کنید. زمانی که کاربر checkbox را فعال یا غیر فعال می کند
+تغییرات آن ها باید در هنگام محاسبه‌ی نسل بعد اعمال شوند.
 
 {{if interactive
 
@@ -1397,33 +1306,20 @@ if}}
 
 {{index "game of life (exercise)"}}
 
-To solve the problem of having the changes conceptually happen at the
-same time, try to see the computation of a ((generation)) as a ((pure
-function)), which takes one ((grid)) and produces a new grid that
-represents the next turn.
+برای حل مساله‌ی اتفاق افتادن تغییرات در یک زمان واحد به صورت مفهومی، سعی کنید که محاسبه‌ی یک نسل را به صورت یک تابع ناب (pure) ببینید، که یک grid را گرفته و یک grid جدید تولید می کند که نماینده‌ی دوره‌ی بعد می‌باشد.
 
-Representing the matrix can be done in the way shown in [Chapter
-?](object#matrix). You can count live ((neighbor))s with two nested
-loops, looping over adjacent coordinates in both dimensions. Take care
-not to count cells outside of the field and to ignore the cell in the
-center, whose neighbors we are counting.
+نمایش ماتریکس را می‌توان از راهی که در [فصل
+?](object#matrix) نشان داده شد، میسر کرد. می‌توانید تعداد همسایه‌های زنده را به وسیله‌ی دو حلقه‌ی تودرتو بشمارید، با پیمایش مختصات مجاور در هر دو بعد. مواظب باشید که سلول‌های خارج از فیلد را نشمارید و سلول مرکز را هم به حساب نیاورید، سلولی که همسایه‌هایش را قصد داریم بشماریم.
 
 {{index "event handling", "change event"}}
 
-Ensuring that changes to ((checkbox))es take effect on the next generation
-can be done in two ways. An event handler could notice these changes
-and update the current grid to reflect them, or you could generate a
-fresh grid from the values in the checkboxes before computing the next
-turn.
+از دو راه می توان اطمینان حاصل کرد که تغییر checkbox ها روی نسل بعد تاثیر می‌گذارد. یک گرداننده‌ی رخداد می تواند این تغییرات را متوجه شود و grid فعلی را برای بازتاب آن به‌روز کند، یا می توانید یک grid تازه از مقادیر موجود در checkbox ها قبل از محاسبه‌ی نسل بعد برای تولید یک grid تازه استفاده کنید.
 
-If you choose to go with event handlers, you might want to attach
-((attribute))s that identify the position that each checkbox
-corresponds to so that it is easy to find out which cell to change.
+اگر انتخاب شما استفاده از گرداننده‌های رخداد باشد، ممکن است بخواهید که خاصیت‌هایی برای  مشخص نمودن موقعیت هر checkbox الحاق کنید تا بتوان به آسانی سلولی که باید تغییر کند را پیدا کنید.
 
 {{index drawing, "table (HTML tag)", "br (HTML tag)"}}
 
-To draw the grid of checkboxes, you can either use a `<table>` element
-(see [Chapter ?](dom#exercise_table)) or simply put them all in the
-same element and put `<br>` (line break) elements between the rows.
+برای رسم جدول checkbox ها، می‌توانید  یا از یک `<table>` ( به [Chapter ?](dom#exercise_table) رجوع کنید ) استفاده کنید یا به سادگی همه‌ی آن ها را در یک عنصر قرار داده و از `<br>` بین ردیف‌ها استفاده کنید.
+
 
 hint}}
