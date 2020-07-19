@@ -1,12 +1,10 @@
 {{meta {load_files: ["code/chapter/19_paint.js"], zip: "html include=[\"css/paint.css\"]"}}}
 
-# Project: A Pixel Art Editor
+# پروژه: یک ویرایشگر پیکسلی
 
-{{quote {author: "Joan Miro", chapter: true}
+{{quote {author: "خوان میرو", chapter: true}
 
-I look at the many colors before me. I look at my blank canvas. Then,
-I try to apply colors like words that shape poems, like notes that
-shape music.
+به رنگ‌های بیشمار پیش رویم نگاه می کنم. به بوم نقاشی خالی‌ام نیز. آن‌گاه، سعی‌ می کنم رنگ‌ها را مانند واژه‌هایی که شعر‌ها را می‌سازند به کار ببرم، مانند نوت‌هایی که به موسیقی شکل می‌دهند.
 
 quote}}
 
@@ -14,131 +12,114 @@ quote}}
 
 {{figure {url: "img/chapter_picture_19.jpg", alt: "Picture of a tiled mosaic", chapter: "framed"}}}
 
-The material from the previous chapters gives you all the elements you
-need to build a basic ((web application)). In this chapter, we will do
-just that.
+هرآنچه برای ساخت یک اپلیکیشن وب ساده مورد نیاز است، در فصل‌های پیشین آمده است. در این فصل، فقط قرار است از آن‌ها استفاده کنیم.
 
 {{index [file, image]}}
 
-Our ((application)) will be a ((pixel)) ((drawing)) program, where you
-can modify a picture pixel by pixel by manipulating a zoomed-in view of it, shown as a grid of colored squares. You can use the program to open image files,
-scribble on them with your mouse or other pointer device, and save
-them. This is what it will look like:
+اپلیکیشن ما قرار است یک برنامه‌ی ترسیم پیکسلی باشد، جایی که می توانید یک تصویر
+را پیکسل به پیکسل تغییر دهید. این کار با دستکاری حالت بزرگ‌نمایی شده‌ی تصویر،
+که جدولی از خانه‌های رنگ شده است صورت می گیرد. می توانید از آن برای باز کردن
+فایل‌های تصویری و خط خطی کردن روی آن‌ها با موس یا هر وسیله‌ی اشاره‌گر دیگر استفاده کنید و سپس آن را ذخیره نمایید. برنامه کاربردی ما شبیه به تصویر زیر خواهد بود:
+
 
 {{figure {url: "img/pixel_editor.png", alt: "The pixel editor interface, with colored pixels at the top and a number of controls below that", width: "8cm"}}}
 
-Painting on a computer is great. You don't need to worry about
-materials, ((skill)), or talent. You just start smearing.
+نقاشی روی یک کامپیوتر خیلی جالب است. نیازی نیست نگران ابزار، توانایی یا استعداد خاصی باشید. کافی است فقط شروع به کشیدن کنید.
 
-## Components
+## مؤلفه‌ها یا اجزاء
 
 {{index drawing, "select (HTML tag)", "canvas (HTML tag)", component}}
 
-The interface for the application shows a big `<canvas>` element on
-top, with a number of form ((field))s below it. The user draws on the
-((picture)) by selecting a tool from a `<select>` field and then
-clicking, ((touch))ing, or ((dragging)) across the canvas. There are
-((tool))s for drawing single pixels or rectangles, for filling an
-area, and for picking a ((color)) from the picture.
+رابط برنامه‌ی کاربردی ما، شامل یک `<canvas>` بزرگ در بالای صفحه می باشد که چندین فیلد
+فرم نیز در زیر آن قرار گرفته است. کاربر با انتخاب یک ابزار از لیست فیلد `<select>` و
+کلیک کردن، لمس کردن یا کشیدن موس روی بوم به ترسیم می پردازد. همچنین ابزارهایی برای رسم تک‌پیکسل‌ها، چهارضلعی‌ها، رنگ‌کردن یک ناحیه، و انتخاب یک رنگ از روی یک تصویر وجود دارد.
 
 {{index [DOM, components]}}
 
-We will structure the editor interface as a number of
-_((component))s_, objects that are responsible for a piece of the
-DOM and that may contain other components inside them.
+ما رابط ویرایشگر را به شکل تعدادی مؤلفه ساختاردهی می کنیم، اشیائی که مسئول
+بخش‌هایی از DOM می باشند و ممکن است حاوی دیگر مؤلفه ها در درون خود باشند.
 
 {{index [state, "of application"]}}
 
-The state of the application consists of the current picture, the
-selected tool, and the selected color. We'll set things up so that the
-state lives in a single value, and the interface components always
-base the way they look on the current state.
+وضعیت (state) برنامه‌ی کاربردی شامل تصویر فعلی، ابزار انتخاب شده و رنگ انتخاب شده می
+باشد. ما کارها را طوری تنظیم می کنیم که در نتیجه وضعیت با یک مقدار مشخص شود و
+دیگر مؤلفه‌ها همیشه با توجه به وضعیت فعلی شکل بگیرند.
 
-To see why this is important, let's consider the
-alternative—distributing pieces of state throughout the interface. Up
-to a certain point, this is easier to program. We can just put in a
-((color field)) and read its value when we need to know the current
-color.
+برای پی بردن به اهمیت این موضوع، اجازه بدهید راه دیگر را هم بررسی کنیم – پخش قسمت‌های وضعیت (state)
+در سراسر رابط. تا نقطه‌ی مشخصی، این روش، برنامه‌نویسی ساده تری
+دارد. می توانیم تنها یک فیلد رنگ در نظر بگیریم و هر زمان که نیاز به دانستن رنگ فعلی داشتیم، مقدار آن را بخوانیم.
 
-But then we add the ((color picker))—a tool that lets you click the
-picture to select the color of a given pixel. To keep the
-color field showing the correct color, that tool would have to know
-that it exists and update it whenever it picks a new color. If
-you ever add another place that makes the color visible (maybe the
-mouse cursor could show it), you have to update your
-color-changing code to keep that synchronized.
+اما در ادامه تصمیم می گیریم یک گزینش‌گر رنگ اضافه کنیم – ابزاری که به شما اجازه می دهد
+تا با کلیک روی تصویر، رنگ پیکسل داده‌شده را انتخاب کنید. برای اینکه کاری کنیم
+تا فیلد رنگ ، رنگ درست را نمایش دهد، ابزار ما بایستی بداند که فیلد رنگ مورد نظر موجود
+است و با هر بار انتخاب رنگ جدید آن را به‌روز رسانی کند. اگر جای دیگری را نیز در نظر گرفتید که رنگ انتخاب شده را نمایان کند( ممکن است اشاره‌گر موس برای این کار
+در نظر گرفته شده باشد)، باید کد مربوط به تغییر رنگ را نیز به‌روز‌رسانی کنید
+تا آن جای جدید را نیز هماهنگ نگه دارید.
 
 {{index modularity}}
 
-In effect, this creates a problem where each part of the interface
-needs to know about all other parts, which is not very modular. For
-small applications like the one in this chapter, that may not be a
-problem. For bigger projects, it can turn into a real nightmare.
+در عمل، این کار شما را با مشکل روبرو می کند طوری که هر بخش از رابط لازم است تا
+درباره‌ی همه بخش‌های دیگر آگاه باشد، که خیلی ماژولار نیست. برای برنامه‌های کاربردی
+کوچک مثل مورد این فصل، ممکن است مشکل خاصی نباشد. برای پروژه های بزرگتر می تواند این
+کار به کابوس بزرگی ختم شود.
 
-To avoid this nightmare on principle, we're going to be strict
-about _((data flow))_. There is a state, and the interface is drawn
-based on that state. An interface component may respond to user
-actions by updating the state, at which point the components get a
-chance to synchronize themselves with this new state.
+خوب برای پیشگیری از بروز این کابوس، ما سعی می کنیم که در مورد جریان داده (data flow) خیلی
+سختگیرانه عمل کنیم. یک وضعیت وجود دارد و رابط قرار است بر اساس آن وضعیت ترسیم
+شود. یک مؤلفه‌ی رابط ممکن است به کارهای کاربر با به‌روز رسانی وضعیت پاسخ دهد، که
+در آن نقطه‌، مؤلفه‌ها شانس دارند تا خودشان را با وضعیت جدید هماهنگ سازند.
 
 {{index library, framework}}
 
-In practice, each ((component)) is set up so that when it is given a
-new state, it also notifies its child components, insofar as those
-need to be updated. Setting this up is a bit of a hassle. Making this
-more convenient is the main selling point of many browser programming
-libraries. But for a small application like this, we can do it without
-such infrastructure.
+در عمل، هر مؤلفه به گونه‌ای تنظیم می شود که زمانی که به آن وضعیت جدیدی داده
+شود، این وضعیت را به مؤلفه‌های فرزندش نیز اعلام کند تا آن‌‌هایی که نیاز دارند به‌روز
+شوند. درست کردن این قسمت کمی با زحمت همراه است. اجرای مناسب و راحت این بخش، مزیت
+و نقطه‌ی برتری خیلی از کتابخانه‌های مربوط به برنامه نویسی مرورگر محسوب می شود. اما
+برای برنامه‌ی کوچکی مثل برنامه‌ی ما ، می توانیم بدون داشتن این زیرساخت نیز جلو
+برویم.
 
 {{index [state, transitions]}}
 
-Updates to the state are represented as objects, which we'll call
-_((action))s_. Components may create such actions and _((dispatch))_
-them—give them to a central state management function. That function
-computes the next state, after which the interface components update
-themselves to this new state.
+به‌روز رسانی‌های وضعیت به شکل اشیاء نمایش داده می شوند که ما آن ها را actions می
+نامیم. مؤلفه‌ها ممکن است این گونه اکشن ها را ایجاد کنند و گسیل  (_((dispatch))_) دهند –
+آن ها را به تابع مرکزی مدیریت وضعیت ارسال نمایند. آن تابع وضعیت بعدی را محاسبه می
+کند که پس از آن ، مؤلفه‌های رابط، خودشان را به وضعیت جدید به‌روز رسانی می‌کنند.
 
 {{index [DOM, components]}}
 
-We're taking the messy task of running a ((user interface)) and
-applying some ((structure)) to it. Though the DOM-related pieces
-are still full of ((side effect))s, they are held up by a conceptually
-simple backbone: the state update cycle. The state determines what the
-DOM looks like, and the only way DOM events can change the state is by
-dispatching actions to the state.
+ما در حال پرداختن به بخش پرکار اجرای یک رابط کاربری و اعمال ساختار به آن هستیم.
+اگرچه بخش‌های مرتبط با DOM هنوز پر از اثرات جانبی هستند، با این وجود توسط یک زیرساخت
+مفهومی ساده نگهداری می شوند – چرخه‌ی به‌روز رسانی وضعیت. وضعیت مشخص می کند که DOM
+چگونه ظاهر یابد، و تنها راهی که رخدادهای DOM دارند برای تغییر وضعیت این است که
+اکشن‌ها را به وضعیت مورد نظر گسیل دهند.
 
 {{index "data flow"}}
 
-There are _many_ variants of this approach, each with its own
-benefits and problems, but their central idea is the same: state
-changes should go through a single well-defined channel, not happen
-all over the place.
+راه‌های زیادی برای انجام این کار وجود دارد که هر کدام مزایا و معایب خودشان را دارند، اما ایده‌ی اصلی همه‌ی آن ها مشترک است: تغییرات وضعیت بایستی از طریق یک کانال یگانه‌ی مشخص انجام شود نه در همه‌ی قسمت‌های موجود.
 
 {{index "dom property", [interface, object]}}
 
-Our ((component))s will be ((class))es conforming to an interface.
-Their constructor is given a state—which may be the whole application
-state or some smaller value if it doesn't need access to everything—and
-uses that to build up a `dom` property. This is the DOM element that represents
-the component. Most constructors will also take some other values
-that won't change over time, such as the function they can use to
-((dispatch)) an action.
+مؤلفه‌های ما کلاس هایی خواهند بود که با یک رابط مطابقت دارند. سازنده‌ی آن ها ،
+وضعیتی را دریافت می کند که ممکن است وضعیت کلی برنامه باشد یا بخشی از آن اگر
+نیازی به دسترسی به همه چیز نیست و از آن برای ساختن خاصیت `dom` استفاده می کند،
+DOMای که نمایانگر مؤلفه می باشد. اغلب سازنده‌ها مقدارهای دیگری را نیز دریافت می
+کنند که در طول زمان ثابت هستند مانند تابعی که می توانند از آن برای گسیل یک اکشن
+استفاده کنند.
 
 {{index "syncState method"}}
 
-Each component has a `syncState` method that is used to synchronize it
-to a new state value. The method takes one argument, the state, which
-is of the same type as the first argument to its constructor.
+هر مؤلفه دارای متدی به نام `syncState` می باشد که برای هماهنگ‌سازی آن با یک مقدار
+وضعیت جدید استفاده می شود. این متد یک آرگومان دریافت می کند، وضعیت، که از نوع
+مشابه اولین آرگومان سازنده‌اش می باشد.
 
-## The state
+## وضعیت یا State
 
 {{index "Picture class", "picture property", "tool property", "color property", "Matrix class"}}
 
-The application state will be an object with `picture`, `tool`, and
-`color` properties. The picture is itself an object that stores the
-width, height, and pixel content of the picture. The ((pixel))s are
-stored in an array, in the same way as the matrix class from [Chapter
-?](object)—row by row, from top to bottom.
+وضعیت برنامه شیئی خواهد بود که دارای خاصیت‌های `picture،` `tool،` و `color` می باشد.
+picture خودش نیز یک شی است که طول، ارتفاع و محتوای پیکسل تصویر را ذخیره می
+نماید. پیکسل‌ها درون یک آرایه ذخیره می شوند به همان شکلی که کلاس ماتریس از[فصل
+?](object)
+عمل می کرد – ردیف به ردیف و از بالا به پایین.
 
 ```{includeCode: true}
 class Picture {
@@ -166,48 +147,40 @@ class Picture {
 
 {{index "side effect", "persistent data structure"}}
 
-We want to be able to treat a picture as an ((immutable)) value, for
-reasons that we'll get back to later in the chapter. But we also
-sometimes need to update a whole bunch of pixels at a time. To be able
-to do that, the class has a `draw` method that expects an array of
-updated pixels—objects with `x`, `y`, and `color` properties—and
-creates a new picture with those pixels overwritten. This method uses
-`slice` without arguments to copy the entire pixel array—the start of
-the slice defaults to 0, and the end defaults to the array's length.
+قصد ما این است که بتوانیم با تصویر مانند یک مقدار غیر قابل تغییر رفتار کنیم به
+دلایلی که بعدا در ادامه فصل خواهیم گفت. اما گاهی نیز لازم است تا بخشی از پیکسل‌ها
+را یکجا تغییر دهیم. برای این که بتوانیم این کار را انجام دهیم کلاس ما متدی به
+نام `draw` دارد که آرایه‌ای را می‌گیرد که شامل پیکسل‌های تغییر یافته می‌باشد –
+اشیائی با خاصیت‌های `x` ، `y` و `color` – و تصویر جدیدی با آن پیکسل‌های بازنویسی شده
+ایجاد کند. این متد از `slice` بدون استفاده از آرگومان بهره می برد تا تمام آرایه‌ی
+پیکسل‌ها را کپی کند – شروع slice به صورت پیشفرض برابر 0 و مقدار پیش‌فرض انتهای آن طول آرایه می
+باشد.
 
 {{index "Array constructor", "fill method", ["length property", "for array"], [array, creation]}}
 
-The `empty` method uses two pieces of array functionality that we
-haven't seen before. The `Array` constructor can be called with a
-number to create an empty array of the given length. The `fill`
-method can then be used to fill this array with a given value. These
-are used to create an array in which all pixels have the same color.
+متد `empty` از دو ویژگی آرایه‌ها بهره می برد که تاکنون مشاهده نکرده ایم. سازنده
+`Array` را می توان با یک عدد برای ساخت یک آرایه تهی با طولی مشخص فراخوانی کرد. و
+متد `fill` را می توان برای پر کردن این آرایه با یک مقدار مشخص استفاده کرد. این
+متدها برای ساختن آرایه‌ای که در آن همه‌ی پیکسل‌ها رنگ مشابهی دارند استفاده می شود.
 
 {{index "hexadecimal number", "color component", "color field", "fillColor property"}}
 
-Colors are stored as strings containing traditional ((CSS)) ((color
-code))s made up of a ((hash sign)) (`#`) followed by six hexadecimal (base-16)
-digits—two for the ((red)) component, two for the ((green))
-component, and two for the ((blue)) component. This is a somewhat
-cryptic and inconvenient way to write colors, but it is the format the
-HTML color input field uses, and it can be used in the `fillColor`
-property of a canvas drawing context, so for the ways we'll use colors
-in this program, it is practical enough.
+رنگ‌ها به عنوان رشته‌هایی که حاوی کدهای رنگ معمول در CSS می باشند – یک علامت هش
+(`#`) که بعد از آن شش رقم هگزادسیمال (مبنای 16) قرار می گیرد، دو رقم برای جزء
+قرمز، دو رقم برای سبز و دو رقم برای بخش آبی – ذخیره می شوند. این شیوه‌ی نوشتن
+رنگ ها مقداری رمزگونه و نامناسب به نظر می رسد اما این فرمتی است که فیلدهای ورودی
+رنگ در HTML استفاده می کنند و می توان از آن برای خاصیت `fillColor` مربوط به بستر (context)
+ترسیم در canvas استفاده کرد. بنابراین در جایی که قصد استفاده از رنگ‌ها در این
+برنامه را داریم، مناسب هستند.
 
 {{index black}}
 
-Black, where all components are zero, is written `"#000000"`, and
-bright ((pink)) looks like `"#ff00ff"`, where the red and blue
-components have the maximum value of 255, written `ff` in hexadecimal
-((digit))s (which use _a_ to _f_ to represent digits 10 to 15).
+رنگ سیاه، زمانی اتفاق می افتد که همه‌ی اجزای رنگ برابر صفر باشند و به صورت <bdo>`"#000000"`</bdo> نوشته می شود ، و رنگ صورتی
+روشن شبیه به <bdo>`"#ff00ff"`</bdo> نوشته می شود، به صورتی که قسمت رنگ قرمز و آبی در آن در بیشینه‌ی مقدار خود، 255، هستند که به صورت `ff` در هگزادسیمال نوشته می شود ( که از _a_ تا _f_ را به عنوان ارقامی معادل 10 تا 15 در نظر می گیرند).
 
 {{index [state, transitions]}}
 
-We'll allow the interface to ((dispatch)) ((action))s as objects whose
-properties overwrite the properties of the previous state. The
-color field, when the user changes it, could dispatch an object like
-`{color: field.value}`, from which this update function can compute a
-new state.
+ما به رابط کاربری این امکان را می دهیم که actionها را به عنوان اشیائی گسیل (dispatch) دهد که خاصیت‌هایشان، خاصیت‌های وضعیت قبلی را بازنویسی می کنند. فیلد رنگ، زمانی که کاربر آن را تغییر می دهد، می تواند شیئی مثل `{color: field.value}` را گسیل دهد که از آن، تابع به‌روز رسانی زیر می تواند مقدار جدید را محاسبه کند.
 
 {{index "updateState function"}}
 
@@ -219,24 +192,13 @@ function updateState(state, action) {
 
 {{index "period character", spread, "Object.assign function"}}
 
-This rather cumbersome pattern, in which `Object.assign` is used to
-first add the properties of `state` to an empty object and then
-overwrite some of those with the properties from `action`, is common
-in JavaScript code that uses ((immutable)) objects. A more convenient
-notation for this, in which the triple-dot operator is used to include
-all properties from another object in an object expression, is in the
-final stages of being standardized. With that addition, you could
-write `{...state, ...action}` instead. At the time of writing, this
-doesn't yet work in all browsers.
+این الگوی نسبتا پیچیده، که در آن از `Object.assign` برای افزودن خاصیت‌های `state` به یک شیء خالی در ابتدا استفاده می کند و بعد بعضی از آن ها را با خاصیت‌هایی از `action` بازنویسی می کند، در کدهای جاوااسکریپتی که از اشیاء غیرقابل تغییر استفاده می کنند معمول است. روش راحت و مناسب تر این کار که در آن از عملگر سه نقطه استفاده می شود تا همه‌ی خاصیت‌های شیء دیگر را در یک عبارت شیء قرار دهد، در آخرین مراحل استاندارد شدن در جاوااسکریپت به سر می برد. با این ویژگی، می توانستید به جای شکل قبلی، بنویسید `{...state, ...action}`. در زمان نوشتن این کتاب، این ویژگی هنوز در همه‌ی مرورگرها پشتیبانی نمی شود.
 
-## DOM building
+## ساختن DOM
 
 {{index "createElement method", "elt function", [DOM, construction]}}
 
-One of the main things that interface components do is creating
-DOM structure. We again don't want to directly use the verbose DOM
-methods for that, so here's a slightly expanded version of the `elt`
-function:
+یکی از کارهای اصلی که مؤلفه‌های رابط کاربری انجام می دهند ساخت ساختار DOM است. ما قصد نداریم که دوباره به صورت مستقیم از متدهای صریح DOM برای این کار استفاده کنیم، بنابراین نسخه‌ای از تابع `elt` که کمی توسعه یافته است را به کار خواهیم برد:
 
 ```{includeCode: true}
 function elt(type, props, ...children) {
@@ -252,16 +214,11 @@ function elt(type, props, ...children) {
 
 {{index "setAttribute method", "attribute", "onclick property", "click event", "event handling"}}
 
-The main difference between this version and the one we used in
-[Chapter ?](game#domdisplay) is that it assigns _properties_ to DOM
-nodes, not _attributes_. This means we can't use it to set arbitrary
-attributes, but we _can_ use it to set properties whose value isn't a
-string, such as `onclick`, which can be set to a function to register
-a click event handler.
+تفاوت اصلی بین این نسخه و نسخه‌ای که از آن در [فصل ?](game#domdisplay) استفاده کرده ام آن است که این نسخه خاصیت‌ها را به گره‌های DOM اختصاص می دهد نه به attributes. این بدان معنی است که نمی توانیم از آن برای تنظیم خصیصه‌های (attribute) دلخواه استفاده کنیم، اما می توانیم از آن برای تنظیم خاصیت‌هایی که مقدارشان رشته‌ای نیست استفاده کنیم مانند `onclick`، که می‌تواند تابعی را به عنوان گرداننده‌ی رخداد کلیک ثبت کند.
 
 {{index "button (HTML tag)"}}
 
-This allows the following style of registering event handlers:
+این باعث می شود که این سبک از ثبت گرداننده‌های رخداد مجاز شود:
 
 ```{lang: "text/html"}
 <body>
@@ -273,21 +230,21 @@ This allows the following style of registering event handlers:
 </body>
 ```
 
-## The canvas
+## canvas
 
-The first component we'll define is the part of the interface that
-displays the picture as a grid of colored boxes. This component is
-responsible for two things: showing a picture and communicating
-((pointer event))s on that picture to the rest of the application.
+اولین مؤلفه ای که تعریف خواهیم کرد بخشی از رابط خواهد بود که قرار است تصویر را
+به صورت جدولی از مربع‌های رنگ شده نشان دهد. این مؤلفه مسئول دو کار می باشد: نمایش
+یک تصویر و ایجاد تعامل بین رخدادهای مربوط به اشاره‌گر و دیگر قسمت‌های برنامه‌ی
+کاربردی.
 
 {{index "PictureCanvas class", "callback function", "scale constant", "canvas (HTML tag)", "mousedown event", "touchstart event", [state, "of application"]}}
 
-As such, we can define it as a component that knows about only the
-current picture, not the whole application state. Because it
-doesn't know how the application as a whole works, it cannot directly
-dispatch ((action))s. Rather, when responding to pointer events, it
-calls a callback function provided by the code that created it, which
-will handle the application-specific parts.
+همینطور، می توانیم آن را به صورت یک مؤلفه که فقط اطلاعاتی در مورد تصویر فعلی
+دارد تعریف کنیم، نه درباره‌ی وضعیت کلی برنامه. به دلیل اینکه این مؤلفه نمی داند
+که برنامه به صورت کلی چگونه کار می کند، قادر نیست تا اکشن‌ها را مستقیما گسیل دهد.
+در عوض، در زمان پاسخ به رخدادهای اشاره‌گر، تابع callbackای را فراخوانی می کند که
+توسط کدی که آن را به وجود آورده فراهم شده است، که بخش‌های مربوط به برنامه را
+مدیریت می کند.
 
 ```{includeCode: true}
 const scale = 10;
@@ -310,16 +267,12 @@ class PictureCanvas {
 
 {{index "syncState method", efficiency}}
 
-We draw each pixel as a 10-by-10 square, as determined by the `scale`
-constant. To avoid unnecessary work, the component keeps track of its
-current picture and does a redraw only when `syncState` is given a new
-picture.
+هر پیکسل را با مربعهای 10 در 10 رسم می کنیم، همانطور که در ثابت `scale` مشخص شده است. برای اجتناب از کار اضافی، مولفه، تصویر فعلی اش را حفظ و رصد می کند و فقط زمانی باز ترسیم را انجام می دهد که تصویر جدیدی به `syncState` داده شود.
 
 {{index "drawPicture function"}}
 
-The actual drawing function sets the size of the canvas based on the
-scale and picture size and fills it with a series of squares, one for
-each pixel.
+تابع اصلی که مسئول ترسیم است ، اندازه‌ی بوم را براساس اندازه‌ی تصویر و ثابت مقیاس
+تنظیم می کند و آن را با مربع‌ها پر می کند، یک مربع به ازای هر پیکسل.
 
 ```{includeCode: true}
 function drawPicture(picture, canvas, scale) {
@@ -338,12 +291,7 @@ function drawPicture(picture, canvas, scale) {
 
 {{index "mousedown event", "mousemove event", "button property", "buttons property", "pointerPosition function"}}
 
-When the left mouse button is pressed while the mouse is over the
-picture canvas, the component calls the `pointerDown` callback, giving
-it the position of the pixel that was clicked—in picture coordinates.
-This will be used to implement mouse interaction with the picture. The
-callback may return another callback function to be notified when the
-pointer is moved to a different pixel while the button is held down.
+زمانی که دکمه‌ی چپ موس فشرده شود در حالیکه اشاره‌گر روی تصویر است، مؤلفه تابع `pointerDown` را فراخوانی می کند و موقعیت مکانی پیکسلی که روی آن کلیک شده را به آن ارسال می نماید- در مختصات تصویر. این کار برای پیاده‌سازی تعاملات موس با تصویر استفاده می شود. تابع callback ممکن است callback دیگری را بازگرداند تا از حرکت اشاره‌گر به پیکسل دیگر آگاه شود در حالیکه دکمه‌ی موس پایین نگه داشته شده است.
 
 ```{includeCode: true}
 PictureCanvas.prototype.mouse = function(downEvent, onDown) {
@@ -373,17 +321,11 @@ function pointerPosition(pos, domNode) {
 
 {{index "getBoundingClientRect method", "clientX property", "clientY property"}}
 
-Since we know the size of the ((pixel))s and we can use
-`getBoundingClientRect` to find the position of the canvas on the
-screen, it is possible to go from mouse event coordinates (`clientX`
-and `clientY`) to picture coordinates. These are always rounded down
-so that they refer to a specific pixel.
+چون ما اندازه‌ی پیکسل‌ها را می دانیم و می توانیم از تابع `getBoundingClientRect` برای پیدا کردن موقعیت بوم روی صفحه استفاده کنیم، می توان از مختصات رخداد موس (`clientX` و `clientY`) به مختصات تصویر دست پیدا کرد. این اعداد همیشه رند می شوند پس به یک پیکسل مشخص اشاره می کنند.
 
 {{index "touchstart event", "touchmove event", "preventDefault method"}}
 
-With touch events, we have to do something similar, but using
-different events and making sure we call `preventDefault` on the
-`"touchstart"` event to prevent ((panning)).
+با رخدادهای مربوط به لمس، می بایست کاری مشابه انجام دهیم، اما با استفاده از رخدادهای متفاوت و اطمینان از اینکه `preventDefault` را روی `touchstart` فراخوانی کرده باشیم تا از جابجایی تصویر (panning) جلوگیری شود.
 
 ```{includeCode: true}
 PictureCanvas.prototype.touch = function(startEvent,
@@ -410,34 +352,20 @@ PictureCanvas.prototype.touch = function(startEvent,
 
 {{index "touches property", "clientX property", "clientY property"}}
 
-For touch events, `clientX` and `clientY` aren't available directly on
-the event object, but we can use the coordinates of the first touch
-object in the `touches` property.
+برای رخدادهای لمسی، `clientX` و `clientY` مستقیما روی شیء رخداد در دسترس نیستند، اما می توانیم از مختصات شیء اولین لمس در خاصیت `touches` استفاده کنیم.
 
-## The application
+## برنامه‌ی کاربردی
 
-To make it possible to build the application piece by piece, we'll
-implement the main component as a shell around a picture canvas and a
-dynamic set of ((tool))s and ((control))s that we pass to its
-constructor.
+برای اینکه بتوان برنامه را جز به جز ساخت، مؤلفه‌ی اصلی را به عنوان یک پوسته حول یک بوم تصویر پیاده سازی می کنیم و مجموعه‌ای پویا از ابزارها و کنترل‌ها را به سازنده‌اش ارسال می کنیم.
 
-The _controls_ are the interface elements that appear below the
-picture. They'll be provided as an array of ((component))
-constructors.
+کنترل‌ها، همان عناصر موجود در رابط کاربری هستند که در زیر تصویر قرار می گیرند. آن‌ها
+به شکل آرایه‌ای از سازنده‌های مؤلفه در دسترس قرار می گیرند.
+
 
 {{index "br (HTML tag)", "flood fill", "select (HTML tag)", "PixelEditor class", dispatch}}
 
-The _tools_ do things like drawing pixels or filling in an area. The
-application shows the set of available tools as a `<select>` field.
-The currently selected tool determines what happens when the user
-interacts with the picture with a pointer device. The set of
-available tools is provided as
-an object that maps the names that appear in the drop-down field to
-functions that implement the tools. Such functions get a picture
-position, a current application state, and a `dispatch` function as
-arguments. They may return a move handler function that gets called
-with a new position and a current state when the pointer moves to a
-different pixel.
+ابزارها کارهایی مثل ترسیم پیکسل‌ها یا رنگ‌کردن یک قسمت را انجام می‌دهند. برنامه مجموعه‌ای از ابزارها را به صورت یک فیلد `<select>` نمایش می دهد. ابزاری که  انتخاب شده مشخص می کند که تعامل اشاره‌گر با تصویر چه خواهد بود. مجموعه‌ی ابزار‌های موجود به صورت یک شیء فراهم می‌شوند که نام‌های نشان داده شده در فیلد select را به توابعی که آن ابزار را پیاده سازی می کنند، نگاشت می کند. این توابع یک موقعیت تصویر ، یک وضعیت فعلی برنامه و نیز یک تابع `dispatch` را به عنوان آرگومان می گیرند. خروجی آن‌ها ممکن است یک گرداننده‌ی حرکت باشد که با تغییر مکان اشاره‌گر به یک پیکسل دیگر و در نتیجه تغییر وضعیت و موقعیت جدید فراخوانی می شود.
+
 
 ```{includeCode: true}
 class PixelEditor {
@@ -463,24 +391,17 @@ class PixelEditor {
   }
 }
 ```
-
-The pointer handler given to `PictureCanvas` calls the currently
-selected tool with the appropriate arguments and, if that returns a
-move handler, adapts it to also receive the state.
+گرداننده‌ی اشاره‌گری که به `PictureCanvas` داده می شود ، ابزاری که در حال حاضر انتخاب شده است را با آرگومان‌های مناسب فراخوانی می کند و اگر پاسخ آن یک گرداننده‌ی حرکت باشد، آن را به گونه‌ای تغییر می دهد که وضعیت را نیز دریافت کند.
 
 {{index "reduce method", "map method", [whitespace, "in HTML"], "syncState method"}}
 
-All controls are constructed and stored in `this.controls` so that
-they can be updated when the application state changes. The call to
-`reduce` introduces spaces between the controls' DOM elements. That
-way they don't look so pressed together.
+تمامی کنترل‌ها در `this.controls` ساختار یافته و ذخیره می شوند در نتیجه می توان آنها را با تغییر وضعیت برنامه به‌روز رسانی کرد. فراخوانی `reduce` باعث به وجود آمدن فاصله‌هایی بین عناصر کنترلی DOM می شود. این کار باعث می‌شود طوری نمایش داده نشوند که به نظر برسد همگی باهم فشرده شده اند.
 
 {{index "select (HTML tag)", "change event", "ToolSelect class", "syncState method"}}
 
-The first control is the ((tool)) selection menu. It creates a
-`<select>` element with an option for each tool and sets up a
-`"change"` event handler that updates the application state when the
-user selects a different tool.
+اولین کنترل، منوی انتخاب ابزار است. این کنترل یک عنصر `<select>` با یک گزینه برای هر ابزار می سازد و یک
+گرداننده‌ی رخداد برای `"change"` تنظیم می کند که وضعیت برنامه را با انتخاب هر ابزار تغییر می دهد.
+
 
 ```{includeCode: true}
 class ToolSelect {
@@ -498,22 +419,15 @@ class ToolSelect {
 
 {{index "label (HTML tag)"}}
 
-By wrapping the label text and the field in a `<label>` element, we
-tell the browser that the label belongs to that field so that you
-can, for example, click the label to focus the field.
+با قرار دادن متن عنوان فیلد و خود فیلد درون یک عنصر `<label>` به مرورگر اعلام می‌کنیم که عنوان مورد نظر مربوط به این فیلد می باشد در نتیجه می توانید به عنوان مثال روی عنوان کلیک کنید تا فیلد فعال شود.
 
 {{index "color field", "input (HTML tag)"}}
 
-We also need to be able to change the color, so let's add a control for
-that. An HTML `<input>` element with a `type` attribute of `color`
-gives us a form field that is specialized for selecting colors. Such a
-field's value is always a CSS color code in `"#RRGGBB"` format (red,
-green, and blue components, two digits per color). The browser will
-show a ((color picker)) interface when the user interacts with it.
+همچنین لازم است تا بتوانیم رنگ را تغییر دهیم – پس اجازه بدهید تا یک کنترل برای آن در نظر بگیریم. یک عنصر `<input>` که خصیصه‌ی `type` آن `color` است به ما فیلد فرمی را می دهد که برای انتخاب رنگ طراحی شده است. مقدار این فیلد همیشه یک کد رنگ CSS به فرمت <bdo>`"#RRGGBB"`</bdo> می باشد (قرمز ، سبز و آبی. برای هر رنگ دو رقم). مرورگر یک رابط انتخابگر رنگ را به کاربر نشان می دهد تا بتواند با آن کار کند.
 
 {{if book
 
-Depending on the browser, the color picker might look like this:
+بسته به مرورگر، انتخابگر رنگ ممکن است شبیه به تصویر زیر باشد:
 
 {{figure {url: "img/color-field.png", alt: "A color field", width: "6cm"}}}
 
@@ -521,8 +435,7 @@ if}}
 
 {{index "ColorSelect class", "syncState method"}}
 
-This ((control)) creates such a field and wires it up to stay
-synchronized with the application state's `color` property.
+این کنترل فیلد مذکور را ایجاد می کند و طوری آن را می نویسد که با خاصیت `color` وضعیت برنامه همگام بماند.
 
 ```{includeCode: true}
 class ColorSelect {
@@ -538,17 +451,13 @@ class ColorSelect {
 }
 ```
 
-## Drawing tools
+## ابزار ترسیم
 
-Before we can draw anything, we need to implement the ((tool))s that
-will control the functionality of mouse or touch events on the canvas.
+پیش از آنکه بتوانیم چیزی رسم کنیم، لازم است تا ابزارهایی که قرار است کارکرد موس یا رخدادهای لمسی روی بوم را کنترل کند پیاده سازی کنیم.
 
 {{index "draw function"}}
 
-The most basic tool is the draw tool, which changes any ((pixel)) you
-click or tap to the currently selected color. It dispatches an action
-that updates the picture to a version in which the pointed-at pixel is
-given the currently selected color.
+پایه‌ای ترین ابزار، ابزار ترسیم است  که هر پیکسلی که روی آن کلیک می شود یا لمس می شود را به رنگ انتخاب شده تغییر می دهد. این ابزار اکشنی را برای تغییر تصویر به تصویری که در آن پیکسل مورد اشاره به رنگ انتخاب شده تغییر یافته است، گسیل می‌نماید.
 
 ```{includeCode: true}
 function draw(pos, state, dispatch) {
@@ -561,15 +470,11 @@ function draw(pos, state, dispatch) {
 }
 ```
 
-The function immediately calls the `drawPixel` function but then also
-returns it so that it is called again for newly touched pixels when
-the user drags or ((swipe))s over the picture.
+تابع بلافاصله تابع `drawPixel` را فراخوانی می کند و بعد آن را بر می گرداند در نتیجه دوباره برای پیکسل‌های لمس‌شده‌ی دیگر در هنگامی که کاربر موس یا انگشتش را حرکت می دهد، فراخوانی می شود.
 
 {{index "rectangle function"}}
 
-To draw larger shapes, it can be useful to quickly create
-((rectangle))s. The `rectangle` ((tool)) draws a rectangle between the
-point where you start ((dragging)) and the point that you drag to.
+برای ترسیم اشکال بزرگتر بهتر است امکان کشیدن چهار‌ضلعی‌ فراهم باشد. ابزار `rectangle` یک چهارضلعی بین نقطه‌ی شروع ترسیم و نقطه‌ای که موس متوقف می شود ترسیم می کند.
 
 ```{includeCode: true}
 function rectangle(start, state, dispatch) {
@@ -593,29 +498,15 @@ function rectangle(start, state, dispatch) {
 
 {{index "persistent data structure", [state, persistence]}}
 
-An important detail in this implementation is that when dragging, the
-rectangle is redrawn on the picture from the _original_ state.
-That way, you can make the rectangle larger and smaller again while
-creating it, without the intermediate rectangles sticking around in
-the final picture. This is one of the reasons why ((immutable))
-picture objects are useful—we'll see another reason later.
+یک نکته‌ی جزئی در پیاده سازی این ابزار این است که در هنگام کشیدن (dragging)، چهارضلعی از روی وضعیت  اصلی روی تصویر بازترسیم می‌شود. در این حالت، می توانید چهارضلعی را در هنگام رسم بزرگتر یا کوچکتر کنید بدون اینکه چهارضلعی هایی که این میان رسم می شوند روی تصویر نهایی باقی بمانند. این یکی از دلایلی است که اشیاء تصویری غیرقابل تغییر مفید واقع می شوند – بعدا دلیل دیگری نیز خواهیم دید.
 
-Implementing ((flood fill)) is somewhat more involved. This is a
-((tool)) that fills the pixel under the pointer and all adjacent
-pixels that have the same color. "Adjacent" means directly
-horizontally or vertically adjacent, not diagonally. This picture
-illustrates the set of ((pixel))s colored when the flood fill tool is
-used at the marked pixel:
+پیاده سازی رنگ آمیزی ناحیه‌های هم‌رنگ یا متصل (flood fill) مقداری پیچیده‌تر است. این ابزار پیکسل مورد اشاره و همه‌ی پیکسل‌های همجوارش که رنگ مشابهی دارند را رنگ می کند. همجوار به این معناست که به صورت افقی یا عمودی همجوار باشد نه به صورت قطری. این تصویر مجموعه‌ی پیکسل‌های رنگ شده در زمان استفاده از این ابزار مشخص را نشان می دهد:
 
 {{figure {url: "img/flood-grid.svg", alt: "A pixel grid showing the area filled by a flood fill operation", width: "6cm"}}}
 
 {{index "fill function"}}
 
-Interestingly, the way we'll do this looks a bit like the
-((pathfinding)) code from [Chapter ?](robot). Whereas that code
-searched through a graph to find a route, this code searches through a
-grid to find all "connected" pixels. The problem of keeping track of a
-branching set of possible routes is similar.
+به شکل جالبی، روشی که ما برای انجام این کار استفاده می کنیم شبیه به کدی است که برای مسیریابی در [فصل ?](robot) نوشتیم. در حالی که آن کد به جستجو در طول یک گراف برای یافتن یک مسیر می پرداخت، این کد به جستجو در یک گرید برای پیدا کردن پیکسل‌های متصل می پردازد. مشکل نگهداری و رصد یک مجموعه شاخه از مسیرهای ممکن، شبیه به آن مساله است.
 
 ```{includeCode: true}
 const around = [{dx: -1, dy: 0}, {dx: 1, dy: 0},
@@ -638,19 +529,11 @@ function fill({x, y}, state, dispatch) {
   dispatch({picture: state.picture.draw(drawn)});
 }
 ```
-
-The array of drawn pixels doubles as the function's ((work list)).
-For each pixel reached, we have to see whether any adjacent pixels have the
-same color and haven't already been painted over. The loop counter
-lags behind the length of the `drawn` array as new pixels are added.
-Any pixels ahead of it still need to be explored. When it catches up
-with the length, no unexplored pixels remain, and the function is
-done.
+آرایه‌ی پیکسل‌های رسم شده ، به عنوان لیست کار این تابع استفاده می‌شود. برای هر پیکسل که بررسی می شود، بایستی ببینیم که آیا پیکسل‌های همجوارش رنگ مشابهی دارند یا خیر و آیا قبل از این رنگ‌آمیزی شده اند. با ورود پیکسل‌های جدید، شمارنده‌ی حلقه از طول آرایه‌ی `drawn` عقب می‌افتد. تمامی پیکسل‌های جلوتر از آن همچنان لازم است تا بررسی شوند. زمانی که شمارنده به طول آرایه می رسد ، هیچ پیکسل بررسی نشده‌ای نمی ماند و کار تابع تمام می شود.
 
 {{index "pick function"}}
 
-The final ((tool)) is a ((color picker)), which allows you to point at
-a color in the picture to use it as the current drawing color.
+آخرین ابزار، گزینشگر رنگ می باشد که به شما امکان انتخاب یک رنگ با استفاده از اشاره گر و استفاده از آن به عنوان رنگ فعلی ترسیم را می دهد.
 
 ```{includeCode: true}
 function pick(pos, state, dispatch) {
@@ -660,7 +543,7 @@ function pick(pos, state, dispatch) {
 
 {{if interactive
 
-We can now test our application!
+اکنون می توانیم اپلیکیشن‌مان را آزمایش نماییم!
 
 ```{lang: "text/html"}
 <div></div>
@@ -684,13 +567,11 @@ We can now test our application!
 
 if}}
 
-## Saving and loading
+## ذخیره سازی و بارگیری
 
 {{index "SaveButton class", "drawPicture function", [file, image]}}
 
-When we've drawn our masterpiece, we'll want to save it for later. We
-should add a button for ((download))ing the current picture as an
-image file. This ((control)) provides that button:
+پس از اتمام ترسیم شاهکار هنری‌مان، می خواهیم آن را ذخیره کنیم. بایستی دکمه‌ای اضافه کنیم که بتوان به وسیله‌ی آن تصویر فعلی را به شکل یک فایل عکسی بارگیری کرد. این کنترل دکمه‌ی مذکور را ایجاد می کند.
 
 ```{includeCode: true}
 class SaveButton {
@@ -717,34 +598,22 @@ class SaveButton {
 
 {{index "canvas (HTML tag)"}}
 
-The component keeps track of the current picture so that it can access
-it when saving. To create the image file, it uses a `<canvas>` element
-that it draws the picture on (at a scale of one pixel per pixel).
+
+این مؤلفه تصویر فعلی را رصد کرده در نتیجه می تواند آن را ذخیره کند. برای  ساخت یک فایل تصویری ، از عنصر `<canvas>` که تصویر را روی آن رسم می کنیم (در مقیاس یک پیکسل بر پیکسل) استفاده می کنیم.
 
 {{index "toDataURL method", "data URL"}}
 
-The `toDataURL` method on a canvas element creates a URL that starts
-with `data:`. Unlike `http:` and `https:` URLs, data URLs contain the
-whole resource in the URL. They are usually very long, but they
-allow us to create working links to arbitrary pictures, right here in
-the browser.
+متد `toDataURL` روی یک canvas یک URL ایجاد می کند که با <bdo>`data:`</bdo> شروع می شود. برخلاف URLهای <bdo>`http:`</bdo> و <bdo>`https:`</bdo> آدرس  (URL)های از نوع data حاوی تمام منبع در خود URL می باشند. این URL ها معمولا خیلی بلند هستند اما به ما این امکان را می دهند تا پیوندهای واقعی به تصاویر دلخواه بسازیم، در دل خود مرورگر.
 
 {{index "a (HTML tag)", "download attribute"}}
 
-To actually get the browser to download the picture, we then create a
-((link)) element that points at this URL and has a `download`
-attribute. Such links, when clicked, make the browser show a file save
-dialog. We add that link to the document, simulate a click on it, and
-remove it again.
+برای اینکه کاری کنیم تا مرورگر تصویر ایجاد شده را دانلود کند، یک عنصر لینک می سازیم که به این URL اشاره می کند و دارای یک خصیصه‌ی `download` می‌باشد. این گونه لینک‌ها، در زمان کلیک شدن، باعث می شوند که مرورگر یک پنجره‌ی محاوره‌ای ذخیره فایل را نمایش دهند. ما آن لینک را به سند اضافه می کنیم و عمل کلیک کردن را روی آن شبیه‌سازی می کنیم و سپس آن را حذف می کنیم.
 
-You can do a lot with ((browser)) technology, but sometimes the way to
-do it is rather odd.
+کارهای زیادی با تکنولوژی مرورگر ها می توان انجام داد اما گاهی اوقات برای انجام کاری لازم است که از روش‌های نامانوس استفاده کنیم.
 
 {{index "LoadButton class", control, [file, image]}}
 
-And it gets worse. We'll also want to be able to load existing image
-files into our application. To do that, we again define a button
-component.
+و بدتر هم می‌شود. لازم است بتوانیم یک فایل تصویری را نیز به درون برنامه بارگیری کنیم. برای این کار، دوباره یک مؤلفه دکمه می سازیم.
 
 ```{includeCode: true}
 class LoadButton {
@@ -769,19 +638,12 @@ function startLoad(dispatch) {
 
 {{index [file, access], "input (HTML tag)"}}
 
-To get access to a file on the user's computer, we need the user to
-select the file through a file input field. But I don't want the load
-button to look like a file input field, so we create the file input
-when the button is clicked and then pretend that this file input
-itself was clicked.
+برای دسترسی به یک فایل روی کامپیوتر کاربر، کاربر بایستی یک فایل را با استفاده از فیلد ورودی فایل انتخاب کند. اما من نمی خواهم که دکمه‌ی بارگیری شبیه به فیلد ورودی فایل باشد؛ بنابراین بعد از فشردن دکمه، فیلد فایل را ایجاد می کنیم و سپس وانمود می کنیم که خودش کلیک را انجام داده است.
 
 {{index "FileReader class", "img (HTML tag)", "readAsDataURL method", "Picture class"}}
 
-When the user has selected a file, we can use `FileReader` to get
-access to its contents, again as a ((data URL)). That URL can be used
-to create an `<img>` element, but because we can't get direct access
-to the pixels in such an image, we can't create a `Picture` object
-from that.
+زمانی که کاربر یک فایل را انتخاب می کند، می توانیم از `FileReader` برای دسترسی به محتوای آن استفاده کنیم و دوباره به عنوان یک data URL. این URL را می توان برای ایجاد یک عنصر `<img>` استفاده کرد اما به دلیل اینکه دسترسی مستقیمی به پیکسل‌های این تصویر نداریم، نمی توانیم یک شیء `Picture` از آن بسازیم.
+
 
 ```{includeCode: true}
 function finishLoad(file, dispatch) {
@@ -801,10 +663,8 @@ function finishLoad(file, dispatch) {
 
 {{index "canvas (HTML tag)", "getImageData method", "pictureFromImage function"}}
 
-To get access to the pixels, we must first draw the picture to a
-`<canvas>` element. The canvas context has a `getImageData` method
-that allows a script to read its ((pixel))s. So, once the picture is on
-the canvas, we can access it and construct a `Picture` object.
+برای دسترسی به پیکسل‌ها بایستی ابتدا یک تصویر روی عنصر `<canvas>` رسم کنیم. context این canvas متدی به نام `getImageData` دارد که به جاوااسکریپت این امکان را می دهد تا پیکسل های آن را بخواند. بنابراین با قرار گرفتن تصویر روی بوم، می توانیم به آن دسترسی داشته باشید و شی `Picture` را بسازیم.
+
 
 ```{includeCode: true}
 function pictureFromImage(image) {
@@ -827,57 +687,36 @@ function pictureFromImage(image) {
 }
 ```
 
-We'll limit the size of images to 100 by 100 pixels since anything
-bigger will look _huge_ on our display and might slow down the
-interface.
+ما اندازه‌ی تصاویر را به 100 در 100 پیکسل محدود خواهیم کرد به این دلیل که هر تصویر بزرگتری روی صفحه‌نمایش ما خیلی بزرگ به نظر می رسد و ممکن است باعث کندی رابط کاربری شود.
+
 
 {{index "getImageData method", color, transparency}}
 
-The `data` property of the object returned by `getImageData` is an
-array of color components. For each pixel in the rectangle specified
-by the arguments, it contains four values, which represent the red,
-green, blue, and _((alpha))_ components of the pixel's color, as
-numbers between 0 and 255. The alpha part represents opacity—when it
-is zero, the pixel is fully transparent, and when it is 255, it is
-fully opaque. For our purpose, we can ignore it.
+خاصیت `data` مربوط به شیءای که با `getImageData` برمی گردد، آرایه‌ای از مؤلفه‌های رنگ می باشد. برای هر پیکسل متعلق به چهارضلعی، که توسط آرگومان‌ها مشخص شده است، دارای چهار مقدار می‌باد که نمایانگر اجزای قرمز، سبز، آبی و آلفای رنگ پیکسل می‌باشند که اعدادی بین 0 و 255 هستند. بخش alpha مربوط به شفافیت می باشد – زمانی که برابر صفر است، پیکسل کاملا شفاف می باشد و وقتی 255 است کامل مات می شود. برای مقصود ما، می توانیم از آن صرف نظر کنیم.
+
 
 {{index "hexadecimal number", "toString method"}}
 
-The two hexadecimal digits per component, as used in our color
-notation, correspond precisely to the 0 to 255 range—two base-16
-digits can express 16^2^ = 256 different numbers. The `toString`
-method of numbers can be given a base as argument, so `n.toString(16)`
-will produce a string representation in base 16. We have to make sure
-that each number takes up two digits, so the `hex` helper function
-calls `padStart` to add a leading zero when necessary.
+دو عدد هگزادسیمال برای هر مؤلفه که در مقدار رنگ ما آمده است، به شکلی دقیق متناظر با طیف 0 تا 255 است – دو رقم مبنای 16 می توانند  <bdo>16^2^ = 256</bdo> عدد متفاوت را نمایش دهند. به متد `toString` مربوط به اعداد می توان یک مبنا به عنوان آرگومان فرستاد، بنابراین  <bdo>`n.toString(16)`</bdo> رشته‌ای تولید می کند که در مبنای 16 نشان داده می شود. بایستی مطمئن شویم که هر عدد دو رقم اشغال می کند در نتیجه تابع کمکی `hex` تابع `padStart` را برای افزودن صفرهای پیشین در صورت نیاز فراخوانی خواهد شد.
 
-We can load and save now! That leaves one more feature before we're
-done.
+اکنون می توانیم بارگیری و ذخیره کنیم. یک امکان دیگر می ماند تا کار تمام شود.
 
-## Undo history
 
-Half of the process of editing is making little mistakes and
-correcting them. So an important feature in a drawing
-program is an ((undo history)).
+## بازگشت در تاریخچه (undo)
+
+نیمی از روند عمل ویرایش شامل انجام اشتباهات کوچک و برطرف کردن آن‌ها است. بنابراین یک ویژگی و کارکرد مهم در یک برنامه‌ی ترسیم این است که بتوان در تاریخچه به عقب بازگشت.
 
 {{index "persistent data structure", [state, "of application"]}}
 
-To be able to undo changes, we need to store previous versions of the
-picture. Since it's an ((immutable)) value, that is easy. But it does
-require an additional field in the application state.
+برای اینکه بتوانیم تغییرات را خنثی کنیم، لازم است تا نسخه‌ی قبلی از تصویر را جایی ذخیره کنیم. به دلیل اینکه این مقدار غیرقابل تغییر می باشد این کار آسان است. اما این کار مستلزم آن است که فیلد دیگری در وضعیت برنامه تعبیه شود.
 
 {{index "done property"}}
 
-We'll add a `done` array to keep previous versions of the ((picture)).
-Maintaining this property requires a more complicated state update
-function that adds pictures to the array.
+ما آرایه‌ای به نام `done` اضافه خواهیم کرد تا نسخه‌های قبلی تصویر را نگهداری کنیم. نگهداری این خاصیت نیازمند تابع به‌روز رسانی وضعیت پیچیده‌تری می باشد که تصاویر را به آرایه اضافه کند.
 
 {{index "doneAt property", "historyUpdateState function", "Date.now function"}}
 
-But we don't want to store _every_ change, only changes a certain
-amount of ((time)) apart. To be able to do that, we'll need a second
-property, `doneAt`, tracking the time at which we last stored a
-picture in the history.
+اما ما قصد نداریم هر تغییری را ذخیره کنیم. فقط تغییراتی که در بازه‌ی زمانی خاصی رخ داده باشند. برای انجام این کار، نیاز به خاصیتی دومی هست، `doneAt،` که زمان آخرین ذخیره‌ی یک تصویر در تاریخچه را نگهداری می کند.
 
 ```{includeCode: true}
 function historyUpdateState(state, action) {
@@ -902,22 +741,15 @@ function historyUpdateState(state, action) {
 
 {{index "undo history"}}
 
-When the action is an undo action, the function takes the most recent
-picture from the history and makes that the current picture. It sets
-`doneAt` to zero so that the next change is guaranteed to store the
-picture back in the history, allowing you to revert to it another
-time if you want.
+زمانی که اکشن مااز جنس خنثی کردن تغییر باشد، تابع، آخرین تصویر موجود در تاریخچه را برداشته و آن را به عنوان تصویر فعلی قرار می دهد. همچنین مقدار `doneAt` را برابر صفر قرار می‌دهد تا تغییر بعدی در تاریخچه ثبت شود و  امکان عقب‌گرد برای آن در صورت نیاز فراهم باشد.
 
-Otherwise, if the action contains a new picture and the last time we
-stored something is more than a second (1000 milliseconds) ago, the
-`done` and `doneAt` properties are updated to store the previous
-picture.
+
+در غیر این صورت، اگر اکشن حاوی تصویر جدیدی باشد و آخرین باری که ما تصویری را ذخیره کرده ایم بیش از یک ثانیه عقب تر باشد ( 1000 میلی ثانیه) خاصیت‌های `done` و `doneAt` به‌روز می شوند تا تصویر قبلی را ذخیره می کنند.
 
 {{index "UndoButton class", control}}
 
-The undo button ((component)) doesn't do much. It dispatches undo
-actions when clicked and disables itself when there is nothing to
-undo.
+مؤلفه‌ی دکمه‌ی خنثی (undo) کاری زیادی انجام نمی دهد. اکشن‌های خنثی سازی را با بروز کلیک گسیل می دهد و  زمانی که چیزی برای بازگشت یا خنثی سازی موجود نیست، خودش را غیرفعال می کند.
+
 
 ```{includeCode: true}
 class UndoButton {
@@ -933,15 +765,12 @@ class UndoButton {
 }
 ```
 
-## Let's draw
+## اکنون زمان ترسیم است
 
 {{index "PixelEditor class", "startState constant", "baseTools constant", "baseControls constant", "startPixelEditor function"}}
 
-To set up the application, we need to create a state, a set of
-((tool))s, a set of ((control))s, and a ((dispatch)) function. We can
-pass them to the `PixelEditor` constructor to create the main
-component. Since we'll need to create several editors in the
-exercises, we first define some bindings.
+برای بالا آوردن برنامه، نیاز است تا یک وضعیت، مجموعه‌ای از ابزار، مجموعه‌ای از کنترل‌ها و یک تابع گسیل (dispatch) را ایجاد کنیم. می توانیم آن ها را به سازنده‌ی `PixelEditor` ارسال نماییم تا مؤلفه‌ی اصلی را ایجاد نماید. به دلیل اینکه نیاز است تا چندین ویرایشگر در بخش تمرین‌ها بسازیم، در اینجا چند متغیر تعریف می کنیم.
+
 
 ```{includeCode: true}
 const startState = {
@@ -975,14 +804,11 @@ function startPixelEditor({state = startState,
 
 {{index "destructuring binding", "= operator", [property, access]}}
 
-When destructuring an object or array, you can use `=` after a binding
-name to give the binding a ((default value)), which is used when the
-property is missing or holds `undefined`. The `startPixelEditor`
-function makes use of this to accept an object with a number of
-optional properties as an argument. If you don't provide a `tools`
-property, for example, `tools` will be bound to `baseTools`.
+زمانی که یک شیء یا یک آرایه را destruct می کنیم، می توانیم از = بعد از نام متغیر برای تعیین یک مقدار
+پیشفرض برای متغیر استفاده کنیم که در زمانی که خاصیت موجود نیست یا برابر `undefined` می باشد استفاده می شود. تابع `startPixelEditor` از این خاصیت استفاده می کند تا شیءای را با تعدادی خاصیت اختیاری به عنوان آرگومان قبول می کند. اگر خاصیت `tools` را فراهم نسازید به عنوان مثال `tools` به `baseTools` متناظر
+خواهد شد.
 
-This is how we get an actual editor on the screen:
+و این روشی است که ما به وسیله‌ی آن، یک ویرایشگر واقعی را روی صفحه‌ی نمایش اجرا می کنیم
 
 ```{lang: "text/html", startCode: true}
 <div></div>
@@ -994,79 +820,47 @@ This is how we get an actual editor on the screen:
 
 {{if interactive
 
-Go ahead and draw something. I'll wait.
+می توانید کمی به ترسیم بپردازید. من منتظر می‌مانم.
 
 if}}
 
-## Why is this so hard?
+## چرا این کار این قدر پرزحمت است
 
-Browser technology is amazing. It provides a powerful set of interface
-building blocks, ways to style and manipulate them, and tools to
-inspect and debug your applications. The software you write for the
-((browser)) can be run on almost every computer and phone on the
-planet.
+تکنولوژی مرورگرها شگفت‌انگیز است.این تکنولوژی مجموعه‌ای قدرتمند از بلاک‌ها برای ساخت رابط، روش‌های سبک‌دهی و تغییر سبک، و ابزارهایی برای اشکال‌زدایی و بررسی برنامه‌هایتان را فراهم می‌سازد. نرم‌افزاری که برای مرورگر می نویسید تقریبا روی هر کامپیوتر یا گوشی یا تبلتی اجرا می شود.
 
-At the same time, browser technology is ridiculous. You have to learn
-a large number of silly tricks and obscure facts to master it, and the
-default programming model it provides is so problematic that most
-programmers prefer to cover it in several layers of ((abstraction))
-rather than deal with it directly.
+
+در عین حال، تکنولوژی مرورگر مزخرف است. شما باید مجموعه‌ای بزرگ از ترفندهای احمقانه و اطلاعات مبهم را یاد بگیرید تا به آن مسلط شوید و همچنین مدل برنامه‌نویسی پیش‌فرضی که فراهم می سازد بسیار مشکل‌زا است که بیشتر برنامه نویسان ترجیح می دهند تا آن را با لایه‌های متعددی از تجرید بپوشانند تا این که مستقیما با آن کار کنند.
 
 {{index standard, evolution}}
 
-And though the situation is definitely improving, it mostly does so in
-the form of more elements being added to address shortcomings—creating
-even more ((complexity)). A feature used by a million websites can't
-really be replaced. Even if it could, it would be hard to decide
-what it should be replaced with.
+اگرچه این شرایط قطعا در حال بهبود می باشد، اما بیشتر این تغییرات در قالب معرفی عناصر جدید برای پوشش کمبودها انجام می شود که خود به پیچیدگی آن افزوده است. یک ویژگی که توسط میلیون‌ها وبسایت استفاده می شود را نمی توان جایگزین کرد. و حتی اگر این کار شدنی باشد، اینکه با چه جایگزین شود خود تصمیمی سخت است.
 
 {{index "social factors", "economic factors", history}}
 
-Technology never exists in a vacuum—we're constrained by our tools and
-the social, economic, and historical factors that produced them.
-This can be annoying, but it is generally more productive to try to
-build a good understanding of how the _existing_ technical reality
-works—and why it is the way it is—than to rage against it or hold out
-for another reality.
+تکنولوژی هیچ وقت در خلاء قابل بررسی نیست – ما توسط ابزارهایمان و جامعه،اقتصاد و فاکتورهای تاریخی که آن ها را ایجاد کرده است محدود می شویم. ممکن است این واقعیت آزاردهنده باشد، اما به طول کلی پربارتر خواهد بود اگر تلاش کنیم تا فهم خوبی از نحوه‌ی کارکرد واقعیت‌های فنی کنونی داشته باشد- و اینکه چرا به شکل فعلی کار می کند- تا اینکه به جنگ آن برویم یا مقاومت پذیرش آن بخواهیم چیزی دیگری را درخواست کنیم.
 
-New ((abstraction))s _can_ be helpful. The component model and ((data
-flow)) convention I used in this chapter is a crude form of that. As
-mentioned, there are libraries that try to make user interface
-programming more pleasant. At the time of writing,
-[React](https://reactjs.org/) and [Angular](https://angular.io/) are
-popular choices, but there's a whole cottage industry of such
-frameworks. If you're interested in programming web applications, I
-recommend investigating a few of them to understand how they work and
-what benefits they provide.
 
-## Exercises
+تجریدهای جدید می توانند مفید باشند. مدل مؤلفه و روش جریان داده ای که من در این فصل استفاده کردم شکل خاصی از آن‌ها بود. همانطور که ذکر شد، کتابخانه‌هایی وجود دارند که باعث می شوند برنامه‌نویسی رابط کاربری بسیار دلپذیر تر بشود. در زمان نوشتن این کتاب ، [React](https://reactjs.org/) و [Angular](https://angular.io/) انتخاب‌های پرآوازه‌ای هستند اما صنعت پرتحرکی از این چهارچوب‌ها در حال فعالیت می باشد. اگر به برنامه نویسی اپلیکیشن‌های وب علاقمند هستید، پیشنهاد می کنم چند تایی از آن ها را بررسی کنید تا از نحوه‌ی کارکرد آن ها باخبر شوید و ببینید چه مزایایی با خود می آورند.
 
-There is still room for improvement in our program. Let's add a few
-more features as exercises.
+## تمرین‌ها
 
-### Keyboard bindings
+برنامه‌ی ما هنوز جای بهتر شدن دارد. اجازه بدهید چند ویژگی جدید به عنوان تمرین به آن اضافه کنیم.
+
+
+### میان‌برهای صفحه‌کلید
 
 {{index "keyboard bindings (exercise)"}}
 
-Add ((keyboard)) shortcuts to the application. The first letter of a
-tool's name selects the tool, and [control]{keyname}-Z or [command]{keyname}-Z activates undo.
+به برنامه میانبر های صفحه کلید اضافه کنید. اولین حرف هر ابزار برای انتخاب آن ابزار و [control]{keyname}-Z یا [command]{keyname}-Z برای انجام خنثی سازی.
+
 
 {{index "PixelEditor class", "tabindex attribute", "elt function", "keydown event"}}
 
-Do this by modifying the `PixelEditor` component. Add a `tabIndex`
-property of 0 to the wrapping `<div>` element so that it can receive
-keyboard ((focus)). Note that the _property_ corresponding to the
-`tabindex` _attribute_ is called `tabIndex`, with a capital I, and our
-`elt` function expects property names. Register the key event handlers
-directly on that element. This means you have to click, touch, or
-tab to the application before you can interact with it with the
-keyboard.
+این کار را با ایجاد تغییر در مؤلفه‌ی `PixelEditor` انجام دهید. به خاصیت `tabIndex` متعلق به عنصر پوششی `<div>` ، مقدار 0 را اعمال کنید. در نتیجه می تواند توسط صفحه‌کلید فعال شود. توجه داشته باشید که خاصیت مذکور که به خصیصه‌ی `tabindex` متناظر است `tabIndex` خوانده می شود که حرف اول آن بزرگ است و تابع `elt` ما نام‌های خاصیت را قبول می کند. گرداننده‌های رخدادهای صفحه‌کلید را مستقیما روی آن عنصر ثبت کنید. یعنی باید کلیک و لمس touch یا tab روی برنامه انجام شود قبل از اینکه بتوانید با آن توسط صفحه کلید تعامل کنید.
 
 {{index "ctrlKey property", "metaKey property", "control key", "command key"}}
 
-Remember that keyboard events have `ctrlKey` and `metaKey` (for the
-[command]{keyname} key on Mac) properties that you can use to see whether those
-keys are held down.
+به خاطر داشته باشید که رخدادهای صفحه‌کلید دارای خاصیت‌های `ctrlKey` و `metaKey‍` (برای کلید [command]{keyname} در مک) می باشند که می توانید از آن ها برای اینکه ببینید آیا این کلیدها پایین نگه‌داشته شده اند استفاده کنید.
 
 {{if interactive
 
@@ -1110,49 +904,38 @@ if}}
 
 {{index "keyboard bindings (exercise)", "key property", "shift key"}}
 
-The `key` property of events for letter keys will be the lowercase
-letter itself, if [shift]{keyname} isn't being held. We're not interested in
-key events with [shift]{keyname} here.
+
+خاصیت `key` متعلق به رخداد‌های کلید‌های حروف همان حروف به شکل کوچک خواهند بود، اگر کلید [shift]{keyname} فشرده شده نباشد. در اینجا ما به رخداد‌های کلیدهایی که [shift]{keyname} دارند توجه‌ای نمی‌کنیم.
 
 {{index "keydown event"}}
 
-A `"keydown"` handler can inspect its event object to see whether it
-matches any of the shortcuts. You can automatically get the list of
-first letters from the `tools` object so that you don't have to write
-them out.
+یک گرداننده‌ی `"keydown"` می تواند شیء رخدادش را برای تطبیق با میان‌برها بررسی کند. می‌توانید لیست حروف‌ اول را از شیء `tools` به دست بیاورید تا نیاز نباشد آن‌ها را از ابتدا بنویسید.
 
 {{index "preventDefault method"}}
 
-When the key event matches a shortcut, call `preventDefault` on it and
-((dispatch)) the appropriate action.
+زمانی که یک رخداد کلید با یک میانبر مطابقت دارد، `preventDefault` را روی آن فراخوانی کنید و اکشن مناسب با آن را گسیل دهید.
 
 hint}}
 
-### Efficient drawing
+### ترسیم بهینه
 
 {{index "efficient drawing (exercise)", "canvas (HTML tag)", efficiency}}
 
-During drawing, the majority of work that our application does happens
-in `drawPicture`. Creating a new state and updating the rest of the
-DOM isn't very expensive, but repainting all the pixels on the canvas
-is quite a bit of work.
+در طول ترسیم بیشترین کاری که برنامه‌ی ما انجام می دهد توسط `drawPicture` صورت می گیرد. ایجاد یک وضعیت جدید و به‌روز رسانی ما بقی قسمت‌های DOM کار زیاد پرهزینه‌ای محسوب نمی شود، اما بازنقاشی تمامی پیکسل‌ها روی canvas نسبتا کار می برد.
 
 {{index "syncState method", "PictureCanvas class"}}
 
-Find a way to make the `syncState` method of `PictureCanvas` faster by
-redrawing only the pixels that actually changed.
+راهی بیابید که متد `syncState` مربوط به PictureCanvas را بتوان با باز ترسیم تنها پیکسل‌هایی که واقعا تغییر نموده‌اند سریع تر کرد.
+
 
 {{index "drawPicture function", compatibility}}
 
-Remember that `drawPicture` is also used by the save button, so if you
-change it, either make sure the changes don't break the old use or
-create a new version with a different name.
+به یاد داشته باشید که `drawPicture` توسط دکمه‌ی ذخیره‌سازی نیز استفاده شده است بنابراین اگر آن را تغییر دهید مطمئن شوید که تغییرات موجب از کار افتادن آن نمی شود. می توان نسخه‌ی جدیدی از آن را با نامی دیگر ساخت.
 
 {{index "width property", "height property"}}
 
-Also note that changing the size of a `<canvas>` element, by setting
-its `width` or `height` properties, clears it, making it entirely
-transparent again.
+همچنین توجه داشته باشید که تغییر اندازه‌ی یک عنصر `<canvas>`، توسط تغییر خاصیت‌های `width` و `height` آن، باعث می شود که از صفحه پاک شود و به طور کامل به صورت شفاف در بیاید.
+
 
 {{if interactive
 
@@ -1191,38 +974,24 @@ if}}
 
 {{index "efficient drawing (exercise)"}}
 
-This exercise is a good example of how ((immutable)) data structures
-can make code _faster_. Because we have both the old and the new
-picture, we can compare them and redraw only the pixels that changed
-color, saving more than 99 percent of the drawing work in most cases.
+این تمرین مثال خوبی است که نشان می دهد چگونه ساختارهای داده‌ی غیرقابل تغییر می توانند باعث سریع تر شدن کد شوند. به دلیل اینکه ما به هر دوی تصاویر جدید و قدیم دسترسی داریم، می توانیم آن‌ها را مقایسه کرده و فقط پیکسل‌هایی را بازترسیم کنیم که رنگشان تغییر یافته است و از 99 درصد از کار ترسیم اضافی بپرهیزیم.
 
 {{index "drawPicture function"}}
 
-You can either write a new function `updatePicture` or have
-`drawPicture` take an extra argument, which may be undefined or the
-previous picture. For each ((pixel)), the function checks whether a
-previous picture was passed with the same color at this position and
-skips the pixel when that is the case.
+شما همچنین می توانید تابع جدیدی `updatePicture` بنویسید یا به `drawPicture` آرگومان جدیدی اضافه کنید که می‌تواند undefined یا برابر تصویر قبل باشد. برای هر پیکسل، تابع بررسی می‌کند آیا تصویر داده‌شده‌ی قبلی در این موقعیت رنگ مشابهی دارد که در این صورت از آن رد می شود.
 
 {{index "width property", "height property", "canvas (HTML tag)"}}
 
-Because the canvas gets cleared when we change its size, you should
-also avoid touching its `width` and `height` properties when the old
-picture and the new picture have the same size. If they are different, which
-will happen when a new picture has been loaded, you can set
-the binding holding the old picture to null after changing the canvas size because you shouldn't
-skip any pixels after you've changed the canvas size.
+با توجه به اینکه canvas با تغییر اندازه، پاک می شود، باید از دستکاری `width` و ‍`height` آن در زمانی که تصویر قدیمی و جدید اندازه‌ی مشابهی دارند، خودداری کنید. در صورت نبود اندازه‌ی برابر، که در هنگام بارگیری تصویر جدید رخ می دهد، می توانید متغیرهایی که تصویر قبلی را نگه‌داری می کردند را پس از تغییر اندازه‌ی canvas برابر null قرار دهید زیرا نباید هیچ پیکسلی پس از تغییر اندازه‌ی canvas از قلم بیفتد.
 
 hint}}
 
-### Circles
+### دوایر
 
 {{index "circles (exercise)", dragging}}
 
-Define a ((tool)) called `circle` that draws a filled circle when you
-drag. The center of the circle lies at the point where the drag or
-touch gesture starts, and its ((radius)) is determined by the distance
-dragged.
+ابزاری به نام `circle` تعریف کنید که با کشیدن آن روی بوم بتوان دایره‌ی توپر رسم نمود. مرکز دایره در قسمتی قرار بگیرد که شروع رسم یا لمس قرار می گیرد و شعاع آن با حرکت موس معلوم می شود.
+
 
 {{if interactive
 
@@ -1246,58 +1015,34 @@ if}}
 
 {{index "circles (exercise)", "rectangle function"}}
 
-You can take some inspiration from the `rectangle` tool. Like that
-tool, you'll want to keep drawing on the _starting_ picture, rather
-than the current picture, when the pointer moves.
+می توانید از ابزار `rectangle‍` الهام گیری کنید. شبیه آن ابزار، در هنگام حرکت اشاره‌گر موس، می خواهید به ترسیم روی تصویر آغازین ادامه دهید نه تصویر فعلی.
 
-To figure out which pixels to color, you can use the ((Pythagorean
-theorem)). First figure out the distance between the current pointer
-position and the start position by taking the square root
-(`Math.sqrt`) of the sum of the square (`Math.pow(x, 2)`) of the difference in
-x-coordinates and the square of the difference in y-coordinates. Then
-loop over a square of pixels around the start position, whose sides
-are at least twice the ((radius)), and color those that are within the
-circle's radius, again using the Pythagorean formula to figure out
-their ((distance)) from the center.
+برای دستیابی به پیکسل‌هایی که بایستی رنگ شوند، می توانید از قضیه‌ی فیثاغورس استفاده کنید. ابتدا فاصله‌ی بین موقعیت اشاره‌گر فعلی و موقعیت آغازین را با محاسبه‌ی ریشه‌ی دوم (`Math.sqrt`) مجموع مربع‌های (`Math.pow(x,2)`) تفاوت مختصات x و مربع تفاوت مختصات y، به دست بیاورید. سپس سراغ مربع پیکسل‌های اطراف نقطه‌ی آغازین بروید با این شرط که ضلع‌شان حداقل دوبرابر شعاع باشد، و آن‌هایی که در محدوده‌ی شعاع قرار می‌گیرند را رنگ کنید، با استفاده از قضیه‌ی فیثاغورس، فاصله‌ی آن‌ها را از مرکز به دست می‌آید.
 
-Make sure you don't try to color pixels that are outside of the
-picture's boundaries.
+حواستان باشد که پیکسل‌هایی که بیرون از محدوده‌ی تصویر هستند را رنگ نکنید.
 
 hint}}
 
-### Proper lines
+### خطوط صحیح
 
 {{index "proper lines (exercise)", "line drawing"}}
 
-This is a more advanced exercise than the preceding two, and it will
-require you to design a solution to a nontrivial problem. Make sure
-you have plenty of time and ((patience)) before starting to work on
-this exercise, and do not get discouraged by initial failures.
+این تمرین از دو تمرین قبلی پیشرفته تر است و لازم است تا راه حلی برای مسئله‌ای نه چندان ساده طراحی کنید. مطمئن شوید که  زمان و صبر کافی برای حل آن قبل از کار کردن روی تمرین، در اختیار دارید و اگر در ابتدای کار موفق به حل آن نشدید نا امید نشوید.
 
 {{index "draw function", "mousemove event", "touchmove event"}}
 
-On most browsers, when you select the `draw` ((tool)) and quickly drag
-across the picture, you don't get a closed line. Rather, you get dots
-with gaps between them because the `"mousemove"` or `"touchmove"`
-events did not fire quickly enough to hit every ((pixel)).
+در بیشتر مرورگرها، زمانی که ابزار `draw` را انتخاب می کنید و سریع روی تصویر به کشیدن می پردازید، خط بسته تولید نمی شود. در عوض آنچه رخ میدهد کشیده شدن نقاطی مقطع است که دلیل آن این است که رخدادهای `"mousemove"` یا `"touchmove"` به سرعت و پی در پی ایجاد نمی شوند که همه‌ی پیکسل‌ها را پوشش دهند.
 
-Improve the `draw` tool to make it draw a full line. This means you
-have to make the motion handler function remember the previous
-position and connect that to the current one.
+ابزار `draw` را بهبود دهید تا بتواند یک خط کامل را رسم نماید. این به این معنا است که شما باید تابع گرداننده‌ی حرکت را تغییر دهید تا موقعیت قبلی را به خاطر داشته باشد و آن را به موقعیت فعلی متصل کند.
 
-To do this, since the pixels can be an arbitrary distance apart,
-you'll have to write a general line drawing function.
+برای انجام این کار، به دلیل اینکه پیکسل‌ها می توانند با فاصله‌ی دلخواهی واقع شوند، لازم است تا یک تابع عمومی برای ترسیم خط بنویسید.
 
-A line between two pixels is a connected chain of pixels, as straight
-as possible, going from the start to the end. Diagonally adjacent
-pixels count as a connected. So a slanted line should look like the
-picture on the left, not the picture on the right.
+یک خط بین دو نقطه توسط زنجیره‌ای از پیکسل‌های متصل رسم می شود که تا جای ممکن مستقیم هستند و از نقطه‌ی شروع به نقطه‌ی پایان قرار می گیرند. پیکسل‌هایی که به صورت قطری مجاور هم هستند به عنوان پیکسل‌های متصل محسوب می شوند. بنابراین یک خط مورب می تواند شبیبه به تصویر سمت چپ باشد نه تصویر سمت راست.
 
 {{figure {url: "img/line-grid.svg", alt: "Two pixelated lines, one light, skipping across pixels diagonally, and one heavy, with all pixels connected horizontally or vertically", width: "6cm"}}}
 
-Finally, if we have code that draws a line between two arbitrary points, we
-might as well use it to also define a `line` tool,
-which draws a straight line between the start and end of a drag.
+درنتیجه، اگر کدی داشته باشیم که یک خط بین دو نقطه‌ی دلخواه رسم کند، ممکن است همچنین ادامه دهیم و از آن برای تعریف یک ابزار `line` نیز بهره ببریم که برای ترسیم خط مستقیم بکار می رود.
+
 
 {{if interactive
 
@@ -1331,44 +1076,23 @@ if}}
 
 {{index "proper lines (exercise)", "line drawing"}}
 
-The thing about the problem of drawing a pixelated line is that it is
-really four similar but slightly different problems. Drawing a
-horizontal line from the left to the right is easy—you loop over the
-x-coordinates and color a pixel at every step. If the line has a
-slight slope (less than 45 degrees or ¼π radians), you can interpolate
-the y-coordinate along the slope. You still need one pixel per _x_
-position, with the _y_ position of those pixels determined by the
-slope.
 
-But as soon as your slope goes across 45 degrees, you need to switch
-the way you treat the coordinates. You now need one pixel per _y_
-position since the line goes up more than it goes left. And then,
-when you cross 135 degrees, you have to go back to looping over the
-x-coordinates, but from right to left.
+موضوع مهم درباره‌ی مشکل ترسیم یک خط پیکسلی این است که در واقع ما با چهار مسئله مشابه اما کمی متفاوت روبرو هستیم. رسم یک خط افقی از چپ به راست آسان است - مختصات x را پیمایش می کنید و در هر گام یک پیکسل را رنگ می کنید. اگر خط شیب کمی داشته باشد (کمتر از ۴۵ درجه یا ¼π رادیان )، می توانید مختصات y را در طول زاویه درون‌یابی کنید. هنوز به یک پیکسل برای هر موقعیت x نیاز دارید چراکه مختصات y آن‌ها توسط شیب تعیین می شود.
 
-You don't actually have to write four loops. Since drawing a line from
-_A_ to _B_ is the same as drawing a line from _B_ to _A_, you can swap
-the start and end positions for lines going from right to left and
-treat them as going left to right.
+اما به محض اینکه شییب شما بیشتر از 45 درجه شود، باید روش برخورد با مختصات را عوض کنید. اکنون به یک پیکسل برای هر موقعیت y نیاز دارید چراکه خط بیشتر به بالا حرکت می‌کند تا به چپ. و در نتیجه، وقتی از شیب 135 درجه عبور می کنید، باید به پیمایش مختصات x برگردید اما از راست به چپ.
 
-So you need two different loops. The first thing your line drawing
-function should do is check whether the difference between the
-x-coordinates is larger than the difference between the y-coordinates.
-If it is, this is a horizontal-ish line, and if not, a vertical-ish
-one.
+در واقع نیازی نیست که چهار حلقه بنویسید. با توجه به اینکه رسم یک خط از نقطه‌ی A به B همانند رسم خط از B به A می‌باشد، می‌توانید موقعیت‌های شروع و پایان را برای خطوطی که از راست به چپ می‌روند جابجا کنید و مانند چپ به راست آن‌ها را در نظر بگیرید.
+
+بنابراین به دو حلقه‌ی متفاوت نیاز دارید. اولین چیزی که تابع رسم خط شما باید انجام دهد این است که بررسی کند که تفاوت مختصات x بزرگ‌تر از تفاوت مختصات y باشد. اگر این طور بود، این خط، خطی افقی شکل است و اگر نبود، عموی شکل می باشد.
 
 {{index "Math.abs function", "absolute value"}}
 
-Make sure you compare the _absolute_ values of the _x_ and _y_
-difference, which you can get with `Math.abs`.
+اطمینان حاصل کنید که قدر مطلق تفاوت مقادیر x و y را مقایسه می کنید که می توان این کار را با <bdo>`Math.abs`</bdo> انجام داد.
 
 {{index "swapping bindings"}}
 
-Once you know along which ((axis)) you will be looping, you can check
-whether the start point has a higher coordinate along that axis than
-the endpoint and swap them if necessary. A succinct way to swap the
-values of two bindings in JavaScript uses ((destructuring assignment))
-like this:
+به محض اینکه بدانید حول کدام محور پیمایش خواهید داشت، می توانید بررسی کنید که نقطه‌ی شروع دارای مختصات بالاتری در طول آن محور نسبت به نقطه‌ی پایان باشد و در صورت نیاز آن‌ها را جابجا کنید. یک روش مختصر برای جابجایی مقادیر دو متغیر در جاوااسکریپت استفاده از انتساب و تخریب به شکل زیر است:
+
 
 ```{test: no}
 [start, end] = [end, start];
@@ -1376,12 +1100,7 @@ like this:
 
 {{index rounding}}
 
-Then you can compute the ((slope)) of the line, which determines the
-amount the coordinate on the other axis changes for each step you
-take along your main axis. With that, you can run a loop along the
-main axis while also tracking the corresponding position on the other
-axis, and you can draw pixels on every iteration. Make sure you round the
-non-main axis coordinates since they are likely to be fractional and
-the `draw` method doesn't respond well to fractional coordinates.
+اکنون می توانید شیب خط را محاسبه نمایید، که خود مقداری که مختصات روی دیگر محور تغیر می کند را برای هر گامی که روی محور اصلی برمی‌دارید، تعیین می نماید. با استفاده از آن، می توانید از یک حلقه برای محور اصلی استفاده کنید و در حین آن موقعیت متناظر روی محور دیگر را نیز رصد کنید، و می توانید پیکسل‌ها را در هر گام حلقه رسم کنید. مطمئن شوید که مختصات محور غیراصلی را رند نمایید چراکه احتمالا اعشاری باشند و متد `draw`به مختصات اعشاری پاسخ خوبی نمی دهد.
+
 
 hint}}
