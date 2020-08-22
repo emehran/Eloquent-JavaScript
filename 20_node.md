@@ -2,13 +2,10 @@
 
 # Node.js
 
-{{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
+{{quote {author: "استاد Yuan-Ma", title: "کتاب برنامه‌نویسی", chapter: true}
 
-A student asked, 'The programmers of old used only simple machines and
-no programming languages, yet they made beautiful programs. Why do we
-use complicated machines and programming languages?'. Fu-Tzu replied,
-'The builders of old used only sticks and clay, yet they made
-beautiful huts.'
+دانش‌آموزی پرسید، 'برنامه‌نویس‌های قدیم فقط با کامپیوترهای ابتدایی و بدون استفاده از زبان‌های برنامه‌نویسی، توانستند برنامه‌های زیبایی بنویسند. چرا ما از کامپیوترهای پیشرفته و زبان‌های برنامه نویسی استفاده می‌کنیم؟ '. Fu-Tzu پاسخ داد، معمار‌های قدیم هم فقط از خشت و چوب استفاده می‌کردند، البته کلبه‌های زیبایی هم می‌ساختند.'
+
 
 quote}}
 
@@ -18,78 +15,43 @@ quote}}
 
 {{index "command line"}}
 
-So far, we have used the JavaScript language in a single environment:
-the browser. This chapter and the [next one](skillsharing) will
-briefly introduce ((Node.js)), a program that allows you to apply your
-JavaScript skills outside of the browser. With it, you can build
-anything from small command line tools to HTTP ((server))s that power
-dynamic ((website))s.
+تاکنون، از جاوااسکریپت فقط در یک محیط اجرایی استفاده کرده ایم: مرورگر.  در این فصل و همچنین فصل [بعد](skillsharing)، کمی به سراغ معرفی ((Node.js)) خواهیم رفت، برنامه‌ای که شما را قادر می سازد تا مهارت‌های کدنویسی‌تان در جاوااسکریپت را به خارج از مرورگر ببرید. به کمک Node می توانید هرچیزی از یک ابزار کوچک برای خط فرمان تا سرویس‌دهنده‌های HTTP برای سایت‌های پویا بسازید.
 
-These chapters aim to teach you the main concepts that Node.js uses
-and to give you enough information to write useful programs for it.
-They do not try to be a complete, or even a thorough, treatment of the
-platform.
+هدف این دو فصل آموزش مفاهیم اصلی Node.js است؛ تا برای نوشتن برنامه‌های Node.js اطلاعات کافی در اختیار داشته باشید. طبیعتا محتوای آن‌ها کامل و جامع نیست.
 
 {{if interactive
 
-Whereas you could run the code in previous chapters directly on these
-pages, because it was either raw JavaScript or written for the
-browser, the code samples in this chapter are written for Node and
-often won't run in the browser.
+کدهای فصل پیش را می توانستید به طور مستقیم در صفحات اجرا کنید، زیرا آن‌ها یا جاوااسکریپت خام بودند یا برای مرورگر نوشته شده بودند. اما نمونه‌ کدهای این فصل برای محیط Node نوشته شده اند و اغلب در مرورگر قابل اجرا نمی باشند.
 
 if}}
 
-If you want to follow along and run the code in this chapter, you'll
-need to install Node.js version 10.1 or higher. To do so, go to
-[_https://nodejs.org_](https://nodejs.org) and follow the installation
-instructions for your operating system. You can also find further
-((documentation)) for Node.js there.
+اگر می خواهید همراه با این فصل کد‌ها را نیز امتحان کنید، لازم است تا Node.js نسخه‌ی 10.1 یا بالاتر را نصب کنید. برای این کار به آدرس [_https://nodejs.org_](https://nodejs.org) بروید و طبق دستور راهنما، آن را روی سیستم عامل تان نصب کنید. همچنین در این آدرس مستندات بیشتری برای Node.js موجود است.
 
-## Background
+## پیش‌زمینه
 
 {{index responsiveness, input, [network, speed]}}
 
-One of the more difficult problems with writing systems that
-communicate over the network is managing input and ((output))—that
-is, the reading and writing of data to and from the network and ((hard
-drive)). Moving data around takes time, and ((scheduling)) it cleverly
-can make a big difference in how quickly a system responds to the user
-or to network requests.
+یکی از چالش‌های پررنگ‌تر در برنامه‌نویسی سیستم‌هایی که در شبکه تعامل دارند، مدیریت  ورودی و خروجی  است- که همان خواندن و نوشتن داده‌ها از و به شبکه و دیسک سخت است. جابجایی داده‌ها زمان‌بر است، و زمان‌بندی  هوشمندانه‌ی آن می تواند تفاوت چشم‌گیری در پاسخ‌دهی سریع یک سیستم به کاربر یا درخواست‌های شبکه ایجاد کند.
 
 {{index ["asynchronous programming", "in Node.js"]}}
 
-In such programs, asynchronous programming is often helpful. It
-allows the program to send and receive data from and to multiple
-devices at the same time without complicated thread management and
-synchronization.
+در این‌گونه برنامه‌ها، برنامه‌نویسی ناهمگام بیشتر سودمند است. زیرا به برنامه اجازه می‌دهد داده‌ها را از و به چندین دستگاه در یک زمان دریافت و ارسال کند بدون پیچیدگی مدیریت thread و هماهنگ‌سازی آن‌ها.
 
 {{index "programming language", "Node.js", standard}}
 
-Node was initially conceived for the purpose of making asynchronous
-programming easy and convenient. JavaScript lends itself well to a
-system like Node. It is one of the few programming languages that does
-not have a built-in way to do in- and output. Thus, JavaScript could
-be fit onto Node's rather eccentric approach to in- and output without
-ending up with two inconsistent interfaces. In 2009, when Node was
-being designed, people were already doing callback-based programming
-in the browser, so the ((community)) around the language was used to
-an asynchronous programming style.
+Node در ابتدا به منظور آسان‌سازی برنامه‌نویسی ناهمگام ابداع شد. جاوااسکریپت بسیار مناسب سیستمی مانند Node است. جاوااسکریپت یکی از معدود زبان‌های برنامه‌نویسی است که به صورت درونی و ذاتی راهی برای پشتیبانی  از عملیات  ورودی/خروجی ندارد. بنابراین، می توانست گزینه‌ی مناسبی برای رویکرد نامتعارف Node در مدیریت I/O باشد بدون اینکه در انتها شاهد وجود دو رابط ناسازگار باشیم. در سال 2009، زمانی که Node در حال طراحی شدن بود، برنامه‌نویسی مبتنی بر callback در مرورگر مرسوم بود، بنابراین جامعه‌ی فعال در جاوااسکریپت به سبک برنامه‌نویسی ناهمگام آشنا بودند.
 
-## The node command
+## دستور node
 
 {{index "node program"}}
 
-When ((Node.js)) is installed on a system, it provides a program
-called `node`, which is used to run JavaScript files. Say you have a
-file `hello.js`, containing this code:
+پس از نصب Node.js روی یک سیستم، برنامه‌ای به نام `node` در دسترس خواهد بود، که برای اجرای فایل‌های جاوااسکریپت استفاده می شود. فرض کنید فایلی به نام `hello.js` دارید، که کد زیر را دارد:
 
 ```
 let message = "Hello world";
 console.log(message);
 ```
-
-You can then run `node` from the ((command line)) like this to execute
-the program:
+می توانید `node` را از خط فرمان مانند مثال زیر برای اجرای برنامه استفاده کنید.
 
 ```{lang: null}
 $ node hello.js
@@ -98,18 +60,11 @@ Hello world
 
 {{index "console.log"}}
 
-The `console.log` method in Node does something similar to what it
-does in the browser. It prints out a piece of text. But in Node, the
-text will go to the process's ((standard output)) stream, rather than
-to a browser's ((JavaScript console)). When running `node` from the
-command line, that means you see the logged values in your
-((terminal)).
+متد `console.log` در محیط Node، کاربردی شبیه به عملکردش در مرورگر دارد. چاپ یک رشته‌ی متنی. اما در Node، این متن به جای اینکه به کنسول جاوااسکریپت مرورگر داده شود، به استریم خروجی استاندارد پروسه‌  (process) ارسال می‌شود . در هنگام اجرای `node` از طریق خط فرمان، گزارش‌های تولیدی توسط این متد را می‌توانید در ترمینال خط‌ فرمانتان مشاهده  کنید.
 
 {{index "node program", "read-eval-print loop"}}
 
-If you run `node` without giving it a file, it provides you with a
-prompt at which you can type JavaScript code and immediately see the
-result.
+اگر دستور `node` را بدون مشخص نمودن یک فایل اجرا کنید، به شما فضایی برای نوشتن کد جاوااسکریپت خواهد داد، تا بتوانید نتیجه را بلافاصله مشاهده کنید.
 
 ```{lang: null}
 $ node
@@ -123,20 +78,11 @@ $
 
 {{index "process object", "global scope", [binding, global], "exit method", "status code"}}
 
-The `process` binding, just like the `console` binding, is available
-globally in Node. It provides various ways to inspect and manipulate
-the current program. The `exit` method ends the process and can be
-given an exit status code, which tells the program that started `node`
-(in this case, the command line shell) whether the program completed
-successfully (code zero) or encountered an error (any other code).
+متغیر `process` درست مثل  `console`، به صورت سراسری در Node در دسترس است. این متغیر روش‌هایی برای بررسی و دستکاری برنامه‌ی فعلی را در اختیارتان می‌گذارد. متد `exit` باعث به اتمام رساندن پروسه‌ی فعلی می‌شود که یک کد وضعیت خروج را نیز می‌تواند دریافت کند؛ کدی که به برنامه‌ی اجرا‌کننده‌ی `node` (در اینجا پوسته‌ی خط فرمان) اطلاع می‌دهد که برنامه‌ی مورد نظر با موفقیت به اتمام رسیده است (کد صفر ) یا با خطایی روبرو شده است (هر کد دیگری).
 
 {{index "command line", "argv property"}}
 
-To find the command line arguments given to your script, you can read
-`process.argv`, which is an array of strings. Note that it also
-includes the name of the `node` command and your script name, so the
-actual arguments start at index 2. If `showargv.js` contains the
-statement `console.log(process.argv)`, you could run it like this:
+برای دستیابی به آرگومان‌هایی که توسط خط فرمان به اسکریپت شما داده‌ می‌شود، می توانید ‍`process.argv` را بخوانید، که آرایه‌ای از رشته‌ است. توجه داشته باشید که نام اسکریپت شما و دستور `node‍` را نیز در بر دارد. بنابراین آرگومان‌های مورد نظر از خانه‌ی 2  آرایه شروع می شوند. اگر `showargv.js` حاوی دستور  <br><bdo>`console.log(process.argv)`</bdo> باشد، می‌توانید به شکل زیر آن را اجرا نمایید:
 
 ```{lang: null}
 $ node showargv.js one --and two
@@ -145,57 +91,35 @@ $ node showargv.js one --and two
 
 {{index [binding, global]}}
 
-All the ((standard)) JavaScript global bindings, such as `Array`,
-`Math`, and `JSON`, are also present in Node's environment.
-Browser-related functionality, such as `document` or `prompt`, is not.
+تمامی متغیر‌های سراسری جاوااسکریپت استاندارد، مانند `Array`، `Math`، و `JSON`، همه در محیط Node نیز در دسترس هستند. اما آن موارد مخصوص به مروگر مثل `document` یا `prompt` طبیعتا وجود ندارند.
 
-## Modules
+## ماژول‌ها
 
 {{index "Node.js", "global scope", "module loader"}}
 
-Beyond the bindings I mentioned, such as `console` and `process`,
-Node puts few additional bindings in the global scope. If you want to access
-built-in functionality, you have to ask the module system for it.
+Node علاوه بر متغیرهایی که معرفی شد، مانند `console` و `process`، چند متغیر دیگر را نیز در فضای سراسری قرار داده است. اگر بخواهید به امکانات و ویژگی‌های درونی دسترسی داشته باشید، باید از سیستم ماژول Node کمک بگیرید.
 
 {{index "require function"}}
 
-The ((CommonJS)) module system, based on the `require` function, was
-described in [Chapter ?](modules#commonjs). This system is built into
-Node and is used to load anything from built-in ((module))s to
-downloaded ((package))s to ((file))s that are part of your own
-program.
+سیستم ماژول CommonJS، که بر اساس تابع `require` می‌باشد، در [فصل ?](modules#commonjs) توصیف شد. این سیستم به صورت درونی در Node قرار داده شده است و برای بارگیری ماژول‌ها چه درونی چه بارگیری شده به صورت بسته و همچنین فایل‌های موجود در برنامه‌ی شما استفاده می ‌شود.
 
 {{index [path, "file system"], "relative path", resolution}}
 
-When `require` is called, Node has to resolve the given string to an
-actual ((file)) that it can load. Pathnames that start with `/`,
-`./`, or `../` are resolved relative to the current module's path,
-where `.` stands for the current directory, `../` for one
-directory up, and `/` for the root of the file system. So if you ask
-for `"./graph"` from the file `/tmp/robot/robot.js`, Node will try to
-load the file `/tmp/robot/graph.js`.
+زمانی که تابع `require` فراخوانی می‌شود، Node باید رشته‌ی داده‌شده را به فایلی که بتوان بارگیری کرد تفسیر کند.  مسیر‌هایی که با `/` ، <bdo>`./`</bdo> یا <bdo>`../`</bdo> شروع می شوند با توجه به مسیر ماژول فعلی به صورت نسبی تفسیر می شوند. که `.` نماینده‌ی پوشه‌ی فعلی، <bdo>`../`</bdo> به معنای یک پوشه بالاتر و `/` به معنای root یا ریشه‌ در سیستم فایل می‌باشد. بنابراین اگر درخواست <bdo>`"./graph"`</bdo> را از درون <bdo>`/tmp/robot/robot.js`</bdo> داشته باشید، Node به دنبال بارگیری <bdo>`/tmp/robot/graph.js`</bdo> خواهد بود.
+
 
 {{index "index.js"}}
 
-The `.js` ((extension)) may be omitted, and Node will add it if such a
-file exists. If the required path refers to a ((directory)), Node will
-try to load the file named `index.js` in that directory.
+می توان از نوشتن پسوند <bdo>`.js`</bdo> صرف نظر کرد، زیرا Node در صورت وجود فایل مورد نظر، آن را خود در نظر خواهد گرفت. اگر مسیر خواسته شده به یک پوشه اشاره کند، Node سعی می کند تا فایلی به نام `index.js` را از آن پوشه بارگیری کند.
+
 
 {{index "node_modules directory", directory}}
 
-When a string that does not look like a relative or absolute path is
-given to `require`, it is assumed to refer to either a built-in
-((module)) or a module installed in a `node_modules` directory. For
-example, `require("fs")` will give you Node's built-in file system
-module. And `require("robot")` might try to load the library found in
-`node_modules/robot/`. A common way to install such libraries is by
-using ((NPM)), which we'll come back to in a moment.
+زمانی که یک رشته‌ی متنی که شباهتی به یک مسیر نسبی یا مطلق ندارد به تابع `require` داده می‌شود، فرض بر آن است که یا یک ماژول درونی، مورد نظر است یا ماژولی که در پوشه‌ی `node_modules` نصب شده است. به عنوان مثال، `require("fs")` به شما ماژول مدیریت سیستم فایل  درونی Node را خواهد داد. و `require("robot")` نیز سعی خواهد کرد تا بسته‌ای که در <bdo>`node_modules/robot/`</bdo> وجود دارد را بارگیری کند. روش رایج نصب این گونه‌ بسته‌ها یا کتابخانه‌ها، استفاده از NPM است که به زودی آن را توضیح خواهیم داد.
 
 {{index "require function", "Node.js", "garble example"}}
 
-Let's set up a small project consisting of two files. The first one,
-called `main.js`, defines a script that can be called from the
-((command line)) to reverse a string.
+بیایید یک پروژه‌ی کوچک شامل دو فایل ایجاد کیم. فایل اول `main.js` است که اسکریپتی است که می توان آن را از خط فرمان اجرا کرد و رشته‌ای را وارونه می کند.
 
 ```
 const {reverse} = require("./reverse");
@@ -208,9 +132,7 @@ console.log(reverse(argument));
 
 {{index reuse, "Array.from function", "join method"}}
 
-The file `reverse.js` defines a library for reversing strings, which
-can be used both by this command line tool and by other scripts that
-need direct access to a string-reversing function.
+فایل بعدی `reverse.js` یک کتابخانه برای وارونه‌کردن رشته‌ها تعریف می کند، که می توان از آن هم برای این ابزار خط فرمان بهره برد و هم دیگر اسکریپت‌هایی که نیاز به دسترسی مستقیم به تابعی برای وارونه‌سازی رشته‌ها دارند.
 
 ```
 exports.reverse = function(string) {
@@ -220,33 +142,25 @@ exports.reverse = function(string) {
 
 {{index "exports object", CommonJS, [interface, module]}}
 
-Remember that adding properties to `exports` adds them to the
-interface of the module. Since Node.js treats files as
-((CommonJS)) ((module))s, `main.js` can take the exported `reverse`
-function from `reverse.js`.
+به خاطر داشته باشید که افزودن خاصیت‌ها به `exports` باعث می‌شود که آن‌ها به رابط ماژول اضافه شوند. به دلیل اینکه Node.js فایل‌ها را به عنوان ماژول‌های CommonJs در نظر می‌گیرد، `main.js` می تواند تابع صادر شده‌ی (exported) `reverse` را از فایل `reverse.js` بردارد.
 
-We can now call our tool like this:
+اکنون می توانیم ابزارمان را به شکل زیر فراخوانی کنیم:
 
 ```{lang: null}
 $ node main.js JavaScript
 tpircSavaJ
 ```
 
-## Installing with NPM
+## نصب به وسیله‌ی NPM
 
 {{index NPM, "Node.js", "npm program", library}}
 
-NPM, which was introduced in [Chapter ?](modules#modules_npm), is an
-online repository of JavaScript ((module))s, many of which are
-specifically written for Node. When you install Node on your computer,
-you also get the `npm` command, which you can use to interact with this
-repository.
+NPM، که در[فصل ?](modules#modules_npm) معرفی شد، مخزنی آنلاین از ماژول‌های جاوااسکریپت است که خیلی از آن‌ها به طور خاص برای Node نوشته شده اند. زمانی که Node را روی کامپیوترتان نصب می کنید، دستور `npm` نیز در دسترس شما قرار می‌گیرد که به کمک آن می توانید با این مخزن تعامل کنید.
+
 
 {{index "ini package"}}
 
-NPM's main use is ((download))ing packages. We saw the `ini` package in
-[Chapter ?](modules#modules_ini). We can use NPM to fetch and install
-that package on our computer.
+کاربرد اصلی NPM بارگیری بسته‌ها می باشد. با بسته‌ی `ini` در [فصل ?](modules#modules_ini) آشنا شدیم. می توانیم با استفاده از NPM آن را دریافت و روی کامپیوترمان نصب کنیم.
 
 ```{lang: null}
 $ npm install ini
@@ -263,31 +177,17 @@ $ node
 
 {{index "require function", "node_modules directory", "npm program"}}
 
-After running `npm install`, ((NPM)) will have created a directory
-called `node_modules`. Inside that directory will be an `ini`
-directory that contains the ((library)). You can open it and look at
-the code. When we call `require("ini")`, this library is loaded, and
-we can call its `parse` property to parse a configuration file.
+پس از اجرای `npm install`، برنامه‌ی NPM یک پوشه به نام `node_modules` ایجاد خواهد کرد. درون آن پوشه، پوشه‌ای دیگر به نام `ini` خواهد بود که حاوی کتابخانه‌ی مورد نظر می باشد. می‌توانید آن را باز کنید و نگاهی به کدهایش بیاندازید. زمانی که `require("ini")` را فراخوانی می‌کنیم، این کتابخانه بارگیری می شود و می‌توانیم خاصیت `parse` آن را فراخوانی کنیم تا فایل تنظیمات ما خوانده شود.
 
-By default NPM installs packages under the current directory, rather
-than in a central place. If you are used to other package managers,
-this may seem unusual, but it has advantages—it puts each application
-in full control of the packages it installs and makes it easier to
-manage versions and clean up when removing an application.
+به صورت پیش‌فرض NPM بسته‌ها را در پوشه‌ی فعلی نصب می کند، نه در یک جای مرکزی. اگر به دیگر مدیریت‌ بسته‌ها عادت کرده اید، ممکن است برای‌تان جدید باشد، اما این‌کار مزیت‌های خودش را دارد- هر اپلیکیشن کنترل کامل روی بسته‌هایی که نصب می کند خواهد داشت و آسان‌تر می‌توان نسخه‌هایش را مدیریت کرد و در هنگام حذف اپلیکیشن آن‌ها را حذف نمود.
 
-### Package files
+### فایل‌های بسته
 
 {{index "package.json", dependency}}
 
-In the `npm install` example, you could see a ((warning)) about the
-fact that the `package.json` file did not exist. It is recommended to
-create such a file for each project, either manually or by running
-`npm init`. It contains some information about the project, such as
-its name and ((version)), and lists its dependencies.
+در مثال `npm install`، یه پیام هشدار در مورد نبود فایل ‍`package.json` را مشاهده کردید. ساخت این فایل برای هر پروژه توصیه می‌شود، چه به صورت دستی چه با استفاده از دستور `npm init`. این فایل حاوی اطلاعاتی درباره‌ی پروژه می باشد مانند نام پروژه، نسخه‌ی آن و لیست وابستگی‌های آن.
 
-The robot simulation from [Chapter ?](robot), as modularized in the
-exercise in [Chapter ?](modules#modular_robot), might have a
-`package.json` file like this:
+شبیه‌سازی ربات از فصل [فصل ?](robot) ، که در تمرین مربوط به فصل [فصل ?](modules#modular_robot) ماژولار شد، می تواند یک فایل ‍`package.json` شبیه این داشته باشد:
 
 ```{lang: "application/json"}
 {
@@ -306,71 +206,40 @@ exercise in [Chapter ?](modules#modular_robot), might have a
 
 {{index "npm program", tool}}
 
-When you run `npm install` without naming a package to install, NPM
-will install the dependencies listed in `package.json`. When you
-install a specific package that is not already listed as a dependency,
-NPM will add it to `package.json`.
+زمانی که دستور `npm install` را بدون نام بردن یک بسته برای نصب اجرا می کنید، NPM به سراغ لیست وابستگی‌های موجود در `package.json‍` می رود. زمانی که یک بسته‌ی مشخص را نصب می کنید که پیش از این به عنوان یک وابستگی لیست نشده است، NPM آن را به `package.json` اضافه می کند.
 
-### Versions
+### نسخه‌ها
 
 {{index "package.json", dependency, evolution}}
 
-A `package.json` file lists both the program's own ((version)) and
-versions for its dependencies. Versions are a way to deal with the
-fact that ((package))s evolve separately, and code written to work
-with a package as it existed at one point may not work with a later,
-modified version of the package.
+یک فایل `package.json` هم نسخه‌ی خود برنامه را نگه‌داری می کند هم نسخه‌های وابستگی‌هایش را. نسخه‌ها روشی‌ هستند که می توان به وسیله‌ی آن‌ها، با این واقعیت که بسته‌ها جداگانه تغییر می‌کنند و کدی که مثلا نوشته شده تا با بسته‌ای کار کند، ممکن است با نسخه‌ی بعدی آن یا نسخه‌ای ویرایش شده از آن کار نکند.
 
 {{index compatibility}}
 
-NPM demands that its packages follow a schema called _((semantic
-versioning))_, which encodes some information about which versions are
-_compatible_ (don't break the old interface) in the version number. A
-semantic version consists of three numbers, separated by periods, such
-as `2.3.0`. Every time new functionality is added, the middle number
-has to be incremented. Every time compatibility is broken, so that
-existing code that uses the package might not work with the new
-version, the first number has to be incremented.
+بر طبق NPM بسته‌ها باید از شمایی موسوم به ((semantic versioning)) یا نسخه‌بندی معنایی پیروی کنند، که اطلاعاتی در مورد نسخه‌هایی که سازگار هستند (به این معنا که رابط قبلی را پشتیبانی می‌کنند) را در شماره‌ی نسخه لحاظ می کند. یک نسخه‌ی معنایی از سه عدد تشکیل می‌شود، که هر کدام با نقطه جدا می شوند، مانند `2.3.0`. هربار که یک ویژگی جدید به بسته اضافه می‌شود، به عدد میانی باید افزوده شود. هربار که سازگاری شکسته شود، که در این صورت کد موجود ممکن است با این نسخه دیگر کار نکند، عدد ابتدایی باید تغییر یابد.
 
 {{index "caret character"}}
 
-A caret character (`^`) in front of the version number for a
-dependency in `package.json` indicates that any version compatible
-with the given number may be installed. So, for example, `"^2.3.0"`
-would mean that any version greater than or equal to 2.3.0 and less
-than 3.0.0 is allowed.
+کاراکتر (`^`) در ابتدای عدد نسخه برای یک وابستگی در `package.json`، به این معنا است که هر نسخه‌ای که با عدد داده شده سازگار است می تواند نصب شود. بنابراین، به عنوان مثال، <bdo>`"^2.3.0"`</bdo> به این معنا است که هر نسخه‌ای بالاتر یا برابر با 2.3.0 و پایین تر از 3.0.0 قابل قبول است.
 
 {{index publishing}}
 
-The `npm` command is also used to publish new packages or new versions
-of packages. If you run `npm publish` in a ((directory)) that has a
-`package.json` file, it will publish a package with the name and
-version listed in the JSON file to the registry. Anyone can publish
-packages to NPM—though only under a package name that isn't in use yet since it would be
-somewhat scary if random people could update existing packages.
+دستور `npm` همچنین برای انتشار بسته‌های جدید یا نسخه‌های جدید بسته‌ها استفاده می‌شود.
+اگر دستور `npm publish` را در یک پوشه‌ی حاوی فایل `package.json`  اجرا کنید، باعث می شود بسته‌ای با نام و شماره‌ نسخه‌ی موجود در فایل JSON در مخزن منتشر شود. هر کسی می‌تواند در NPM بسته منتشر کند البته که نام بسته نباید قبلا استفاده شده باشد.
 
-Since the `npm` program is a piece of software that talks to an open
-system—the package registry—there is nothing unique about what it
-does. Another program, `yarn`, which can be installed from the NPM
-registry, fills the same role as `npm` using a somewhat different
-interface and installation strategy.
+با توجه به اینکه برنامه‌ی `npm` نرم‌افزاری است که با یک سیستم باز تعامل دارد - مخزن بسته‌ها - کاری که می‌کند منحصر به فرد نیست. برنامه‌ای دیگر که `yarn` نام دارد، نیز می‌تواند از طریق NPM نصب شود که کاری شبیه به ‍`npm` انجام می دهد ولی با دستورات و استراتژی متفاوت.
 
-This book won't delve further into the details of ((NPM)) usage. Refer
-to [_https://npmjs.org_](https://npmjs.org) for further documentation and a
-way to search for packages.
+این کتاب به سراغ جزئیات بیشتر مربوط به NPM نمی‌رود. برای اطلاعات بیشتر و جستجوی بسته‌ها به [_https://npmjs.org_](https://npmjs.org) مراجعه کنید.
 
-## The file system module
+## ماژول سیستم فایل
 
 {{index directory, "fs package", "Node.js", [file, access]}}
 
-One of the most commonly used built-in modules in Node is the `fs`
-module, which stands for _((file system))_. It exports functions for
-working with files and directories.
+یکی از پراستفاده‌ترین ماژول‌های درونی در Node، ماژول `fs` می‌باشد، که سرنام _((file system))_ است. این ماژول توابعی را برای کار با فایل‌ها و پوشه‌ها فراهم می‌سازد.
 
 {{index "readFile function", "callback function"}}
 
-For example, the function called `readFile` reads a file
-and then calls a callback with the file's contents.
+به عنوان مثال، تابع `readFile` فایلی را می‌خواند و سپس یک تابع callback را با محتوای فایل خوانده شده فراخوانی می کند.
 
 ```
 let {readFile} = require("fs");
@@ -382,15 +251,7 @@ readFile("file.txt", "utf8", (error, text) => {
 
 {{index "Buffer class"}}
 
-The second argument to `readFile` indicates the _((character
-encoding))_ used to decode the file into a string. There are several
-ways in which ((text)) can be encoded to ((binary data)), but most
-modern systems use ((UTF-8)). So unless you have reasons to believe
-another encoding is used, pass `"utf8"` when reading a text file. If
-you do not pass an encoding, Node will assume you are interested in
-the binary data and will give you a `Buffer` object instead of a
-string. This is an ((array-like object)) that contains numbers
-representing the bytes (8-bit chunks of data) in the files.
+ورودی دوم تابع `readFile` مشخص کننده‌ی کدبندی کاراکتر (character encoding) است که برای رمزگشایی و تبدیل محتوای فایل به رشته استفاده می‌شود. راه‌های متعددی برای کدگذاری متون به داده‌های باینری وجود دارد، اما بیشتر سیستم‌های مدرن از UTF-8 استفاده می کنند. بنابراین اگر دلیلی برای استفاده از یک کدبندی دیگر ندارید، همان `"utf8"` را در هنگام خواندن یک فایل استفاده کنید. اگر کدبندی را به تابع ارسال نکنید، Node بنا را بر این می‌گذارد که شما به محتوای دودویی علاقمند هستید و یک شیء `Buffer` به جای رشته‌ی متنی برمی‌گرداند که شیئی آرایه‌گونه است و اعدادی دارد که نمایانگر بایت‌ها در فایل‌ها می‌باشند (قطعات 8 بیتی داده) .
 
 ```
 const {readFile} = require("fs");
@@ -403,7 +264,7 @@ readFile("file.txt", (error, buffer) => {
 
 {{index "writeFile function", "file system", [file, access]}}
 
-A similar function, `writeFile`, is used to write a file to disk.
+تابعی مشابه به نام `writeFile` وجود دارد که برای نوشتن یک فایل روی دیسک استفاده می شود.
 
 ```
 const {writeFile} = require("fs");
@@ -415,34 +276,19 @@ writeFile("graffiti.txt", "Node was here", err => {
 
 {{index "Buffer class", "character encoding"}}
 
-Here it was not necessary to specify the encoding—`writeFile` will
-assume that when it is given a string to write, rather than a `Buffer`
-object, it should write it out as text using its default character
-encoding, which is ((UTF-8)).
+در اینجا لازم نبود تا کدبندی مشخص شود-`writeFile` زمانی که به جای `Buffer‍`، یک رشته دریافت می کند، آن را به صورت رشته و با کدبندی پیش‌فرض که همان UTF-8 است، می نویسد.
 
 {{index "fs package", "readdir function", "stat function", "rename function", "unlink function"}}
 
-The `fs` module contains many other useful functions: `readdir` will
-return the files in a ((directory)) as an array of strings, `stat`
-will retrieve information about a file, `rename` will rename a file,
-`unlink` will remove one, and so on. See the documentation at
-[_https://nodejs.org_](https://nodejs.org) for specifics.
+ماژول `fs‍`، توابع مفید دیگری نیز دارد: `readdire` فایل‌های موجود در یک پوشه‌ را به صورت یک آرایه‌ی رشته‌ای برمی‌گرداند، `stat` اطلاعاتی در درباره‌ی یک فایل برمی‌گرداند، `rename` نام یک فایل را تغییر می‌دهد، `unlink` فایلی را حذف می کند و الی آخر. می توانید مستندات آن را در [_https://nodejs.org_](https://nodejs.org) مشاهده کنید.
 
 {{index ["asynchronous programming", "in Node.js"], "Node.js", "error handling", "callback function"}}
 
-Most of these take a callback function as the last parameter, which
-they call either with an error (the first argument) or with a successful
-result (the second). As we saw in [Chapter ?](async), there are
-downsides to this style of programming—the biggest one being that
-error handling becomes verbose and error-prone.
+بیشتر این توابع یک تابع callback به عنوان آخرین ورودی دریافت می کنند، که یا با یک error (آرگومان اول) یا با یک نتیجه‌ی موفق (آرگومان دوم) آن‌ را فراخوانی‌ می کنند.  همانطور که در [فصل ?](async) دیدیم، این سبک از برنامه‌نویسی ایراداتی دارد که بزرگترین آن مدیریت خطاها‌ است که شلوغ و دردسرساز می شود.
 
 {{index "Promise class", "promises package"}}
 
-Though promises have been part of JavaScript for a while, at the time
-of writing their integration into Node.js is still a work in progress.
-There is an object `promises` exported from the `fs` package since
-version 10.1 that contains most of the same functions as `fs` but
-uses promises rather than callback functions.
+اگرچه promise ها مدتی است که بخشی از جاوااسکریپت هستند، اما در زمان نوشتن این کتاب، پیاده‌سازی آن‌ها هنوز در جریان است. شیئی به نام `promises`  توسط بسته‌ی `fs` از نسخه‌ی 10.1 صادر می‌شود که همان توابع موجود در `fs` را دارد با این تفاوت که از promiseها به جای توابع callback استفاده می کنند.
 
 ```
 const {readFile} = require("fs").promises;
@@ -452,10 +298,7 @@ readFile("file.txt", "utf8")
 
 {{index "synchronous programming", "fs package", "readFileSync function"}}
 
-Sometimes you don't need asynchronicity, and it just gets in the way.
-Many of the functions in `fs` also have a synchronous variant, which
-has the same name with `Sync` added to the end. For example, the
-synchronous version of `readFile` is called `readFileSync`.
+گاهی نیازی به ناهمگامی ندارید و فقط با توجه به پیش‌فرض بودن آن‌ها مورد استفاده قرار می‌گیرند . خیلی از توابع موجود در `fs` یک نسخه‌ی همگام نیز دارند که نامشان یکسان است با این تفاوت که `Sync` به انتهایشان اضافه شده است. به عنوان مثال، نسخه‌ی همگام `readFile` به صورت `readFileSync` در دسترس است.
 
 ```
 const {readFileSync} = require("fs");
@@ -465,21 +308,17 @@ console.log("The file contains:",
 
 {{index optimization, performance, blocking}}
 
-Do note that while such a synchronous operation is being performed,
-your program is stopped entirely. If it should be responding to the
-user or to other machines on the network, being stuck on a synchronous
-action might produce annoying delays.
+حواستان باشد که وقتی یک عمل همگام در حال اجرا است، برنامه‌ی شما در آن لحظه متوقف است. اگر قرار است به یک  کاربر یا ماشین‌های دیگر در شبکه پاسخ بدهید، توقف روی یک عمل همگام ممکن است تاخیر در پاسخگویی برنامه به وجود بیاورد.
 
-## The HTTP module
+## ماژول HTTP
 
 {{index "Node.js", "http package", [HTTP, server]}}
 
-Another central module is called `http`. It provides functionality for
-running HTTP ((server))s and making HTTP ((request))s.
+یکی دیگر از ماژول‌های اصلی `http` است. این ماژول امکاناتی برای اجرای سرویس‌دهنده‌های HTTP و ساختن درخواست‌های HTTP فراهم می کند.
 
 {{index "listening (TCP)", "listen method", "createServer function"}}
 
-This is all it takes to start an HTTP server:
+تمام آنچه برای راه‌اندازی یک سرویس‌دهنده‌ی HTTP لازم است:
 
 ```
 const {createServer} = require("http");
@@ -496,66 +335,36 @@ console.log("Listening! (port 8000)");
 
 {{index port, localhost}}
 
-If you run this script on your own machine, you can point your web
-browser at
-[_http://localhost:8000/hello_](http://localhost:8000/hello) to make a
-request to your server. It will respond with a small HTML page.
+اگر این اسکریپت را در کامپیوتر خودتان اجرا کنید، می‌توانید در مروگر آدرس  [_http://localhost:8000/hello_](http://localhost:8000/hello) را باز کنید تا یک درخواست به سرویس‌دهنده‌تان ارسال کنید. پاسخ سرویس‌دهنده یک صفحه‌ی ساده‌ی HTML خواهد بود.
 
 {{index "createServer function", HTTP}}
 
-The function passed as argument to `createServer` is called every time
-a client connects to the server. The `request` and `response` bindings
-are objects representing the incoming and outgoing data. The first
-contains information about the ((request)), such as its `url` property,
-which tells us to what URL the request was made.
+تابعی که به عنوان آرگومان به `createServer` داده‌ می‌شود هر بار که کلاینت (سرویس‌گیرنده) به سرویس‌دهنده متصل می شود، فراخوانی می شود. دو متغیر `request` و `response` اشیائی هستند که نمایانگر داده‌های ورودی و برگشتی می‌باشند. شیء اول دربردارنده‌ی اطلاعاتی درباره‌ی درخواست است مانند `url` درخواست، که مشخص می‌کند درخواست به کدام URL ارسال شده است.
 
-So, when you open that page in your browser, it sends a request to your
-own computer. This causes the server function to run and send back a
-response, which you can then see in the browser.
+بنابراین، وقتی شما آن صفحه را در مرورگرتان باز می کنید، مرورگر درخواستی به کامپیوتر خودتان ارسال می کند. این کار باعث می‌شود که تابع سرویس‌دهنده اجرا شود و پاسخی برگرداند، که می توانید آن را در مرورگر ببینید.
 
 {{index "200 (HTTP status code)", "Content-Type header", "writeHead method"}}
 
-To send something back, you call methods on the `response` object. The
-first, `writeHead`, will write out the ((response)) ((header))s (see
-[Chapter ?](http#headers)). You give it the status code (200 for "OK"
-in this case) and an object that contains header values. The example
-sets the `Content-Type` header to inform the client that we'll be
-sending back an HTML document.
+برای اینکه چیزی برگردانید، متدهایی روی شیء `response` فراخوانی می کنید. اولین متد، متد `writeHead` است که سرنام‌های پاسخ یا headers را می‌نویسد، به [فصل ?](http#headers) مراجعه کنید. به این متد یک کد وضعیت (مثل 200 یا "OK" در این مورد) و یک شیء حاوی مقادیر سرنام‌ها داده می‌شود. در مثال، سرنام `Content-Type` تنظیم می‌شود تا کلاینت باخبر شود که ما قرار است یک سند HTML برگردانیم.
 
 {{index "writable stream", "body (HTTP)", stream, "write method", "end method"}}
-
-Next, the actual response body (the document itself) is sent with
-`response.write`. You are allowed to call this method multiple times
-if you want to send the response piece by piece, for example to stream
-data to the client as it becomes available. Finally, `response.end`
-signals the end of the response.
+سپس، بدنه‌ی اصلی پاسخ (که محتوای سند است) به وسیله‌ی `response.write` ارسال می‌شود. می توانید این متد را چندین بار فراخوانی کنید اگر دوست دارید تا پاسخ را بخش بخش ارسال کنید، مثلا استریم کردن داده ها به کلاینت همزمان با آماده شدن آن‌ها. در آخر، `response.end` پایان پاسخ را مشخص می کند.
 
 {{index "listen method"}}
 
-The call to `server.listen` causes the ((server)) to start waiting for
-connections on ((port)) 8000. This is why you have to connect
-to _localhost:8000_ to speak to this server, rather than just
-_localhost_, which would use the default port 80.
+فراخوانی `server.listen` باعث می‌شود که سرویس‌دهنده منتظر ارتباطات روی پورت 8000 بماند. به همین علت است که شما باید به _localhost:8000_ متصل شوید تا بتوانید با سرویس‌دهنده تعامل کنید زیرا _localhost_ به صورت پیش‌فرض از پورت 80 استفاده می کند.
 
 {{index "Node.js", "kill process"}}
 
-When you run this script, the process just sits there and waits. When
-a script is listening for events—in this case, network
-connections—`node` will not automatically exit when it reaches the end
-of the script. To close it, press [control]{keyname}-C.
+هنگامی که این اسکریپت را اجرا می کنید، پروسه‌ی مورد نظر اجرا و منتظر درخواست‌ها می ماند. زمانی که یک اسکریپت منتظر رخداد‌ها می‌باشد-در این مثال، ارتباطات شبکه- `node` به صورت خودکار پس از رسیدن به پایان اسکریپت متوقف نمی‌شود. برای متوقف کردن آن باید کلید‌های [control]{keyname}-C را فشار دهید.
 
 {{index [method, HTTP]}}
 
-A real web ((server)) usually does more than the one in the example—it
-looks at the request's ((method)) (the `method` property) to see what
-action the client is trying to perform and looks at the request's ((URL)) to
-find out which resource this action is being performed on. We'll see a
-more advanced server [later in this chapter](node#file_server).
+یک سرویس‌دهنده‌ی وب واقعی معمولا کارهای بیشتری از آنچه در مثال نشان‌داده شد انجام می دهد- به متد درخواست توجه می کند (خاصیت `method`) تا متوجه منظور کلاینت از ارسال درخواست بشود و  به URL درخواست نگاه می کند تا منبع مورد نظر این درخواست برای اعمال را بداند. [در ادامه‌ی این فصل](node#file_server)، یک سرویس‌دهنده‌ی پیش‌رفته‌تر را مشاهده خواهیم کرد.
 
 {{index "http package", "request function", [HTTP, client]}}
 
-To act as an HTTP _((client))_, we can use the `request` function
-in the `http` module.
+برای اینکه مانند یک کلاینت HTTP عمل کنیم، می توانیم از تابع `request` ماژول `http` استفاده کنیم.
 
 ```
 const {request} = require("http");
@@ -573,87 +382,50 @@ requestStream.end();
 
 {{index "Node.js", "callback function", "readable stream"}}
 
-The first argument to `request` configures the request, telling Node
-what server to talk to, what path to request from that server, which
-method to use, and so on. The second argument is the function that
-should be called when a response comes in. It is given an object that
-allows us to inspect the response, for example to find out its status
-code.
+آرگومان اول `request`، درخواست را تنظیم می کند، مشخص می کند به کدام سرویس‌دهنده باید تماس حاصل شود، چه مسیری از آن سرویس‌دهنده مورد درخواست قرار بگیرد، چه متدی استفاده شود و از این قبیل. آرگومان دوم تابعی است که زمانی باید فراخوانی شود که پاسخ از راه می‌رسد. به این تابع  شیئ داده‌ می‌شود که به ما امکان بررسی محتوای پاسخ را می‌دهد، مثلا دریافت کد وضعیت.
 
 {{index "GET method", "write method", "end method", "writable stream", "request function"}}
 
-Just like the `response` object we saw in the server, the object
-returned by `request` allows us to ((stream)) data into the
-((request)) with the `write` method and finish the request with the
-`end` method. The example does not use `write` because `GET` requests
-should not contain data in their request body.
+درست شبیه به `response` که پیش‌تر در سرویس‌دهنده‌ دیدیم، شیئی که توسط `request` برگردانده‌ می‌شود به ما این امکان را می‌دهد تا داده‌ها را به وسیله‌ی متد `write` درون request استریم کنیم و به وسیله‌ی متد `end` آن، آن را به پایان برسانیم.  در مثال، از متد `write` استفاده نشده است زیرا درخواست‌های نوع `GET` نباید داده‌ای در بدنه‌ی درخواست داشته باشند.
 
 {{index HTTPS, "https package", "request function"}}
 
-There's a similar `request` function in the `https` module that
-can be used to make requests to `https:` URLs.
+در ماژول `https` تابع مشابهی به نام `request` وجود دارد که می‌تواند برای درخواست‌هایی که به URL‌های `https:` می باشند استفاده شود.
 
 {{index "fetch function", "Promise class", "node-fetch package"}}
 
-Making requests with Node's raw functionality is rather verbose.
-There are much more convenient wrapper packages available on NPM. For
-example, `node-fetch` provides the promise-based `fetch` interface that
-we know from the browser.
+ساخت درخواست‌ها به وسیله‌ی امکانات خام Node، نسبتا زیادنویسی است. در NPM بسته‌های پوششی بسیار ساده‌تر برای این کار وجود دارد. به عنوان مثال، بسته‌ی `node-fetch` رابط `fetch` را به صورت مبتنی بر promise ها فراهم می‌سازد که ما با آن در موضوع مرورگرها آشنا شدیم.
 
-## Streams
+## استریم یا جریان
 
 {{index "Node.js", stream, "writable stream"}}
 
-We have seen two instances of writable streams in the HTTP
-examples—namely, the response object that the server could write to
-and the request object that was returned from `request`.
+دو نمونه از استریم‌های قابل نوشتن را در مثال‌های HTTP مشاهده کرده ایم: شیء پاسخ که سرویس‌دهنده می توانست در آن بنویسد و شیء درخواستی که از `request` برگردانده می‌شد.
 
 {{index "callback function", ["asynchronous programming", "in Node.js"], "write method", "end method", "Buffer class"}}
 
-_Writable streams_ are a widely used concept in Node. Such objects have
-a `write` method that can be passed a string or a `Buffer` object to
-write something to the stream. Their `end` method closes the stream
-and optionally takes a value to write to the stream before
-closing. Both of these methods can also be given a callback as an
-additional argument, which they will call when the writing or closing
-has finished.
+استریم‌های قابل نوشتن (_Writable streams_) مفهومی پراستفاده در Node می‌باشند. این‌گونه اشیاء متدی به نام `write` دارند که یک رشته یا یک `Buffer` برای نوشتن چیزی در استریم دریافت می کند. متد `end‍` ‌آن‌ها، باعث می‌شود که استریم بسته شود و می‌توان به صورت اختیاری مقداری را به آن داد که قبل از بستن استریم آن را در آن بنویسید. هر دوی این متد‌ها همچنین یک تابع callback به عنوان آرگومان اضافی قبول می‌کنند که آن را هنگامی که عمل نوشتن یا بستن پایان پذیرفت، فراخوانی می کنند.
 
 {{index "createWriteStream function", "writeFile function", [file, stream]}}
 
-It is possible to create a writable stream that points at a file
-with the `createWriteStream` function from the `fs` module. Then you
-can use the `write` method on the resulting object to write the file
-one piece at a time, rather than in one shot as with `writeFile`.
+همچنین این امکان وجود دارد که به وسیله‌ی تابع `createWriteStream` ماژول `fs` یک استریم قابل نوشتن ایجاد کرد که به یک فایل اشاره می کند. سپس می‌توانید از متد `write` موجود در شیء حاصل استفاده کنید تا فایل را به‌جای نوشتن در یک حرکت با `writeFile`، به صورت گام به گام بنویسید.
 
 {{index "createServer function", "request function", "event handling", "readable stream"}}
 
-Readable ((stream))s are a little more involved. Both the `request`
-binding that was passed to the HTTP server's callback and the
-`response` binding passed to the HTTP client's callback are readable
-streams—a server reads requests and then writes responses, whereas a
-client first writes a request and then reads a response. Reading from
-a stream is done using event handlers, rather than methods.
+استریم‌های قابل‌خواندن اندکی پیچیده‌تر هستند. هر دوی متغیرهای `request` و ‍`response` که به callback مربوط به کلاینت HTTP داده می‌شوند، استریم‌های قابل‌خواندن هستند- یک سرویس‌دهنده درخواست‌ها را می‌خواند و سپس  پاسخ‌ها را می‌نویسد، درحالی‌که که کلاینت ابتدا یک درخواست می‌نویسد و سپس یک پاسخ را می‌خواند. خواندن از یک استریم به وسیله‌ی استفاده از گرداننده‌های رخداد صورت می‌گیرد نه متد‌ها.
 
 {{index "on method", "addEventListener method"}}
 
-Objects that emit events in Node have a method called `on` that is
-similar to the `addEventListener` method in the browser. You give it
-an event name and then a function, and it will register that function
-to be called whenever the given event occurs.
+در Node، اشیائی که رخداد‌ها را تولید‌ می‌کنند متدی به نام `on` دارند که شبیه به متد `addEventListener` موجود در مرورگر است. نام رخداد و یک تابع به آن می‌دهید، و این متد تابع دریافتی را ثبت کرده و هنگامی که رخداد داده شده اتفاق افتاد، آن را فراخوانی می‌کند.
 
 {{index "createReadStream function", "data event", "end event", "readable stream"}}
 
-Readable ((stream))s have `"data"` and `"end"` events. The first is
-fired every time data comes in, and the second is called whenever the
-stream is at its end. This model is most suited for _streaming_ data that
-can be immediately processed, even when the whole document isn't
-available yet. A file can be read as a readable stream by using the
-`createReadStream` function from `fs`.
+استریم‌های قابل خواندن دارای رخداد‌های `"data"` و `"end"` می‌باشند. اولین رخداد با هربار ورود داده ایجاد می‌شود، و دومین هنگامی که استریم به پایان می‌رسد فراخوانی می‌شود. این مدل بسیار مناسب داده‌های جریان‌داری (streaming) که می‌توانند بلافاصله پردازش شوند می‌باشد، حتی هنگامی که کل سند هنوز در دسترس نیست. یک فایل را می‌توان با استفاده از تابع `createReadStream` ماژول `fs`  به صورت یک استریم قابل‌خواندن خواند.
+
 
 {{index "upcasing server example", capitalization, "toUpperCase method"}}
 
-This code creates a ((server)) that reads request bodies and streams
-them back to the client as all-uppercase text:
+کد زیر یک سرویس‌دهنده ایجاد می‌کند که بدنه‌های درخواست را می‌خواند و آن‌ها را به کلاینت به صورت حروف بزرگ استریم می ‌کند:
 
 ```
 const {createServer} = require("http");
@@ -667,13 +439,9 @@ createServer((request, response) => {
 
 {{index "Buffer class", "toString method"}}
 
-The `chunk` value passed to the data handler will be a binary
-`Buffer`. We can convert this to a string by decoding it as UTF-8
-encoded characters with its `toString` method.
+مقدار `chunk` که به گرداننده‌ی data ارسال‌ می‌شود یک ‍‍`Buffer` دودویی خواهد بود. می‌توانیم این را با کدگشایی آن به عنوان کاراکتر‌های کدگذاری شده با UTF-8 به وسیله‌ی متد `toString` به یک رشته تبدیل کنیم.
 
-The following piece of code, when run with the uppercasing server
-active, will send a request to that server and write out the response
-it gets:
+کد زیر، زمانی که با سرویس‌دهنده بزرگ کننده‌ی حروف اجرا شود، درخواستی به آن سرویس‌دهنده ارسال می کند و پاسخی را که دریافت می‌کند در خروجی می‌نویسد:
 
 ```
 const {request} = require("http");
@@ -690,48 +458,27 @@ request({
 
 {{index "stdout property", "standard output", "writable stream", "console.log"}}
 
-The example writes to `process.stdout` (the process's standard output,
-which is a writable stream) instead of using `console.log`. We can't
-use `console.log` because it adds an extra newline character after
-each piece of text that it writes, which isn't appropriate here since
-the response may come in as multiple chunks.
+در مثال عمل نوشتن در `process.stdout` (خروجی استاندارد process، که یک استریم قابل نوشتن است) صورت گرفته است؛ نه `console.log`. نمی‌توانیم از `console.log` استفاده کنیم زیرا این متد یک کاراکتر خط جدید بعد از هر بخش از متنی که می‌نویسد اضافه می‌کند، که مناسب اینجا نیست زیرا پاسخ ممکن است به صورت چند تکه دریافت شود.
 
 {{id file_server}}
 
-## A file server
+## یک سرویس‌دهنده‌ی فایل
 
 {{index "file server example", "Node.js", [HTTP, server]}}
 
-Let's combine our newfound knowledge about HTTP ((server))s and
-working with the ((file system)) to create a bridge between the two:
-an HTTP server that allows ((remote access)) to a file system. Such a
-server has all kinds of uses—it allows web applications to store and
-share data, or it can give a group of people shared access to a bunch of
-files.
+بیایید دانش جدیدمان در مورد سرویس‌دهنده‌های HTTP و کار کردن با سیستم فایل را ترکیب کنیم تا پلی بین این دو بسازیم: یک سرویس‌دهنده‌ی HTTP که اجازه‌ی دسترسی به سیستم فایل از راه دور را فراهم می‌سازد. این سرویس‌دهنده‌ کاربرد‌های زیاد و متنوعی دارد-به اپلیکیشن‌های وب امکان ذخیره و به اشتراک‌گذاری داده‌ها را می‌دهد، یا می‌تواند به گروهی از کاربران دسترسی مشترک به تعدادی فایل را بدهد.
 
 {{index [path, URL], "GET method", "PUT method", "DELETE method", [file, resource]}}
 
-When we treat files as HTTP ((resource))s, the HTTP methods `GET`,
-`PUT`, and `DELETE` can be used to read, write, and delete the files,
-respectively. We will interpret the path in the request as the path of
-the file that the request refers to.
+زمانی که فایل‌ها را به عنوان منبع‌های HTTP در نظر می‌گیریم، متد‌های `GET`، `PUT`، و `DELETE` در HTTP را می‌توان برای خواندن، نوشتن و حذف فایل‌ها به کار برد. ما بخش مسیر در درخواست را به عنوان مسیر فایل مورد درخواست تفسیر خواهیم کرد.
 
 {{index [path, "file system"], "relative path"}}
 
-We probably don't want to share our whole file system, so we'll
-interpret these paths as starting in the server's working
-((directory)), which is the directory in which it was started. If I
-ran the server from `/tmp/public/` (or `C:\tmp\public\` on Windows),
-then a request for `/file.txt` should refer to `/tmp/public/file.txt`
-(or `C:\tmp\public\file.txt`).
+احتمالا قصد نداریم کل سیستم فایلمان را به اشتراک بگذاریم، پس این مسیر‌ها را به عنوان شروع در پوشه‌ی کاری  سرویس‌دهنده که همان پوشه‌ای است که در آن اجرا شده است، تفسیر می‌کنیم.  اگر من سرویس‌دهنده را از `/tmp/public/` (یا <bdo>`C:\tmp\public\`</bdo> در ویندوز) اجرا کنم، سپس درخواستی برای فایل <bdo>`/file.txt`</bdo>ارسال کنم، باید به <bdo>`/tmp/public/file.txt`</bdo> (یا <bdo>`C:\tmp\public\file.txt`</bdo>) اشاره شود.
 
 {{index "file server example", "Node.js", "methods object", "Promise class"}}
 
-We'll build the program piece by piece, using an object called
-`methods` to store the functions that handle the various HTTP methods.
-Method handlers are `async` functions that get the request object as
-argument and return a promise that resolves to an object that
-describes the response.
+برنامه‌ را قطعه به قطعه خواهیم نوشت، و از شیئی به نام `methods` برای ذخیره توابعی که متد‌های متنوع HTTP را مدیریت می‌کنند، استفاده خواهیم کرد.  گرداننده‌های ما از نوع توابع `async` می‌باشند که شیء درخواست را به عنوان ورودی دریافت می کنند و یک promise برمی‌گردانند که  منجر به یک شیء می‌شود که آن شیء توصیف کننده پاسخ می‌باشد.
 
 ```{includeCode: ">code/file_server.js"}
 const {createServer} = require("http");
@@ -762,39 +509,23 @@ async function notAllowed(request) {
 
 {{index "405 (HTTP status code)"}}
 
-This starts a server that just returns 405 error responses, which is
-the code used to indicate that the server refuses to handle a given
-method.
+این کد یک سرویس‌دهنده اجرا می‌کند که پاسخ‌های خطای 405 برمی‌گرداند، که این شماره در صورت عدم پذیرش متد داده شده توسط سرویس‌دهنده استفاده می‌شود.
 
 {{index "500 (HTTP status code)", "error handling", "error response"}}
 
-When a request handler's promise is rejected, the `catch` call
-translates the error into a response object, if it isn't one already, so
-that the server can send back an error response to inform the client
-that it failed to handle the request.
+زمانی که یک promise گرداننده‌ی درخواست لغو یا رد می‌شود، فراخوانی `catch`، خطای موجود را به یک شیء پاسخ تبدیل می‌کند، البته اگر خود به آن صورت نبود، بنابراین سرویس‌دهنده می‌تواند پاسخ خطا را بازگرداند و کلاینت را از ناموفق بودن درخواستش باخبر کند.
 
 {{index "200 (HTTP status code)", "Content-Type header"}}
 
-The `status` field of the response description may be omitted, in
-which case it defaults to 200 (OK). The content type, in the `type`
-property, can also be left off, in which case the response is assumed
-to be plain text.
+فیلد `status` در پاسخ ممکن است از قلم بیفتد، که در این صورت معادل <bdo>200 (OK)</bdo> در نظر گرفته می‌شود. نوع محتوا (content type)، در خاصیت `type` را نیز می‌توان از قلم انداخت که در این صورت پاسخ به صورت رشته‌ی معمولی در نظر گرفته می‌شود.
 
 {{index "end method", "pipe method", stream}}
 
-When the value of `body` is a ((readable stream)), it will have a
-`pipe` method that is used to forward all content from a readable
-stream to a ((writable stream)). If not, it is assumed to be either
-`null` (no body), a string, or a buffer, and it is passed directly to the
-((response))'s `end` method.
+هنگامی که مقدار `body` یک استریم قابل خواندن است، یک متد ‍‍`pipe` خواهد داشت که برای انتقال همه‌ی محتوا از یک استریم قابل خواندن به یک استریم قابل نوشتن استفاده می‌شود. اگر اینچنین نبود، فرض می‌شود که یا `null` (بدون بدنه)، یا رشته، یا بافر باشد  و مستقیما به متد `end` پاسخ  داده می‌شود.
 
 {{index [path, URL], "urlToPath function", "url package", parsing, [escaping, "in URLs"], "decodeURIComponent function", "startsWith method"}}
 
-To figure out which file path corresponds to a request URL, the
-`urlPath` function uses Node's built-in `url` module to parse the URL.
-It takes its pathname, which will be something like `"/file.txt"`,
-decodes that to get rid of the `%20`-style escape codes, and resolves
-it relative to the program's working directory.
+برای اینکه مشخص کنیم کدام مسیر فایل به یک URL درخواست متناظر می‌شود، تابع `urlPath` از ماژول درونی `url` در Node بهره می‌برد تا URL را تجزیه کند. این تابع نام مسیررا که چیزی مثل <bdo>`"/file.txt"`</bdo> می‌باشد می‌گیرد، آن را کدگشایی می‌کند تا `%20` یا کد‌های گریز را حذف کند، و آن را نسبت به پوشه‌ی فعال برنامه‌ نتیجه‌یابی کند.
 
 ```{includeCode: ">code/file_server.js"}
 const {parse} = require("url");
@@ -812,50 +543,26 @@ function urlPath(url) {
   return path;
 }
 ```
+به محض اینکه برنامه‌ای را تنظیم کردید تا درخواست‌های شبکه را قبول کند، نگرانی در مورد امنیت نیز شروع می‌شود. در مورد ما، اگر دقت کافی نکنیم، احتمال دارد به صورت اتفاقی کل سیستم فایل‌مان را در معرض دید شبکه قرار دهیم.
 
-As soon as you set up a program to accept network requests, you have
-to start worrying about ((security)). In this case, if we aren't
-careful, it is likely that we'll accidentally expose our whole ((file
-system)) to the network.
+مسیر‌ فایل‌ها در Node از جنس رشته می‌باشند. برای نگاشت این‌گونه رشته‌ها به فایل‌های واقعی، تجزیه‌ و تفسیر‌های مهمی در جریان است. مسیر‌ها ممکن است، به عنوان مثال، حاوی <bdo>`../`</bdo> برای اشاره به پوشه‌ی والدشان باشند. بنابراین یکی از مشکل‌های روشن از درخواست‌هایی برای مسیری مانند <bdo>`/../secret_file`</bdo> ریشه می‌گیرد.
 
-File paths are strings in Node. To map such a string to an actual
-file, there is a nontrivial amount of interpretation going on. Paths
-may, for example, include `../` to refer to a parent directory. So
-one obvious source of problems would be requests for paths like
-`/../secret_file`.
 
 {{index "path package", "resolve function", "cwd function", "process object", "403 (HTTP status code)", "sep binding", ["backslash character", "as path separator"], "slash character"}}
 
-To avoid such problems, `urlPath` uses the `resolve` function from the
-`path` module, which resolves relative paths. It then verifies that
-the result is _below_ the working directory. The `process.cwd`
-function (where `cwd` stands for "current working directory") can be
-used to find this working directory. The `sep` binding from the
-`path` package is the system's path separator—a backslash on Windows
-and a forward slash on most other systems. When the path doesn't start
-with the base directory, the function throws an error response object,
-using the HTTP status code indicating that access to the resource is
-forbidden.
+برای پیشگیری از این گونه مشکلات، `urlPath` از تابع `resolve` متعلق به ماژول `path` بهره می‌برد، که مسیر‌های نسبی را واکاوی می‌کند. سپس تحقیق می‌کند که مسیر حاصل زیرمجموعه‌ی پوشه‌ی کاری برنامه باشد. تابع `process.cwd` (که `cwd` سرنام "current working directory" یا پوشه‌ی فعلی کاری می‌باشد) را می‌توان برای پیدا کردن پوشه‌ی کاری استفاده کرد. متغیر `sep` از بسته‌ی `path`، جداساز مسیر سیستم است- یک بک‌اسلش در ویندوز و اسلش در بیشتر دیگر سیستم‌ ها. زمانی که یک مسیر با پوشه‌ی پایه شروعی نمی‌شود، این تابع یک پاسخ خطا رها می‌کند، که به وسیله‌ی کد وضعیت HTTP مشخص می‌شود که دسترسی به این منبع ممنوع می‌باشد.
 
 {{index "file server example", "Node.js", "GET method", [file, resource]}}
 
-We'll set up the `GET` method to return a list of files when
-reading a ((directory)) and to return the file's content when reading
-a regular file.
+ما متد `GET` را برای دریافت لیستی از فایل‌ها در هنگام خواندن یک پوشه و نمایش محتوای فایل در صورت خواندن یک فایل، تنظیم می کنیم.
 
 {{index "media type", "Content-Type header", "mime package"}}
 
-One tricky question is what kind of `Content-Type` header we should
-set when returning a file's content. Since these files could be
-anything, our server can't simply return the same content type for all
-of them. ((NPM)) can help us again here. The `mime` package (content
-type indicators like `text/plain` are also called _((MIME type))s_)
-knows the correct type for a large number of ((file extension))s.
+یک سوال مهم این است که چه نوع سرنام `Content-Type`ای باید در زمان بازگرداندن محتوای یک فایل  انتخاب کنیم. با توجه به اینکه فایل‌های درخواستی می توانند از هر نوعی باشند، سرویس‌دهنده‌ی ما نمی‌تواند به سادگی فقط یک content type برای همه‌ی فایل ها در نظر بگیرد. دوباره NPM می تواند به ما کمک کند. بسته‌ی `mime` (نشان‌های نوع محتوا مانند `text/plain` که MIME types یا انواع MIME نیز خوانده می‌شوند.) نوع صحیح محتوا را برای تعداد زیادی از پسوند‌های فایل می‌داند.
 
 {{index "require function", "npm program"}}
 
-The following `npm` command, in the directory where the server script
-lives, installs a specific version of `mime`:
+دستور `npm` پیش‌رو، اگر در پوشه‌ای که اسکریپت سرویس‌دهنده قرار دارد اجرا شود، نسخه‌ی مشخص شده از `mime` را نصب می‌کند.
 
 ```{lang: null}
 $ npm install mime@2.2.0
@@ -863,10 +570,7 @@ $ npm install mime@2.2.0
 
 {{index "404 (HTTP status code)", "stat function", [file, resource]}}
 
-When a requested file does not exist, the correct HTTP status code to
-return is 404. We'll use the `stat` function, which looks up
-information about a file, to find out both whether the file exists
-and whether it is a ((directory)).
+زمانی که فایلی درخواست می‌شود که وجود ندارد، کد وضعیت صحیحی که باید برگردانده شود کد 404 است. از تابع `stat` استفاده خواهیم کرد که به جستجوی اطلاعات در مورد فایل داده شده می‌پردازد و دو چیز را مشخص می‌کند: آیا فایل موجود است و اینکه آیا نتیجه پوشه است یا فایل.
 
 ```{includeCode: ">code/file_server.js"}
 const {createReadStream} = require("fs");
@@ -893,33 +597,21 @@ methods.GET = async function(request) {
 
 {{index "createReadStream function", ["asynchronous programming", "in Node.js"], "error handling", "ENOENT (status code)", "Error type", inheritance}}
 
-Because it has to touch the disk and thus might take a while, `stat`
-is asynchronous. Since we're using promises rather than callback
-style, it has to be imported from `promises` instead of directly from
-`fs`.
+به دلیل اینکه این تابع باید به سراغ دیسک برود پس ممکن است کمی زمان ببرد، ‍‍ `stat` ناهمگام است. با توجه به اینکه ما از سبک promiseها به جای callback استفاده می کنیم، باید آن را از  `promises` وارد (import) نمود نه از ماژول `fs`;
 
-When the file does not exist, `stat` will throw an error object with a
-`code` property of `"ENOENT"`. These somewhat obscure,
-((Unix))-inspired codes are how you recognize error types in Node.
+هنگامی که فایل مورد نظر وجود ندارد، `stat` شیء خطایی رها می‌کند که حاوی خاصیتی به نام `code` و مقدار `"ENOENT"` می‌باشد. این مقدار کمی ناآشنا به نظر می‌رسد، کدهای خطا در Node از Unix الهام گرفته شده اند.
 
 {{index "Stats type", "stat function", "isDirectory method"}}
 
-The `stats` object returned by `stat` tells us a number of things
-about a ((file)), such as its size (`size` property) and its
-((modification date)) (`mtime` property). Here we are interested in
-the question of whether it is a ((directory)) or a regular file, which
-the `isDirectory` method tells us.
+شیء `stats`ای که توسط تابع `stat` برگردانده‌ می‌شود اطلاعاتی مانند اندازه فایل (خاصیت `size`) و تاریخ تغییر آن (`mtime`) را در اختیار ما می‌گذارد.  در اینجا ما می‌خواهیم بدانیم که درخواست ما فایل معمولی بوده است یا یک پوشه، که متد `isDirectory` این موضوع را مشخص می‌کند.
 
 {{index "readdir function"}}
 
-We use `readdir` to read the array of files in a ((directory)) and
-return it to the client. For normal files, we create a readable stream
-with `createReadStream` and return that as the body, along with the
-content type that the `mime` package gives us for the file's name.
+از متد `readdir` برای خواندن مجموعه‌ای از فایل‌های یک پوشه و بازگرداندن آن به کلاینت استفاده می‌کنیم. برای فایل‌های عادی، یک استریم قابل خواندن به وسیله‌ی `createReadStream` ایجاد کرده و آن را به عنوان بدنه به همراه نوع محتوایی که بسته‌ی `mime` برای نام فایل داده شده مشخص می‌کند باز می‌گردانیم.
 
 {{index "Node.js", "file server example", "DELETE method", "rmdir function", "unlink function"}}
 
-The code to handle `DELETE` requests is slightly simpler.
+کدی که درخواست‌های `DELETE` را رسیدگی می‌کند کمی ساده‌تر است.
 
 ```{includeCode: ">code/file_server.js"}
 const {rmdir, unlink} = require("fs").promises;
@@ -940,27 +632,14 @@ methods.DELETE = async function(request) {
 ```
 
 {{index "204 (HTTP status code)", "body (HTTP)"}}
-
-When an ((HTTP)) ((response)) does not contain any data, the status
-code 204 ("no content") can be used to indicate this. Since the
-response to deletion doesn't need to transmit any information beyond
-whether the operation succeeded, that is a sensible thing to return
-here.
+هنگامی که یک پاسخ HTTP حاوی هیچ داده‌ای نیست، کد وضعیت 204 ("no content") را می‌توان برای مشخص کردن آن استفاده کرد. با توجه به اینکه پاسخ به یک درخواست حذف (DELETE) نیازمند ارسال اطلاعاتی به جز اینکه عملیات موفق بوده یا خیر نیست، استفاده از این کد وضعیت در اینجا منطقی است.
 
 {{index idempotence, "error response"}}
-
-You may be wondering why trying to delete a nonexistent file returns a
-success status code, rather than an error. When the file that is being
-deleted is not there, you could say that the request's objective is
-already fulfilled. The ((HTTP)) standard encourages us to make
-requests _idempotent_, which means that making the same request
-multiple times produces the same result as making it once. In a way,
-if you try to delete something that's already gone, the effect you
-were trying to do has been achieved—the thing is no longer there.
+ممکن است تعجب کنید که چرا تلاش برای حذف فایلی که موجود نیست وضعیت کد موفقیت برمی‌گرداند نه کد وضعیت خطا. زمانی که فایلی که باید حذف شود موجود نیست، می‌توانید پاسخ دهید که هدف درخواست پیش از این  برآورده شده است. استاندارد HTTP پیشنهاد می‌کند که درخواست‌ها را تکرار شونده (idempotent)  بسازیم، به این معنا که اگر درخواست مشابهی را چندین بار ارسال کنیم، پاسخی که دریافت می‌کنیم مشابه این باشد که آن درخواست یک بار ارسال شده است. به عبارتی، اگر سعی کنید که چیزی را که پیش از این حذف شده است  حذف کنید، اثر مورد نظر برآورده شده است -آن فایل دیگر موجود نیست.
 
 {{index "file server example", "Node.js", "PUT method"}}
 
-This is the handler for `PUT` requests:
+گرداننده برای درخواست‌های `PUT` در اینجا آمده است:
 
 ```{includeCode: ">code/file_server.js"}
 const {createWriteStream} = require("fs");
@@ -983,38 +662,21 @@ methods.PUT = async function(request) {
 
 {{index overwriting, "204 (HTTP status code)", "error event", "finish event", "createWriteStream function", "pipe method", stream}}
 
-We don't need to check whether the file exists this time—if it does,
-we'll just overwrite it. We again use `pipe` to move data from a
-readable stream to a writable one, in this case from the request to
-the file. But since `pipe` isn't written to return a promise, we have
-to write a wrapper, `pipeStream`, that creates a promise around the
-outcome of calling `pipe`.
+این‌بار نیازی نیست بررسی کنیم که فایل مورد نظر وجود دارد یا خیر- اگر وجود داشت، کافی است تا باز نویسی‌اش کنیم. دوباره از  ‍`pipe` برای انتقال داده‌ها از یک استریم قابل خوانده به قابل نوشتن استفاده می‌کنیم، در این مورد از یک درخواست به یک فایل. اما چون `pipe` طوری نوشته نشده است که یک promise برگرداند، باید برایش یک پوشش ایجاد کنیم، که همان `pipeStream` است و یک promise پیرامون خروجی `pipe` ایجاد می‌کند.
 
 {{index "error event", "finish event"}}
 
-When something goes wrong when opening the file, `createWriteStream`
-will still return a stream, but that stream will fire an `"error"`
-event. The output stream to the request may also fail, for example if
-the network goes down. So we wire up both streams' `"error"` events to
-reject the promise. When `pipe` is done, it will close the output
-stream, which causes it to fire a `"finish"` event. That's the point
-where we can successfully resolve the promise (returning nothing).
+هنگامی‌ که در زمان باز نمودن فایل، مشکلی پیش‌ می‌آید، `createWriteStream` همچنان یک استریم برمی‌گرداند اما آن استریم یک رخداد `"error"` را تولید می‌کند. استریم خروجی درخواست نیز ممکن است متوقف شود، به عنوان مثال، اگر شبکه از دسترس خارج شود. بنابراین ما رخداد‌های ‍`"error"` هر دو استریم را در نظر می‌گیریم تا promise را لغو (reject) کنیم. وقتی کار `pipe` به اتمام می‌رسد استریم خروجی را می‌بندد که باعث می‌شود رخداد ‍‍`"finish"` تولید شود. این نقطه ای است که ما می‌توانیم با موفقیت promise را به سرانجام برسانیم (بدون بازگرداندن چیزی).
 
 {{index download, "file server example", "Node.js"}}
 
-The full script for the server is available at
-[_https://eloquentjavascript.net/code/file_server.js_](https://eloquentjavascript.net/code/file_server.js).
-You can download that and, after installing its dependencies, run it
-with Node to start your own file server. And, of course, you can modify
-and extend it to solve this chapter's exercises or to experiment.
+اسکریپت کامل این سرویس‌دهنده در آدرس
+[_https://eloquentjavascript.net/code/file_server.js_](https://eloquentjavascript.net/code/file_server.js) موجود است.
+می توانید آن را دانلود کرده و پس از نصب وابستگی‌هایش، آن را به وسیله‌ی Node اجرا کنید و سرویس‌هنده‌ی فایل خودتان را داشته باشید. و البته که می توانید آن را تغییر دهید و با حل تمرین‌های این فصل آن را بهبود ببخشید.
 
 {{index "body (HTTP)", "curl program", [HTTP, client], [method, HTTP]}}
 
-The command line tool `curl`, widely available on ((Unix))-like
-systems (such as macOS and Linux), can be used to make HTTP
-((request))s. The following session briefly tests our server. The `-X`
-option is used to set the request's method, and `-d` is used to
-include a request body.
+ابزار خط فرمان `curl`، که به طور گسترده در سیستم‌های مبتنی بر Unix مانند مک و لینوکس در دسترس است، را می‌توان برای ایجاد درخواست‌های HTTP استفاده کرد. دستور پیش‌رو به صورت مختصر سرویس‌دهنده‌ی ما را آزمایش می‌کند. گزینه‌ی <bdo>`-X`</bdo> برای تنظیم متد درخواست استفاده می‌شود و <bdo>`-d`</bdo> برای قرار دادن بدنه‌ی درخواست.
 
 ```{lang: null}
 $ curl http://localhost:8000/file.txt
@@ -1026,113 +688,67 @@ $ curl -X DELETE http://localhost:8000/file.txt
 $ curl http://localhost:8000/file.txt
 File not found
 ```
+اولین درخواست برای `file.txt` با شکست روبرو می‌شود زیرا فایل هنوز وجود ندارد. درخواست `PUT` فایل را ایجاد می کند و درخواست بعدی آن را با موفقیت برمی‌گرداند. پس از حذف آن به وسیله‌ی درخواست `DELETE`، فایل دوباره ناموجود می‌شود.
 
-The first request for `file.txt` fails since the file does not exist
-yet. The `PUT` request creates the file, and behold, the next request
-successfully retrieves it. After deleting it with a `DELETE` request,
-the file is again missing.
-
-## Summary
+## خلاصه
 
 {{index "Node.js"}}
 
-Node is a nice, small system that lets us run JavaScript in a
-nonbrowser context. It was originally designed for network tasks to
-play the role of a _node_ in a network. But it lends itself to all
-kinds of scripting tasks, and if writing JavaScript is something you
-enjoy, automating tasks with Node works well.
+Node دوست داشتنی است، سیستمی کوچک که برای ما امکان اجرای جاوااسکریپت در فضایی غیر از مرورگر را فراهم می‌سازد. هدف ابتدایی طراحی Node برای استفاده در وظایف شبکه بود که قرار بود نقش یک گره (node) را در شبکه بازی کند. اما توانست خود را به همه‌ی وظایف و کاربردهای اسکریپتی عرضه کند، و اگر شما از نوشتن جاوااسکریپت لذت می‌برید، با استفاده از Node می‌توانید کارهایتان را خودکار نمایید.
 
-NPM provides packages for everything you can think of (and quite a few
-things you'd probably never think of), and it allows you to fetch and
-install those packages with the `npm` program. Node comes with a
-number of built-in modules, including the `fs` module for working with
-the file system and the `http` module for running HTTP servers and
-making HTTP requests.
+NPM برای هر چیزی که فکرش را بکنید‌ (و چیزهایی که شاید فکرش را هم نکنید) بسته‌هایی فراهم می‌کند، و می‌توانید آن‌ها را بارگیری و به وسیله‌ی برنامه‌ی `npm` نصب کنید. خود Node نیز تعدادی ماژول درونی دارد،‌ مانند ماژول `fs` برای کار با سیستم فایل و `http` برای اجرای سرویس‌دهنده‌های HTTP و ساختن درخواست‌های HTTP.
 
-All input and output in Node is done asynchronously, unless you
-explicitly use a synchronous variant of a function, such as
-`readFileSync`. When calling such asynchronous functions, you provide
-callback functions, and Node will call them with an error value and
-(if available) a result when it is ready.
+همه‌ی عملیات ورودی و خروجی در Node به صورت ناهمگام صورت می‌پذیرند مگر اینکه صراحتا از شکل همگام یک تابع مانند `readFileSync` استفاده کنید. زمانی که از این گونه توابع ناهمگام استفاده می‌کنید، شما یک تابع callback به تابع مورد نظر ارسال می‌کنید و Node آن‌ها با یک مقدار خطا و (درصورت وجود) یک نتیجه فراخوانی می کند.
 
-## Exercises
+## تمرین‌ها
 
-### Search tool
+### ابزار جستجو
 
 {{index grep, "search problem", "search tool (exercise)"}}
 
-On ((Unix)) systems, there is a command line tool called `grep` that
-can be used to quickly search files for a ((regular expression)).
+در سیستم‌های مبتنی بر Unix، ابزار خط فرمانی به نام `grep` وجود دارد که می‌توان از آن برای جستجوی فایل‌ها بر اساس یک عبارت باقاعده استفاده کرد.
 
-Write a Node script that can be run from the ((command line)) and acts
-somewhat like `grep`. It treats its first command line argument as a
-regular expression and treats any further arguments as files to search. It
-should output the names of any file whose content matches the regular
-expression.
+یک اسکریپت Node بنویسید که بتوان آن را از طریق خط فرمان اجرا نمود و کاری مشابه `grep` را انجام دهد.  اولین دستور ورودی از خط فرمان را به عنوان عبارت باقاعده در نظر بگیرد و دیگر ورودی‌ها را به عنوان فایل‌هایی که باید جستجو کند. خروجی این ابزار باید نام‌ فایل‌هایی باشد که محتوایشان با عبارت باقاعده مطابقت داشته باشد.
 
-When that works, extend it so that when one of the arguments is a
-((directory)), it searches through all files in that directory and its
-subdirectories.
+پس از اینکه به خوبی کار کرد، به آن یک ویژگی جدید اضافه کنید که اگر یکی از ورودی ها پوشه بود، جستجو در همه‌ی فایل‌های آن پوشه و زیرپوشه‌های آن صورت می‌گیرد.
 
 {{index ["asynchronous programming", "in Node.js"], "synchronous programming"}}
 
-Use asynchronous or synchronous file system functions as you see fit.
-Setting things up so that multiple asynchronous actions are requested
-at the same time might speed things up a little, but not a huge
-amount, since most file systems can read only one thing at a time.
+با توجه به نیازی که می‌بینید از توابع سیستم فایل ناهمگام یا همگام استفاده کنید.
+تنظیم سیستم به صورتی که بتوان چندین عمل ناهمگام را در یک لحظه درخواست داد ممکن است سرعت را اندکی بالا ببرد، اما نباید تعداد عملیات ناهمگام زیاد شود، زیرا در بیشتر سیستم‌های فایل در هر لحظه فقط می‌توان یک چیز را خواند.
 
 {{hint
 
 {{index "RegExp class", "search tool (exercise)"}}
 
-Your first command line argument, the ((regular expression)), can be
-found in `process.argv[2]`. The input files come after that. You can
-use the `RegExp` constructor to go from a string to a regular
-expression object.
+ورودی اول ابزار خط فرمان شما، همان عبارت باقاعده، را می توان در ‍`process.argv[2]‍‍` به دست آورد. فایل‌های ورودی بعد از آن می‌آیند. می توانید از سازنده‌ی `RegExp` برای ساخت عبارت باقاعده از یک رشته استفاده کنید.
 
 {{index "readFileSync function"}}
 
-Doing this synchronously, with `readFileSync`, is more
-straightforward, but if you use `fs.promises` again to get
-promise-returning functions and write an `async` function, the code
-looks similar.
+انجام این کار به صورت همگام، با استفاده از `readFileSync`، سرراست‌تر است، اما اگر دوباره از `fs.promises` برای گرفتن توابعی که promise برمی‌گردانند استفاده کنید و یک تابع `async` بنویسید، کد شما یکسان خواهد بود.
+
 
 {{index "stat function", "statSync function", "isDirectory method"}}
 
-To figure out whether something is a directory, you can again use
-`stat` (or `statSync`) and the stats object's `isDirectory` method.
+ برای فهمیدن اینکه چیزی از جنس پوشه است، می توانید دوباره از `stat` یا `statSync` و متد `isDirectory` شیء stats استفاده کنید.
 
 {{index "readdir function", "readdirSync function"}}
 
-Exploring a directory is a branching process. You can do it either
-by using a recursive function or by keeping an array of work (files that
-still need to be explored). To find the files in a directory, you can
-call `readdir` or `readdirSync`. The strange
-capitalization—Node's file system function naming is loosely based on
-standard Unix functions, such as `readdir`, that are all lowercase,
-but then it adds `Sync` with a capital letter.
+کاوش یک پوشه یک پردازش درختی است. می توانید این کار را یا با استفاده از یک تابع بازگشتی یا با نگه‌داری آرایه‌ای از کارها (فایل‌هایی که همچنان نیاز است کاوش شوند) انجام دهید. برای یافتن فایل‌های یک پوشه، می توانید `readdir` یا `readdirSync` را فراخوانی کنید.  روش عجیب استفاده از حروف بزرگ در نام‌گذاری توابع در سیستم فایل Node از توابع استاندارد Unix الهام گرفته مانند `readdir` که تماما با حروف کوچک است، اما `Sync` را با حروف بزرگ به آن اضافه می‌کند.
 
-To go from a filename read with `readdir` to a full path name, you
-have to combine it with the name of the directory, putting a ((slash
-character)) (`/`) between them.
+برای بدست آوردن یک نام مسیر کامل از نام فایلی که با `readdir` به دست آمده است، باید آن را با نام پوشه ترکیب کنید و یک کاراکتر اسلش (`/`) بین‌شان قرار دهید.
 
 hint}}
 
-### Directory creation
+### ایجاد پوشه
 
 {{index "file server example", "directory creation (exercise)", "rmdir function"}}
 
-Though the `DELETE` method in our file server is able to delete
-directories (using `rmdir`), the server currently does not provide any
-way to _create_ a ((directory)).
+اگر در سرویس‌دهنده‌ی فایل ما، متد `DELETE` قادر است تا پوشه‌ها را حذف کند (به وسیله‌ی `rmdir`)، هنوز امکان ایجاد یک پوشه را پشتیبانی نمی‌کند.
 
 {{index "MKCOL method", "mkdir function"}}
 
-Add support for the `MKCOL` method ("make collection"), which should create
-a directory by calling `mkdir` from the `fs` module. `MKCOL` is not a
-widely used HTTP method, but it does exist for this same purpose in
-the _((WebDAV))_ standard, which specifies a set of conventions on top
-of ((HTTP)) that make it suitable for creating documents.
+پشتیبانی از متد `MKCOL` ("make collection") را اضافه کنید، که باید پوشه‌ای را به وسیله‌ی فراخوانی `mkdir` از ماژول `fs` ایجاد کند. `MKCOL` متدی نیست که زیاد استفاده شود در HTTP اما به هر حال برای این هدف در استاندارد _((WebDAV))_ وجود دارد، که مجموعه‌ای قرارداد در HTTP مشخص می‌کند که آن را مناسب ایجاد کردن اسناد می‌سازد.
 
 ```{hidden: true, includeCode: ">code/file_server.js"}
 const {mkdir} = require("fs").promises;
@@ -1156,74 +772,42 @@ methods.MKCOL = async function(request) {
 
 {{index "directory creation (exercise)", "file server example", "MKCOL method", "mkdir function", idempotency, "400 (HTTP status code)"}}
 
-You can use the function that implements the `DELETE` method as a
-blueprint for the `MKCOL` method. When no file is found, try to create
-a directory with `mkdir`. When a directory exists at that path, you
-can return a 204 response so that directory creation requests are
-idempotent. If a nondirectory file exists here, return an error code.
-Code 400 ("bad request") would be appropriate.
+می‌توانید از تابعی که متد `DELETE` را پیاده‌سازی می‌کند به عنوان نقطه‌ی شروع برای متد `MKCOL` استفاده کنید. زمانی که فایلی پیدا نمی‌شود، سعی کنید تا پوشه‌ای را به وسیله‌ی `mkdir` ایجاد کنید. زمانی که پوشه‌ی مورد نظر در مسیر داده شده موجود بود، می توانید یک پاسخ 204 ارسال کنید که نشان دهید درخواست‌های ایجاد پوشه تکرارشونده یا idempotent می‌باشند. اگر فایلی غیرپوشه در اینجا وجود داشت، یک کد خطا برگردانید. کد <bdo>400 ("bad request")</bdo> مناسب خواهد بود.
 
 hint}}
 
-### A public space on the web
+### یک فضای عمومی در وب
 
 {{index "public space (exercise)", "file server example", "Content-Type header", website}}
 
-Since the file server serves up any kind of file and even includes the
-right `Content-Type` header, you can use it to serve a website. Since
-it allows everybody to delete and replace files, it would be an
-interesting kind of website: one that can be modified, improved, and
-vandalized by everybody who takes the time to create the right HTTP
-request.
+با توجه به اینکه سرویس‌دهنده‌ی فایل ما هر نوعی از فایل را پشتیبانی می‌کند و حتی سرنام صحیح برای `Content-Type` در نظر می‌گیرد، می توانید از آن برای میزبانی یک وب‌سایت استفاده کنید. به دلیل اینکه این سرویس‌دهنده اجازه حذف و جایگزینی فایل‌ها را به همه می‌دهد، در نوع خودش وب‌سایت جالبی خواهد شد: وب‌سایتی که می توان‌ آن را توسط هرکسی که زمان داشته باشد تا درخواست‌های HTTP صحیح ارسال کند، تغییر داد، بهبود بخشید و خراب کرد .
 
-Write a basic ((HTML)) page that includes a simple JavaScript file.
-Put the files in a directory served by the file server and open them
-in your browser.
+یک صفحه‌ی HTML ساده به همراه یک فایل جاوااسکریپت ساده ایجاد کنید. فایل‌ها را درون یک پوشه قرار داده و توسط سرویس‌دهنده‌ی پشتیبانی و در مرورگرتان باز کنید.
 
-Next, as an advanced exercise or even a ((weekend project)), combine
-all the knowledge you gained from this book to build a more
-user-friendly interface for modifying the website—from _inside_ the
-website.
+سپس، به عنوان یک تمرین پیشرفته یا حتی یک پروژه برای آخر هفته، تمام دانشی که در این کتاب کسب کرده اید را به کار ببرید تا رابط کاربرپسند‌تری برای ایجاد تغییر در این وب‌سایت ایجاد کنید- از درون خود وب‌سایت.
 
-Use an HTML ((form)) to edit the content of the files that make up the
-website, allowing the user to update them on the server by using HTTP
-requests, as described in [Chapter ?](http).
+از یک فرم HTML برای ویرایش محتوای فایل‌های سازنده‌ی وب‌سایت استفاده کنید و به کاربر این امکان را بدهید که توسط درخواست‌های HTTP آن ها را به‌روزرسانی کند، همانطور که در [فصل ?](http) توضیح داده شده است.
 
-Start by making only a single file editable. Then make it so that the
-user can select which file to edit. Use the fact that our file server
-returns lists of files when reading a directory.
+ابتدا فقط با یک فایل قابل ویرایش شروع کنید. سپس آن را تغییر داده تا کاربر بتواند فایلی که می‌خواهد ویرایش کند را انتخاب کند. از این نکته که سرویس‌دهنده‌ی فایل ما در هنگام خواندن یک پوشه لیستی از فایل‌ها را بر می‌گرداند بهره ببرید.
 
 {{index overwriting}}
 
-Don't work directly in the code exposed by the file server since if
-you make a mistake, you are likely to damage the files there. Instead,
-keep your work outside of the publicly accessible directory and copy
-it there when testing.
+مستقیما در کدی که توسط سرویس‌دهنده فایل در دستری قرار می‌گیرد کار نکنید زیرا اگر اشتباهی مرتکب شوید، احتمال اینکه فایل‌ها را خراب کنید وجود دارد. در عوض، کدهایتان را خارج از یک پوشه قابل دسترس عموم بنویسید و هنگام آزمایش در انجا کپی کنید.
 
 {{hint
 
 {{index "file server example", "textarea (HTML tag)", "fetch function", "relative path", "public space (exercise)"}}
 
-You can create a `<textarea>` element to hold the content of the file
-that is being edited. A `GET` request, using `fetch`, can retrieve the
-current content of the file. You can use relative URLs like
-_index.html_, instead of
-[_http://localhost:8000/index.html_](http://localhost:8000/index.html),
-to refer to files on the same server as the running script.
+برای نگه‌داری محتوای فایلی که در حال ویرایش است می‌توانید از یک `<textarea>` استفاده کنید. یک درخواست‌ ‍`GET` به وسیله‌ی `fetch` می‌تواند برای دریافت محتوای  یک فایل استفاده شود. می‌توانید به جای استفاده از
+[_http://localhost:8000/index.html_](http://localhost:8000/index.html)،
+از URL های نسبی مثل  _index.html_ استفاده کنید تا به فایل‌هایی که روی سرویس‌دهنده‌ی یکسانی با اسکریپت اجرایی هستند ارجاع دهید.
 
 {{index "form (HTML tag)", "submit event", "PUT method"}}
 
-Then, when the user clicks a button (you can use a `<form>` element
-and `"submit"` event), make a `PUT` request to the same URL, with the
-content of the `<textarea>` as request body, to save the file.
+سپس، هنگامی که کاربر روی یک دکمه (می توانید از یک عنصر `<form>` و رخداد `"submit"` استفاده کنید) کلیک می کند، یک درخواست `PUT` به URL مشابه ارسال کنید که در این درخواست محتوای `<textarea>` به عنوان بدنه‌ی درخواست ارسال می‌شود تا فایل مورد نظر ذخیره شود.
 
 {{index "select (HTML tag)", "option (HTML tag)", "change event"}}
 
-You can then add a `<select>` element that contains all the files in
-the server's top ((directory)) by adding `<option>` elements
-containing the lines returned by a `GET` request to the URL `/`. When
-the user selects another file (a `"change"` event on the field), the
-script must fetch and display that file. When saving a file, use the
-currently selected filename.
+در ادامه می‌توانید یک عنصر `<select>` که حاوی همه‌ی فایل‌ها موجود در پوشه‌ی بالایی سرویس‌دهنده است اضافه کنید. گزینه‌ها را به وسیله‌ی خطوطی که به وسیله‌ی ارسال درخواست `GET` به آدرس `/` دریافت می‌شوند توسط `<option>` تنظیم کنید. زمانی که کاربر فایل دیگری را انتخاب می‌کند (یک رخداد `change` روی فیلد)، اسکریپت باید آن فایل را دریافت و نمایش دهد. در هنگام ذخیره‌ی یک فایل، از نام فایل انتخاب شده‌ی فعلی استفاده کنید.
 
 hint}}
