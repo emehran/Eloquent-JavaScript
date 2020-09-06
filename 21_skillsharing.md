@@ -1,10 +1,10 @@
 {{meta {code_links: "[\"code/skillsharing.zip\"]"}}}
 
-# Project: Skill-Sharing Website
+# پروژه: وب‌سایت اشتراک مهارت‌ها
 
-{{quote {author: "Margaret Fuller", chapter: true}
+{{quote {author: "مارگارت فولر", chapter: true}
 
-If you have knowledge, let others light their candles at it.
+اگر دانشی دارید، بگذارید دیگران از چراغ دانش‌تان بهره‌مند شوند.
 
 quote}}
 
@@ -12,149 +12,75 @@ quote}}
 
 {{figure {url: "img/chapter_picture_21.jpg", alt: "Picture of two unicycles", chapter: "framed"}}}
 
-A _((skill-sharing))_ meeting is an event where people with a shared
-interest come together and give small, informal presentations about
-things they know. At a ((gardening)) skill-sharing meeting, someone
-might explain how to cultivate ((celery)). Or in a programming
-skill-sharing group, you could drop by and tell people about Node.js.
+یک جلسه‌ی اشتراک مهارت، رخدادی است که در آن‌جا افرادی با یک علاقه‌ی مشترک دور هم جمع می‌شوند و دانش خود را به صورت خودمانی و کوتاه ارائه می‌کنند. در یک جلسه‌ی اشتراک مهارت باغبانی، ممکن است فردی به توضیح نحوه‌ی کاشت کرفس بپردازد. یا در یک گروه اشتراک مهارت برنامه‌نویسی، شما می‌توانید شرکت کنید و درباره‌ی Node.js مطلبی ارائه کنید.
 
 {{index learning, "users' group"}}
 
-Such meetups—also often called _users' groups_ when they are about
-computers—are a great way to broaden your horizon, learn about new
-developments, or simply meet people with similar interests. Many
-larger cities have JavaScript meetups. They are typically free to
-attend, and I've found the ones I've visited to be friendly and
-welcoming.
+این‌گونه جلسات- که اغلب وقتی درباره‌ی کامپیوتر است، گروه‌‌های کاربران نامیده می‌شود (users' groups)- روش مناسبی برای وسعت بخشیدن به گستره‌ی دانش‌تان، یادگیری درباره‌ی پیش‌رفت‌ها و توسعه‌های جدید، یا ملاقات افراد جدید با علايق مشترک می‌باشند. خیلی از شهر‌های بزرگ جلسات جاوااسکریپت دارند. معمولا شرکت در این‌گونه‌ جلسات رایگان است، و جلساتی که من تجربه کرده‌ام، همگی گرم و دوستانه بوده اند.
 
-In this final project chapter, our goal is to set up a ((website)) for
-managing ((talk))s given at a skill-sharing meeting. Imagine a small
-group of people meeting up regularly in the office of one of the
-members to talk about ((unicycling)). The previous organizer of the
-meetings moved to another town, and nobody stepped forward to take
-over this task. We want a system that will let the participants
-propose and discuss talks among themselves, without a central
-organizer.
+در این فصل پروژه‌ی پایانی، هدف ما این ‌است که وب‌سایتی برای مدیریت ارائه‌هایی که در یک جلسه‌ی اشتراک مهارت اجرا می‌شود، ایجاد کنیم. تصور کنید که گروه کوچکی از کاربران به صورت منظم در دفتر کار یکی از اعضا ملاقات می‌کنند تا درباره‌ی یک‌چرخه‌ها صحبت کنند. مسئول برگزاری پیشین به شهر دیگری نقل مکان کرده است و کسی برای قبول این کار قدم پیش‌ نگذاشته است. ما به سیستمی نیاز داریم که به شرکت کنندگان این امکان را بدهد تا بتوانند ارائه‌ها را پیشنهاد داده و در مورد آن‌ها بحث کنند بدون اینکه نیازی به یک مدیر برگزارکننده‌ی مرکزی باشد.
 
-[Just like in the [previous chapter](node), some of the code in this
-chapter is written for Node.js, and running it directly in the HTML
-page that you are looking at is unlikely to work.]{if interactive} The
-full code for the project can be ((download))ed from
-[_https://eloquentjavascript.net/code/skillsharing.zip_](https://eloquentjavascript.net/code/skillsharing.zip).
+[درست مانند [فصل پیش](node)، بخشی از کدی که در این فصل می‌آید برای محیط Node.js نوشته شده است، و اجرای مستقیم آن در صفحه‌ی HTMLای کد را در آن مشاهده می‌کنید، بعید است که کار کند.]{if interactive} کد کامل پروژه را می‌توانید از [_https://eloquentjavascript.net/code/skillsharing.zip_](https://eloquentjavascript.net/code/skillsharing.zip) دانلود کنید.
 
-## Design
+## طراحی
 
 {{index "skill-sharing project", persistence}}
 
-There is a _((server))_ part to this project, written for ((Node.js)),
-and a _((client))_ part, written for the ((browser)). The server
-stores the system's data and provides it to the client. It also serves
-the files that implement the client-side system.
+در این پروژه، بخشی مربوط به سرویس‌دهنده است که برای Node.js نوشته شده است، و بخشی مربوط به کلاینت که برای مرورگر نوشته شده است. سرویس‌دهنده داده‌های سیستم را ذخیره می ‌کند و آن‌ها را برای کلاینت فراهم می‌سازد. همچنین میزبانی و سرو فایل‌هایی که بخش سمت کلایت را پیاده سازی می‌کنند نیز با سرویس دهنده است.
 
 {{index [HTTP, client]}}
 
-The server keeps the list of ((talk))s proposed for the next meeting,
-and the client shows this list. Each talk has a presenter name, a
-title, a summary, and an array of ((comment))s associated with it. The
-client allows users to propose new talks (adding them to the list),
-delete talks, and comment on existing talks. Whenever the user makes
-such a change, the client makes an HTTP ((request)) to tell the
-server about it.
+سرویس‌دهنده لیست ارائه‌هایی که برای جلسه‌ی بعدی پیشنهاد شده اند را نگه‌داری می‌کند و کلاینت آن‌ها را نمایش می‌دهد. هر ارائه دارای یک نام ارائه کننده، یک عنوان، یک خلاصه، و آرایه‌ای از نظرات مرتبط با آن می‌باشد. کلاینت به کاربران امکان پیشنهاد ارائه‌های جدید ( اضافه کردن آن‌ها به لیست)، حذف آن‌ها و ارسال نظر به ارائه‌های فعلی را فراهم می‌سازد. هر بار که کاربر تغییری این‌گونه ایجاد می‌کند، کلاینت یک درخواست HTTP به سرویس‌دهنده‌ برای آن ارسال می کند.
 
 {{figure {url: "img/skillsharing.png", alt: "Screenshot of the skill-sharing website",width: "10cm"}}}
 
 {{index "live view", "user experience", "pushing data", connection}}
 
-The ((application)) will be set up to show a _live_ view of the
-current proposed talks and their comments. Whenever someone,
-somewhere, submits a new talk or adds a comment, all people who have
-the page open in their browsers should immediately see the change.
-This poses a bit of a challenge—there is no way for a web server to
-open a connection to a client, nor is there a good way to know which
-clients are currently looking at a given website.
+اپلیکیشن به صورتی تنظیم خواهد شد که یک نمای زنده از ارائه‌های پیشنهاد شده‌ی کنونی نمایش دهد. هنگامی که کسی، جایی، یک ارائه‌ی جدید ثبت می‌کند یا نظری ارسال می‌کند، همه‌ی افرادی که صفحه‌ی سایت را باز نگه‌داشته اند بایستی تغییرات را بلافاصله ببینند. این ویژگی کمی چالش ایجاد خواهد کرد- زیرا راهی وجود ندارد که سرویس‌دهنده تماسی را به یک کلاینت برقرار سازد، و همچنین راه مناسبی برای دانستن اینکه کدام کلاینت‌ها در حال حاضر در حال مشاهده‌ی یک وب سایت هستند وجود ندارد.
 
 {{index "Node.js"}}
 
-A common solution to this problem is called _((long polling))_, which
-happens to be one of the motivations for Node's design.
+یک راه حل رایج برای این مشکل وجود دارد که _((long polling))_ نامیده می‌شود که یکی از انگیزه‌های موجود برای طراحی Node بوده است.
 
 ## Long polling
 
 {{index firewall, notification, "long polling", network, [browser, security]}}
 
-To be able to immediately notify a client that something changed, we
-need a ((connection)) to that client. Since web browsers do not
-traditionally accept connections and clients are often behind
-((router))s that would block such connections anyway, having the
-server initiate this connection is not practical.
+برای اینکه بتوان بلافاصله کلاینت را از تغییری باخبر کرد، لازم است تا ارتباطی با کلاینت برقرار کنیم. با توجه به اینکه مرورگرهای وب از دیرباز درخواست اتصال را قبول نمی‌کنند و اغلب پشت روترهایی هستند که این‌گونه درخواست‌های اتصال را بلاک می‌کنند، ارسال اتصال توسط سرویس‌دهنده کارایی ندارد.
 
-We can arrange for the client to open the connection and keep it
-around so that the server can use it to send information when it needs
-to do so.
+می توانیم کلاینت را طوری هماهنگ کنیم که اتصالی برقرار کرده و آن را باز نگه‌دارد تا سرویس‌دهنده بتواند با کمک آن اطلاعاتی که نیاز است ارسال شود را ارسال کند.
 
 {{index socket}}
 
-But an ((HTTP)) request allows only a simple flow of information: the
-client sends a request, the server comes back with a single response,
-and that is it. There is a technology called _((WebSockets))_,
-supported by modern browsers, that makes it possible to open
-((connection))s for arbitrary data exchange. But using them properly
-is somewhat tricky.
+اما درخواست‌های HTTP فقط از جریان‌های ساده‌ی داده پشتیبانی می کنند: کلاینت یک درخواست ارسال می‌نماید، سرویس‌دهنده یک پاسخ برای آن درخواست برمی‌گرداند، و فقط همین. فناوری‌ای وجود دارد که WebSockets نام دارد، و توسط مرورگرهای مدرن پشتیبانی می‌شود. به کمک این فناوری، می‌توان اتصالاتی برای تبادل داده‌ها به صورت دلخواه باز نمود. اما استفاده‌ی درست از آن کمی پیچیده است.
 
-In this chapter, we use a simpler technique—((long polling))—where
-clients continuously ask the server for new information using regular
-HTTP requests, and the server stalls its answer when it has nothing
-new to report.
+در این فصل، ما از تکنیکی ساده تر-((long polling))- استفاده می‌کنیم جایی که کلاینت‌ها به صورت مداوم از سرویس‌دهنده‌ به وسیله‌ی درخواست‌های HTTP معمولی، تقاضای داده‌های جدید می‌کند، و سرویس‌دهنده در صورت نبود چیز جدیدی برای گزارش، ارسال پاسخ را متوقف می کند.
 
 {{index "live view"}}
 
-As long as the client makes sure it constantly has a polling request
-open, it will receive information from the server quickly after it
-becomes available. For example, if Fatma has our skill-sharing
-application open in her browser, that browser will have made a request
-for updates and will be waiting for a response to that request. When Iman
-submits a talk on Extreme Downhill Unicycling, the server will notice
-that Fatma is waiting for updates and send a response containing the
-new talk to her pending request. Fatma's browser will receive the data
-and update the screen to show the talk.
+اگر کلاینت همیشه‌ درخواست بازی از نوع polling داشته باشد، می‌تواند انتظار داشته باشد که در صورت در دسترس قرار گرفتن داده‌ی جدید، آن را به سرعت از سرویس‌دهنده دریافت خواهد کرد. به عنوان مثال، اگر Fatma سایت اشتراک مهارت ما را مرورگرش باز داشته باشد، آن مرورگر درخواستی برای به‌روز‌رسانی‌ها به سرویس‌دهنده‌ خواهد داشت و منتظر پاسخ برای آن می‌ماند. زمانی که Iman ارائه ای را در مورد یک‌چرخه‌‌سواری در شیب‌های تند ثبت می‌کند، سرویس‌دهنده می‌داند که Fatma منتظر خبر جدیدی است و پاسخی حاوی ارائه جدید ثبت شده به درخواست او ارسال می‌کند. مرورگر Fatma داده‌ها را دریافت کرده و صفحه‌ی نمایش را با اطلاعات ارائه‌ی جدید به‌روز می‌کند.
 
 {{index robustness, timeout}}
 
-To prevent connections from timing out (being aborted because of a
-lack of activity), ((long polling)) techniques usually set a maximum
-time for each request, after which the server will respond anyway,
-even though it has nothing to report, after which the client will
-start a new request. Periodically restarting the request also makes
-the technique more robust, allowing clients to recover from temporary
-((connection)) failures or server problems.
+برای جلوگیری از لغو شدن اتصال‌ها به دلیل نبود فعالیت، تکنیک‌های long polling معمولا یک بیشینه‌ی زمان برای هر درخواست در نظر می‌گیرند، پس از گذشت آن زمان، سرویس‌دهنده پاسخی را به هر حال ارسال می‌کند، حتی درصورتی که چیزی برای گزارش نداشته باشد، که بعد از آن کلاینت دوباره درخواستی ارسال می‌کند. دوباره ارسال مدوام درخواست باعث می‌شود که تکنیک پایدار شود، زیرا به کلاینت امکان پوشش مشکلات موقت سرویس‌دهنده و قطع ارتباط می‌دهد.
 
 {{index "Node.js"}}
 
-A busy server that is using long polling may have thousands of waiting
-requests, and thus ((TCP)) connections, open. Node, which makes it
-easy to manage many connections without creating a separate thread of
-control for each one, is a good fit for such a system.
+یک سرویس‌دهنده‌ی پرترافیک که از تکنیک long polling استفاده می‌کند ممکن است هزاران درخواست منتظر پاسخ داشته باشد، که به معنای همین تعداد اتصال TCP باز می‌باشد. Node، که امکان مدیریت اتصال‌های زیاد بدون نیاز به ایجاد thread‌های مجزا و کنترل آن‌ها را به آسانی فراهم می‌سازد، گزینه‌ی مناسبی برای این‌گونه سیستم‌ها می‌باشد.
 
-## HTTP interface
+## رابط HTTP
 
 {{index "skill-sharing project", [interface, HTTP]}}
 
-Before we start designing either the server or the client, let's think
-about the point where they touch: the ((HTTP)) interface over
-which they communicate.
+پیش از اینکه به سراغ طراحی سرویس‌دهنده یا کلاینت برویم، اجازه‌ دهید به نقطه‌ای که هر دوی‌ آن‌ها با آن ارتباط برقرار می‌کنند فکر کنیم: رابط HTTP که در بستر آن تعامل صورت خواهد گرفت.
 
 {{index [path, URL], [method, HTTP]}}
 
-We will use ((JSON)) as the format of our request and response body.
-Like in the file server from [Chapter ?](node#file_server), we'll try
-to make good use of HTTP methods and ((header))s. The interface is
-centered around the `/talks` path. Paths that do not start with
-`/talks` will be used for serving ((static file))s—the HTML and
-JavaScript code for the client-side system.
+ما از JSON به عنوان فرمت بدنه‌ی درخواست‌ها و پاسخ‌هایمان استفاده خواهیم کرد. درست مانند سرویس‌دهنده‌ی فایل مربوط به [Chapter ?](node#file_server)، سعی خواهیم کرد که از متد‌های HTTP و سرنام‌ها به درستی بهره ببریم. رابط ما پیرامون مسیر <bdo>`/talks`</bdo> خواهد بود. مسیر‌هایی که با <bdo>`/talks`</bdo> شروع نمی‌شوند برای سرو فایل‌های ایستا-کدهای جاوااسکریپت و HTML مربوط به سیستم کلاینت - استفاده می‌شوند.
 
 {{index "GET method"}}
 
-A `GET` request to `/talks` returns a JSON document like this:
+یک درخواست `GET` به مسیر <bdo>‍‍‍`/talks`</bdo>، یک سند JSON به صورت زیر برمی‌گرداند:
 
 ```{lang: "application/json"}
 [{"title": "Unituning",
@@ -165,24 +91,18 @@ A `GET` request to `/talks` returns a JSON document like this:
 
 {{index "PUT method", URL}}
 
-Creating a new talk is done by making a `PUT` request to a URL like
-`/talks/Unituning`, where the part after the second slash is the title
-of the talk. The `PUT` request's body should contain a ((JSON)) object
-that has `presenter` and `summary` properties.
+ایجاد یک ارائه‌ی جدید به وسیله‌ی یک درخواست `PUT` به آدرسی مانند <bdo>`/talks/Unituning`</bdo> صورت می‌گیرد، جاییکه بخش بعد از اولین اسلش نمایانگر عنوان ارائه می‌باشد. بدنه‌ی درخواست `PUT` باید حاوی یک شیء JSON باشد که که دارای خاصیت‌های `presenter` و `summary` باشد.
 
 {{index "encodeURIComponent function", [escaping, "in URLs"], [whitespace, "in URLs"]}}
 
-Since talk titles may contain spaces and other characters that may not
-appear normally in a URL, title strings must be encoded with the
-`encodeURIComponent` function when building up such a URL.
+با توجه به اینکه عنوان ارائه‌ها ممکن است دارای فاصله یا دیگر کاراکترهایی باشد که ممکن است در URL درست نمایش نیابند، عنوان‌ها باید به وسیله‌ی `encodeURIComponent` در هنگام ساخت URL کدگذاری شوند.
 
 ```
 console.log("/talks/" + encodeURIComponent("How to Idle"));
 // → /talks/How%20to%20Idle
 ```
 
-A request to create a talk about idling might look something like
-this:
+یک درخواست برای ایجاد ارائه‌ای درباره‌ی حرکت بدون رکاب‌زدن ممکن است چیزی شبیه درخواست زیر باشد:
 
 ```{lang: http}
 PUT /talks/How%20to%20Idle HTTP/1.1
@@ -193,14 +113,11 @@ Content-Length: 92
  "summary": "Standing still on a unicycle"}
 ```
 
-Such URLs also support `GET` requests to retrieve the JSON
-representation of a talk and `DELETE` requests to delete a talk.
+همچنین این‌گونه URLها درخواست‌های `GET` برای دریافت نمایش JSON یک ارائه و درخواست `DELETE` برای حذف یک ارائه را پشتیبانی می‌کند.
 
 {{index "POST method"}}
 
-Adding a ((comment)) to a talk is done with a `POST` request to a URL
-like `/talks/Unituning/comments`, with a JSON body that has `author`
-and `message` properties.
+افزودن یک نظر (comment) به یک ارائه به وسیله‌ی یک درخواست `POST` به یک URL شبیه به <bdo>`/talks/Unituning/comments`</bdo> صورت می‌گیرد که بدنه‌ی درخواست به صورت JSON و دارای خاصیت‌های `message` و `author` می‌باشد.
 
 ```{lang: http}
 POST /talks/Unituning/comments HTTP/1.1
@@ -213,37 +130,16 @@ Content-Length: 72
 
 {{index "query string", timeout, "ETag header", "If-None-Match header"}}
 
-To support ((long polling)), `GET` requests to `/talks` may include
-extra headers that inform the server to delay the response if no new
-information is available. We'll use a pair of headers normally
-intended to manage caching: `ETag` and `If-None-Match`.
+برای پشتیبانی از تکنیک ((long polling))، درخواست‌های `GET` به <bdo>`/talks`</bdo> باید سرنام‌های بیشتری داشته باشند تا به سرویس‌دهنده خبر دهند که در صورت نبود خبر جدید،‌ ارسال پاسخ را باید به تاخیر بیاندازد. ما از یک جفت سرنام که معمولا برای مدیریت کش(حافظه‌ی نهان) استفاده می‌شوند، `ETag` و `If-None-Match` استفاده می‌کنیم.
 
 {{index "304 (HTTP status code)"}}
-
-Servers may include an `ETag` ("entity tag") header in a response. Its
-value is a string that identifies the current version of the resource.
-Clients, when they later request that resource again, may make a
-_((conditional request))_ by including an `If-None-Match` header whose
-value holds that same string. If the resource hasn't changed, the
-server will respond with status code 304, which means "not modified",
-telling the client that its cached version is still current. When the
-tag does not match, the server responds as normal.
+سرویس‌دهنده‌ها ممکن است یک سرنام `Etag` (برچسب موجودیت) در یک پاسخ قرار دهند. مقدار آن رشته‌ای است که نسخه‌ی فعلی منبع را مشخص می‌کند. کلاینت‌ها، وقتی در آینده آن منبع را درخواست می‌کنند، ممکن است یک درخواست شرطی بسازند که این کار را با قرار دادن سرنام `If-None-Match` و مقداری مشابه مقدار `Etag` در درخواست انجام می‌دهند. اگر منبع مورد نظر تغییر نکرده است، سرویس‌دهنده پاسخی با کد وضعیت 304 ارسال می‌کند که معنای آن "تغییر نکرده است" می‌باشد. این پاسخ به کلاینت می‌گوید که نسخه‌ی کش شده مشابه نسخه‌ی فعلی است. زمانی که مقدار برچسب متفاوت بود، سرویس‌دهنده به صورت عادی پاسخ می‌دهد.
 
 {{index "Prefer header"}}
 
-We need something like this, where the client can tell the server
-which version of the list of talks it has, and the server
-responds only when that list has changed. But instead of immediately
-returning a 304 response, the server should stall the response and
-return only when something new is available or a given amount of time
-has elapsed. To distinguish long polling requests from normal
-conditional requests, we give them another header, `Prefer: wait=90`,
-which tells the server that the client is willing to wait up to 90
-seconds for the response.
+ما به چیزی مثل این نیاز داریم، کلاینت بتواند به سرویس‌دهنده بگوید که کدام نسخه از لیست ارائه‌ها را دارد، و سرویس‌دهنده فقط زمانی پاسخ دهد که آن لیست به‌روز شده است. اما به‌جای اینکه بلافاصله پاسخی با کد 304 برگرداند، سرویس‌دهنده باید پاسخ را نگه‌دارد و فقط زمانی پاسخ دهد که چیزی تغییر کرده یا زمان مشخصی طی شده است. برای ایجاد تمایز بین درخواست‌های long polling و درخواست‌های معمولی، سرنام دیگری، `Prefer: wait=90`، اضافه ‌می‌کنیم که به سرویس‌دهنده می‌گوید کلاینت تا 90 ثانیه می‌تواند برای پاسخ صبر کند.
 
-The server will keep a version number that it updates every time the
-talks change and will use that as the `ETag` value. Clients can make
-requests like this to be notified when the talks change:
+سرویس‌دهنده یک شماره‌ نسخه که با هر بار تغییر ارائه‌ها به‌روز می‌شود را نگه‌داری کرده و آن را به عنوان مقدار `ETag` استفاده می‌کند. کلاینت‌ها می‌توانند درخواست‌هایی مانند زیر را ارسال کنند تا با بروز یک تغییر از آن باخبر شوند:
 
 ```{lang: null}
 GET /talks HTTP/1.1
@@ -262,46 +158,29 @@ Content-Length: 295
 
 {{index security}}
 
-The protocol described here does not do any ((access control)).
-Everybody can comment, modify talks, and even delete them. (Since the
-Internet is full of ((hooligan))s, putting such a system online
-without further protection probably wouldn't end well.)
+پروتکلی که اینجا شرح داده شد هیچ کنترل درخواستی را انجام نمی‌دهد. هر کسی می‌تواند نظر دهد، ارائه‌ها را تغییر دهد، و حتی حذف‌شان کند. (با توجه به اینکه اینترنت پر است از افراد خراب‌کار، اگر سیستمی این‌چنینی را جایی در اینترنت بدون لایه‌ای محافظ قرار دهید، نباید انتظار پایان خوشی داشته باشید.
+)
 
-## The server
+## سرویس‌دهنده
 
 {{index "skill-sharing project"}}
 
-Let's start by building the ((server))-side part of the program. The
-code in this section runs on ((Node.js)).
+خب بیایید ساخت بخش مربوط به سرویس‌دهنده را شروع کنیم. کد این بخش در محیط Node اجرا می‌شود.
 
-### Routing
+### Routing (مسیرگزینی)
 
 {{index "createServer function", [path, URL], [method, HTTP]}}
-
-Our server will use `createServer` to start an HTTP server. In the
-function that handles a new request, we must distinguish between the
-various kinds of requests (as determined by the method and the
-path) that we support. This can be done with a long chain of `if`
-statements, but there is a nicer way.
+سرویس‌دهنده‌ی ما از `createServer` برای شروع یک سرویس‌دهنده‌ی HTTP استفاده می‌کند. در تابعی که قرار است درخواست‌های جدید را مدیریت کند، باید بین انواع درخواست‌هایی که ما پشتیبانی می‌کنیم تمایز قائل شویم (با توجه به متد درخواست و مسیر درخواستی). این کار را می‌تواند به وسیله‌ی یک زنجیره‌ی بلند از دستورات `if` انجام داد، اما راه نیکوتری وجود دارد.
 
 {{index dispatch}}
 
-A _((router))_ is a component that helps dispatch a request to the
-function that can handle it. You can tell the router, for example,
-that `PUT` requests with a path that matches the regular expression
-`/^\/talks\/([^\/]+)$/` (`/talks/` followed by a talk title) can be
-handled by a given function. In addition, it can help extract the
-meaningful parts of the path (in this case the talk title), wrapped in
-parentheses in the ((regular expression)), and pass them to the
-handler function.
+یک _((router))_ یک مؤلفه است که به ما کمک می‌کند تا یک درخواست را به تابعی که می‌تواند آن را رسیدگی کند گسیل دهیم. می‌توانید برای مسیرگزین(router) مشخص کنید که مثلا درخواست‌های `PUT` که دارای مسیری باشند که با عبارت باقاعده‌ی <bdo>`/^\/talks\/([^\/]+)$/`</bdo> تطابق داشته باشد (<bdo>`/talks/`</bdo> و پس از آن یک عنوان) می‌توانند با یک تابع داده شده رسیدگی شوند. افزون بر آن، مسیرگزین می‌تواند برای استخراج بخش‌های معنادار مسیر (در این مورد عنوان ارائه) استفاده شود بخشی که در عبارت باقاعده درون پرانتز قرار دارد و نتیجه را به تابع رسیدگی‌کننده ارسال کند.
 
-There are a number of good router packages on ((NPM)), but here we'll
-write one ourselves to illustrate the principle.
+در NPM چندین بسته‌ی خوب برای مدیریت مسیرها (routing) وجود دارد، اما ما اینجا نسخه‌ی خودمان را می‌نویسیم تا قواعد آن را روشن کنیم.
 
 {{index "require function", "Router class", module}}
 
-This is `router.js`, which we will later `require` from our server
-module:
+فایلی به نام `router.js` وجود دارد که در ادامه از ماژول سرویس‌دهنده‌ی ما `require` خواهد شد:
 
 ```{includeCode: ">code/skillsharing/router.js"}
 const {parse} = require("url");
@@ -329,46 +208,23 @@ module.exports = class Router {
 
 {{index "Router class"}}
 
-The module exports the `Router` class. A router object allows new
-handlers to be registered with the `add` method and can resolve
-requests with its `resolve` method.
+ماژول ما کلاس `Router` را صادر (export) می‌کند. یک شیء router امکان ثبت گرداننده‌های جدید را به وسیله‌ی متد `add` فراهم می‌سازد و می‌تواند درخواست‌ها را به وسیله‌ی متد `resolve` نتیجه‌یابی کند.
 
 {{index "some method"}}
 
-The latter will return a response when a handler was found, and `null`
-otherwise. It tries the routes one at a time (in the order in which
-they were defined) until a matching one is found.
+متد دوم در صورت پیدا کردن یک گرداننده، یک پاسخ برمی‌گرداند و درغیر این صورت، مقدار `null` را تولید می‌کند. این متد مسیر‌ها را یک به یک (به ترتیبی که تعریف شده اند) امتحان می‌کند تا زمانی که مسیر منطبق پیدا شود.
 
 {{index "capture group", "decodeURIComponent function", [escaping, "in URLs"]}}
 
-The handler functions are called with the `context` value (which
-will be the server instance in our case), match strings for any groups
-they defined in their ((regular expression)), and the request object.
-The strings have to be URL-decoded since the raw URL may contain
-`%20`-style codes.
+توابع گرداننده با مقدار `context` (که در اینجا نمونه‌ی سرویس‌دهنده است)، رشته‌های تطبیقی برای هر گروهی که در عبارت باقاعده‌شان تعریف شده، و شیء درخواست(request)، فراخوانی می‌شوند. رشته باید کدگشایی URL شده باشد زیرا ممکن است URL دارای کدهای شبیه به `%20` باشد.
 
-### Serving files
+### سرو کردن فایل‌ها
 
-When a request matches none of the request types defined in our
-router, the server must interpret it as a request for a file in the
-`public` directory. It would be possible to use the file server
-defined in [Chapter ?](node#file_server) to serve such files, but we
-neither need nor want to support `PUT` and `DELETE` requests on files,
-and we would like to have advanced features such as support for
-caching. So let's use a solid, well-tested ((static file)) server from
-((NPM)) instead.
+زمانی که درخواستی با هیچ‌یک از انواع درخواست تعریف شده در مسیر‌گزین ما (router) تطبیق نمی‌یابد، سرویس‌دهنده باید آن درخواست را درخواستی برای یک فایل در پوشه‌ی `public` تفسیر کند. می‌توان از سرویس‌دهنده‌ی فایلی که در [فصل ?](node#file_server) ایجاد شد برای سرو این‌گونه فایل‌ها استفاده کرد، اما ما نه نیاز به پشتیبانی از `PUT` و `DELETE` داریم نه قصد آن را داریم، همچنین دوست داریم ویژگی‌های پیشرفته‌ای مثل پشتیبانی از حافظه‌ی نهان (کش) را داشته باشیم. پس اجازه بدهید از یک بسته‌ی آزمایش‌شده و کارآمد سرویس‌دهنده‌ی فایل موجود در NPM استفاده کنیم.
 
 {{index "createServer function", "ecstatic package"}}
 
-I opted for `ecstatic`. This isn't the only such server on NPM, but it
-works well and fits our purposes. The `ecstatic` package exports a
-function that can be called with a configuration object to produce a
-request handler function. We use the `root` option to tell the server
-where it should look for files. The handler function accepts `request`
-and `response` parameters and can be passed directly to `createServer`
-to create a server that serves _only_ files. We want to first check
-for requests that we should handle specially, though, so we wrap it in
-another function.
+انتخاب من `ecstatic` بود. خب این فقط تنها سرویس‌دهنده‌ی موجود در NPM نبود، اما برای کار ما مناسب است و به خوبی کار می‌کند. بسته‌ی `ecstatic` تابعی را فراهم می‌سازد که می‌توان آن را با یک شیء تنظیمات فراخواند تا یک تابع گرداننده‌ی درخواست به وجود آورد. ما از گزینه‌ی `root` استفاده می‌کنیم تا به سرویس‌دهنده اعلام کنیم که کجا باید به دنبال فایل‌ها بگردد. تابع گرداننده پارامترهای `response` و `request` را دریافت می کند و می‌توان آن را مستقیما به `createServer` فرستاد تا سرویس‌دهنده‌ای ایجاد کنیم که فقط فایل‌ها را سرو می‌کند. با توجه به اینکه قصد داریم ابتدا درخواست‌هایی را بررسی کنیم که باید به صورت خاص رسیدگی شوند، بنابراین آن را توسط تابع دیگری پوشش می‌دهیم.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 const {createServer} = require("http");
@@ -411,24 +267,15 @@ class SkillShareServer {
 }
 ```
 
-This uses a similar convention as the file server from the [previous
-chapter](node) for responses—handlers return promises that resolve to
-objects describing the response. It wraps the server in an object that
-also holds its state.
+کد بالا برای پاسخ‌ها از سبکی مشابه سرویس‌دهنده‌ی فایل [فصل پیش](node) استفاده می‌کند- گرداننده‌ها promise برمی‌گردانند که به اشیائی منتج می‌شوند که پاسخ را مشخص می‌کنند. سرویس دهنده درون یک شیء قرار می‌گیرد که همچنین وضعیت آن را نیز نگه‌داری می‌کند.
 
-### Talks as resources
+### ارائه‌ها به صورت منابع
 
-The ((talk))s that have been proposed are stored in the `talks`
-property of the server, an object whose property names are the talk
-titles. These will be exposed as HTTP ((resource))s under
-`/talks/[title]`, so we need to add handlers to our router that
-implement the various methods that clients can use to work with them.
+ارائه‌های پیشنهادی در خاصیت `talks` سرویس‌دهنده ذخیره می‌شوند، شیئی که نام خاصیت‌های آن عنوان‌های ارائه‌ها می‌باشد. این ارائه‌ها به عنوان منابع HTTP در آدرس <bdo>`/talks/[title]`</bdo> در معرض دسترسی قرار می‌گیرند، بنابراین ما نیاز به گرداننده‌هایی داریم که به مسیرگزین‌مان اضافه شوند و متدهای متنوعی که کلاینت‌ها می‌توانند برای کار با آن‌ها استفاده کنند را پیاده سازی کنند.
 
 {{index "GET method", "404 (HTTP status code)"}}
 
-The handler for requests that `GET` a single talk must look up the
-talk and respond either with the talk's JSON data or with a 404 error
-response.
+گرداننده‌ی درخواست‌های `GET` برای دریافت یک ارائه باید به دنبال ارائه بگردد و پاسخی حاوی اطلاعات ارائه به صورت JSON یا یک خطای 404 را برگرداند.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 const talkPath = /^\/talks\/([^\/]+)$/;
@@ -445,7 +292,7 @@ router.add("GET", talkPath, async (server, title) => {
 
 {{index "DELETE method"}}
 
-Deleting a talk is done by removing it from the `talks` object.
+حذف یک ارائه با پاک کردن آن از شیء `talks` صورت می‌گیرد.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 router.add("DELETE", talkPath, async (server, title) => {
@@ -459,15 +306,11 @@ router.add("DELETE", talkPath, async (server, title) => {
 
 {{index "long polling", "updated method"}}
 
-The `updated` method, which we will define
-[later](skillsharing#updated), notifies waiting long polling requests
-about the change.
+متد `updated`، که در [ادامه](skillsharing#updated) آن را تعریف خواهیم کرد، درخواست‌های long polling را از وجود تغییر باخبر می‌کند.
 
 {{index "readStream function", "body (HTTP)", stream}}
 
-To retrieve the content of a request body, we define a function called
-`readStream`, which reads all content from a ((readable stream)) and
-returns a promise that resolves to a string.
+برای بازیابی محتوای یک بدنه‌ی درخواست، تابعی تعریف می‌کنیم که `readStream` نام دارد، که همه‌ی محتوای یک استریم قابل خواندن را می‌خواند و یک promise برمی‌گرداند که به یک رشته منتج می‌شود.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 function readStream(stream) {
@@ -482,18 +325,11 @@ function readStream(stream) {
 
 {{index validation, input, "PUT method"}}
 
-One handler that needs to read request bodies is the `PUT` handler,
-which is used to create new ((talk))s. It has to check whether the
-data it was given has `presenter` and `summary` properties, which are
-strings. Any data coming from outside the system might be nonsense,
-and we don't want to corrupt our internal data model or ((crash)) when
-bad requests come in.
+گرداننده‌ای که نیاز است بدنه‌های درخواست‌ها را بخواند گرداننده‌ی `PUT` می‌باشد، که این گرداننده برای ایجاد ارائه‌های جدید استفاده می‌شود. بررسی اینکه داده‌های داده شده دارای خاصیت‌های `presenter` و `summary` باشد به عهده‌ای این گرداننده است. داده‌هایی که از بیرون از سیستم می‌آیند ممکن است بی‌معنا باشد، و ما قصد نداریم مدل داده‌ درونی‌مان را خراب کنیم یا در صورت دریافت درخواستی بد، سرویس‌دهنده از کار بیفتد.
 
 {{index "updated method"}}
 
-If the data looks valid, the handler stores an object that represents
-the new talk in the `talks` object, possibly ((overwriting)) an
-existing talk with this title, and again calls `updated`.
+اگر داده‌ها معتبر باشند، گرداننده شیئی که نمایانگر ارائه جدید است را در شیء `talks` ذخیره می‌کند، احتمالا ارائه ای با همین نام را بازنویسی می‌کند و دوباره تابع `updated` را فراخوانی می‌کند.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 router.add("PUT", talkPath,
@@ -519,9 +355,7 @@ router.add("PUT", talkPath,
 
 {{index validation, "readStream function"}}
 
-Adding a ((comment)) to a ((talk)) works similarly. We use
-`readStream` to get the content of the request, validate the resulting
-data, and store it as a comment when it looks valid.
+افزودن یک نظر به یک ارائه به همین صورت است. از `readStream` برای گرفتن محتوای درخواست استفاده می کنیم، داده‌ی به‌ دست آمده را اعتبارسنجی می‌کنیم و در صورت معتبر بودن آن را به صورت یک نظر ذخیره می‌کنیم.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
@@ -547,19 +381,15 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
 
 {{index "404 (HTTP status code)"}}
 
-Trying to add a comment to a nonexistent talk returns a 404 error.
+تلاش برای اضافه کردن یک نظر به ارائه ای که وجود ندارد منجر به بازگشتن خطای 404 می‌گردد.
 
-### Long polling support
+### پشتیبانی از Long Polling
 
-The most interesting aspect of the server is the part that handles
-((long polling)). When a `GET` request comes in for `/talks`, it may
-be either a regular request or a long polling request.
+جالب ترین بخش سرویس‌دهنده، بخشی است که تکنیک long polling را انجام می‌دهد. زمانی که یک درخواست `GET` برای <bdo>‍‍‍`/talks`</bdo> دریافت می‌شود، ممکن است یک درخواست معمولی یا یک درخواست به سبک long polling باشد.
 
 {{index "talkResponse method", "ETag header"}}
 
-There will be multiple places in which we have to send an array of
-talks to the client, so we first define a helper method that builds up
-such an array and includes an `ETag` header in the response.
+با توجه به اینکه در موارد متعددی لازم است که آرایه‌ای از ارائه‌ها را به کلاینت ارسال کنیم، ابتدا یک متد کمکی تعریف می کنیم که این‌ آرایه را برای ما بسازد و سرنام `ETag` را در پاسخ قرار دهد.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 SkillShareServer.prototype.talkResponse = function() {
@@ -576,11 +406,7 @@ SkillShareServer.prototype.talkResponse = function() {
 ```
 
 {{index "query string", "url package", parsing}}
-
-The handler itself needs to look at the request headers to see whether
-`If-None-Match` and `Prefer` headers are present. Node stores headers,
-whose names are specified to be case insensitive, under their
-lowercase names.
+گرداننده خود نیاز دارد تا سرنام‌های درخواست را بررسی کند تا مطمئن شود سرنام‌های `If-None-Match` و `Prefer` موجود باشند. Node سرنام‌ها را که نامشان به صورت غیرحساس به بزرگی/کوچکی حروف مشخص می‌شود را با حروف کوچک ذخیره می‌کند.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 router.add("GET", /^\/talks$/, async (server, request) => {
@@ -598,18 +424,11 @@ router.add("GET", /^\/talks$/, async (server, request) => {
 
 {{index "long polling", "waitForChanges method", "If-None-Match header", "Prefer header"}}
 
-If no tag was given or a tag was given that doesn't match the
-server's current version, the handler responds with the list of talks.
-If the request is conditional and the talks did not change, we consult
-the `Prefer` header to see whether we should delay the response or respond
-right away.
+اگر برچسبی داده نشده بود یا برچسب داده شده با نسخه‌ی کنونی سرویس‌دهنده منطبق نبود، گرداننده لیست‌ ارائه ها را برمی‌گرداند. اگر درخواست شرطی باشد و ارائه ها تغییری نکرده باشند، ما سرنام `Prefer` را بررسی می‌کنیم تا ببینیم که آیا لازم است پاسخ‌دادن را به تاخییر بیاندازیم یا باید سریع پاسخ دهیم.
 
 {{index "304 (HTTP status code)", "setTimeout function", timeout, "callback function"}}
 
-Callback functions for delayed requests are stored in the server's
-`waiting` array so that they can be notified when something happens.
-The `waitForChanges` method also immediately sets a timer to respond
-with a 304 status when the request has waited long enough.
+توابع callback برای درخواست‌هایی که به تاخیر انداخته شده اند در آرایه‌ی `waiting` سرویس‌دهنده ذخیره می‌شوند در نتیجه در هنگام تغییر چیزی می‌توان آن‌ها را باخبر کرد. متد `waitForChanges` همچنین بلافاصله یک زمان‌سنج برای پاسخ با یک کد وضعیت 304 تنظیم می‌کند که در صورتی‌که درخواست به مدت طولانی منتظر بماند عمل خواهد کرد.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 SkillShareServer.prototype.waitForChanges = function(time) {
@@ -628,8 +447,7 @@ SkillShareServer.prototype.waitForChanges = function(time) {
 
 {{id updated}}
 
-Registering a change with `updated` increases the `version` property
-and wakes up all waiting requests.
+ثبت یک تغییر به وسیله‌ی `updated` باعث افزایش شماره نسخه، خاصیت ‍`version`، می‌شود و همه‌ی درخواست‌های در انتظار را بیدار می‌کند.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 SkillShareServer.prototype.updated = function() {
@@ -642,36 +460,24 @@ SkillShareServer.prototype.updated = function() {
 
 {{index [HTTP, server]}}
 
-That concludes the server code. If we create an instance of
-`SkillShareServer` and start it on port 8000, the resulting HTTP
-server serves files from the `public` subdirectory alongside a
-talk-managing interface under the `/talks` URL.
+کد سرویس‌دهنده اینجا به پایان می‌رسد. اگر ما یک نمونه از `SkillShareServer` ایجاد کرده و روی درگاه 8000 اجرا کنیم، سرویس‌دهنده‌ی ایجاد شده، فایل ها را از زیرپوشه‌ی `public` به همراه یک رابط مدیریت ارائه تحت مسیر <bdo>`/talks`</bdo> سرو می‌کند.
 
 ```{includeCode: ">code/skillsharing/skillsharing_server.js"}
 new SkillShareServer(Object.create(null)).start(8000);
 ```
 
-## The client
+## کلاینت
 
 {{index "skill-sharing project"}}
 
-The ((client))-side part of the skill-sharing website consists of
-three files: a tiny HTML page, a style sheet, and a JavaScript file.
+بخش مربوط به کلاینت وب‌سایت اشتراک مهارت از سه فایل تشکیل می‌شود: یک صفحه‌ی HTML ساده، یک برگه‌ی سبک CSS، و یک فایل جاوااسکریپت.
 
 ### HTML
 
 {{index "index.html"}}
+یکی از قراردادهای بسیار پراستفاده در سرویس‌دهنده‌های وب این است که در صورت دریافت درخواستی مستقیم به مسیری که به یک پوشه ختم می‌شود، سرویس‌دهنده تلاش می‌کند تا فایلی به نام `index.html` را سرو کند. ماژول سرویس‌دهنده‌ی فایلی که ما استفاده می‌کنیم، ‍`ecstatic`، از این قرارداد پشتیبانی می‌کند. زمانی که یک درخواست به مسیر `/` ارسال می‌شود، سرویس‌دهنده به دنبال فایل <bdo>`./public/index.html`</bdo> می‌گردد (<bdo>`./public`</bdo> ریشه‌ای است که ما تعیین کرده ایم) و آن فایل را در صورت وجود بازمی‌گرداند.
 
-It is a widely used convention for web servers to try to serve a file
-named `index.html` when a request is made directly to a path that
-corresponds to a directory. The ((file server)) module we use,
-`ecstatic`, supports this convention. When a request is made to the
-path `/`, the server looks for the file `./public/index.html`
-(`./public` being the root we gave it) and returns that file if found.
-
-Thus, if we want a page to show up when a browser is pointed at our
-server, we should put it in `public/index.html`. This is our index
-file:
+بنابراین، اگر قصد داریم صفحه‌ای را در هنگام باز شدن سرویس‌دهنده‌مان نمایش دهیم، باید آن صفحه را در <bdo>`public/index.html`</bdo> قرار دهیم. فایل index ما به شکل زیر می‌باشد:
 
 ```{lang: "text/html", includeCode: ">code/skillsharing/public/index.html"}
 <!doctype html>
@@ -685,27 +491,17 @@ file:
 ```
 
 {{index CSS}}
+این فایل عنوان صفحه را تعریف کرده و یک فایل CSS اضافه می‌کند. فایل CSS تعدادی سبک تعریف می کند و علاوه بر چند کار دیگر، فاصله‌ی بین ارائه‌ها را تنظیم می‌کند.
 
-It defines the document ((title)) and includes a style sheet,
-which defines a few styles to, among other things, make sure there is
-some space between talks.
+در ادامه، یک سرعنوان به بالای صفحه اضافه می‌کند و اسکریپتی که کد کلاینت اپلیکیشن را دارد را نیز بارگیری می‌کند.
 
-At the bottom, it adds a heading at the top of the page and loads the
-script that contains the ((client))-side application.
+### کنش‌ها(actions)
 
-### Actions
-
-The application state consists of the list of talks and the name of
-the user, and we'll store it in a `{talks, user}` object. We don't
-allow the user interface to directly manipulate the state or send off
-HTTP requests. Rather, it may emit _actions_ that describe what the
-user is trying to do.
+وضعیت اپلیکیشن حاوی لیست ارائه‌ها و نام کاربر می‌باشد، و ما آن را در یک شیء `{talks, user}` ذخیره می‌کنیم. رابط کاربری مستقیما اجازه‌ی دستکاری وضعیت و ارسال درخواست HTTP را نخواهد داشت. در عوض، رابط کنش‌ها (actions) را گسیل می‌دهد که عمل مورد نظر کاربر را توضیح می‌دهند.
 
 {{index "handleAction function"}}
 
-The `handleAction` function takes such an action and makes it happen.
-Because our state updates are so simple, state changes are handled in
-the same function.
+تابع `handleAction` یک action گرفته و به آن عمل می‌کند. با توجه به اینکه به‌روز‌رسانی‌های وضعیت خیلی ساده می‌باشند، تغییر وضعیت در همان تابع صورت می‌گیرد.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function handleAction(state, action) {
@@ -741,16 +537,11 @@ function handleAction(state, action) {
 ```
 
 {{index "localStorage object"}}
-
-We'll store the user's name in `localStorage` so that it can be
-restored when the page is loaded.
+نام کاربر را در `localeStorage` ذخیره می‌کنیم در نتیجه می‌توان آن را با بارگیری صفحه بازیابی کرد.
 
 {{index "fetch function", "status property"}}
 
-The actions that need to involve the server make network requests,
-using `fetch`, to the HTTP interface described earlier. We use a
-wrapper function, `fetchOK`, which makes sure the returned promise is
-rejected when the server returns an error code.
+این کنش‌ها نیاز دارند تا با سرویس‌دهنده برای ساخت درخواست‌های شبکه با استفاده از `fetch` و به رابط HTTPای که پیش‌تر توصیف شد تعامل کنند. ما از یک تابع پوشش‌دهنده به نام `fetchOK` استفاده می‌کنیم، که باعث می‌شود اطمینان حاصل شود که promise برگشتی در صورت تولید خطا توسط سرویس‌دهنده لغو شود.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function fetchOK(url, options) {
@@ -763,8 +554,7 @@ function fetchOK(url, options) {
 
 {{index "talkURL function", "encodeURIComponent function"}}
 
-This helper function is used to build up a ((URL)) for a talk
-with a given title.
+تابع کمکی زیر برای ساخت یک URL برای یک ارائه با یک عنوان داده‌شده استفاده می‌شود.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function talkURL(title) {
@@ -774,10 +564,7 @@ function talkURL(title) {
 
 {{index "error handling", "user experience", "reportError function"}}
 
-When the request fails, we don't want to have our page just sit there,
-doing nothing without explanation. So we define a function called
-`reportError`, which at least shows the user a dialog that tells them
-something went wrong.
+زمانی که یک درخواست با مشکل روبرو می‌شود، دوست‌ نداریم صفحه‌ی کاربر بدون هیچ توضیحی ثابت بماند. پس تابعی تعریف می‌کنیم به نام `reportError` که حداقل به کاربر متنی را نشان می‌دهد که چیزی با مشکل روبرو شده است.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function reportError(error) {
@@ -785,16 +572,11 @@ function reportError(error) {
 }
 ```
 
-### Rendering components
+### ساخت و نمایش مؤلفه‌ها
 
 {{index "renderUserField function"}}
 
-We'll use an approach similar to the one we saw in [Chapter ?](paint),
-splitting the application into components. But since some of the
-components either never need to update or are always fully redrawn
-when updated, we'll define those not as classes but as functions that
-directly return a DOM node. For example, here is a component that
-shows the field where the user can enter their name:
+از روشی مشابه آنچه در [فصل ?](paint) دیدیم، که تقسیم اپلیکیشن به مؤلفه‌ها بود استفاده می‌کنیم. اما با توجه به اینکه بعضی از مؤلفه‌ها هرگز نیاز به‌ به‌روز‌رسانی ندارند یا در صورت به‌روز شدن، از نو به صورت کامل بازایجاد می‌شوند، ما آن‌ها را نه بصورت کلاس بلکه به شکل توابعی تعریف می‌کنیم که مستقیما یک گره‌ی DOM برمی‌گردانند. به عنوان مثال، در اینجا مؤلفه‌ای داریم که فیلدی را نشان می دهد که کاربر می‌تواند نامش را در آن وارد کند:
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function renderUserField(name, dispatch) {
@@ -810,8 +592,7 @@ function renderUserField(name, dispatch) {
 
 {{index "elt function"}}
 
-The `elt` function used to construct DOM elements is the one we used
-in [Chapter ?](paint).
+تابع `elt` برای ساخت عناصر DOM استفاده می‌شود، همانی است که در [فصل ?](paint) استفاده می‌کردیم.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no, hidden: true}
 function elt(type, props, ...children) {
@@ -827,8 +608,7 @@ function elt(type, props, ...children) {
 
 {{index "renderTalk function"}}
 
-A similar function is used to render talks, which include a list of
-comments and a form for adding a new ((comment)).
+تابع مشابهی برای ساخت و نمایش ارائه‌ها در صفحه ‌استفاده می شود، که لیستی از نظر‌ها و فرمی برای افزودن یک نظر جدید را نیز شامل می‌شود.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function renderTalk(talk, dispatch) {
@@ -860,19 +640,11 @@ function renderTalk(talk, dispatch) {
 
 {{index "submit event"}}
 
-The `"submit"` event handler calls `form.reset` to clear the form's
-content after creating a `"newComment"` action.
+گرداننده‌ رخداد `"submit"` متد `form.reset` را فراخوانی می‌کند تا محتوای فرم را پس از ایجاد یک کنش `"newComment"` پاک کند.
 
-When creating moderately complex pieces of DOM, this style of
-programming starts to look rather messy. There's a widely used
-(non-standard) JavaScript extension called _((JSX))_ that lets you
-write HTML directly in your scripts, which can make such code prettier
-(depending on what you consider pretty). Before you can actually run
-such code, you have to run a program on your script to convert the
-pseudo-HTML into JavaScript function calls much like the ones we use
-here.
+در صورت ایجاد بخش نسبتا پیچیده‌ای از DOM، این سبک از برنامه‌نویسی در ابتدا کمی شلوغ‌ به نظر می‌رسد. افزونه‌ی پراستفاده‌ای برای جاوااسکریپت (غیراستاندارد) وجود دارد که JSX نام دارد و به شما امکان نوشتن مستقیم HTML درون اسکریپت‌های جاوااسکریپت را می‌دهد که می‌تواند این‌گونه کدها را زیبا تر کند (البته بسته به اینکه شما کد زیبا را چگونه ارزیابی کنید). پیش از اینکه بتوانید این کد را اجرا کنید، باید برنامه‌ای روی اسکریپت‌تان اجرا کنید تا کدهای شبه‌HTML را به فراخوانی‌های تابع جاوااسکریپت تبدیل کند بسیار شبیه به آن چه اینجا استفاده کردیم.
 
-Comments are simpler to render.
+ساخت و نمایش نظرها ساده تر است.
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function renderComment(comment) {
@@ -884,8 +656,7 @@ function renderComment(comment) {
 
 {{index "form (HTML tag)", "renderTalkForm function"}}
 
-Finally, the form that the user can use to create a new talk is
-rendered like this:
+سرانجام، فرمی که کاربر برای ایجاد یک ارائه‌ی جدید استفاده می‌کند به صورت زیر ایجاد می‌شود:
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function renderTalkForm(dispatch) {
@@ -910,11 +681,7 @@ function renderTalkForm(dispatch) {
 
 {{index "pollTalks function", "long polling", "If-None-Match header", "Prefer header", "fetch function"}}
 
-To start the app we need the current list of talks. Since the initial
-load is closely related to the long polling process—the `ETag` from
-the load must be used when polling—we'll write a function that keeps
-polling the server for `/talks` and calls a ((callback function))
-when a new set of talks is available.
+برای راه‌اندازی اپلیکیشن به لیست ارائه‌های موجود نیاز داریم. به دلیل اینکه بارگیری ابتدایی بسیار به فرایند long polling مرتبط است - `ETag` به دست آمده از بارگیری باید در هنگام درخواست polling استفاده شود - تابعی خواهیم نوشت که به ارسال درخواست polling به سرویس‌دهنده برای <bdo>`/talks`</bdo> ادامه خواهد داد و هنگامی که مجموعه‌ی جدیدی از ارائه‌ها در دسترس باشد، یک تابع callback فراخوانی می‌کند .
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 async function pollTalks(update) {
@@ -940,33 +707,21 @@ async function pollTalks(update) {
 
 {{index "async function"}}
 
-This is an `async` function so that looping and waiting for the
-request is easier. It runs an infinite loop that, on each iteration,
-retrieves the list of talks—either normally or, if this isn't the
-first request, with the headers included that make it a long polling
-request.
+این تابع از نوع `async` می‌باشد در نتیجه استفاده از حلقه و انتظار برای این درخواست در آن ساده‌ تر خواهد بود. این تابع حلقه‌ای بی‌نهایت را اجرا می‌کند که در هر تکرار، لیستی از ارائه‌ها را بازیابی می‌کند، یا به صورت عادی، یا اگر این اولین درخواست نباشد، با سرنام‌های اضافه شده که باعث شده این درخواست long polling در نظر گرفته شود.
 
 {{index "error handling", "Promise class", "setTimeout function"}}
 
-When a request fails, the function waits a moment and then tries
-again. This way, if your network connection goes away for a while and
-then comes back, the application can recover and continue updating.
-The promise resolved via `setTimeout` is a way to force the `async`
-function to wait.
+زمانی که یک درخواست با مشکل روبرو می‌شود، تابع اندکی صبر می‌کند و سپس دوباره تلاش می‌کند. با این کار، اگر اتصال شبکه برای لحظه‌ای قطع شود و دوباره برگردد، نرم‌افزار می‌تواند خودش را بازیابی کند و به به‌روز‌رسانی ادامه دهد. promise منتج شده به وسیله‌ی `setTimeout` روشی‌ است که تابع `async` را وادار می‌سازد اندکی منتظر بماند.
 
 {{index "304 (HTTP status code)", "ETag header"}}
 
-When the server gives back a 304 response, that means a long polling
-request timed out, so the function should just immediately start the
-next request. If the response is a normal 200 response, its body is
-read as ((JSON)) and passed to the callback, and its `ETag` header
-value is stored for the next iteration.
+هنگامی‌که سرویس‌دهنده پاسخی با کد 304 برمی‌گرداند، معنای آن این است که یک درخواست long polling منقضی شده است، بنابراین تابع باید بدون درنگ به سراغ راه‌اندازی درخواست بعدی برود. اگر پاسخ یک پاسخ عادی 200 باشد، بدنه‌ی آن به عنوان JSON خوانده شده و به callback ارسال می‌شود، و مقدار سرنام `ETag` آن برای تکرار بعدی ذخیره می‌شود.
 
-### The application
+### اپلیکیشن
 
 {{index "SkillShareApp class"}}
 
-The following component ties the whole user interface together:
+مؤلفه‌ی پیش‌رو، همه‌ی اجزاء رابط کاربری را گردآوری می‌کند:
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 class SkillShareApp {
@@ -995,10 +750,9 @@ class SkillShareApp {
 
 {{index synchronization, "live view"}}
 
-When the talks change, this component redraws all of them. This is
-simple but also wasteful. We'll get back to that in the exercises.
+زمانی که ارائه‌ها تغییر می‌کنند، این مؤلفه همه‌ی آن‌ها را بازترسیم می‌نماید. این کار ساده اما اضافی است. در قسمت تمرین‌ها به سراغ این مشکل خواهیم رفت.
 
-We can start the application like this:
+می‌توانیم اپلیکیشن را به صورت زیر راه‌اندازی کنیم:
 
 ```{includeCode: ">code/skillsharing/public/skillsharing_client.js", test: no}
 function runApp() {
@@ -1023,101 +777,56 @@ function runApp() {
 runApp();
 ```
 
-If you run the server and open two browser windows for
-[_http://localhost:8000_](http://localhost:8000/) next to each other, you can
-see that the actions you perform in one window are immediately visible
-in the other.
+اگر سرویس‌دهنده را اجرا کنید و دو صفحه‌ی مرورگر را برای [_http://localhost:8000_](http://localhost:8000/) در کنار هم باز کنید، می‌توانید مشاهده نمایید که کارهایی که در یک پنجره انجام می‌دهید در دیگر پنجره قابل مشاهده است.
 
-## Exercises
+## تمرین‌ها
 
 {{index "Node.js", NPM}}
 
-The following exercises will involve modifying the system defined in
-this chapter. To work on them, make sure you ((download)) the code
-first
-([_https://eloquentjavascript.net/code/skillsharing.zip_](https://eloquentjavascript.net/code/skillsharing.zip)),
-have Node installed [_https://nodejs.org_](https://nodejs.org), and have
-installed the project's dependency with `npm install`.
+تمرین‌های این قسمت درباره‌ی ایجاد تغییر روی سیستمی است که در این فصل ایجاد شده است. برای کار روی آن‌ها، اطمینان حاصل کنید کد‌های مورد نیاز را ([_https://eloquentjavascript.net/code/skillsharing.zip_](https://eloquentjavascript.net/code/skillsharing.zip)) بارگیری کنید، Node را نصب کنید [_https://nodejs.org_](https://nodejs.org)، و وابستگی‌های پروژه را نیز به وسیله‌ی `npm install` نصب کنید.
 
-### Disk persistence
+### مانایی داده‌ها در دیسک
 
 {{index "data loss", persistence, [memory, persistence]}}
-
-The skill-sharing server keeps its data purely in memory. This
-means that when it ((crash))es or is restarted for any reason, all
-talks and comments are lost.
+سرویس‌دهنده‌ی سایت اشتراک مهارت داده‌هایش را کاملا در حافظه نگه‌داری می‌کند. معنای آن این است که در صورت متوقف شدن یا شروع مجدد به هر دلیلی، تمامی ارائه‌ها و نظرات از بین خواهند رفت.
 
 {{index "hard drive"}}
 
-Extend the server so that it stores the talk data to disk and
-automatically reloads the data when it is restarted. Do not worry
-about efficiency—do the simplest thing that works.
+سرویس‌دهنده را توسعه دهید تا بتواند داده‌های مربوط به ارائه‌ها را روی دیسک ذخیره کرده و به صورت خودکار در صورت شروع مجدد بازیابی کند. به بهینگی فکر نکنید و ساده‌ترین راهی که کار می‌کند را انتخاب کنید.
 
 {{hint
 
 {{index "file system", "writeFile function", "updated method", persistence}}
 
-The simplest solution I can come up with is to encode the whole
-`talks` object as ((JSON)) and dump it to a file with `writeFile`.
-There is already a method (`updated`) that is called every time the
-server's data changes. It can be extended to write the new data to
-disk.
+ساده‌ترین راه‌حلی که من می‌توانم پیشنهاد دهم این است که کل شیء `talks` را به صورت JSON کدگذاری کنید و درون یک فایل به وسیله‌ی `writeFile` ذخیره کنید. هم‌اکنون متدی به نام `updated` موجود می‌باشد که با هر بار تغییر داده‌های سرویس‌دهنده فراخوانی می‌شود. می‌توان آن را توسعه داد تا داده‌های جدید را در دیسک ذخیره کند.
 
 {{index "readFile function"}}
 
-Pick a ((file))name, for example `./talks.json`. When the server
-starts, it can try to read that file with `readFile`, and if that
-succeeds, the server can use the file's contents as its starting data.
+یک نام برای فایل انتخاب کنید مثلا ‍<bdo>`./talks.json`</bdo>. در زمانی که سرویس‌دهنده شروع به کار می‌کند، می‌تواند آن فایل را به وسیله‌ی `readFile` بخواند و اگر این خواندن موفقیت آمیز بود، محتوای فایل خوانده شده را می‌تواند به عنوان داده‌های ابتدایی استفاده کند.
 
 {{index prototype, "JSON.parse function"}}
 
-Beware, though. The `talks` object started as a prototype-less object
-so that the `in` operator could reliably be used. `JSON.parse` will
-return regular objects with `Object.prototype` as their prototype. If
-you use JSON as your file format, you'll have to copy the properties
-of the object returned by `JSON.parse` into a new, prototype-less
-object.
+مراقب باشید. شیء `talks` در ابتدا به عنوان یک شیء بدون prototype آغاز شد، در نتیجه می‌توان از عملگر `in` با خیال راحت استفاده کرد. خروجی <bdo>`JSON.parse`</bdo> اشیاء معمولی با پروتوتایپ ‍`Object.prototype` می باشد. اگر از JSON به عنوان فرمت فایل‌تان استفاده کنید، لازم می‌شود تا خاصیت‌های شیئی که توسط `JSON.parse` تولید می‌شود را به یک شیء بدون prototype کپی کند.
 
 hint}}
 
-### Comment field resets
+### بازنشانی فیلد ورود نظرات
 
 {{index "comment field reset (exercise)", template, [state, "of application"]}}
 
-The wholesale redrawing of talks works pretty well because you usually
-can't tell the difference between a DOM node and its identical
-replacement. But there are exceptions. If you start typing something
-in the comment ((field)) for a talk in one browser window and then, in
-another, add a comment to that talk, the field in the first window
-will be redrawn, removing both its content and its ((focus)).
+کلیت بازترسیم ارائه‌ها به خوبی کار می‌کند زیرا معمولا تفاوت بین یک گره‌ی DOM و جایگزین مشابه‌ش تشخیص داده نمی‌شود. اما استثناهایی هم وجود دارد. اگر شروع به تایپ چیزی به عنوان یک نظر در یکی از پنجره‌های مرورگر در فیلد مربوط به آن کنید، و سپس در دیگر پنجره، یک نظر به یک ارائه اضافه کنید، فیلد پنجره‌ی اول بازترسیم خواهد شد که در نتیجه هم محتوایش و هم focus روی آن از بین می‌رود.
 
-In a heated discussion, where multiple people are adding comments at
-the same time, this would be annoying. Can you come up with a way
-to solve it?
+در یک بحث داغ، جاییکه چندین کاربر در حال افزودن نظراتشان در یک زمان می‌باشند، این ایراد ممکن است آزاردهنده باشد. می‌توانید راه حلی برای آن پیدا کنید؟
 
 {{hint
 
 {{index "comment field reset (exercise)", template, "syncState method"}}
+احتمالا بهترین روش انجام این‌کار این است که اشیاء مولفه برای ارائه‌ها بسازیم، به همراه یک متد `syncState`، در نتیجه می‌توان آن‌ها را به‌روز کرد تا یک نسخه‌ی تغییریافته‌ی یک ارائه را نشان دهند. در زمان انجام کارهای عادی، تنها راهی که یک ارائه می‌تواند تغییر کند اضافه کردن نظرات بیشتر است، پس متد `syncState` می‌تواند نسبتا ساده باشد.
 
-The best way to do this is probably to make talks component objects,
-with a `syncState` method, so that they can be updated to show a
-modified version of the talk. During normal operation, the only way a
-talk can be changed is by adding more comments, so the `syncState`
-method can be relatively simple.
-
-The difficult part is that, when a changed list of talks comes in, we
-have to reconcile the existing list of DOM components with the talks
-on the new list—deleting components whose talk was deleted and
-updating components whose talk changed.
+بخش مشکل ماجرا این است که، زمانی که یک لیست تغییر یافته از ارائه‌ها می‌آید، ما باید لیست مؤلفه‌های موجود DOM را با ارائه‌های موجود در لیست جدید یکپارچه کنیم- با حذف مؤلفه‌هایی که ارائه‌هایش حذف شده است و به‌روز‌رسانی مؤلفه‌هایی که ارائه‌ش تغییر یافته است.
 
 {{index synchronization, "live view"}}
 
-To do this, it might be helpful to keep a data structure that stores
-the talk components under the talk titles so that you can easily
-figure out whether a component exists for a given talk. You can then
-loop over the new array of talks, and for each of them, either
-synchronize an existing component or create a new one. To delete
-components for deleted talks, you'll have to also loop over the
-components and check whether the corresponding talks still exist.
+برای انجام این کار، شاید مفید باشد که ساختار داده‌ای داشته باشیم که مؤلفه‌های ارائه را تحت عنوان‌های ارائه ذخیره کند در نتیجه می‌توان به سادگی وجود یک مؤلفه برای ارائه‌ی داده شده را بررسی کرد. بعدا می‌توانید آرایه‌ی جدید ارائه‌ها را پیمایش کرده و برای هر یک از آن‌ها، یا یک مؤلفه‌ی موجود را هماهنگ کنید یا مؤلفه‌ی جدید را بسازید. برای حذف مؤلفه‌ها برای ارائه‌هایی که حذف شده اند، لازم است همچنین مؤلفه‌ها را پیمایش کنید و تا ببینید ارائه‌های مربوط هنوز موجود هستند یا خیر.
 
 hint}}
