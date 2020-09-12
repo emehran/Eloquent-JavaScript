@@ -2,12 +2,8 @@
 
 # مقدارها, انواع داده, و عملگرها
 
-{{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
-
-Below the surface of the machine, the program moves. Without effort,
-it expands and contracts. In great harmony, electrons scatter and
-regroup. The forms on the monitor are but ripples on the water. The
-essence stays invisibly below.
+{{quote {author: "استاد Yuan-Ma", title: "کتاب برنامه‌نویسی", chapter: true}
+پایین تر از سطح ماشین، برنامه است که حرکت می‌کند. به‌ آسانی‌ منبسط و منقبض می‌شود. الکترون‌ها با هماهنگی تمام، پراکنده و دوباره جمع می‌شوند. اشکال روی مانیتور چیزی جز امواج روی آب نیستند. جوهر اصلی در زیر به صورت نامرئی می‌ماند.
 
 quote}}
 

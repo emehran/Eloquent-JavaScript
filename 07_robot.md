@@ -3,9 +3,7 @@
 # پروژه: ساخت یک ربات
 
 {{quote {author: "Edsger Dijkstra", title: "The Threats to Computing Science", chapter: true}
-
-[...] the question of whether Machines Can Think [...] is about as
-relevant as the question of whether Submarines Can Swim.
+[...] این سوال که آیا ماشین‌ها می‌توانند فکر کنند یا خیر [...] مثل این است که بپرسیم آیا زیردریایی‌ها می‌توانند شنا کنند.
 
 quote}}
 

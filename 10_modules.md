@@ -4,7 +4,7 @@
 
 {{quote {author: "Tef", title: "Programming is Terrible", chapter: true}
 
-Write code that is easy to delete, not easy to extend.
+کدی بنویسید که راحت بتوان در صورت نیاز حذفش کرد، لازم نیست قابل توسعه باشد.
 
 quote}}
 

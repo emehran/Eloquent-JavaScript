@@ -4,7 +4,7 @@
 
 {{quote {author: "M.C. Escher", title: "cited by Bruno Ernst in The Magic Mirror of M.C. Escher", chapter: true}
 
-نقاشی فریب است.
+طراحی یک فریب است.
 
 quote}}
 

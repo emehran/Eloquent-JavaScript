@@ -1,11 +1,7 @@
 # ساختار برنامه
 
-{{quote {author: "_why", title: "Why's (Poignant) Guide to Ruby", chapter: true}
-
-And my heart glows bright red under my filmy, translucent skin and
-they have to administer 10cc of JavaScript to get me to come back. (I
-respond well to toxins in the blood.) Man, that stuff will kick the
-peaches right out your gills!
+{{quote {author: "why", title: "Why's (Poignant) Guide to Ruby", chapter: true}
+سرخی قلبم از زیر پوست شفاف و نازکم می‌درخشد و آن‌ها باید به من 10 سی‌سی جاوااسکریپت تزریق کنند تا من را به زندگی برگردانند. (بدن من به وجود سم در خون خوب واکنش می‌دهد.) این آشغال فورا نفس شما را برمی‌گرداند!
 
 quote}}
 

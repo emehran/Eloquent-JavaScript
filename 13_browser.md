@@ -2,10 +2,7 @@
 
 {{quote {author: "Tim Berners-Lee", title: "The World Wide Web: A very short personal history", chapter: true}
 
-The dream behind the Web is of a common information space in which we
-communicate by sharing information. Its universality is essential: the
-fact that a hypertext link can point to anything, be it personal,
-local or global, be it draft or highly polished.
+رویای پشت وب وجود یک فضای مشترک اطلاعاتی است که در آن ما با اشتراک گذاری اطلاعات با هم ارتباط برقرار می‌کنیم. عمومیت و فراگیری آن یک اصل است: اینکه در واقع می‌توان با یک پیوند ابرمتن (hypertext link) به هر چیزی اشاره کرد، چه اطلاعات شخصی، محلی یا جهانی، پیش‌نویس یا اطلاعاتی ویرایش‌شده باشد.
 
 quote}}
 

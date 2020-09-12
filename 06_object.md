@@ -2,11 +2,9 @@
 
 # زندگی اسرارآمیز اشیاء
 
-{{quote {author: "Barbara Liskov", title: "Programming with Abstract Data Types", chapter: true}
+{{quote {author: "باربارا لیسکوف", title: "برنامه‌نویسی با انواع داده‌ی انتزاعی", chapter: true}
 
-An abstract data type is realized by writing a special kind of program
-[…] which defines the type in terms of the operations which can be
-performed on it.
+یک نوع داده‌ی انتزاعی را می‌توان با نوشتن یک برنامه‌ی بخصوصی فهمید […] که این نوع را بر اساس کارهایی که روی آن می‌توان انجام داد تعریف می کند.
 
 quote}}
 

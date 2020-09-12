@@ -4,9 +4,8 @@
 
 {{quote {author: "Brian Kernighan and P.J. Plauger", title: "The Elements of Programming Style", chapter: true}
 
-Debugging is twice as hard as writing the code in the first place.
-Therefore, if you write the code as cleverly as possible, you are, by
-definition, not smart enough to debug it.
+رفع‌ باگ دوبرابر سخت‌تر از خود کدنویسی ابتدایی است. پس اگر کدی که نوشته‌اید خیلی هوشمندانه‌است، با توجه به تعریف، از پس رفع باگ آن برنخواهید آمد.
+
 
 quote}}
 

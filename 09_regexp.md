@@ -2,8 +2,7 @@
 
 {{quote {author: "Jamie Zawinski", chapter: true}
 
-Some people, when confronted with a problem, think 'I know, I'll use
-regular expressions.' Now they have two problems.
+بعضی‌ها، وقتی با مشکلی روبرو می‌شوند، فکر می‌کنند 'خب، راه حل را می‌دانم، استفاده از عبارات باقاعده.' ولی حالا با دو مشکل روبرو هستند.
 
 quote}}
 
@@ -11,11 +10,9 @@ quote}}
 
 {{if interactive
 
-{{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
+{{quote {author: "استاد Yuan-Ma", title: "کتاب برنامه‌نویسی", chapter: true}
 
-Yuan-Ma said, 'When you cut against the grain of the wood, much
-strength is needed. When you program against the grain of the problem,
-much code is needed.'
+Yuan-Ma گفت،  'وقتی چوب را برخلاف جهت الیافش برش می‌دهید, نیروی  بیشتری نیاز دارید. و هنگامی‌که بر خلاف روش صحیح حل مسئله، برنامه‌نویسی می‌کنید، به کد بیشتری نیاز دارید.'
 
 quote}}
 

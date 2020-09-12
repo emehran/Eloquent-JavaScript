@@ -2,12 +2,9 @@
 
 # ساختارهای داده: اشیاء و آرایه‌ها
 
-{{quote {author: "Charles Babbage", title: "Passages from the Life of a Philosopher (1864)", chapter: true}
+{{quote {author: "چارلز بابیج", title: "گذری بر زندگی یک فیلسوف (1864)", chapter: true}
 
-On two occasions I have been asked, 'Pray, Mr. Babbage, if you put
-into the machine wrong figures, will the right answers come out?'
-[...] I am not able rightly to apprehend the kind of confusion of
-ideas that could provoke such a question.
+در دو موقعیت از من پرسش شد، ‍'ببخشید، آقای بابیج اگر اعداد غلطی را به ماشین بدهی، ماشین پاسخ درست را خودش تولید می‌کند؟' [...] من نمی‌توانم به درستی درک کنم چه آشفتگی‌ ذهنی می‌تواند اینچنین سوالی را برانگیزد.
 
 quote}}
 

@@ -4,13 +4,9 @@
 
 {{if interactive
 
-{{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
+{{quote {author: "استاد Yuan-Ma", title: "کتاب برنامه‌نویسی", chapter: true}
 
-Tzu-li and Tzu-ssu were boasting about the size of their latest
-programs. 'Two-hundred thousand lines,' said Tzu-li, 'not counting
-comments!' Tzu-ssu responded, 'Pssh, mine is almost a *million* lines
-already.' Master Yuan-Ma said, 'My best program has five hundred
-lines.' Hearing this, Tzu-li and Tzu-ssu were enlightened.
+زو-لی و زو-سو درباره‌ی اندازه‌ی آخرین برنامه‌هایشان در حال رجز خوانی بودند. زو-لی گفت: 'دویست هزار خط کد' بدون شمردن توضیحات! زو-سو پاسخ داد، هه! برنامه‌ی من تقریبا یک میلون خط شده! استاد Yuan-Ma گفت، 'بهترین برنامه‌ای که نوشتم پانصد خط کد داشت'. با شنیدن این جمله، زو-لی و زو-سو متنبه شدند و به خود آمدند.
 
 quote}}
 
@@ -20,10 +16,7 @@ if}}
 
 {{index "Hoare, C.A.R."}}
 
-There are two ways of constructing a software design: One way is to
-make it so simple that there are obviously no deficiencies, and the
-other way is to make it so complicated that there are no obvious
-deficiencies.
+دو روش برای ساختاردهی در طراحی نرم‌افزار وجود دارد: یک راه این است که آن را آن‌قدر ساده بسازیم که به وضوح مشخص باشد که ایرادی وجود ندارد، و روش دیگر این است که آن‌قدر آن را پیچیده بسازیم که نتوان  ایرادات نرم‌افزار را به وضوح تشخیص داد.
 
 quote}}
 
